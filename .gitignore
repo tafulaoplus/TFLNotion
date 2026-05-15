@@ -1,0 +1,33 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Node (ถ้ามี)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Local backup files
+*.bak
+*.backup
+
+# Exported data backups (optional - uncomment if you don't want to commit)
+# tfl-workspace-*.json
+# data.json
+
+# Vercel
+.vercel
+.env
+.env.local
+.env.*.local
+
+# Build outputs (ไม่มีในโปรเจกต์นี้แต่กันไว้)
+dist/
+build/
