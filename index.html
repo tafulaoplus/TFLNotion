@@ -204,10 +204,10 @@
   --ws-c3: #1e293b;
   --ws-c4: #a78bfa;
 }
-.ws-logo{height:40px;width:auto;flex-shrink:0;transition:filter .25s ease}
+.ws-logo{height:48px;width:auto;flex-shrink:0;transition:filter .25s ease}
 [data-theme="dark"] .ws-logo{filter:drop-shadow(0 0 14px rgba(167,139,250,.35))}
 @media (max-width:680px){
-  .ws-logo{height:32px}
+  .ws-logo{height:36px}
 }
 
 /* ===== IMPORT PROGRESS MODAL ===== */
@@ -3167,18 +3167,18 @@ function topbarFB(label, sub, actions=''){
 }
 
 function topbarWS(label, sub, actions=''){
-  const logo = `<svg class="ws-logo" viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" aria-label="WORKSPACE">
+  const logo = `<svg class="ws-logo" viewBox="0 0 1180 290" xmlns="http://www.w3.org/2000/svg" aria-label="WORKSPACE" preserveAspectRatio="xMidYMid meet">
     <defs>
       <linearGradient id="wsGrad" x1="0%" y1="0%" x2="0%" y2="100%">
         <stop offset="0%" stop-color="var(--ws-c1)"/>
         <stop offset="100%" stop-color="var(--ws-c2)"/>
       </linearGradient>
     </defs>
-    <text x="0" y="190" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="230" letter-spacing="-10" fill="url(#wsGrad)">WORK</text>
-    <rect x="678" y="34" width="208" height="108" rx="14" fill="var(--ws-c3)"/>
-    <rect x="678" y="156" width="126" height="38" rx="10" fill="var(--ws-c3)"/>
-    <rect x="814" y="156" width="72" height="38" rx="10" fill="var(--ws-c4)"/>
-    <text x="676" y="248" font-family="Inter,system-ui,Arial,sans-serif" font-weight="800" font-size="56" letter-spacing="6" fill="var(--ws-c2)">SPACE</text>
+    <text x="20" y="220" textLength="780" lengthAdjust="spacingAndGlyphs" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="230" fill="url(#wsGrad)">WORK</text>
+    <rect x="850" y="40" width="260" height="118" rx="18" fill="var(--ws-c3)"/>
+    <rect x="850" y="172" width="156" height="44" rx="12" fill="var(--ws-c3)"/>
+    <rect x="1018" y="172" width="92" height="44" rx="12" fill="var(--ws-c4)"/>
+    <text x="848" y="272" textLength="262" lengthAdjust="spacingAndGlyphs" font-family="Inter,system-ui,Arial,sans-serif" font-weight="800" font-size="60" fill="var(--ws-c2)">SPACE</text>
   </svg>`;
   return `<div class="topbar">
     <div class="topbar-title">
