@@ -289,6 +289,87 @@
   .lib-logo{height:38px}
 }
 
+/* ===== DOCS (เอกสาร) brand logo ===== */
+:root {
+  --doc-p1:    #fde68a;
+  --doc-p2:    #93c5fd;
+  --doc-p3:    #6ee7b7;
+  --doc-edge1: #f59e0b;
+  --doc-edge2: #2563eb;
+  --doc-edge3: #059669;
+  --doc-pen:   #ef4444;
+  --doc-text:  #0f172a;
+  --doc-acc:   #2563eb;
+}
+[data-theme="dark"] {
+  --doc-p1:    #fcd34d;
+  --doc-p2:    #93c5fd;
+  --doc-p3:    #6ee7b7;
+  --doc-edge1: #fbbf24;
+  --doc-edge2: #60a5fa;
+  --doc-edge3: #34d399;
+  --doc-pen:   #f87171;
+  --doc-text:  #f1f5f9;
+  --doc-acc:   #60a5fa;
+}
+.doc-logo{height:50px;width:auto;flex-shrink:0;transition:filter .25s ease}
+[data-theme="dark"] .doc-logo{filter:drop-shadow(0 0 14px rgba(96,165,250,.3))}
+@media (max-width:680px){
+  .doc-logo{height:38px}
+}
+
+/* ===== TRACK (ติดตามงาน) brand logo ===== */
+:root {
+  --tr-pad:    #fef3c7;
+  --tr-clip:   #4b5563;
+  --tr-check:  #10b981;
+  --tr-bar:    #3b82f6;
+  --tr-bar-bg: #e2e8f0;
+  --tr-dot:    #ef4444;
+  --tr-text:   #0f172a;
+  --tr-acc:    #10b981;
+}
+[data-theme="dark"] {
+  --tr-pad:    #fde68a;
+  --tr-clip:   #9ca3af;
+  --tr-check:  #34d399;
+  --tr-bar:    #60a5fa;
+  --tr-bar-bg: #334155;
+  --tr-dot:    #f87171;
+  --tr-text:   #f1f5f9;
+  --tr-acc:    #34d399;
+}
+.tr-logo{height:50px;width:auto;flex-shrink:0;transition:filter .25s ease}
+[data-theme="dark"] .tr-logo{filter:drop-shadow(0 0 14px rgba(52,211,153,.3))}
+@media (max-width:680px){
+  .tr-logo{height:38px}
+}
+
+/* ===== MY TASKS (งานของฉัน) brand logo ===== */
+:root {
+  --mt-c1:    #fbbf24;
+  --mt-c2:    #ec4899;
+  --mt-c3:    #8b5cf6;
+  --mt-c4:    #14b8a6;
+  --mt-chk:   #10b981;
+  --mt-text:  #0f172a;
+  --mt-acc:   #8b5cf6;
+}
+[data-theme="dark"] {
+  --mt-c1:    #fcd34d;
+  --mt-c2:    #f472b6;
+  --mt-c3:    #a78bfa;
+  --mt-c4:    #2dd4bf;
+  --mt-chk:   #34d399;
+  --mt-text:  #f1f5f9;
+  --mt-acc:   #a78bfa;
+}
+.mt-logo{height:50px;width:auto;flex-shrink:0;transition:filter .25s ease}
+[data-theme="dark"] .mt-logo{filter:drop-shadow(0 0 14px rgba(167,139,250,.3))}
+@media (max-width:680px){
+  .mt-logo{height:38px}
+}
+
 /* ===== IMPORT PROGRESS MODAL ===== */
 .import-modal{background:#fff;border-radius:18px;width:560px;max-width:95vw;max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(17,24,39,.25);border:1px solid var(--border);animation:modalIn .25s ease}
 .import-hd{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
@@ -3240,6 +3321,116 @@ function topbarFB(label, sub, actions=''){
           <span class="sun-i">${I.sun}</span>
           <span class="moon-i">${I.moon}</span>
         </span>
+      </button>
+    </div>
+  </div>`;
+}
+
+function topbarDoc(label, sub, actions=''){
+  const logo = `<svg class="doc-logo" viewBox="0 0 820 460" xmlns="http://www.w3.org/2000/svg" aria-label="DOCS">
+    <g transform="rotate(-8 110 230)">
+      <path d="M40 60 H180 L220 100 V400 H40 Z" fill="var(--doc-p1)" stroke="var(--doc-edge1)" stroke-width="10" stroke-linejoin="round"/>
+      <path d="M180 60 V100 H220" fill="none" stroke="var(--doc-edge1)" stroke-width="10" stroke-linejoin="round"/>
+      <line x1="70" y1="160" x2="190" y2="160" stroke="var(--doc-edge1)" stroke-width="8" stroke-linecap="round"/>
+      <line x1="70" y1="200" x2="190" y2="200" stroke="var(--doc-edge1)" stroke-width="8" stroke-linecap="round"/>
+      <line x1="70" y1="240" x2="160" y2="240" stroke="var(--doc-edge1)" stroke-width="8" stroke-linecap="round"/>
+    </g>
+    <g transform="rotate(4 200 230)">
+      <path d="M150 40 H290 L330 80 V380 H150 Z" fill="var(--doc-p2)" stroke="var(--doc-edge2)" stroke-width="10" stroke-linejoin="round"/>
+      <path d="M290 40 V80 H330" fill="none" stroke="var(--doc-edge2)" stroke-width="10" stroke-linejoin="round"/>
+      <line x1="180" y1="140" x2="300" y2="140" stroke="var(--doc-edge2)" stroke-width="8" stroke-linecap="round"/>
+      <line x1="180" y1="180" x2="300" y2="180" stroke="var(--doc-edge2)" stroke-width="8" stroke-linecap="round"/>
+      <line x1="180" y1="220" x2="270" y2="220" stroke="var(--doc-edge2)" stroke-width="8" stroke-linecap="round"/>
+    </g>
+    <path d="M280 70 L330 50 L350 110 L300 130 Z" fill="var(--doc-pen)"/>
+    <text x="380" y="200" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="140" letter-spacing="-4" fill="var(--doc-text)">DOCS</text>
+    <text x="380" y="340" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="140" letter-spacing="-4" fill="var(--doc-acc)">HUB</text>
+  </svg>`;
+  return `<div class="topbar">
+    <div class="topbar-title">
+      <div class="fb-brand">
+        ${logo}
+        <div class="fb-brand-sub">
+          <div class="fb-brand-label">${label||''}</div>
+          ${sub?`<div class="fb-brand-meta">${sub}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      ${actions}
+      <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
+        <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+        <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+      </button>
+    </div>
+  </div>`;
+}
+
+function topbarTrack(label, sub, actions=''){
+  const logo = `<svg class="tr-logo" viewBox="0 0 820 460" xmlns="http://www.w3.org/2000/svg" aria-label="TRACK">
+    <rect x="40" y="60" width="280" height="360" rx="20" fill="var(--tr-pad)" stroke="var(--tr-clip)" stroke-width="10"/>
+    <rect x="130" y="30" width="100" height="50" rx="14" fill="var(--tr-clip)"/>
+    <rect x="80" y="140" width="36" height="36" rx="8" fill="none" stroke="var(--tr-check)" stroke-width="8"/>
+    <polyline points="88,158 100,170 124,142" fill="none" stroke="var(--tr-check)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="130" y="148" width="160" height="14" rx="7" fill="var(--tr-clip)" opacity=".7"/>
+    <rect x="80" y="210" width="36" height="36" rx="8" fill="none" stroke="var(--tr-check)" stroke-width="8"/>
+    <polyline points="88,228 100,240 124,212" fill="none" stroke="var(--tr-check)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="130" y="218" width="140" height="14" rx="7" fill="var(--tr-clip)" opacity=".7"/>
+    <rect x="80" y="280" width="36" height="36" rx="8" fill="none" stroke="var(--tr-dot)" stroke-width="8"/>
+    <rect x="130" y="288" width="120" height="14" rx="7" fill="var(--tr-clip)" opacity=".5"/>
+    <rect x="80" y="350" width="220" height="18" rx="9" fill="var(--tr-bar-bg)"/>
+    <rect x="80" y="350" width="140" height="18" rx="9" fill="var(--tr-bar)"/>
+    <text x="370" y="200" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="140" letter-spacing="-4" fill="var(--tr-text)">TASK</text>
+    <text x="370" y="340" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="140" letter-spacing="-4" fill="var(--tr-acc)">FLOW</text>
+  </svg>`;
+  return `<div class="topbar">
+    <div class="topbar-title">
+      <div class="fb-brand">
+        ${logo}
+        <div class="fb-brand-sub">
+          <div class="fb-brand-label">${label||''}</div>
+          ${sub?`<div class="fb-brand-meta">${sub}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      ${actions}
+      <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
+        <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+        <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+      </button>
+    </div>
+  </div>`;
+}
+
+function topbarMyTask(label, sub, actions=''){
+  const logo = `<svg class="mt-logo" viewBox="0 0 820 460" xmlns="http://www.w3.org/2000/svg" aria-label="MY TASKS">
+    <rect x="30"  y="60"  width="100" height="120" rx="14" fill="var(--mt-c1)"/>
+    <rect x="140" y="60"  width="100" height="120" rx="14" fill="var(--mt-c2)"/>
+    <rect x="250" y="60"  width="100" height="120" rx="14" fill="var(--mt-c3)"/>
+    <rect x="30"  y="200" width="100" height="120" rx="14" fill="var(--mt-c4)"/>
+    <rect x="140" y="200" width="210" height="120" rx="14" fill="var(--mt-c2)" opacity=".55"/>
+    <circle cx="195" cy="260" r="32" fill="#fff"/>
+    <polyline points="178,260 192,274 216,248" fill="none" stroke="var(--mt-chk)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="30"  y="340" width="320" height="20" rx="10" fill="var(--mt-c3)" opacity=".4"/>
+    <text x="380" y="200" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="140" letter-spacing="-4" fill="var(--mt-text)">MY</text>
+    <text x="380" y="340" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="140" letter-spacing="-4" fill="var(--mt-acc)">TASKS</text>
+  </svg>`;
+  return `<div class="topbar">
+    <div class="topbar-title">
+      <div class="fb-brand">
+        ${logo}
+        <div class="fb-brand-sub">
+          <div class="fb-brand-label">${label||''}</div>
+          ${sub?`<div class="fb-brand-meta">${sub}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      ${actions}
+      <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
+        <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+        <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
       </button>
     </div>
   </div>`;
@@ -7383,7 +7574,7 @@ function renderFiles(el){
     <input type="file" id="fileInput" multiple style="display:none" onchange="uploadFiles(this.files);this.value=''">` :
     `<button class="btn-primary" onclick="${configured?'startDriveSignIn()':'openDriveSetup()'}">${I.cloud} ${configured?'เข้าสู่ระบบ':'ตั้งค่า Drive'}</button>`;
 
-  el.innerHTML = topbarWS('เอกสาร', signedIn?`${driveFiles.length} ไฟล์ใน Drive · ${formatBytes(totalSize)}`:'เชื่อม Google Drive เพื่อจัดการไฟล์', actions) + `
+  el.innerHTML = topbarDoc('เอกสาร', signedIn?`${driveFiles.length} ไฟล์ใน Drive · ${formatBytes(totalSize)}`:'เชื่อม Google Drive เพื่อจัดการไฟล์', actions) + `
   <div class="page-content" id="filesPage">
     ${connectionPanel}
 
@@ -7501,7 +7692,7 @@ function renderTaskBoard(el){
   const actions = `
     <div class="search-wrap">${I.search}<input class="search-inp" placeholder="ค้นหางาน..." id="boardSearch" oninput="boardSearch(this.value)"></div>
     ${isAdmin?`<button class="btn-primary" onclick="openNewTask('todo')">${I.plus} งานใหม่</button>`:''}`;
-  el.innerHTML = topbarWS('ติดตามงาน TFL+', 'งานประจำวันของ TFL+', actions) + `
+  el.innerHTML = topbarTrack('ติดตามงาน TFL+', 'งานประจำวันของ TFL+', actions) + `
   <div class="page-content" style="max-width:none">
     <div class="view-tabs">
       <div class="view-tab ${currentBoardTab==='all'?'active':''}" onclick="switchBoardTab('all')">${I.star} งานทั้งหมด</div>
@@ -8233,7 +8424,7 @@ function toggleChecklist(id){
 function renderMyTasks(el){
   const mine=tasks.filter(t=>t.assignees.includes(currentUser.id));
   const actions = `<button class="btn-primary" onclick="openNewTask('todo')">${I.plus} งานใหม่</button>`;
-  el.innerHTML = topbarWS('งานของฉัน', `${mine.length} งานทั้งหมด`, actions) + `
+  el.innerHTML = topbarMyTask('งานของฉัน', `${mine.length} งานทั้งหมด`, actions) + `
   <div class="page-content">
     <div class="filter-row" id="mf">
       <div class="filter-tag active" data-filter="all" onclick="filterMine('all',this)">ทั้งหมด (${mine.length})</div>
