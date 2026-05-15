@@ -370,6 +370,62 @@
   .mt-logo{height:38px}
 }
 
+/* ===== ALL TASKS (งานทั้งหมด) brand logo ===== */
+:root {
+  --at-row1:  #fde68a;
+  --at-row2:  #bfdbfe;
+  --at-row3:  #fecaca;
+  --at-row4:  #c7d2fe;
+  --at-tag1:  #f59e0b;
+  --at-tag2:  #3b82f6;
+  --at-tag3:  #ef4444;
+  --at-tag4:  #6366f1;
+  --at-text:  #0f172a;
+  --at-acc:   #f59e0b;
+}
+[data-theme="dark"] {
+  --at-row1:  #fcd34d;
+  --at-row2:  #93c5fd;
+  --at-row3:  #fca5a5;
+  --at-row4:  #a5b4fc;
+  --at-tag1:  #fbbf24;
+  --at-tag2:  #60a5fa;
+  --at-tag3:  #f87171;
+  --at-tag4:  #818cf8;
+  --at-text:  #f1f5f9;
+  --at-acc:   #fbbf24;
+}
+.at-logo{height:50px;width:auto;flex-shrink:0;transition:filter .25s ease}
+[data-theme="dark"] .at-logo{filter:drop-shadow(0 0 14px rgba(251,191,36,.28))}
+@media (max-width:680px){
+  .at-logo{height:38px}
+}
+
+/* ===== TEAM (จัดการสมาชิก) brand logo ===== */
+:root {
+  --tm-a1:    #f59e0b;
+  --tm-a2:    #3b82f6;
+  --tm-a3:    #ec4899;
+  --tm-a4:    #10b981;
+  --tm-ring:  #fff;
+  --tm-text:  #0f172a;
+  --tm-acc:   #ec4899;
+}
+[data-theme="dark"] {
+  --tm-a1:    #fbbf24;
+  --tm-a2:    #60a5fa;
+  --tm-a3:    #f472b6;
+  --tm-a4:    #34d399;
+  --tm-ring:  #0f172a;
+  --tm-text:  #f1f5f9;
+  --tm-acc:   #f472b6;
+}
+.tm-logo{height:50px;width:auto;flex-shrink:0;transition:filter .25s ease}
+[data-theme="dark"] .tm-logo{filter:drop-shadow(0 0 14px rgba(244,114,182,.3))}
+@media (max-width:680px){
+  .tm-logo{height:38px}
+}
+
 /* ===== IMPORT PROGRESS MODAL ===== */
 .import-modal{background:#fff;border-radius:18px;width:560px;max-width:95vw;max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(17,24,39,.25);border:1px solid var(--border);animation:modalIn .25s ease}
 .import-hd{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
@@ -3321,6 +3377,80 @@ function topbarFB(label, sub, actions=''){
           <span class="sun-i">${I.sun}</span>
           <span class="moon-i">${I.moon}</span>
         </span>
+      </button>
+    </div>
+  </div>`;
+}
+
+function topbarAllTasks(label, sub, actions=''){
+  const logo = `<svg class="at-logo" viewBox="0 0 820 460" xmlns="http://www.w3.org/2000/svg" aria-label="ALL TASKS">
+    <rect x="30" y="50"  width="320" height="72" rx="14" fill="var(--at-row1)"/>
+    <rect x="48" y="74"  width="28"  height="28" rx="8" fill="var(--at-tag1)"/>
+    <rect x="92" y="78"  width="180" height="10" rx="5" fill="var(--at-tag1)" opacity=".75"/>
+    <rect x="92" y="96"  width="120" height="10" rx="5" fill="var(--at-tag1)" opacity=".45"/>
+    <rect x="30" y="140" width="320" height="72" rx="14" fill="var(--at-row2)"/>
+    <rect x="48" y="164" width="28"  height="28" rx="8" fill="var(--at-tag2)"/>
+    <rect x="92" y="168" width="200" height="10" rx="5" fill="var(--at-tag2)" opacity=".75"/>
+    <rect x="92" y="186" width="140" height="10" rx="5" fill="var(--at-tag2)" opacity=".45"/>
+    <rect x="30" y="230" width="320" height="72" rx="14" fill="var(--at-row3)"/>
+    <rect x="48" y="254" width="28"  height="28" rx="8" fill="var(--at-tag3)"/>
+    <rect x="92" y="258" width="160" height="10" rx="5" fill="var(--at-tag3)" opacity=".75"/>
+    <rect x="92" y="276" width="110" height="10" rx="5" fill="var(--at-tag3)" opacity=".45"/>
+    <rect x="30" y="320" width="320" height="72" rx="14" fill="var(--at-row4)"/>
+    <rect x="48" y="344" width="28"  height="28" rx="8" fill="var(--at-tag4)"/>
+    <rect x="92" y="348" width="190" height="10" rx="5" fill="var(--at-tag4)" opacity=".75"/>
+    <rect x="92" y="366" width="130" height="10" rx="5" fill="var(--at-tag4)" opacity=".45"/>
+    <text x="380" y="200" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="140" letter-spacing="-4" fill="var(--at-text)">ALL</text>
+    <text x="380" y="340" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="140" letter-spacing="-4" fill="var(--at-acc)">TASKS</text>
+  </svg>`;
+  return `<div class="topbar">
+    <div class="topbar-title">
+      <div class="fb-brand">
+        ${logo}
+        <div class="fb-brand-sub">
+          <div class="fb-brand-label">${label||''}</div>
+          ${sub?`<div class="fb-brand-meta">${sub}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      ${actions}
+      <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
+        <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+        <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+      </button>
+    </div>
+  </div>`;
+}
+
+function topbarTeam(label, sub, actions=''){
+  const logo = `<svg class="tm-logo" viewBox="0 0 820 460" xmlns="http://www.w3.org/2000/svg" aria-label="TEAM">
+    <circle cx="100" cy="160" r="68" fill="var(--tm-a1)" stroke="var(--tm-ring)" stroke-width="10"/>
+    <text x="100" y="186" text-anchor="middle" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="70" fill="#fff">T</text>
+    <circle cx="220" cy="160" r="68" fill="var(--tm-a2)" stroke="var(--tm-ring)" stroke-width="10"/>
+    <text x="220" y="186" text-anchor="middle" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="70" fill="#fff">N</text>
+    <circle cx="160" cy="290" r="68" fill="var(--tm-a3)" stroke="var(--tm-ring)" stroke-width="10"/>
+    <text x="160" y="316" text-anchor="middle" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="70" fill="#fff">P</text>
+    <circle cx="290" cy="290" r="68" fill="var(--tm-a4)" stroke="var(--tm-ring)" stroke-width="10"/>
+    <text x="290" y="316" text-anchor="middle" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="70" fill="#fff">V</text>
+    <text x="400" y="200" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="140" letter-spacing="-4" fill="var(--tm-text)">TEAM</text>
+    <text x="400" y="340" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="140" letter-spacing="-4" fill="var(--tm-acc)">HUB</text>
+  </svg>`;
+  return `<div class="topbar">
+    <div class="topbar-title">
+      <div class="fb-brand">
+        ${logo}
+        <div class="fb-brand-sub">
+          <div class="fb-brand-label">${label||''}</div>
+          ${sub?`<div class="fb-brand-meta">${sub}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      ${actions}
+      <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
+        <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+        <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
       </button>
     </div>
   </div>`;
@@ -8449,7 +8579,7 @@ function renderAllTasks(el){
   const actions = `
     <div class="search-wrap">${I.search}<input class="search-inp" placeholder="ค้นหางาน..." oninput="searchAll(this.value)"></div>
     <button class="btn-primary" onclick="openNewTask('todo')">${I.plus} งานใหม่</button>`;
-  el.innerHTML = topbarWS('งานทั้งหมด', `${tasks.length} งานในระบบ`, actions) + `
+  el.innerHTML = topbarAllTasks('งานทั้งหมด', `${tasks.length} งานในระบบ`, actions) + `
   <div class="page-content">
     <div class="filter-row" id="af">
       <div class="filter-tag active" data-filter="all" onclick="filterAll('all',this)">ทั้งหมด (${tasks.length})</div>
@@ -8477,7 +8607,7 @@ function searchAll(q){
 function renderMembers(el){
   if(currentMemberId){ renderMemberDetail(el, currentMemberId); return; }
   const actions = `<button class="btn-primary" onclick="openAddMemberModal('app')">${I.plus} เพิ่มสมาชิก</button>`;
-  el.innerHTML = topbarWS('จัดการสมาชิก', `${USERS.length} สมาชิกในทีม · คลิกที่การ์ดเพื่อดูงานของสมาชิก`, actions) + `
+  el.innerHTML = topbarTeam('จัดการสมาชิก', `${USERS.length} สมาชิกในทีม · คลิกที่การ์ดเพื่อดูงานของสมาชิก`, actions) + `
   <div class="page-content">
     <div class="members-grid">
       ${USERS.map(u=>{
