@@ -237,6 +237,58 @@
   .kn-logo{height:38px}
 }
 
+/* ===== DASHBOARD (ภาพรวม) brand logo ===== */
+:root {
+  --db-bar1:   #fbbf24;
+  --db-bar2:   #3b82f6;
+  --db-bar3:   #4f46e5;
+  --db-line:   #ef4444;
+  --db-dot:    #10b981;
+  --db-text:   #0f172a;
+  --db-accent: #3b82f6;
+}
+[data-theme="dark"] {
+  --db-bar1:   #fcd34d;
+  --db-bar2:   #60a5fa;
+  --db-bar3:   #818cf8;
+  --db-line:   #f87171;
+  --db-dot:    #34d399;
+  --db-text:   #f1f5f9;
+  --db-accent: #60a5fa;
+}
+.db-logo{height:50px;width:auto;flex-shrink:0;transition:filter .25s ease}
+[data-theme="dark"] .db-logo{filter:drop-shadow(0 0 14px rgba(96,165,250,.3))}
+@media (max-width:680px){
+  .db-logo{height:38px}
+}
+
+/* ===== LIBRARY (ไลบรารี) brand logo ===== */
+:root {
+  --lib-b1:    #ef4444;
+  --lib-b2:    #14b8a6;
+  --lib-b3:    #f59e0b;
+  --lib-b4:    #4f46e5;
+  --lib-b5:    #ec4899;
+  --lib-shelf: #92400e;
+  --lib-text:  #0f172a;
+  --lib-acc:   #ef4444;
+}
+[data-theme="dark"] {
+  --lib-b1:    #f87171;
+  --lib-b2:    #2dd4bf;
+  --lib-b3:    #fbbf24;
+  --lib-b4:    #818cf8;
+  --lib-b5:    #f472b6;
+  --lib-shelf: #b45309;
+  --lib-text:  #f1f5f9;
+  --lib-acc:   #f87171;
+}
+.lib-logo{height:50px;width:auto;flex-shrink:0;transition:filter .25s ease}
+[data-theme="dark"] .lib-logo{filter:drop-shadow(0 0 14px rgba(248,113,113,.28))}
+@media (max-width:680px){
+  .lib-logo{height:38px}
+}
+
 /* ===== IMPORT PROGRESS MODAL ===== */
 .import-modal{background:#fff;border-radius:18px;width:560px;max-width:95vw;max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(17,24,39,.25);border:1px solid var(--border);animation:modalIn .25s ease}
 .import-hd{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
@@ -3193,6 +3245,71 @@ function topbarFB(label, sub, actions=''){
   </div>`;
 }
 
+function topbarDash(label, sub, actions=''){
+  const logo = `<svg class="db-logo" viewBox="0 0 820 460" xmlns="http://www.w3.org/2000/svg" aria-label="DASHBOARD">
+    <rect x="20"  y="240" width="62" height="170" rx="14" fill="var(--db-bar1)"/>
+    <rect x="100" y="160" width="62" height="250" rx="14" fill="var(--db-bar2)"/>
+    <rect x="180" y="80"  width="62" height="330" rx="14" fill="var(--db-bar3)"/>
+    <polyline points="50,230 130,150 210,70 290,40" fill="none" stroke="var(--db-line)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="50"  cy="230" r="13" fill="var(--db-line)"/>
+    <circle cx="130" cy="150" r="13" fill="var(--db-line)"/>
+    <circle cx="210" cy="70"  r="13" fill="var(--db-line)"/>
+    <circle cx="290" cy="40"  r="13" fill="var(--db-dot)"/>
+    <text x="340" y="200" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="140" letter-spacing="-4" fill="var(--db-text)">DASH</text>
+    <text x="340" y="340" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="140" letter-spacing="-4" fill="var(--db-accent)">BOARD</text>
+  </svg>`;
+  return `<div class="topbar">
+    <div class="topbar-title">
+      <div class="fb-brand">
+        ${logo}
+        <div class="fb-brand-sub">
+          <div class="fb-brand-label">${label||''}</div>
+          ${sub?`<div class="fb-brand-meta">${sub}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      ${actions}
+      <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
+        <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+        <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+      </button>
+    </div>
+  </div>`;
+}
+
+function topbarLib(label, sub, actions=''){
+  const logo = `<svg class="lib-logo" viewBox="0 0 820 460" xmlns="http://www.w3.org/2000/svg" aria-label="LIBRARY">
+    <rect x="20"  y="60"  width="52" height="320" rx="8" fill="var(--lib-b1)"/>
+    <rect x="82"  y="100" width="52" height="280" rx="8" fill="var(--lib-b2)"/>
+    <rect x="144" y="40"  width="52" height="340" rx="8" fill="var(--lib-b3)"/>
+    <rect x="206" y="80"  width="52" height="300" rx="8" fill="var(--lib-b4)"/>
+    <g transform="rotate(14 300 220)">
+      <rect x="270" y="90" width="52" height="280" rx="8" fill="var(--lib-b5)"/>
+    </g>
+    <rect x="10" y="390" width="340" height="22" rx="6" fill="var(--lib-shelf)"/>
+    <text x="380" y="270" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="155" letter-spacing="-4" fill="var(--lib-text)">LIBR<tspan fill="var(--lib-acc)">ARY</tspan></text>
+  </svg>`;
+  return `<div class="topbar">
+    <div class="topbar-title">
+      <div class="fb-brand">
+        ${logo}
+        <div class="fb-brand-sub">
+          <div class="fb-brand-label">${label||''}</div>
+          ${sub?`<div class="fb-brand-meta">${sub}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      ${actions}
+      <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
+        <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+        <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+      </button>
+    </div>
+  </div>`;
+}
+
 function topbarNote(label, sub, actions=''){
   const logo = `<svg class="kn-logo" viewBox="0 0 720 460" xmlns="http://www.w3.org/2000/svg" aria-label="KEEP NOTE APP">
     <rect x="20"  y="20"  width="100" height="100" rx="18" fill="var(--kn-orange)"/>
@@ -3328,7 +3445,7 @@ function renderDashboard(el){
   const allDone=tasks.filter(t=>t.status==='done').length;
   const pct = mine.length ? Math.round(myDone/mine.length*100) : 0;
 
-  el.innerHTML = topbarWS('ภาพรวม', `วันนี้ ${new Date().toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'})}`) + `
+  el.innerHTML = topbarDash('ภาพรวม', `วันนี้ ${new Date().toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'})}`) + `
   <div class="page-content">
     <div class="page-head">
       <div class="page-title">สวัสดี ${currentUser.name}</div>
@@ -3430,7 +3547,7 @@ function renderLibrary(el){
   const actions = `
     <div class="search-wrap">${I.search}<input class="search-inp" placeholder="ค้นหาเอกสาร..." oninput="filterDocs(this.value)"></div>
     ${isAdmin?`<button class="btn-primary" onclick="openDocModal()">${I.plus} หน้าใหม่</button>`:''}`;
-  el.innerHTML = topbarWS('ไลบรารี', `${documents.length} เอกสารทั้งหมด`, actions) + `
+  el.innerHTML = topbarLib('ไลบรารี', `${documents.length} เอกสารทั้งหมด`, actions) + `
   <div class="page-content">
     <div class="view-tabs">
       <div class="view-tab active">${I.folder} พื้นที่ทำงานของทีม</div>
