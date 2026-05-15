@@ -210,6 +210,33 @@
   .ws-logo{height:36px}
 }
 
+/* ===== KEEP NOTE APP brand logo ===== */
+:root {
+  --kn-orange: #f59e0b;
+  --kn-blue:   #3b82f6;
+  --kn-red:    #ef4444;
+  --kn-indigo: #4f46e5;
+  --kn-dark:   #0f172a;
+  --kn-teal:   #38bdf8;
+  --kn-text:   #0f172a;
+  --kn-accent: #f59e0b;
+}
+[data-theme="dark"] {
+  --kn-orange: #fbbf24;
+  --kn-blue:   #60a5fa;
+  --kn-red:    #f87171;
+  --kn-indigo: #818cf8;
+  --kn-dark:   #e5e7eb;
+  --kn-teal:   #67e8f9;
+  --kn-text:   #f1f5f9;
+  --kn-accent: #fbbf24;
+}
+.kn-logo{height:50px;width:auto;flex-shrink:0;transition:filter .25s ease}
+[data-theme="dark"] .kn-logo{filter:drop-shadow(0 0 14px rgba(251,191,36,.25))}
+@media (max-width:680px){
+  .kn-logo{height:38px}
+}
+
 /* ===== IMPORT PROGRESS MODAL ===== */
 .import-modal{background:#fff;border-radius:18px;width:560px;max-width:95vw;max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(17,24,39,.25);border:1px solid var(--border);animation:modalIn .25s ease}
 .import-hd{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
@@ -3166,6 +3193,46 @@ function topbarFB(label, sub, actions=''){
   </div>`;
 }
 
+function topbarNote(label, sub, actions=''){
+  const logo = `<svg class="kn-logo" viewBox="0 0 720 460" xmlns="http://www.w3.org/2000/svg" aria-label="KEEP NOTE APP">
+    <rect x="20"  y="20"  width="100" height="100" rx="18" fill="var(--kn-orange)"/>
+    <rect x="140" y="20"  width="130" height="100" rx="18" fill="var(--kn-blue)"/>
+    <rect x="20"  y="140" width="100" height="100" rx="18" fill="var(--kn-red)"/>
+    <rect x="140" y="140" width="130" height="100" rx="18" fill="var(--kn-indigo)"/>
+    <rect x="296" y="20"  width="44"  height="120" rx="22" fill="var(--kn-dark)"/>
+    <rect x="296" y="160" width="44"  height="180" rx="22" fill="var(--kn-orange)"/>
+    <rect x="20"  y="270" width="320" height="22" rx="11" fill="var(--kn-teal)"/>
+    <rect x="20"  y="310" width="260" height="22" rx="11" fill="var(--kn-teal)" opacity=".75"/>
+    <text x="390" y="135" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="115" letter-spacing="-3" fill="var(--kn-text)">KEEP</text>
+    <text x="390" y="252" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="115" letter-spacing="-3" fill="var(--kn-text)">NOTE</text>
+    <text x="390" y="369" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="115" letter-spacing="-3" fill="var(--kn-accent)">APP</text>
+  </svg>`;
+  return `<div class="topbar">
+    <div class="topbar-title">
+      <div class="fb-brand">
+        ${logo}
+        <div class="fb-brand-sub">
+          <div class="fb-brand-label">${label||''}</div>
+          ${sub?`<div class="fb-brand-meta">${sub}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      ${actions}
+      <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
+        <span class="theme-toggle-icons">
+          <span class="sun-i">${I.sun}</span>
+          <span class="moon-i">${I.moon}</span>
+        </span>
+        <span class="theme-toggle-thumb">
+          <span class="sun-i">${I.sun}</span>
+          <span class="moon-i">${I.moon}</span>
+        </span>
+      </button>
+    </div>
+  </div>`;
+}
+
 function topbarWS(label, sub, actions=''){
   const logo = `<svg class="ws-logo" viewBox="0 0 1180 290" xmlns="http://www.w3.org/2000/svg" aria-label="WORKSPACE" preserveAspectRatio="xMidYMid meet">
     <defs>
@@ -3456,7 +3523,7 @@ function renderNotes(el){
 
   const actions = `<div class="search-wrap">${I.search}<input class="search-inp" placeholder="ค้นหาโน้ต..." oninput="searchNotes(this.value)"></div>`;
 
-  el.innerHTML = topbarWS('Note', `${totalCount} โน้ตของคุณ`, actions) + `
+  el.innerHTML = topbarNote('Note', `${totalCount} โน้ตของคุณ`, actions) + `
   <div class="notes-page">
     <div class="note-input-wrap">
       <div class="note-input" id="quickNoteInput">
