@@ -1,0 +1,19 @@
+{
+  "name": "tfl-workspace",
+  "version": "1.0.0",
+  "description": "TFL+ Workspace — Task management + Live analytics",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "init-db": "node scripts/init-db.mjs",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.4",
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
