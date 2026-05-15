@@ -426,6 +426,45 @@
   .tm-logo{height:38px}
 }
 
+/* ===== NOTIFICATION SYSTEM ===== */
+.notif-btn{position:relative;background:transparent;border:1px solid var(--border-2);border-radius:10px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t1);transition:background .15s ease,border-color .15s ease;flex-shrink:0}
+.notif-btn:hover{background:var(--bg-hover);border-color:var(--brand)}
+.notif-btn svg{width:18px;height:18px}
+.notif-badge{position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;border-radius:10px;min-width:18px;height:18px;padding:0 5px;font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;line-height:1;box-shadow:0 0 0 2px var(--bg);font-feature-settings:'tnum'}
+.notif-panel{position:fixed;top:64px;right:14px;width:380px;max-width:calc(100vw - 28px);max-height:min(560px, calc(100vh - 100px));background:var(--bg);border:1px solid var(--border-2);border-radius:14px;box-shadow:0 14px 40px rgba(17,24,39,.15);z-index:9000;display:none;flex-direction:column;overflow:hidden;animation:notifIn .18s ease}
+.notif-panel.show{display:flex}
+@keyframes notifIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.notif-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
+.notif-head h3{margin:0;font-size:15px;font-weight:700;color:var(--t1)}
+.notif-head-actions{display:flex;gap:6px}
+.notif-head-actions button{background:none;border:none;color:var(--t2);font-size:12px;padding:4px 8px;border-radius:6px;cursor:pointer}
+.notif-head-actions button:hover{background:var(--bg-hover);color:var(--t1)}
+.notif-list{overflow-y:auto;flex:1;padding:6px 0}
+.notif-empty{text-align:center;color:var(--t2);font-size:13px;padding:36px 18px}
+.notif-item{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .12s ease;position:relative}
+.notif-item:hover{background:var(--bg-hover)}
+.notif-item.unread{background:rgba(59,130,246,.06)}
+.notif-item.unread::before{content:'';position:absolute;left:5px;top:20px;width:6px;height:6px;background:#3b82f6;border-radius:50%}
+.notif-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;background:var(--bg-hover)}
+.notif-icon.deadline{background:#fef3c7;color:#b45309}
+.notif-icon.overdue{background:#fee2e2;color:#dc2626}
+.notif-icon.assigned{background:#dbeafe;color:#1d4ed8}
+.notif-icon.live{background:#f3e8ff;color:#7c3aed}
+[data-theme="dark"] .notif-icon.deadline{background:rgba(251,191,36,.2);color:#fbbf24}
+[data-theme="dark"] .notif-icon.overdue{background:rgba(248,113,113,.2);color:#f87171}
+[data-theme="dark"] .notif-icon.assigned{background:rgba(96,165,250,.2);color:#60a5fa}
+[data-theme="dark"] .notif-icon.live{background:rgba(167,139,250,.2);color:#a78bfa}
+.notif-body{flex:1;min-width:0}
+.notif-title{font-size:13.5px;font-weight:700;color:var(--t1);margin-bottom:2px}
+.notif-text{font-size:12.5px;color:var(--t2);line-height:1.4;word-break:break-word}
+.notif-time{font-size:11px;color:var(--t2);opacity:.7;margin-top:4px}
+.notif-del{background:none;border:none;color:var(--t2);font-size:18px;cursor:pointer;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;padding:0;opacity:0;transition:opacity .15s ease}
+.notif-item:hover .notif-del{opacity:1}
+.notif-del:hover{background:var(--bg-hover);color:var(--t1)}
+@media (max-width:680px){
+  .notif-panel{right:8px;left:8px;width:auto;top:60px}
+}
+
 /* ===== IMPORT PROGRESS MODAL ===== */
 .import-modal{background:#fff;border-radius:18px;width:560px;max-width:95vw;max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(17,24,39,.25);border:1px solid var(--border);animation:modalIn .25s ease}
 .import-hd{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
@@ -1359,6 +1398,16 @@ svg{display:block;flex-shrink:0}
 <div id="app">
   <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">☰</button>
   <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
+  <div class="notif-panel" id="notifPanel" onclick="event.stopPropagation()">
+    <div class="notif-head">
+      <h3>การแจ้งเตือน</h3>
+      <div class="notif-head-actions">
+        <button onclick="markAllNotifsRead()">อ่านทั้งหมด</button>
+        <button onclick="clearAllMyNotifs()">ล้างทั้งหมด</button>
+      </div>
+    </div>
+    <div class="notif-list" id="notifList"></div>
+  </div>
   <div class="app-layout">
     <div class="sidebar" id="appSidebar">
       <div class="sb-brand">
@@ -1989,6 +2038,10 @@ let documents = [
 ];
 
 let currentUser = null;
+let notifications = [];
+let nextNotifId = 1;
+let notifCheckTimer = null;
+let _notifPermAsked = false;
 let editTaskId = null;
 let currentView = 'dashboard';
 let currentBoardTab = 'all';
@@ -2171,6 +2224,12 @@ function applyRemoteWorkspace(data){
   if(data.columnWidths) Object.assign(columnWidths, data.columnWidths);
   if(Number.isFinite(data.nextTaskId)) nextTaskId = Math.max(nextTaskId, data.nextTaskId);
   if(Number.isFinite(data.nextDocId)) nextDocId = Math.max(nextDocId, data.nextDocId);
+  if(Array.isArray(data.notifications)){
+    notifications = data.notifications;
+    const maxId = notifications.reduce((m,n)=>Math.max(m, n.id||0), 0);
+    nextNotifId = Math.max(nextNotifId, maxId + 1);
+    try { updateNotifBadge(); } catch(_){}
+  }
   saveAllLocal();
   if(currentUser){
     try { refreshDbTables(); } catch(_){}
@@ -2202,6 +2261,7 @@ function syncToNeon(){
         columnWidths: columnWidths,
         nextTaskId: nextTaskId,
         nextDocId: nextDocId,
+        notifications: notifications,
         _updatedBy: currentUser ? currentUser.name : 'unknown',
       };
       const r = await fetch(`${NEON_API}/workspace`, {
@@ -2301,6 +2361,8 @@ function saveAllLocal(){
     localStorage.setItem('tfl_nextTaskId', String(nextTaskId));
     localStorage.setItem('tfl_nextDocId', String(nextDocId));
     if(typeof liveSessions !== 'undefined') localStorage.setItem('tfl_live_sessions', JSON.stringify(liveSessions));
+    localStorage.setItem('tfl_notifications', JSON.stringify(notifications));
+    localStorage.setItem('tfl_nextNotifId', String(nextNotifId));
   } catch(e){ console.warn('Save failed:', e); }
 }
 
@@ -2331,6 +2393,12 @@ function loadAll(){
     if(maxTaskId >= nextTaskId) nextTaskId = maxTaskId + 1;
     const maxDocId = documents.reduce((m,d)=>Math.max(m, parseInt(d.id,10)||0), 0);
     if(maxDocId >= nextDocId) nextDocId = maxDocId + 1;
+    const nn = localStorage.getItem('tfl_notifications');
+    if(nn){ const arr = JSON.parse(nn); if(Array.isArray(arr)) notifications = arr; }
+    const nni = localStorage.getItem('tfl_nextNotifId');
+    if(nni) nextNotifId = Math.max(parseInt(nni,10)||1, 1);
+    const maxNotifId = notifications.reduce((m,n)=>Math.max(m, parseInt(n.id,10)||0), 0);
+    if(maxNotifId >= nextNotifId) nextNotifId = maxNotifId + 1;
   } catch(e){ console.warn('Load failed:', e); }
 }
 
@@ -2952,6 +3020,8 @@ function initApp(){
     }
   } catch(e){}
   navigateTo(startView);
+  try { requestBrowserNotifPerm(); } catch(_){}
+  try { startNotifChecker(); } catch(_){}
 }
 
 function renderSidebar(){
@@ -3276,6 +3346,7 @@ function navigateTo(id){
   const el = document.getElementById('view'+cap(id));
   if(el){ el.classList.add('active'); renderView(id,el); }
   renderSidebar();
+  try { updateNotifBadge(); } catch(_){}
   // Auto-close mobile sidebar on navigate
   if(window.innerWidth <= 980) closeSidebar();
 }
@@ -3368,6 +3439,7 @@ function topbarFB(label, sub, actions=''){
     </div>
     <div class="topbar-actions">
       ${actions}
+      ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons">
           <span class="sun-i">${I.sun}</span>
@@ -3380,6 +3452,236 @@ function topbarFB(label, sub, actions=''){
       </button>
     </div>
   </div>`;
+}
+
+// ============ NOTIFICATION SYSTEM ============
+function notifBellHTML(){
+  return `<button class="notif-btn" onclick="toggleNotifPanel(event)" title="แจ้งเตือน" type="button">
+    ${I.bell}
+    <span class="notif-badge" id="notifBadge" style="display:none">0</span>
+  </button>`;
+}
+function escapeHtmlN(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function timeAgoN(ts){
+  if(!ts) return '';
+  const diff = Date.now() - ts;
+  const sec = Math.floor(diff/1000);
+  if(sec < 60) return 'เมื่อกี้';
+  const min = Math.floor(sec/60);
+  if(min < 60) return `${min} นาทีที่แล้ว`;
+  const hr = Math.floor(min/60);
+  if(hr < 24) return `${hr} ชั่วโมงที่แล้ว`;
+  const day = Math.floor(hr/24);
+  if(day < 30) return `${day} วันที่แล้ว`;
+  const mo = Math.floor(day/30);
+  return `${mo} เดือนที่แล้ว`;
+}
+function formatDateThaiN(s){
+  if(!s) return '';
+  try {
+    const d = new Date(s);
+    if(isNaN(d.getTime())) return s;
+    return d.toLocaleDateString('th-TH', { day:'numeric', month:'short' });
+  } catch(_){ return s; }
+}
+function getMyNotifs(){
+  if(!currentUser) return [];
+  return notifications.filter(n => n.userId === currentUser.id).sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+}
+function getUnreadCount(){
+  return getMyNotifs().filter(n => !n.read).length;
+}
+function updateNotifBadge(){
+  const b = document.getElementById('notifBadge');
+  if(!b) return;
+  const count = getUnreadCount();
+  if(count > 0){
+    b.textContent = count > 99 ? '99+' : String(count);
+    b.style.display = '';
+  } else {
+    b.style.display = 'none';
+  }
+}
+function createNotif(opts){
+  const {userId, type, taskId, title, body, dedupeKey, link} = opts || {};
+  if(!userId) return;
+  if(dedupeKey && notifications.some(n => n.userId===userId && n.dedupeKey===dedupeKey)) return;
+  const notif = {
+    id: nextNotifId++,
+    userId, type: type||'info',
+    taskId: taskId||null,
+    link: link||null,
+    title: title||'',
+    body: body||'',
+    createdAt: Date.now(),
+    read: false,
+    dedupeKey: dedupeKey||null,
+  };
+  notifications.push(notif);
+  // Limit storage to last 150 notifs per user
+  const userNotifs = notifications.filter(n => n.userId === userId).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+  if(userNotifs.length > 150){
+    const removeIds = new Set(userNotifs.slice(0, userNotifs.length - 150).map(n=>n.id));
+    notifications = notifications.filter(n => !removeIds.has(n.id));
+  }
+  if(currentUser && currentUser.id === userId){
+    updateNotifBadge();
+    showBrowserNotif(title, body);
+  }
+  try { saveAllLocal(); } catch(_){}
+  try { syncToNeon(); } catch(_){}
+}
+function markNotifRead(id){
+  const n = notifications.find(x => x.id === id);
+  if(!n) return;
+  if(!n.read){ n.read = true; updateNotifBadge(); renderNotifPanel(); saveAllLocal(); syncToNeon(); }
+}
+function markAllNotifsRead(){
+  if(!currentUser) return;
+  let changed = false;
+  notifications.forEach(n => { if(n.userId===currentUser.id && !n.read){ n.read = true; changed = true; } });
+  if(changed){ updateNotifBadge(); renderNotifPanel(); saveAllLocal(); syncToNeon(); }
+}
+function clearAllMyNotifs(){
+  if(!currentUser) return;
+  if(!confirm('ลบแจ้งเตือนทั้งหมด?')) return;
+  notifications = notifications.filter(n => n.userId !== currentUser.id);
+  updateNotifBadge(); renderNotifPanel(); saveAllLocal(); syncToNeon();
+}
+function deleteNotif(id){
+  notifications = notifications.filter(n => n.id !== id);
+  updateNotifBadge(); renderNotifPanel(); saveAllLocal(); syncToNeon();
+}
+function toggleNotifPanel(ev){
+  if(ev){ ev.stopPropagation(); ev.preventDefault(); }
+  const panel = document.getElementById('notifPanel');
+  if(!panel) return;
+  const willShow = !panel.classList.contains('show');
+  panel.classList.toggle('show', willShow);
+  if(willShow){
+    renderNotifPanel();
+    setTimeout(() => {
+      document.addEventListener('click', _closeNotifOutside, { once: true });
+    }, 0);
+  }
+}
+function _closeNotifOutside(e){
+  const panel = document.getElementById('notifPanel');
+  if(panel && !panel.contains(e.target) && !e.target.closest('.notif-btn')){
+    panel.classList.remove('show');
+  }
+}
+function renderNotifPanel(){
+  const list = document.getElementById('notifList');
+  if(!list) return;
+  const items = getMyNotifs();
+  if(items.length === 0){
+    list.innerHTML = '<div class="notif-empty">ยังไม่มีแจ้งเตือน</div>';
+    return;
+  }
+  const iconMap = { assigned:'👤', deadline:'⏰', overdue:'⚠️', live:'📡', info:'🔔' };
+  list.innerHTML = items.map(n => `
+    <div class="notif-item ${n.read?'read':'unread'}" onclick="onNotifClick(${n.id})">
+      <div class="notif-icon ${escapeHtmlN(n.type)}">${iconMap[n.type]||'🔔'}</div>
+      <div class="notif-body">
+        <div class="notif-title">${escapeHtmlN(n.title)}</div>
+        <div class="notif-text">${escapeHtmlN(n.body)}</div>
+        <div class="notif-time">${timeAgoN(n.createdAt)}</div>
+      </div>
+      <button class="notif-del" onclick="event.stopPropagation(); deleteNotif(${n.id})" title="ลบ">×</button>
+    </div>`).join('');
+}
+function onNotifClick(id){
+  const n = notifications.find(x => x.id === id);
+  if(!n) return;
+  if(!n.read){ n.read = true; updateNotifBadge(); saveAllLocal(); syncToNeon(); }
+  if(n.taskId){
+    const t = tasks.find(x => x.id === n.taskId);
+    if(t){
+      const target = (currentUser && currentUser.role==='admin') ? 'allTasks' : 'myTasks';
+      navigateTo(target);
+    }
+  } else if(n.link){
+    try { navigateTo(n.link); } catch(_){}
+  }
+  const panel = document.getElementById('notifPanel');
+  if(panel) panel.classList.remove('show');
+}
+function requestBrowserNotifPerm(){
+  if(!('Notification' in window)) return;
+  if(Notification.permission === 'default' && !_notifPermAsked){
+    _notifPermAsked = true;
+    try { Notification.requestPermission(); } catch(_){}
+  }
+}
+function showBrowserNotif(title, body){
+  if(!('Notification' in window)) return;
+  if(Notification.permission !== 'granted') return;
+  if(document.hasFocus && document.hasFocus()) return;
+  try {
+    new Notification(title || 'TFL+', { body: body || '', tag: (title||'')+(body||'').slice(0,40) });
+  } catch(_){}
+}
+function checkTaskDeadlines(){
+  if(!currentUser) return;
+  const now = new Date();
+  const today = now.toISOString().slice(0,10);
+  const tomorrow = new Date(now.getTime() + 24*3600*1000).toISOString().slice(0,10);
+  tasks.forEach(t => {
+    if(!t.due || t.status === 'done') return;
+    if(!Array.isArray(t.assignees)) return;
+    t.assignees.forEach(uid => {
+      if(t.due < today){
+        createNotif({
+          userId: uid, type:'overdue', taskId: t.id,
+          title: 'งานเลยกำหนด',
+          body: `${t.emoji||'📌'} ${t.name} — กำหนด ${formatDateThaiN(t.due)}`,
+          dedupeKey: `overdue:${t.id}:${t.due}`,
+        });
+      } else if(t.due === today){
+        createNotif({
+          userId: uid, type:'deadline', taskId: t.id,
+          title: 'งานครบกำหนดวันนี้',
+          body: `${t.emoji||'📌'} ${t.name}`,
+          dedupeKey: `deadline-today:${t.id}:${t.due}`,
+        });
+      } else if(t.due === tomorrow){
+        createNotif({
+          userId: uid, type:'deadline', taskId: t.id,
+          title: 'งานครบกำหนดพรุ่งนี้',
+          body: `${t.emoji||'📌'} ${t.name}`,
+          dedupeKey: `deadline-tomorrow:${t.id}:${t.due}`,
+        });
+      }
+    });
+  });
+}
+function startNotifChecker(){
+  if(notifCheckTimer) clearInterval(notifCheckTimer);
+  checkTaskDeadlines();
+  updateNotifBadge();
+  notifCheckTimer = setInterval(() => {
+    checkTaskDeadlines();
+    updateNotifBadge();
+  }, 60000);
+}
+function notifyTaskAssigned(task, prevAssignees){
+  if(!task || !Array.isArray(task.assignees)) return;
+  const prev = new Set(prevAssignees||[]);
+  task.assignees.forEach(uid => {
+    if(prev.has(uid)) return;
+    if(currentUser && uid === currentUser.id) return;
+    const u = USERS.find(x => x.id === uid);
+    if(!u) return;
+    createNotif({
+      userId: uid, type:'assigned', taskId: task.id,
+      title: 'คุณได้รับมอบหมายงานใหม่',
+      body: `${task.emoji||'📌'} ${task.name}${task.due?` · กำหนด ${formatDateThaiN(task.due)}`:''}`,
+      dedupeKey: `assigned:${task.id}:${uid}`,
+    });
+  });
 }
 
 function topbarAllTasks(label, sub, actions=''){
@@ -3415,6 +3717,7 @@ function topbarAllTasks(label, sub, actions=''){
     </div>
     <div class="topbar-actions">
       ${actions}
+      ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
         <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -3448,6 +3751,7 @@ function topbarTeam(label, sub, actions=''){
     </div>
     <div class="topbar-actions">
       ${actions}
+      ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
         <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -3488,6 +3792,7 @@ function topbarDoc(label, sub, actions=''){
     </div>
     <div class="topbar-actions">
       ${actions}
+      ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
         <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -3525,6 +3830,7 @@ function topbarTrack(label, sub, actions=''){
     </div>
     <div class="topbar-actions">
       ${actions}
+      ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
         <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -3558,6 +3864,7 @@ function topbarMyTask(label, sub, actions=''){
     </div>
     <div class="topbar-actions">
       ${actions}
+      ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
         <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -3591,6 +3898,7 @@ function topbarDash(label, sub, actions=''){
     </div>
     <div class="topbar-actions">
       ${actions}
+      ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
         <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -3623,6 +3931,7 @@ function topbarLib(label, sub, actions=''){
     </div>
     <div class="topbar-actions">
       ${actions}
+      ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
         <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -3657,6 +3966,7 @@ function topbarNote(label, sub, actions=''){
     </div>
     <div class="topbar-actions">
       ${actions}
+      ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons">
           <span class="sun-i">${I.sun}</span>
@@ -3697,6 +4007,7 @@ function topbarWS(label, sub, actions=''){
     </div>
     <div class="topbar-actions">
       ${actions}
+      ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons">
           <span class="sun-i">${I.sun}</span>
@@ -3721,6 +4032,7 @@ function topbar(title, sub, actions=''){
     </div>
     <div class="topbar-actions">
       ${actions}
+      ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons">
           <span class="sun-i">${I.sun}</span>
@@ -8825,11 +9137,19 @@ function saveTask(){
       file: document.getElementById('fTaskFile').value || '',
       assignees: [Number.isFinite(assigneeVal) ? assigneeVal : currentUser.id],
     };
+    let savedTask;
     if(editTaskId){
       const i = tasks.findIndex(t => t.id === editTaskId);
-      if(i >= 0) tasks[i] = {...tasks[i], ...data};
+      if(i >= 0){
+        const prevAssignees = Array.isArray(tasks[i].assignees) ? [...tasks[i].assignees] : [];
+        tasks[i] = {...tasks[i], ...data};
+        savedTask = tasks[i];
+        try { notifyTaskAssigned(savedTask, prevAssignees); } catch(_){}
+      }
     } else {
-      tasks.push({id: nextTaskId++, ...data});
+      savedTask = {id: nextTaskId++, ...data};
+      tasks.push(savedTask);
+      try { notifyTaskAssigned(savedTask, []); } catch(_){}
     }
     saveAll();
     closeModal('taskModal');
