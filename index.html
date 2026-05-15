@@ -169,6 +169,58 @@
 [data-theme="dark"] .note-input .quick-placeholder{color:var(--t3)}
 [data-theme="dark"] .stat-trend{background:var(--p100);color:var(--p400)}
 
+/* ===== IMPORT PROGRESS MODAL ===== */
+.import-modal{background:#fff;border-radius:18px;width:560px;max-width:95vw;max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(17,24,39,.25);border:1px solid var(--border);animation:modalIn .25s ease}
+.import-hd{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.import-hd .title{font-size:17px;font-weight:800;display:flex;align-items:center;gap:8px}
+.import-body{padding:22px 24px}
+.import-hero-icon{width:78px;height:78px;border-radius:50%;background:var(--gradient-soft);display:flex;align-items:center;justify-content:center;color:var(--p600);margin:0 auto 14px}
+.import-hero-icon.success{background:#d1fae5;color:#059669;animation:popIn .4s cubic-bezier(.4,1.6,.6,1)}
+.import-hero-icon.warn{background:#fef3c7;color:#d97706}
+@keyframes popIn{0%{transform:scale(0)}80%{transform:scale(1.1)}100%{transform:scale(1)}}
+.import-hero-title{text-align:center;font-size:18px;font-weight:800;margin-bottom:4px;color:var(--t1)}
+.import-hero-sub{text-align:center;font-size:13px;color:var(--t2);margin-bottom:18px}
+.import-progress-wrap{margin-bottom:18px}
+.import-progress-info{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:6px}
+.import-progress-info .label{color:var(--t2)}
+.import-progress-info .pct{color:var(--p600)}
+.import-progress-bar{height:10px;background:var(--bg-soft);border-radius:100px;overflow:hidden;position:relative;box-shadow:inset 0 1px 2px rgba(0,0,0,.05)}
+.import-progress-fill{height:100%;background:linear-gradient(90deg,#8b5cf6 0%,#ec4899 50%,#8b5cf6 100%);background-size:200% 100%;border-radius:100px;transition:width .35s cubic-bezier(.4,0,.2,1);animation:gradMove 2s linear infinite;position:relative}
+.import-progress-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.4) 50%,transparent 100%);animation:shimmer 1.8s linear infinite}
+@keyframes gradMove{0%{background-position:0% 0%}100%{background-position:-200% 0%}}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.import-file-list{display:flex;flex-direction:column;gap:7px;max-height:260px;overflow-y:auto;padding-right:4px}
+.import-file-item{display:flex;align-items:center;gap:11px;padding:11px 13px;background:var(--bg-soft);border:1px solid var(--border);border-radius:10px;transition:all .2s ease}
+.import-file-item.active{background:var(--p50);border-color:var(--p200)}
+.import-file-item.done{background:#f0fdf4;border-color:#bbf7d0}
+.import-file-item.error{background:#fef2f2;border-color:#fecaca}
+.import-file-status{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:11px}
+.import-file-status.pending{background:var(--border-2);color:var(--t3)}
+.import-file-status.processing{background:var(--p100);color:var(--p600)}
+.import-file-status.processing svg{animation:spin 1.2s linear infinite}
+.import-file-status.done{background:#10b981;color:#fff}
+.import-file-status.error{background:#ef4444;color:#fff}
+.import-file-info{flex:1;min-width:0}
+.import-file-name{font-weight:700;font-size:12.5px;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.import-file-meta{font-size:11px;color:var(--t3);margin-top:2px}
+.import-file-meta .err{color:#dc2626;font-weight:600}
+.import-stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:14px 0 4px}
+.import-stat-card{padding:12px 14px;background:var(--bg-soft);border:1px solid var(--border);border-radius:10px}
+.import-stat-label{font-size:10.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.import-stat-row{display:flex;align-items:baseline;gap:6px;font-size:14px;font-weight:800;color:var(--t1)}
+.import-stat-row .arrow{color:var(--t3);font-weight:500;font-size:11px}
+.import-stat-row .new{color:var(--p600)}
+.import-stat-row .delta{font-size:11px;color:#059669;font-weight:700;background:#d1fae5;padding:1px 7px;border-radius:100px;margin-left:auto}
+.import-stat-row .delta.zero{background:var(--bg-hover);color:var(--t3)}
+.import-ft{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;background:var(--bg-soft);border-radius:0 0 18px 18px}
+
+[data-theme="dark"] .import-modal{background:var(--card)}
+[data-theme="dark"] .import-file-item{background:var(--bg-soft);border-color:var(--border)}
+[data-theme="dark"] .import-file-item.done{background:#0f2818;border-color:#1a4530}
+[data-theme="dark"] .import-file-item.error{background:#2a1517;border-color:#5a2828}
+[data-theme="dark"] .import-stat-card{background:var(--bg-soft);border-color:var(--border)}
+[data-theme="dark"] .import-ft{background:var(--bg-soft);border-color:var(--border)}
+
 /* ===== THEME TOGGLE BUTTON ===== */
 .theme-toggle{position:relative;width:62px;height:30px;background:var(--bg-soft);border:1px solid var(--border-2);border-radius:100px;cursor:pointer;display:inline-flex;align-items:center;padding:2px;flex-shrink:0;transition:all .25s ease}
 .theme-toggle:hover{border-color:var(--t4)}
@@ -999,6 +1051,18 @@ svg{display:block;flex-shrink:0}
   </div>
 </div>
 
+<!-- IMPORT PROGRESS MODAL -->
+<div class="overlay" id="importModal">
+  <div class="import-modal">
+    <div class="import-hd">
+      <div class="title" id="importHdTitle">Import ข้อมูล</div>
+      <button class="modal-close" onclick="closeImportModal()" id="importCloseBtn">×</button>
+    </div>
+    <div class="import-body" id="importBody"></div>
+    <div class="import-ft" id="importFooter"></div>
+  </div>
+</div>
+
 <!-- HIDDEN IMPORT FILE INPUT -->
 <input type="file" id="importFileInput" accept=".json,application/json" multiple style="display:none" onchange="handleImportFiles(this.files);this.value=''">
 
@@ -1589,6 +1653,10 @@ const I = {
   sun:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>',
   moon:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>',
   copy:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+  checkBig:'<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  uploadHero:'<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+  alertBig:'<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  spinSm:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2a10 10 0 0 1 10 10"/></svg>',
   pin:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>',
   palette:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>',
   edit:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
@@ -1779,6 +1847,145 @@ function syncToFirebase(){
   }, 400);
 }
 
+// ============================================================
+// NEON POSTGRES SYNC — auto-detect /api/ availability
+// ============================================================
+let neonEnabled = false;
+let neonLastUpdatedAt = null;
+let neonSyncTimer = null;
+let neonPollTimer = null;
+let neonSyncInProgress = false;
+const NEON_API = '/api';
+
+async function initNeonSync(){
+  // Skip if running on file:// (no API)
+  if(location.protocol === 'file:'){
+    console.log('[Neon] Disabled on file:// protocol');
+    return false;
+  }
+  try {
+    const r = await fetch(`${NEON_API}/health`, { cache: 'no-store' });
+    if(!r.ok) throw new Error('Health check failed: ' + r.status);
+    const data = await r.json();
+    if(!data.ok) throw new Error(data.error || 'Health not ok');
+    neonEnabled = true;
+    console.log(`[Neon] ✓ Connected to ${data.db} (${data.version})`);
+    await loadFromNeon();
+    startNeonPolling();
+    return true;
+  } catch(e){
+    console.log('[Neon] Not available — falling back to localStorage / Firebase');
+    return false;
+  }
+}
+
+async function loadFromNeon(){
+  try {
+    const r = await fetch(`${NEON_API}/workspace`, { cache: 'no-store' });
+    if(!r.ok) throw new Error('GET workspace ' + r.status);
+    const data = await r.json();
+    if(!data.exists){
+      // First sync — push current local data
+      console.log('[Neon] Empty workspace — pushing local data');
+      syncToNeon();
+      return;
+    }
+    neonLastUpdatedAt = data.updatedAt;
+    applyRemoteWorkspace(data);
+    console.log('[Neon] Loaded workspace (updated ' + data.updatedAt + ')');
+  } catch(e){
+    console.warn('[Neon] Load failed:', e.message);
+  }
+}
+
+function applyRemoteWorkspace(data){
+  if(Array.isArray(data.users) && data.users.length) USERS = data.users;
+  if(Array.isArray(data.tasks)) tasks = data.tasks;
+  if(Array.isArray(data.documents)) documents = data.documents;
+  if(data.opts && data.opts.status && data.opts.priority && data.opts.type) OPTS = data.opts;
+  if(Array.isArray(data.notes)){
+    notes = data.notes;
+    try { localStorage.setItem('tfl_notes', JSON.stringify(notes)); } catch(_){}
+  }
+  if(Array.isArray(data.liveSessions)){
+    liveSessions = data.liveSessions;
+    try { localStorage.setItem('tfl_live_sessions', JSON.stringify(liveSessions)); } catch(_){}
+  }
+  if(data.columnWidths) Object.assign(columnWidths, data.columnWidths);
+  if(Number.isFinite(data.nextTaskId)) nextTaskId = Math.max(nextTaskId, data.nextTaskId);
+  if(Number.isFinite(data.nextDocId)) nextDocId = Math.max(nextDocId, data.nextDocId);
+  saveAllLocal();
+  if(currentUser){
+    try { refreshDbTables(); } catch(_){}
+    try { renderSidebar(); } catch(_){}
+    try {
+      if(currentView==='members' && !currentMemberId) rerender();
+      if(currentView==='notes') rerender();
+      if(currentView==='library') rerender();
+      if(currentView==='dashboard') rerender();
+      if(currentView==='fbLive' && !currentLiveSessionId) rerender();
+    } catch(_){}
+  }
+}
+
+function syncToNeon(){
+  if(!neonEnabled) return;
+  clearTimeout(neonSyncTimer);
+  neonSyncTimer = setTimeout(async ()=>{
+    if(neonSyncInProgress) return;
+    neonSyncInProgress = true;
+    try {
+      const payload = {
+        users: USERS,
+        tasks: tasks,
+        documents: documents,
+        opts: OPTS,
+        notes: notes,
+        liveSessions: (typeof liveSessions !== 'undefined' ? liveSessions : []),
+        columnWidths: columnWidths,
+        nextTaskId: nextTaskId,
+        nextDocId: nextDocId,
+        _updatedBy: currentUser ? currentUser.name : 'unknown',
+      };
+      const r = await fetch(`${NEON_API}/workspace`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if(r.ok){
+        const data = await r.json();
+        neonLastUpdatedAt = data.updatedAt;
+      } else {
+        console.warn('[Neon] Sync HTTP error', r.status);
+      }
+    } catch(e){
+      console.warn('[Neon] Sync failed:', e.message);
+    } finally {
+      neonSyncInProgress = false;
+    }
+  }, 500);
+}
+
+function startNeonPolling(){
+  // Poll every 30s for updates from other clients (skip when tab hidden)
+  clearInterval(neonPollTimer);
+  neonPollTimer = setInterval(async ()=>{
+    if(document.hidden) return;
+    if(neonSyncInProgress) return;
+    try {
+      const r = await fetch(`${NEON_API}/workspace`, { cache: 'no-store' });
+      if(!r.ok) return;
+      const data = await r.json();
+      if(!data.exists) return;
+      if(data.updatedAt && data.updatedAt !== neonLastUpdatedAt){
+        console.log('[Neon] Remote update detected');
+        neonLastUpdatedAt = data.updatedAt;
+        applyRemoteWorkspace(data);
+      }
+    } catch(_){}
+  }, 30000);
+}
+
 // ========== PERSISTENCE ==========
 function saveAllLocal(){
   try {
@@ -1934,78 +2141,237 @@ function mergeOpts(...optsArr){
   return result;
 }
 
+// === Import flow state ===
+let importFiles = [];
+let importParsed = [];
+let importFailed = [];
+let importMergedData = null;
+
+function openImportModal(){
+  document.getElementById('importModal').classList.add('show');
+}
+function closeImportModal(){
+  document.getElementById('importModal').classList.remove('show');
+  importFiles = []; importParsed = []; importFailed = []; importMergedData = null;
+}
+
+function fmtBytes(b){
+  if(b < 1024) return b + ' B';
+  if(b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
+  return (b/1024/1024).toFixed(2) + ' MB';
+}
+
+function renderImportFileList(){
+  return `<div class="import-file-list">
+    ${importFiles.map(f => {
+      let icon = '·';
+      if(f.status === 'processing') icon = I.spinSm;
+      else if(f.status === 'done') icon = '✓';
+      else if(f.status === 'error') icon = '!';
+      const meta = f.status === 'error'
+        ? `<span class="err">${escapeHtml(f.error||'อ่านไม่สำเร็จ')}</span>`
+        : f.status === 'done' && f.stats
+          ? f.stats
+          : fmtBytes(f.size);
+      return `<div class="import-file-item ${f.status==='processing'?'active':f.status}">
+        <div class="import-file-status ${f.status}">${icon}</div>
+        <div class="import-file-info">
+          <div class="import-file-name">${escapeHtml(f.name)}</div>
+          <div class="import-file-meta">${meta}</div>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+function updateImportProgress(){
+  const total = importFiles.length;
+  const done = importFiles.filter(f => f.status==='done' || f.status==='error').length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  const body = document.getElementById('importBody');
+  if(!body) return;
+  body.innerHTML = `
+    <div class="import-hero-icon">${I.uploadHero}</div>
+    <div class="import-hero-title">กำลังนำเข้า ${total} ไฟล์</div>
+    <div class="import-hero-sub">อ่านและประมวลผลไฟล์ JSON · ตัดข้อมูลซ้ำตาม ID</div>
+    <div class="import-progress-wrap">
+      <div class="import-progress-info">
+        <span class="label">ความคืบหน้า ${done}/${total}</span>
+        <span class="pct">${pct}%</span>
+      </div>
+      <div class="import-progress-bar"><div class="import-progress-fill" style="width:${pct}%"></div></div>
+    </div>
+    ${renderImportFileList()}`;
+}
+
+function fileSummary(data){
+  const c = [];
+  if(Array.isArray(data.users) && data.users.length) c.push(`${data.users.length} สมาชิก`);
+  if(Array.isArray(data.tasks) && data.tasks.length) c.push(`${data.tasks.length} งาน`);
+  if(Array.isArray(data.documents) && data.documents.length) c.push(`${data.documents.length} เอกสาร`);
+  if(Array.isArray(data.notes) && data.notes.length) c.push(`${data.notes.length} โน้ต`);
+  if(Array.isArray(data.liveSessions) && data.liveSessions.length) c.push(`${data.liveSessions.length} Live`);
+  return c.join(' · ') || 'ว่าง';
+}
+
+async function processImportFile(idx){
+  const f = importFiles[idx];
+  if(!f) return;
+  f.status = 'processing';
+  updateImportProgress();
+  // Small delay for visual progress feedback
+  await new Promise(r => setTimeout(r, 160));
+  try {
+    const result = await readJsonFile(f.fileObj);
+    f.status = 'done';
+    f.data = result.data;
+    f.stats = fileSummary(result.data);
+    importParsed.push(result);
+  } catch(e){
+    f.status = 'error';
+    f.error = e.message;
+    importFailed.push({ name: f.name, error: e.message });
+  }
+  updateImportProgress();
+}
+
 async function handleImportFiles(fileList){
   if(!fileList || !fileList.length) return;
-  const files = Array.from(fileList);
+  importFiles = Array.from(fileList).map(f => ({
+    name: f.name, size: f.size, fileObj: f, status: 'pending',
+  }));
+  importParsed = [];
+  importFailed = [];
+  importMergedData = null;
 
-  // Read all
-  let parsed = [];
-  const failed = [];
-  for(const f of files){
-    try { parsed.push(await readJsonFile(f)); }
-    catch(e){ failed.push({ name: f.name, error: e.message }); }
+  // Setup modal
+  document.getElementById('importHdTitle').textContent = `Import ${importFiles.length} ไฟล์`;
+  document.getElementById('importFooter').innerHTML = '';
+  openImportModal();
+  updateImportProgress();
+
+  // Process files one by one
+  for(let i=0; i<importFiles.length; i++){
+    await processImportFile(i);
   }
-  if(!parsed.length){
-    alert('ไม่สามารถอ่านไฟล์ใดได้\n' + failed.map(f=>`• ${f.name}: ${f.error}`).join('\n'));
+
+  // After processing, show review
+  await new Promise(r => setTimeout(r, 400));
+  showImportReview();
+}
+
+function showImportReview(){
+  if(!importParsed.length){
+    showImportError();
     return;
   }
-
-  // Sort by exportedAt (older first → newer overrides on conflict)
-  parsed.sort((a, b) => {
+  // Sort by exportedAt (older first → newer overrides)
+  importParsed.sort((a, b) => {
     const ta = (a.data._meta && a.data._meta.exportedAt) || '';
     const tb = (b.data._meta && b.data._meta.exportedAt) || '';
     return ta.localeCompare(tb);
   });
 
-  // Build merge plan
-  const allUsers = [USERS, ...parsed.map(p => p.data.users)].filter(Array.isArray);
-  const allTasks = [tasks, ...parsed.map(p => p.data.tasks)].filter(Array.isArray);
-  const allDocs = [documents, ...parsed.map(p => p.data.documents)].filter(Array.isArray);
-  const allNotes = [notes, ...parsed.map(p => p.data.notes)].filter(Array.isArray);
-  const allLive = [liveSessions, ...parsed.map(p => p.data.liveSessions)].filter(Array.isArray);
-  const allOpts = [OPTS, ...parsed.map(p => p.data.opts)].filter(o => o && o.status);
+  const allUsers = [USERS, ...importParsed.map(p => p.data.users)].filter(Array.isArray);
+  const allTasks = [tasks, ...importParsed.map(p => p.data.tasks)].filter(Array.isArray);
+  const allDocs = [documents, ...importParsed.map(p => p.data.documents)].filter(Array.isArray);
+  const allNotes = [notes, ...importParsed.map(p => p.data.notes)].filter(Array.isArray);
+  const allLive = [liveSessions, ...importParsed.map(p => p.data.liveSessions)].filter(Array.isArray);
+  const allOpts = [OPTS, ...importParsed.map(p => p.data.opts)].filter(o => o && o.status);
 
-  const mergedUsers = mergeById(...allUsers);
-  const mergedTasks = mergeById(...allTasks);
-  const mergedDocs = mergeById(...allDocs);
-  const mergedNotes = mergeById(...allNotes);
-  const mergedLive = mergeById(...allLive);
-  const mergedOpts = mergeOpts(...allOpts) || OPTS;
+  importMergedData = {
+    users: mergeById(...allUsers),
+    tasks: mergeById(...allTasks),
+    docs: mergeById(...allDocs),
+    notes: mergeById(...allNotes),
+    live: mergeById(...allLive),
+    opts: mergeOpts(...allOpts) || OPTS,
+  };
 
-  // Stats for confirmation
-  const beforeStats = {
+  const before = {
     users: USERS.length, tasks: tasks.length, docs: documents.length,
     notes: notes.length, live: liveSessions.length,
   };
-  const fileDetails = parsed.map(p => {
-    const d = p.data;
-    const c = [];
-    if(Array.isArray(d.users)) c.push(`${d.users.length}u`);
-    if(Array.isArray(d.tasks)) c.push(`${d.tasks.length}t`);
-    if(Array.isArray(d.documents)) c.push(`${d.documents.length}d`);
-    if(Array.isArray(d.notes)) c.push(`${d.notes.length}n`);
-    if(Array.isArray(d.liveSessions)) c.push(`${d.liveSessions.length}L`);
-    const ts = (d._meta && d._meta.exportedAt) ? new Date(d._meta.exportedAt).toLocaleDateString('th-TH') : '?';
-    return `   • ${p.file.name} [${ts}] (${c.join(' ')||'ว่าง'})`;
-  }).join('\n');
+  const after = {
+    users: importMergedData.users.length, tasks: importMergedData.tasks.length,
+    docs: importMergedData.docs.length, notes: importMergedData.notes.length,
+    live: importMergedData.live.length,
+  };
 
-  const msg = `นำเข้า ${parsed.length} ไฟล์ — ระบบจะรวมข้อมูลและตัดรายการที่ซ้ำ (ตาม ID)\n\n${fileDetails}\n\n📊 ผลรวมหลัง merge:\n   สมาชิก: ${beforeStats.users} → ${mergedUsers.length}\n   งาน: ${beforeStats.tasks} → ${mergedTasks.length}\n   เอกสาร: ${beforeStats.docs} → ${mergedDocs.length}\n   โน้ต: ${beforeStats.notes} → ${mergedNotes.length}\n   Live: ${beforeStats.live} → ${mergedLive.length}\n\n${failed.length?'⚠ ' + failed.length + ' ไฟล์อ่านไม่ได้\n':''}กดยืนยันเพื่อนำเข้า?`;
-  if(!confirm(msg)) return;
+  const renderRow = (label, b, a) => {
+    const diff = a - b;
+    return `<div class="import-stat-card">
+      <div class="import-stat-label">${label}</div>
+      <div class="import-stat-row">${b} <span class="arrow">→</span> <span class="new">${a}</span>
+        <span class="delta ${diff===0?'zero':''}">${diff>=0?'+':''}${diff}</span>
+      </div>
+    </div>`;
+  };
 
-  // Apply
-  if(mergedUsers.length) USERS = mergedUsers;
-  tasks = mergedTasks;
-  documents = mergedDocs;
-  notes = mergedNotes;
-  liveSessions = mergedLive;
-  OPTS = mergedOpts;
+  document.getElementById('importHdTitle').textContent = 'ตรวจสอบก่อนนำเข้า';
+  document.getElementById('importBody').innerHTML = `
+    <div class="import-hero-icon success">${I.checkBig}</div>
+    <div class="import-hero-title">พร้อมนำเข้า ${importParsed.length} ไฟล์</div>
+    <div class="import-hero-sub">ระบบจะรวมข้อมูลและตัดรายการที่ซ้ำตาม ID อัตโนมัติ</div>
+    <div class="import-stats-grid">
+      ${renderRow('สมาชิก', before.users, after.users)}
+      ${renderRow('งาน', before.tasks, after.tasks)}
+      ${renderRow('เอกสาร', before.docs, after.docs)}
+      ${renderRow('โน้ต', before.notes, after.notes)}
+      ${renderRow('Live', before.live, after.live)}
+    </div>
+    ${importFailed.length ? `
+      <div style="padding:11px 13px;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;font-size:12px;color:#dc2626;margin-top:12px;display:flex;align-items:center;gap:8px">
+        ${I.alert} <b>${importFailed.length} ไฟล์อ่านไม่สำเร็จและถูกข้าม</b>
+      </div>` : ''}`;
+  document.getElementById('importFooter').innerHTML = `
+    <button class="btn-cancel" onclick="closeImportModal()">ยกเลิก</button>
+    <button class="btn-save" onclick="applyImport()">ยืนยันนำเข้า</button>`;
+}
+
+function showImportError(){
+  document.getElementById('importHdTitle').textContent = 'นำเข้าไม่สำเร็จ';
+  document.getElementById('importBody').innerHTML = `
+    <div class="import-hero-icon warn">${I.alertBig}</div>
+    <div class="import-hero-title">ไม่สามารถอ่านไฟล์ใดได้</div>
+    <div class="import-hero-sub">ตรวจสอบว่าเป็นไฟล์ JSON ที่ Export จากระบบ</div>
+    ${renderImportFileList()}`;
+  document.getElementById('importFooter').innerHTML = `
+    <button class="btn-save" onclick="closeImportModal()">ปิด</button>`;
+}
+
+async function applyImport(){
+  if(!importMergedData) return;
+  // Update UI to applying state
+  document.getElementById('importHdTitle').textContent = 'กำลังนำเข้า...';
+  document.getElementById('importBody').innerHTML = `
+    <div class="import-hero-icon">${I.uploadHero}</div>
+    <div class="import-hero-title">กำลังนำเข้าและบันทึก...</div>
+    <div class="import-progress-wrap">
+      <div class="import-progress-info">
+        <span class="label">โปรดรอสักครู่</span>
+        <span class="pct">90%</span>
+      </div>
+      <div class="import-progress-bar"><div class="import-progress-fill" style="width:90%"></div></div>
+    </div>`;
+  document.getElementById('importFooter').innerHTML = '';
+  document.getElementById('importCloseBtn').style.display = 'none';
+
+  await new Promise(r => setTimeout(r, 400));
+
+  // Apply data
+  if(importMergedData.users.length) USERS = importMergedData.users;
+  tasks = importMergedData.tasks;
+  documents = importMergedData.docs;
+  notes = importMergedData.notes;
+  liveSessions = importMergedData.live;
+  OPTS = importMergedData.opts;
 
   // Merge columnWidths (latest overrides)
-  for(const p of parsed){
+  for(const p of importParsed){
     if(p.data.columnWidths) Object.assign(columnWidths, p.data.columnWidths);
   }
 
-  // Update next IDs to max + 1
   const maxTaskId = tasks.reduce((m,t) => Math.max(m, parseInt(t.id,10)||0), 0);
   const maxDocId = documents.reduce((m,d) => Math.max(m, parseInt(d.id,10)||0), 0);
   nextTaskId = Math.max(nextTaskId, maxTaskId + 1);
@@ -2016,7 +2382,18 @@ async function handleImportFiles(fileList){
 
   saveAll();
   ensureAllAvatars();
-  alert(`นำเข้าสำเร็จ ${parsed.length} ไฟล์\nรายการซ้ำถูกตัดออกแล้ว — กำลังโหลดใหม่`);
+
+  // Success state
+  document.getElementById('importHdTitle').textContent = 'นำเข้าสำเร็จ';
+  document.getElementById('importBody').innerHTML = `
+    <div class="import-hero-icon success">${I.checkBig}</div>
+    <div class="import-hero-title">นำเข้าข้อมูลสำเร็จ</div>
+    <div class="import-hero-sub">รวมข้อมูลจาก ${importParsed.length} ไฟล์เรียบร้อย · กำลังโหลดหน้าเว็บใหม่...</div>
+    <div class="import-progress-wrap" style="margin-top:14px">
+      <div class="import-progress-bar"><div class="import-progress-fill" style="width:100%;animation:none;background:linear-gradient(90deg,#10b981,#059669)"></div></div>
+    </div>`;
+
+  await new Promise(r => setTimeout(r, 1100));
   location.reload();
 }
 
