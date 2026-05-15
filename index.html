@@ -169,6 +169,47 @@
 [data-theme="dark"] .note-input .quick-placeholder{color:var(--t3)}
 [data-theme="dark"] .stat-trend{background:var(--p100);color:var(--p400)}
 
+/* ===== FACEBOOK BRAND LOGO (Live Analytics header) ===== */
+:root {
+  --fb-c1: #4267B2;
+  --fb-c2: #1877F2;
+}
+[data-theme="dark"] {
+  --fb-c1: #818cf8;
+  --fb-c2: #a78bfa;
+}
+.fb-brand{display:flex;align-items:center;gap:14px;min-width:0}
+.fb-logo{height:38px;width:auto;flex-shrink:0;transition:filter .25s ease}
+[data-theme="dark"] .fb-logo{filter:drop-shadow(0 0 12px rgba(167,139,250,.35))}
+.fb-brand-sub{display:flex;flex-direction:column;border-left:2px solid var(--border-2);padding-left:14px;line-height:1.2;min-width:0}
+[data-theme="dark"] .fb-brand-sub{border-left-color:var(--border-2)}
+.fb-brand-label{font-size:14px;font-weight:800;color:var(--t1);letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.fb-brand-meta{font-size:11.5px;color:var(--t2);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:480px}
+@media (max-width:680px){
+  .fb-logo{height:30px}
+  .fb-brand-label{font-size:13px}
+  .fb-brand-meta{font-size:11px;max-width:200px}
+}
+
+/* ===== WORKSPACE BRAND LOGO (generic page header) ===== */
+:root {
+  --ws-c1: #93c5fd;
+  --ws-c2: #1d4ed8;
+  --ws-c3: #0b1739;
+  --ws-c4: #4f46e5;
+}
+[data-theme="dark"] {
+  --ws-c1: #c7d2fe;
+  --ws-c2: #6366f1;
+  --ws-c3: #1e293b;
+  --ws-c4: #a78bfa;
+}
+.ws-logo{height:40px;width:auto;flex-shrink:0;transition:filter .25s ease}
+[data-theme="dark"] .ws-logo{filter:drop-shadow(0 0 14px rgba(167,139,250,.35))}
+@media (max-width:680px){
+  .ws-logo{height:32px}
+}
+
 /* ===== IMPORT PROGRESS MODAL ===== */
 .import-modal{background:#fff;border-radius:18px;width:560px;max-width:95vw;max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(17,24,39,.25);border:1px solid var(--border);animation:modalIn .25s ease}
 .import-hd{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
@@ -3087,6 +3128,84 @@ function refreshDbTables(){
   }
 }
 
+function topbarFB(label, sub, actions=''){
+  const logo = `<svg class="fb-logo" viewBox="0 0 740 170" xmlns="http://www.w3.org/2000/svg" aria-label="facebook">
+    <defs>
+      <linearGradient id="fbGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="var(--fb-c1)"/>
+        <stop offset="100%" stop-color="var(--fb-c2)"/>
+      </linearGradient>
+    </defs>
+    <rect x="16" y="22" width="132" height="132" rx="22" fill="none" stroke="url(#fbGrad)" stroke-width="13"/>
+    <path d="M40 125 L72 78 L102 105 L138 48" fill="none" stroke="url(#fbGrad)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="180" y="128" font-family="Inter,system-ui,sans-serif" font-weight="900" font-size="118" letter-spacing="-3" fill="url(#fbGrad)">facebook</text>
+  </svg>`;
+  return `<div class="topbar">
+    <div class="topbar-title">
+      <div class="fb-brand">
+        ${logo}
+        <div class="fb-brand-sub">
+          <div class="fb-brand-label">${label||'Live Analytics'}</div>
+          ${sub?`<div class="fb-brand-meta">${sub}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      ${actions}
+      <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
+        <span class="theme-toggle-icons">
+          <span class="sun-i">${I.sun}</span>
+          <span class="moon-i">${I.moon}</span>
+        </span>
+        <span class="theme-toggle-thumb">
+          <span class="sun-i">${I.sun}</span>
+          <span class="moon-i">${I.moon}</span>
+        </span>
+      </button>
+    </div>
+  </div>`;
+}
+
+function topbarWS(label, sub, actions=''){
+  const logo = `<svg class="ws-logo" viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" aria-label="WORKSPACE">
+    <defs>
+      <linearGradient id="wsGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="var(--ws-c1)"/>
+        <stop offset="100%" stop-color="var(--ws-c2)"/>
+      </linearGradient>
+    </defs>
+    <text x="0" y="190" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="230" letter-spacing="-10" fill="url(#wsGrad)">WORK</text>
+    <rect x="678" y="34" width="208" height="108" rx="14" fill="var(--ws-c3)"/>
+    <rect x="678" y="156" width="126" height="38" rx="10" fill="var(--ws-c3)"/>
+    <rect x="814" y="156" width="72" height="38" rx="10" fill="var(--ws-c4)"/>
+    <text x="676" y="248" font-family="Inter,system-ui,Arial,sans-serif" font-weight="800" font-size="56" letter-spacing="6" fill="var(--ws-c2)">SPACE</text>
+  </svg>`;
+  return `<div class="topbar">
+    <div class="topbar-title">
+      <div class="fb-brand">
+        ${logo}
+        <div class="fb-brand-sub">
+          <div class="fb-brand-label">${label||''}</div>
+          ${sub?`<div class="fb-brand-meta">${sub}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      ${actions}
+      <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
+        <span class="theme-toggle-icons">
+          <span class="sun-i">${I.sun}</span>
+          <span class="moon-i">${I.moon}</span>
+        </span>
+        <span class="theme-toggle-thumb">
+          <span class="sun-i">${I.sun}</span>
+          <span class="moon-i">${I.moon}</span>
+        </span>
+      </button>
+    </div>
+  </div>`;
+}
+
 function topbar(title, sub, actions=''){
   return `<div class="topbar">
     <div class="topbar-title">
@@ -3142,7 +3261,7 @@ function renderDashboard(el){
   const allDone=tasks.filter(t=>t.status==='done').length;
   const pct = mine.length ? Math.round(myDone/mine.length*100) : 0;
 
-  el.innerHTML = topbar('ภาพรวม', `วันนี้ ${new Date().toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'})}`) + `
+  el.innerHTML = topbarWS('ภาพรวม', `วันนี้ ${new Date().toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'})}`) + `
   <div class="page-content">
     <div class="page-head">
       <div class="page-title">สวัสดี ${currentUser.name}</div>
@@ -3244,7 +3363,7 @@ function renderLibrary(el){
   const actions = `
     <div class="search-wrap">${I.search}<input class="search-inp" placeholder="ค้นหาเอกสาร..." oninput="filterDocs(this.value)"></div>
     ${isAdmin?`<button class="btn-primary" onclick="openDocModal()">${I.plus} หน้าใหม่</button>`:''}`;
-  el.innerHTML = topbar('ไลบรารี', `${documents.length} เอกสารทั้งหมด`, actions) + `
+  el.innerHTML = topbarWS('ไลบรารี', `${documents.length} เอกสารทั้งหมด`, actions) + `
   <div class="page-content">
     <div class="view-tabs">
       <div class="view-tab active">${I.folder} พื้นที่ทำงานของทีม</div>
@@ -3337,7 +3456,7 @@ function renderNotes(el){
 
   const actions = `<div class="search-wrap">${I.search}<input class="search-inp" placeholder="ค้นหาโน้ต..." oninput="searchNotes(this.value)"></div>`;
 
-  el.innerHTML = topbar('Note', `${totalCount} โน้ตของคุณ`, actions) + `
+  el.innerHTML = topbarWS('Note', `${totalCount} โน้ตของคุณ`, actions) + `
   <div class="notes-page">
     <div class="note-input-wrap">
       <div class="note-input" id="quickNoteInput">
@@ -3729,7 +3848,7 @@ function renderFbLive(el){
   const actions = `
     <button class="btn-ghost" onclick="exportLivePDF()">${I.download} Export Weekly Report</button>
     <button class="btn-primary" onclick="openNewLive()">${I.plus} เพิ่ม Live</button>`;
-  el.innerHTML = topbar('Facebook Live Analytics', `${liveSessions.length} Live ทั้งหมด · ${filtered.length} ในช่วงที่เลือก`, actions) + `
+  el.innerHTML = topbarFB('Live Analytics', `${liveSessions.length} Live ทั้งหมด · ${filtered.length} ในช่วงที่เลือก`, actions) + `
   <div class="page-content" style="max-width:1400px" id="liveDashboard">
     <div class="live-hero">
       <div class="live-hero-icon">${I.live}</div>
@@ -6476,7 +6595,7 @@ function renderFbLiveAuto(el){
   const hasFb = !!liveAiState.fbToken;
   const ready = hasFb;
 
-  el.innerHTML = topbar('Facebook Live Analytics (Auto)', 'ดึงข้อมูลจาก Facebook + Audience Analytics แบบมืออาชีพ', '') + `
+  el.innerHTML = topbarFB('Live AI · Auto Fetch', 'ดึงข้อมูลจาก Facebook + Audience Analytics แบบมืออาชีพ', '') + `
   <div class="page-content" style="max-width:1200px">
     <div class="live-hero">
       <div class="live-hero-icon" style="color:var(--p600)">${I.activity}</div>
@@ -7080,7 +7199,7 @@ function renderFiles(el){
     <input type="file" id="fileInput" multiple style="display:none" onchange="uploadFiles(this.files);this.value=''">` :
     `<button class="btn-primary" onclick="${configured?'startDriveSignIn()':'openDriveSetup()'}">${I.cloud} ${configured?'เข้าสู่ระบบ':'ตั้งค่า Drive'}</button>`;
 
-  el.innerHTML = topbar('เอกสาร', signedIn?`${driveFiles.length} ไฟล์ใน Drive · ${formatBytes(totalSize)}`:'เชื่อม Google Drive เพื่อจัดการไฟล์', actions) + `
+  el.innerHTML = topbarWS('เอกสาร', signedIn?`${driveFiles.length} ไฟล์ใน Drive · ${formatBytes(totalSize)}`:'เชื่อม Google Drive เพื่อจัดการไฟล์', actions) + `
   <div class="page-content" id="filesPage">
     ${connectionPanel}
 
@@ -7198,7 +7317,7 @@ function renderTaskBoard(el){
   const actions = `
     <div class="search-wrap">${I.search}<input class="search-inp" placeholder="ค้นหางาน..." id="boardSearch" oninput="boardSearch(this.value)"></div>
     ${isAdmin?`<button class="btn-primary" onclick="openNewTask('todo')">${I.plus} งานใหม่</button>`:''}`;
-  el.innerHTML = topbar('ติดตามงาน TFL+', 'งานประจำวันของ TFL+', actions) + `
+  el.innerHTML = topbarWS('ติดตามงาน TFL+', 'งานประจำวันของ TFL+', actions) + `
   <div class="page-content" style="max-width:none">
     <div class="view-tabs">
       <div class="view-tab ${currentBoardTab==='all'?'active':''}" onclick="switchBoardTab('all')">${I.star} งานทั้งหมด</div>
@@ -7930,7 +8049,7 @@ function toggleChecklist(id){
 function renderMyTasks(el){
   const mine=tasks.filter(t=>t.assignees.includes(currentUser.id));
   const actions = `<button class="btn-primary" onclick="openNewTask('todo')">${I.plus} งานใหม่</button>`;
-  el.innerHTML = topbar('งานของฉัน', `${mine.length} งานทั้งหมด`, actions) + `
+  el.innerHTML = topbarWS('งานของฉัน', `${mine.length} งานทั้งหมด`, actions) + `
   <div class="page-content">
     <div class="filter-row" id="mf">
       <div class="filter-tag active" data-filter="all" onclick="filterMine('all',this)">ทั้งหมด (${mine.length})</div>
@@ -7955,7 +8074,7 @@ function renderAllTasks(el){
   const actions = `
     <div class="search-wrap">${I.search}<input class="search-inp" placeholder="ค้นหางาน..." oninput="searchAll(this.value)"></div>
     <button class="btn-primary" onclick="openNewTask('todo')">${I.plus} งานใหม่</button>`;
-  el.innerHTML = topbar('งานทั้งหมด', `${tasks.length} งานในระบบ`, actions) + `
+  el.innerHTML = topbarWS('งานทั้งหมด', `${tasks.length} งานในระบบ`, actions) + `
   <div class="page-content">
     <div class="filter-row" id="af">
       <div class="filter-tag active" data-filter="all" onclick="filterAll('all',this)">ทั้งหมด (${tasks.length})</div>
@@ -7983,7 +8102,7 @@ function searchAll(q){
 function renderMembers(el){
   if(currentMemberId){ renderMemberDetail(el, currentMemberId); return; }
   const actions = `<button class="btn-primary" onclick="openAddMemberModal('app')">${I.plus} เพิ่มสมาชิก</button>`;
-  el.innerHTML = topbar('จัดการสมาชิก', `${USERS.length} สมาชิกในทีม · คลิกที่การ์ดเพื่อดูงานของสมาชิก`, actions) + `
+  el.innerHTML = topbarWS('จัดการสมาชิก', `${USERS.length} สมาชิกในทีม · คลิกที่การ์ดเพื่อดูงานของสมาชิก`, actions) + `
   <div class="page-content">
     <div class="members-grid">
       ${USERS.map(u=>{
