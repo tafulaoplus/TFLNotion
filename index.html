@@ -515,9 +515,176 @@
 .sales-actions .icon-btn[title="ลบ"]:hover{color:#dc2626}
 .empty-state{text-align:center;padding:60px 20px;color:var(--t2);font-size:14px;background:var(--bg-soft);border-radius:12px}
 
-/* ===== SALES MODAL & DASHBOARD (rewrite) ===== */
-.sales-modal{width:min(820px,calc(100vw - 32px));max-height:calc(100vh - 64px)}
-.sales-modal .modal-bd{max-height:calc(100vh - 220px);overflow-y:auto}
+/* ===== SALES MODAL V2 (image-style) ===== */
+.sales-modal{
+  width:min(840px,calc(100vw - 32px));
+  max-height:calc(100vh - 48px);
+  border-radius:26px;
+  background:linear-gradient(160deg,#faf7ff 0%, #ffffff 55%);
+  border:1px solid #ece7f7;
+  box-shadow:0 30px 80px rgba(76,29,149,.18);
+  overflow:hidden;
+  position:relative;
+}
+.sales-modal .modal-hd{
+  border-bottom:none;background:transparent;
+  padding:26px 30px 6px;align-items:flex-start;
+}
+.sales-modal .modal-title{display:none}
+.sales-modal .modal-close{
+  width:38px;height:38px;border-radius:12px;
+  border:1.5px solid #ece7f7;background:#fff;color:#6b6585;
+  font-size:18px;
+}
+.sales-modal .modal-bd{
+  padding:18px 30px 12px;max-height:calc(100vh - 240px);
+  overflow-y:auto;background:transparent;
+}
+.sm-pro-hdr{display:flex;align-items:center;gap:18px;flex:1;min-width:0}
+.sm-pro-icon{
+  width:60px;height:60px;border-radius:18px;
+  background:linear-gradient(135deg,#a78bfa 0%,#7c3aed 100%);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 10px 24px rgba(124,58,237,.35);flex-shrink:0;
+}
+.sm-pro-icon svg{width:28px;height:28px}
+.sm-pro-titles{flex:1;min-width:0}
+.sm-pro-title{
+  font-size:24px;font-weight:800;color:#1f1147;
+  letter-spacing:-.01em;display:flex;align-items:center;gap:8px;line-height:1.1
+}
+.sm-pro-title .spark{color:#a855f7;font-size:18px}
+.sm-pro-sub{font-size:13.5px;color:#6b6585;margin-top:6px}
+
+.sm-field{margin-bottom:18px}
+.sm-field-lbl{
+  display:flex;align-items:center;gap:6px;
+  font-size:14px;font-weight:700;color:#1f1147;
+  margin-bottom:8px;
+}
+.sm-field-lbl .req{color:#dc2626}
+.sm-input{
+  display:flex;align-items:stretch;
+  background:#fff;border:1.5px solid #ece7f7;border-radius:14px;
+  transition:border-color .15s ease, box-shadow .15s ease;
+  overflow:hidden;
+}
+.sm-input:focus-within{border-color:#a78bfa;box-shadow:0 0 0 4px rgba(167,139,250,.18)}
+.sm-input-icon{
+  width:50px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  color:#a78bfa;background:transparent;
+}
+.sm-input-icon svg{width:20px;height:20px}
+.sm-input input,.sm-input select,.sm-input textarea{
+  flex:1;border:none;outline:none;background:transparent;
+  padding:15px 14px 15px 0;font-size:14.5px;color:#1f1147;
+  font-family:inherit;width:100%;
+}
+.sm-input textarea{resize:vertical;min-height:96px;line-height:1.55}
+.sm-input select{padding-right:42px;appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%236b6585" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>');background-repeat:no-repeat;background-position:right 14px center}
+.sm-input input[type="date"]{font-family:inherit}
+.sm-input input::placeholder,.sm-input textarea::placeholder{color:#a5a0bd}
+
+.sm-row-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:680px){.sm-row-2{grid-template-columns:1fr}}
+
+.sm-gps-row{display:flex;gap:8px;align-items:stretch}
+.sm-gps-row .sm-input{flex:1}
+.sm-gps-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:0 18px;background:#f3edff;color:#7c3aed;font-weight:700;font-size:13px;
+  border:1.5px solid #ece7f7;border-radius:14px;text-decoration:none;white-space:nowrap;
+  transition:all .15s ease;height:auto;
+}
+.sm-gps-btn:hover{background:#7c3aed;color:#fff;border-color:#7c3aed}
+.sm-gps-btn svg{width:13px;height:13px}
+
+.sm-section-hdr{display:flex;align-items:center;gap:12px;margin:24px 0 14px}
+.sm-section-hdr-icon{
+  width:36px;height:36px;border-radius:11px;
+  background:linear-gradient(135deg,#ddd6fe,#c4b5fd);
+  color:#7c3aed;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.sm-section-hdr-icon svg{width:18px;height:18px}
+.sm-section-hdr-title{font-size:15px;font-weight:800;color:#1f1147}
+.sm-section-hdr-sub{font-size:12.5px;color:#6b6585;font-weight:500;margin-left:4px}
+
+.sm-assignee-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:780px){.sm-assignee-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.sm-assignee-grid{grid-template-columns:1fr}}
+.sm-asg{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;border:1.5px solid #ece7f7;border-radius:14px;
+  background:#fff;cursor:pointer;transition:all .15s ease;user-select:none;
+}
+.sm-asg:hover{border-color:#c4b5fd}
+.sm-asg.sel{border-color:#a78bfa;background:linear-gradient(135deg,#faf7ff,#f3edff);box-shadow:0 4px 14px rgba(124,58,237,.12)}
+.sm-asg-av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;flex-shrink:0}
+.sm-asg-info{flex:1;min-width:0}
+.sm-asg-name{font-size:14px;font-weight:700;color:#1f1147;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sm-asg-role{font-size:11.5px;color:#6b6585;text-transform:capitalize;margin-top:2px}
+.sm-asg-chk{
+  width:22px;height:22px;border-radius:7px;border:1.5px solid #d4cde8;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#fff;
+  transition:all .15s ease;color:#fff;
+}
+.sm-asg.sel .sm-asg-chk{background:linear-gradient(135deg,#a78bfa,#7c3aed);border-color:#7c3aed}
+.sm-asg-chk svg{width:14px;height:14px;display:none}
+.sm-asg.sel .sm-asg-chk svg{display:block}
+
+.sales-modal .modal-ft{
+  background:linear-gradient(0deg, rgba(167,139,250,.06) 0%, transparent 100%);
+  border-top:none;padding:20px 30px 24px;border-radius:0 0 26px 26px;
+  position:relative;display:flex;justify-content:flex-end;gap:10px;
+}
+.sm-btn-cancel{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:11px 22px;background:#fff;color:#6b6585;font-weight:700;
+  border:1.5px solid #ece7f7;border-radius:14px;cursor:pointer;
+  font-size:14px;transition:all .15s ease;font-family:inherit;
+}
+.sm-btn-cancel:hover{background:#faf7ff;color:#1f1147}
+.sm-btn-cancel svg{width:14px;height:14px}
+.sm-btn-save{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 26px;background:linear-gradient(135deg,#a78bfa 0%,#7c3aed 100%);
+  color:#fff;font-weight:700;border:none;border-radius:14px;
+  cursor:pointer;font-size:14px;box-shadow:0 10px 24px rgba(124,58,237,.35);
+  transition:all .15s ease;font-family:inherit;
+}
+.sm-btn-save:hover{transform:translateY(-1px);box-shadow:0 14px 28px rgba(124,58,237,.45)}
+.sm-btn-save svg{width:16px;height:16px}
+
+/* Decorative dots */
+.sales-modal::after{
+  content:'';position:absolute;left:14px;top:38%;width:8px;height:200px;
+  background-image:radial-gradient(circle, #c4b5fd 2px, transparent 2.5px);
+  background-size:8px 24px;background-repeat:repeat-y;
+  opacity:.5;pointer-events:none;
+}
+
+[data-theme="dark"] .sales-modal{
+  background:linear-gradient(160deg,#1e1b3a 0%, #0f0f23 60%);
+  border-color:rgba(167,139,250,.2);
+}
+[data-theme="dark"] .sales-modal .modal-close{background:rgba(167,139,250,.08);border-color:rgba(167,139,250,.2);color:#c4b5fd}
+[data-theme="dark"] .sm-pro-title{color:#f1f5f9}
+[data-theme="dark"] .sm-pro-sub{color:#a5a0bd}
+[data-theme="dark"] .sm-field-lbl{color:#f1f5f9}
+[data-theme="dark"] .sm-input{background:rgba(167,139,250,.06);border-color:rgba(167,139,250,.22)}
+[data-theme="dark"] .sm-input input,[data-theme="dark"] .sm-input select,[data-theme="dark"] .sm-input textarea{color:#f1f5f9}
+[data-theme="dark"] .sm-input input::placeholder,[data-theme="dark"] .sm-input textarea::placeholder{color:#6b6585}
+[data-theme="dark"] .sm-gps-btn{background:rgba(167,139,250,.15);border-color:rgba(167,139,250,.3);color:#c4b5fd}
+[data-theme="dark"] .sm-asg{background:rgba(167,139,250,.06);border-color:rgba(167,139,250,.2)}
+[data-theme="dark"] .sm-asg.sel{background:linear-gradient(135deg,rgba(167,139,250,.18),rgba(124,58,237,.22));border-color:#a78bfa}
+[data-theme="dark"] .sm-asg-name{color:#f1f5f9}
+[data-theme="dark"] .sm-asg-chk{background:rgba(15,15,35,.5);border-color:rgba(167,139,250,.35)}
+[data-theme="dark"] .sm-section-hdr-title{color:#f1f5f9}
+[data-theme="dark"] .sm-section-hdr-icon{background:rgba(167,139,250,.2);color:#c4b5fd}
+[data-theme="dark"] .sm-btn-cancel{background:rgba(167,139,250,.08);border-color:rgba(167,139,250,.2);color:#c4b5fd}
+[data-theme="dark"] .sm-btn-cancel:hover{background:rgba(167,139,250,.15);color:#f1f5f9}
+
+/* legacy classes below kept for result modal */
 .sales-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media (max-width:680px){.sales-grid-2{grid-template-columns:1fr}}
 .sales-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
@@ -1789,17 +1956,30 @@ svg{display:block;flex-shrink:0}
 <div class="overlay" id="salesModal">
   <div class="modal sales-modal">
     <div class="modal-hd">
-      <div class="modal-title" id="salesModalTitle">เพิ่มกิจกรรมใหม่</div>
+      <div class="sm-pro-hdr">
+        <div class="sm-pro-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>
+        </div>
+        <div class="sm-pro-titles">
+          <div class="sm-pro-title" id="salesModalTitle">เพิ่มกิจกรรมใหม่ <span class="spark">✦</span></div>
+          <div class="sm-pro-sub">กรอกข้อมูลเพื่อสร้างกิจกรรมของคุณ</div>
+        </div>
+      </div>
       <button class="modal-close" onclick="closeModal('salesModal')">×</button>
     </div>
     <div class="modal-bd">
-      <div>
-        <div class="sales-field-lbl">ชื่องาน <span class="req">*</span></div>
-        <input type="text" id="fSalesTitle" placeholder="เช่น ออกบูธงานวันแม่ ห้างเซ็นทรัล"/>
+      <div class="sm-field">
+        <div class="sm-field-lbl">ชื่อของงาน <span class="req">*</span></div>
+        <div class="sm-input">
+          <div class="sm-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg></div>
+          <input type="text" id="fSalesTitle" placeholder="เช่น ออกบูธงานวันแม่ ห้างเซ็นทรัล"/>
+        </div>
       </div>
-      <div class="sales-grid-2" style="margin-top:14px">
-        <div>
-          <div class="sales-field-lbl">ประเภทงาน</div>
+
+      <div class="sm-field">
+        <div class="sm-field-lbl">ประเภทงาน</div>
+        <div class="sm-input">
+          <div class="sm-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
           <select id="fSalesCategory">
             <option value="field">ลงพื้นที่</option>
             <option value="booth">ออกบูธ</option>
@@ -1807,42 +1987,69 @@ svg{display:block;flex-shrink:0}
             <option value="visit">เยี่ยมลูกค้า</option>
           </select>
         </div>
-        <div></div>
       </div>
-      <div class="sales-grid-2" style="margin-top:14px">
-        <div>
-          <div class="sales-field-lbl">วันที่เริ่ม <span class="req">*</span></div>
-          <input type="date" id="fSalesStartDate"/>
+
+      <div class="sm-row-2">
+        <div class="sm-field">
+          <div class="sm-field-lbl">วันที่เริ่ม <span class="req">*</span></div>
+          <div class="sm-input">
+            <div class="sm-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <input type="date" id="fSalesStartDate"/>
+          </div>
         </div>
-        <div>
-          <div class="sales-field-lbl">วันที่จบ</div>
-          <input type="date" id="fSalesEndDate"/>
-        </div>
-      </div>
-      <div style="margin-top:14px">
-        <div class="sales-field-lbl">สถานที่</div>
-        <input type="text" id="fSalesLocation" placeholder="เช่น ตลาดนัด ABC, ห้างฯ XYZ"/>
-      </div>
-      <div style="margin-top:14px">
-        <div class="sales-field-lbl">พิกัด GPS (Google Maps Link)</div>
-        <div class="gps-row">
-          <input type="url" id="fSalesGps" placeholder="https://maps.google.com/..."/>
-          <a class="gps-btn" id="fSalesGpsOpen" target="_blank" rel="noopener" style="display:none">เปิดแผนที่</a>
+        <div class="sm-field">
+          <div class="sm-field-lbl">วันที่จบ</div>
+          <div class="sm-input">
+            <div class="sm-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <input type="date" id="fSalesEndDate"/>
+          </div>
         </div>
       </div>
-      <div style="margin-top:14px">
-        <div class="sales-field-lbl">รายละเอียดงาน</div>
-        <textarea id="fSalesDesc" rows="3" placeholder="วัตถุประสงค์ของงาน, สิ่งที่ต้องเตรียม..."></textarea>
+
+      <div class="sm-field">
+        <div class="sm-field-lbl">สถานที่</div>
+        <div class="sm-input">
+          <div class="sm-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <input type="text" id="fSalesLocation" placeholder="เช่น ตลาดนัด ABC, ห้างฯ XYZ"/>
+          <div class="sm-input-icon" style="color:#a78bfa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></div>
+        </div>
       </div>
-      <div class="sales-section-hdr" style="margin-top:18px">
-        <h4>ผู้รับผิดชอบ</h4>
-        <span class="hdr-sub">เลือกได้มากกว่า 1 คน</span>
+
+      <div class="sm-field">
+        <div class="sm-field-lbl">พิกัด GPS (Google Maps Link)</div>
+        <div class="sm-gps-row">
+          <div class="sm-input">
+            <div class="sm-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+            <input type="url" id="fSalesGps" placeholder="https://maps.google.com/..."/>
+          </div>
+          <a class="sm-gps-btn" id="fSalesGpsOpen" target="_blank" rel="noopener" style="display:none">เปิดแผนที่ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        </div>
       </div>
-      <div class="assignee-grid" id="fSalesAssigneeGrid"></div>
+
+      <div class="sm-field">
+        <div class="sm-field-lbl">รายละเอียดงาน</div>
+        <div class="sm-input">
+          <div class="sm-input-icon" style="align-items:flex-start;padding-top:15px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <textarea id="fSalesDesc" rows="3" placeholder="วัตถุประสงค์ของงาน, สิ่งที่ต้องเตรียม..."></textarea>
+        </div>
+      </div>
+
+      <div class="sm-section-hdr">
+        <div class="sm-section-hdr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="sm-section-hdr-title">ผู้รับผิดชอบ</div>
+        <div class="sm-section-hdr-sub">เลือกได้มากกว่า 1 คน</div>
+      </div>
+      <div class="sm-assignee-grid" id="fSalesAssigneeGrid"></div>
     </div>
     <div class="modal-ft">
-      <button class="btn-ghost" onclick="closeModal('salesModal')">ยกเลิก</button>
-      <button class="btn-primary" onclick="saveSalesEvent()">บันทึก</button>
+      <button class="sm-btn-cancel" onclick="closeModal('salesModal')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        ยกเลิก
+      </button>
+      <button class="sm-btn-save" onclick="saveSalesEvent()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.5 17 14.5 18.5 22 12 18.5 5.5 22 7 14.5 2 9.5 9 8.5 12 2"/></svg>
+        บันทึกกิจกรรม
+      </button>
     </div>
   </div>
 </div>
@@ -10057,13 +10264,13 @@ function _renderAssigneeGrid(){
   if(!grid) return;
   grid.innerHTML = USERS.map(u => {
     const sel = _salesAssigneeSel.has(u.id);
-    return `<div class="assignee-card ${sel?'sel':''}" onclick="toggleAssignee(${u.id})">
-      <div class="assignee-avatar" style="background:${u.color||'#3b82f6'}">${escapeHtmlN(u.init||(u.name||'?')[0])}</div>
-      <div class="assignee-info">
-        <div class="assignee-name">${escapeHtmlN(u.name)}</div>
-        <div class="assignee-role">${escapeHtmlN(u.role||'member')}</div>
+    return `<div class="sm-asg ${sel?'sel':''}" onclick="toggleAssignee(${u.id})">
+      <div class="sm-asg-av" style="background:${u.color||'#3b82f6'}">${escapeHtmlN(u.init||(u.name||'?')[0])}</div>
+      <div class="sm-asg-info">
+        <div class="sm-asg-name">${escapeHtmlN(u.name)}</div>
+        <div class="sm-asg-role">${escapeHtmlN(u.role||'member')}</div>
       </div>
-      <div class="assignee-check">${I.check}</div>
+      <div class="sm-asg-chk">${I.check}</div>
     </div>`;
   }).join('');
 }
@@ -10088,7 +10295,8 @@ function openSalesModal(id){
   const gpsBtn = document.getElementById('fSalesGpsOpen');
   const initialGps = e?.gpsLink || '';
   if(initialGps){ gpsBtn.href = initialGps; gpsBtn.style.display = ''; } else { gpsBtn.style.display = 'none'; }
-  document.getElementById('fSalesGps').oninput = function(){
+  const gpsInput = document.getElementById('fSalesGps');
+  gpsInput.oninput = function(){
     if(this.value.trim()){ gpsBtn.href = this.value.trim(); gpsBtn.style.display = ''; }
     else gpsBtn.style.display = 'none';
   };
