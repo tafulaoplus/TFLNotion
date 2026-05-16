@@ -3300,8 +3300,10 @@ async function pushAllToNeon(){
       return;
     }
   }
-  if(!confirm(`ดันข้อมูลทั้งหมดจาก Local ขึ้น Neon Database?\n\n· สมาชิก: ${USERS.length}\n· งาน: ${tasks.length}\n· เอกสาร: ${documents.length}\n· โน้ต: ${notes.length}\n· Live: ${(typeof liveSessions!=='undefined'?liveSessions.length:0)}\n\nข้อมูลปัจจุบันใน Neon จะถูกแทนที่`)) return;
+  if(!confirm(`ดันข้อมูลทั้งหมดจาก Local ขึ้น Neon Database?\n\n· สมาชิก: ${USERS.length}\n· งาน: ${tasks.length}\n· เอกสาร: ${documents.length}\n· โน้ต: ${notes.length}\n· Live: ${(typeof liveSessions!=='undefined'?liveSessions.length:0)}\n· ออกพื้นที่: ${salesEvents.length}\n· ยอดขายหวย: ${lotterySales.length}\n\nจะ wipe ข้อมูลเดิมใน Neon แล้วเขียนทับด้วยของ browser นี้`)) return;
   try {
+    // Wipe corrupt/oversized row first
+    try { await fetch(`${NEON_API}/wipe-snapshot`, { method:'POST' }); } catch(_){}
     const payload = {
       users: USERS,
       tasks: tasks,
@@ -3312,6 +3314,11 @@ async function pushAllToNeon(){
       columnWidths: columnWidths,
       nextTaskId: nextTaskId,
       nextDocId: nextDocId,
+      notifications: notifications.slice(-200),
+      salesEvents: _slimSalesForSync(salesEvents),
+      activityLog: activityLog.slice(-500),
+      lotterySales: lotterySales,
+      lotterySettings: lotterySettings,
       _updatedBy: currentUser ? currentUser.name : 'migration',
     };
     const r = await fetch(`${NEON_API}/workspace`, {
@@ -3322,7 +3329,8 @@ async function pushAllToNeon(){
     if(r.ok){
       const data = await r.json();
       neonLastUpdatedAt = data.updatedAt;
-      alert('ดันข้อมูลขึ้น Neon สำเร็จ\nUpdated: ' + data.updatedAt);
+      setNeonStatus('online');
+      alert('✓ ดันข้อมูลขึ้น Neon สำเร็จ\nขนาด: ' + (data.sizeBytes? (data.sizeBytes/1024).toFixed(1)+' KB' : '?') + '\nUpdated: ' + data.updatedAt);
     } else {
       const err = await r.text();
       alert('Push ล้มเหลว: ' + err);
