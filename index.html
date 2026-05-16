@@ -2345,6 +2345,18 @@ svg{display:block;flex-shrink:0}
   </div>
 </div>
 
+<!-- ATTENDANCE RECORD DETAIL MODAL -->
+<div class="overlay" id="attDetailModal">
+  <div class="modal att-modal" style="width:min(680px,calc(100vw - 32px))">
+    <div class="modal-hd" style="padding:22px 24px 4px;border-bottom:none">
+      <div class="modal-title">รายละเอียดการลงเวลา</div>
+      <button class="modal-close" onclick="closeModal('attDetailModal')">×</button>
+    </div>
+    <div class="modal-bd" style="padding:14px 24px" id="attDetailBody"></div>
+    <div class="modal-ft" style="padding:18px 24px 22px;display:flex;justify-content:flex-end;gap:10px" id="attDetailFooter"></div>
+  </div>
+</div>
+
 <!-- ATTENDANCE IMPORT MODAL -->
 <div class="overlay" id="attImportModal">
   <div class="modal att-modal" style="width:min(720px,calc(100vw - 32px))">
@@ -2368,7 +2380,7 @@ svg{display:block;flex-shrink:0}
       <div class="lot-fld">
         <label class="leave-attach-upload" id="impFileLabel">
           <input type="file" id="fImpFile" accept=".xlsx,.xls,.csv" onchange="handleAttImportFile(event)"/>
-          <div class="ic">${'<svg width=\'18\' height=\'18\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\'/><polyline points=\'17 8 12 3 7 8\'/><line x1=\'12\' y1=\'3\' x2=\'12\' y2=\'15\'/></svg>'}</div>
+          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
           <div>
             <div style="font-size:13px;font-weight:700;color:var(--t1)" id="impFileName">เลือกไฟล์ Excel หรือ CSV</div>
             <div style="font-size:11.5px;color:var(--t2);margin-top:2px">.xlsx, .xls, .csv</div>
@@ -2396,7 +2408,7 @@ svg{display:block;flex-shrink:0}
   <canvas id="attPhotoCanvas"></canvas>
   <div class="pp-actions">
     <button class="pp-btn cancel" onclick="closePhotoCapture()">ยกเลิก</button>
-    <button class="pp-btn capture" onclick="capturePhotoAndProceed()">${'<svg width=\'18\' height=\'18\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><circle cx=\'12\' cy=\'12\' r=\'4\'/><path d=\'M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z\'/></svg>'}ถ่ายภาพ + ยืนยัน</button>
+    <button class="pp-btn capture" onclick="capturePhotoAndProceed()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/></svg>ถ่ายภาพ + ยืนยัน</button>
   </div>
 </div>
 
@@ -2434,7 +2446,7 @@ svg{display:block;flex-shrink:0}
         <label class="lot-fld-lbl">เอกสารแนบ (ใบรับรองแพทย์ ฯลฯ)</label>
         <label class="leave-attach-upload">
           <input type="file" id="fLeaveAttach" accept="image/*,application/pdf" onchange="handleLeaveAttachUpload(event)"/>
-          <div class="ic">${'<svg width=\'18\' height=\'18\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\'/><polyline points=\'17 8 12 3 7 8\'/><line x1=\'12\' y1=\'3\' x2=\'12\' y2=\'15\'/></svg>'}</div>
+          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
           <div>
             <div style="font-size:13px;font-weight:700;color:var(--t1)">อัพโหลดเอกสาร</div>
             <div style="font-size:11.5px;color:var(--t2);margin-top:2px">รูปภาพหรือ PDF (≤ 3 MB)</div>
@@ -2791,7 +2803,7 @@ svg{display:block;flex-shrink:0}
         <div class="sales-field-lbl">ใบเสร็จ (ค่าเช่าสถานที่)</div>
         <label class="receipt-upload" id="fResReceiptLabel">
           <input type="file" id="fResReceiptFile" accept="image/*,application/pdf" onchange="handleReceiptUpload(event)"/>
-          <div class="receipt-upload-icon">${'<svg width=\'20\' height=\'20\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\'/><polyline points=\'17 8 12 3 7 8\'/><line x1=\'12\' y1=\'3\' x2=\'12\' y2=\'15\'/></svg>'}</div>
+          <div class="receipt-upload-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
           <div>
             <div style="font-size:13px;font-weight:700;color:var(--t1)">อัพโหลดใบเสร็จ</div>
             <div style="font-size:11.5px;color:var(--t2);margin-top:2px">รูปภาพหรือ PDF</div>
@@ -3424,6 +3436,8 @@ let attendanceView = 'me'; // me | history | leave | admin
 let attendancePhotoData = null;
 let _leafletMap = null;
 let attMonth = new Date().toISOString().slice(0,7);
+let attHistoryFilterDate = '';
+let attHistoryFilterUser = 0;
 let _leaveAttachmentData = null;
 let notifications = [];
 let nextNotifId = 1;
@@ -11562,7 +11576,7 @@ function renderAttendance(el){
       <div class="att-table-wrap">
         ${myRecs.length===0? '<div class="empty-state">ยังไม่มีประวัติการลงเวลา</div>' :
         `<table class="att-table">
-          <thead><tr><th>วันที่</th><th>เช็คอิน</th><th>เช็คเอาท์</th><th>รวม</th><th>มาสาย</th><th>OT</th><th>สถานะ</th><th>ภาพ</th></tr></thead>
+          <thead><tr><th>วันที่</th><th>เช็คอิน</th><th>เช็คเอาท์</th><th>รวม</th><th>มาสาย</th><th>OT</th><th>สถานะ</th><th>ดู</th></tr></thead>
           <tbody>${myRecs.map(r => `<tr>
             <td>${r.date}</td>
             <td>${r.checkIn?_fmtTime(r.checkIn.time):'—'}</td>
@@ -11571,7 +11585,7 @@ function renderAttendance(el){
             <td>${r.lateMinutes? r.lateMinutes+'m':'—'}</td>
             <td>${r.otHours? r.otHours+'h':'—'}</td>
             <td><span class="att-status-pill ${r.status}">${_attStatusLabel(r.status)}</span></td>
-            <td>${r.checkIn?.photo? `<img class="att-mini-photo" src="${r.checkIn.photo}" onclick="window.open(this.src,'_blank')"/>` : '—'}</td>
+            <td><button onclick="openAttDetail(${r.id})" title="ดูรายละเอียด" style="background:none;border:none;cursor:pointer;color:var(--brand);padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
           </tr>`).join('')}</tbody>
         </table>`}
       </div>`;
@@ -11623,7 +11637,68 @@ function renderAttendance(el){
   }
 }
 
-function setAttMonth(v){ attMonth = v; rerender(); }
+function setAttMonth(v){ attMonth = v; attHistoryFilterDate=''; rerender(); }
+function setAttHistFilterDate(v){ attHistoryFilterDate = v||''; rerender(); }
+function setAttHistFilterUser(v){ attHistoryFilterUser = parseInt(v,10)||0; rerender(); }
+function clearAttHistFilters(){ attHistoryFilterDate=''; attHistoryFilterUser=0; rerender(); }
+
+function openAttDetail(recId){
+  const r = attendanceRecords.find(x => x.id === recId);
+  if(!r){ alert('ไม่พบข้อมูล'); return; }
+  const u = USERS.find(x => x.id === r.userId);
+  const settings = _userWorkSettings(u);
+  const mapsLink = (lat,lng) => lat&&lng ? `https://maps.google.com/?q=${lat},${lng}` : null;
+  const inLink = mapsLink(r.checkIn?.lat, r.checkIn?.lng);
+  const outLink = mapsLink(r.checkOut?.lat, r.checkOut?.lng);
+
+  const body = `
+    <div style="display:flex;align-items:center;gap:14px;padding:16px;background:linear-gradient(135deg,${u?.color||'#888'}15 0%,var(--bg) 60%);border-radius:14px;margin-bottom:16px">
+      <div class="att-rank-av" style="width:48px;height:48px;background:${u?.color||'#888'};font-size:18px">${u?.init||(u?.name||'?')[0]}</div>
+      <div style="flex:1">
+        <div style="font-size:16px;font-weight:800;color:var(--t1)">${escapeHtmlN(u?.name||'?')}</div>
+        <div style="font-size:12px;color:var(--t2)">วันที่ <b>${r.date}</b> · เวลางาน ${settings.start} - ${settings.end}</div>
+      </div>
+      <span class="att-status-pill ${r.status}" style="font-size:13px">${_attStatusLabel(r.status)}</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div class="att-kpi normal" style="padding:14px"><div class="att-kpi-lbl">รวมชั่วโมง</div><div class="att-kpi-val">${r.totalHours||0}h</div></div>
+      <div class="att-kpi late" style="padding:14px"><div class="att-kpi-lbl">มาสาย</div><div class="att-kpi-val">${r.lateMinutes||0}<span style="font-size:14px"> นาที</span></div></div>
+      <div class="att-kpi ot" style="padding:14px"><div class="att-kpi-lbl">OT</div><div class="att-kpi-val">${r.otHours||0}h</div></div>
+      <div class="att-kpi absent" style="padding:14px"><div class="att-kpi-lbl">ออกก่อนเวลา</div><div class="att-kpi-val">${r.earlyLeaveMinutes||0}<span style="font-size:14px"> นาที</span></div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div style="border:1px solid var(--border);border-radius:12px;padding:14px;background:var(--bg-soft)">
+        <div style="font-size:11px;font-weight:800;color:#059669;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">เช็คอิน</div>
+        ${r.checkIn? `
+          <div style="font-size:24px;font-weight:800;color:var(--t1);font-feature-settings:'tnum';margin-bottom:8px">${_fmtTime(r.checkIn.time)}</div>
+          ${r.checkIn.photo? `<img src="${r.checkIn.photo}" style="width:100%;border-radius:10px;cursor:pointer;border:1px solid var(--border);margin-bottom:8px" onclick="window.open(this.src,'_blank')"/>` : '<div style="padding:24px;text-align:center;color:var(--t2);background:var(--bg);border-radius:10px;font-size:12px;margin-bottom:8px">ไม่มีรูปถ่าย</div>'}
+          ${r.checkIn.distance!=null? `<div style="font-size:12px;color:var(--t2)">📍 ${r.checkIn.distance < 1000 ? r.checkIn.distance + ' m' : (r.checkIn.distance/1000).toFixed(2) + ' km'} จากบริษัท</div>`:''}
+          ${inLink? `<a href="${inLink}" target="_blank" style="display:inline-block;margin-top:6px;color:var(--brand);font-size:12px;font-weight:600;text-decoration:none">เปิดแผนที่ Google</a>`:''}
+          ${r.checkIn._source==='import'? `<div style="font-size:11px;color:var(--t2);margin-top:6px;font-style:italic">นำเข้าจากไฟล์</div>`:''}
+        ` : '<div style="color:var(--t2);font-size:13px;padding:12px 0">ยังไม่เช็คอิน</div>'}
+      </div>
+      <div style="border:1px solid var(--border);border-radius:12px;padding:14px;background:var(--bg-soft)">
+        <div style="font-size:11px;font-weight:800;color:#dc2626;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">เช็คเอาท์</div>
+        ${r.checkOut? `
+          <div style="font-size:24px;font-weight:800;color:var(--t1);font-feature-settings:'tnum';margin-bottom:8px">${_fmtTime(r.checkOut.time)}</div>
+          ${r.checkOut.photo? `<img src="${r.checkOut.photo}" style="width:100%;border-radius:10px;cursor:pointer;border:1px solid var(--border);margin-bottom:8px" onclick="window.open(this.src,'_blank')"/>` : '<div style="padding:24px;text-align:center;color:var(--t2);background:var(--bg);border-radius:10px;font-size:12px;margin-bottom:8px">ไม่มีรูปถ่าย</div>'}
+          ${r.checkOut.distance!=null? `<div style="font-size:12px;color:var(--t2)">📍 ${r.checkOut.distance < 1000 ? r.checkOut.distance + ' m' : (r.checkOut.distance/1000).toFixed(2) + ' km'} จากบริษัท</div>`:''}
+          ${outLink? `<a href="${outLink}" target="_blank" style="display:inline-block;margin-top:6px;color:var(--brand);font-size:12px;font-weight:600;text-decoration:none">เปิดแผนที่ Google</a>`:''}
+          ${r.checkOut._source==='import'? `<div style="font-size:11px;color:var(--t2);margin-top:6px;font-style:italic">นำเข้าจากไฟล์</div>`:''}
+        ` : '<div style="color:var(--t2);font-size:13px;padding:12px 0">ยังไม่เช็คเอาท์</div>'}
+      </div>
+    </div>`;
+  document.getElementById('attDetailBody').innerHTML = body;
+  const isAdmin = currentUser.role === 'admin';
+  document.getElementById('attDetailFooter').innerHTML = `
+    <button class="sm-btn-cancel" onclick="closeModal('attDetailModal')">ปิด</button>
+    ${isAdmin? `<button class="sm-btn-cancel" onclick="closeModal('attDetailModal'); adminClearCheckOut(${r.id})" style="color:var(--t2)">ล้าง check-out</button>
+    <button class="sm-btn-cancel" onclick="closeModal('attDetailModal'); adminCancelCheckIn(${r.id})" style="color:#f59e0b">ยกเลิก check-in</button>
+    <button class="sm-btn-cancel" onclick="closeModal('attDetailModal'); adminDeleteAttendance(${r.id})" style="color:#dc2626">ลบ record</button>`:''}`;
+  document.getElementById('attDetailModal').classList.add('show');
+}
 
 function _renderAdminAttDashboard(allUsers, today){
   const month = attMonth || today.slice(0,7);
@@ -11835,28 +11910,53 @@ function _renderAdminAttDashboard(allUsers, today){
       </table>
     </div>
 
-    <h3 class="sales-section-title" style="font-size:15px;margin:24px 0 12px">ประวัติทั้งหมดในเดือน ${month}</h3>
+    <h3 class="sales-section-title" style="font-size:15px;margin:24px 0 12px">ประวัติทั้งหมด</h3>
+    <div class="sales-filter-row" style="margin-bottom:12px">
+      <div class="sales-filter-field">
+        <label>วันที่</label>
+        <input type="date" value="${attHistoryFilterDate}" onchange="setAttHistFilterDate(this.value)"/>
+      </div>
+      <div class="sales-filter-field">
+        <label>สมาชิก</label>
+        <select onchange="setAttHistFilterUser(this.value)">
+          <option value="0">ทั้งหมด</option>
+          ${allUsers.map(u => `<option value="${u.id}" ${attHistoryFilterUser==u.id?'selected':''}>${escapeHtmlN(u.name)}</option>`).join('')}
+        </select>
+      </div>
+      <div style="display:flex;align-items:flex-end">
+        <button class="btn-ghost" onclick="clearAttHistFilters()">ล้างตัวกรอง</button>
+      </div>
+    </div>
     <div class="att-table-wrap">
       <table class="att-table">
         <thead><tr><th>วันที่</th><th>สมาชิก</th><th>เช็คอิน</th><th>เช็คเอาท์</th><th>รวม</th><th>มาสาย</th><th>OT</th><th>สถานะ</th><th>จัดการ</th></tr></thead>
-        <tbody>${monthRecs.sort((a,b) => b.date.localeCompare(a.date) || (b.id-a.id)).map(r => {
-          const u = USERS.find(x => x.id === r.userId);
-          return `<tr>
-            <td>${r.date}</td>
-            <td>${u? `<span class="sales-userchip" style="background:${u.color||'#888'}">${u.init||(u.name||'?')[0]}</span> ${escapeHtmlN(u.name)}` : '?'}</td>
-            <td>${r.checkIn? _fmtTime(r.checkIn.time):'—'}</td>
-            <td>${r.checkOut? _fmtTime(r.checkOut.time):'—'}</td>
-            <td>${r.totalHours||0}h</td>
-            <td>${r.lateMinutes? r.lateMinutes+'m':'—'}</td>
-            <td>${r.otHours? r.otHours+'h':'—'}</td>
-            <td><span class="att-status-pill ${r.status}">${_attStatusLabel(r.status)}</span></td>
-            <td style="white-space:nowrap">
-              ${r.checkOut? `<button class="icon-btn" onclick="adminClearCheckOut(${r.id})" title="ล้าง check-out" style="background:none;border:none;cursor:pointer;color:var(--t2);padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">↩</button>`:''}
-              <button class="icon-btn" onclick="adminCancelCheckIn(${r.id})" title="ยกเลิก check-in" style="background:none;border:none;cursor:pointer;color:#f59e0b;padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">⊘</button>
-              <button class="icon-btn" onclick="adminDeleteAttendance(${r.id})" title="ลบ" style="background:none;border:none;cursor:pointer;color:#dc2626;padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">${I.trash}</button>
-            </td>
-          </tr>`;
-        }).join('')}</tbody>
+        <tbody>${(()=>{
+          let filtered = attendanceRecords.filter(r => r.date.startsWith(month));
+          if(attHistoryFilterDate) filtered = filtered.filter(r => r.date === attHistoryFilterDate);
+          if(attHistoryFilterUser) filtered = filtered.filter(r => r.userId === attHistoryFilterUser);
+          filtered.sort((a,b) => b.date.localeCompare(a.date) || (b.id-a.id));
+          if(filtered.length === 0) return '<tr><td colspan="9" style="text-align:center;color:var(--t2);padding:24px">ไม่พบรายการที่ตรงกับตัวกรอง</td></tr>';
+          return filtered.map(r => {
+            const u = USERS.find(x => x.id === r.userId);
+            const hasPhoto = !!(r.checkIn?.photo || r.checkOut?.photo);
+            return `<tr>
+              <td>${r.date}</td>
+              <td>${u? `<span class="sales-userchip" style="background:${u.color||'#888'}">${u.init||(u.name||'?')[0]}</span> ${escapeHtmlN(u.name)}` : '?'}</td>
+              <td>${r.checkIn? _fmtTime(r.checkIn.time):'—'}${r.checkIn?.photo? ' <span title="มีรูปถ่าย" style="color:#10b981;font-size:10px">●</span>':''}</td>
+              <td>${r.checkOut? _fmtTime(r.checkOut.time):'—'}${r.checkOut?.photo? ' <span title="มีรูปถ่าย" style="color:#10b981;font-size:10px">●</span>':''}</td>
+              <td>${r.totalHours||0}h</td>
+              <td>${r.lateMinutes? r.lateMinutes+'m':'—'}</td>
+              <td>${r.otHours? r.otHours+'h':'—'}</td>
+              <td><span class="att-status-pill ${r.status}">${_attStatusLabel(r.status)}</span></td>
+              <td style="white-space:nowrap">
+                <button onclick="openAttDetail(${r.id})" title="ดูรายละเอียด + รูปถ่าย" style="background:none;border:none;cursor:pointer;color:var(--brand);padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                ${r.checkOut? `<button onclick="adminClearCheckOut(${r.id})" title="ล้าง check-out" style="background:none;border:none;cursor:pointer;color:var(--t2);padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">↩</button>`:''}
+                <button onclick="adminCancelCheckIn(${r.id})" title="ยกเลิก check-in" style="background:none;border:none;cursor:pointer;color:#f59e0b;padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">⊘</button>
+                <button onclick="adminDeleteAttendance(${r.id})" title="ลบ" style="background:none;border:none;cursor:pointer;color:#dc2626;padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">${I.trash}</button>
+              </td>
+            </tr>`;
+          }).join('');
+        })()}</tbody>
       </table>
     </div>`;
 }
