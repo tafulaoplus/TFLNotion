@@ -11,6 +11,8 @@
 <!-- Leaflet for attendance map -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin/>
 <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin></script>
+<!-- SheetJS for Excel import -->
+<script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <!-- Firebase for cross-device sync (optional - configure FIREBASE_CONFIG below) -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
@@ -2339,6 +2341,51 @@ svg{display:block;flex-shrink:0}
       <div id="viewCalendar" class="view"></div>
       <div id="viewLottery" class="view"></div>
       <div id="viewAttendance" class="view"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ATTENDANCE IMPORT MODAL -->
+<div class="overlay" id="attImportModal">
+  <div class="modal att-modal" style="width:min(720px,calc(100vw - 32px))">
+    <div class="modal-hd" style="padding:22px 24px 4px;border-bottom:none">
+      <div class="modal-title">Import ไฟล์สแกนนิ้ว</div>
+      <button class="modal-close" onclick="closeModal('attImportModal')">×</button>
+    </div>
+    <div class="modal-bd" style="padding:14px 24px">
+      <div class="upload-info-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <div>
+          <div style="font-weight:700;margin-bottom:3px">รูปแบบไฟล์ Excel/CSV ที่รองรับ</div>
+          <div>คอลัมน์: <b>ชื่อ</b> | <b>เวลาเข้า</b> | <b>เวลาออก</b> (แถวแรกคือ header ระบบจะข้ามให้)</div>
+        </div>
+      </div>
+      <div class="lot-fld" style="margin-top:12px">
+        <label class="lot-fld-lbl">วันที่ของข้อมูล <span style="color:#dc2626">*</span></label>
+        <input type="date" id="fImpDate"/>
+        <div style="font-size:11px;color:var(--t2);margin-top:4px">ระบบจะใช้วันที่นี้กับทุก record ในไฟล์</div>
+      </div>
+      <div class="lot-fld">
+        <label class="leave-attach-upload" id="impFileLabel">
+          <input type="file" id="fImpFile" accept=".xlsx,.xls,.csv" onchange="handleAttImportFile(event)"/>
+          <div class="ic">${'<svg width=\'18\' height=\'18\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\'/><polyline points=\'17 8 12 3 7 8\'/><line x1=\'12\' y1=\'3\' x2=\'12\' y2=\'15\'/></svg>'}</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--t1)" id="impFileName">เลือกไฟล์ Excel หรือ CSV</div>
+            <div style="font-size:11.5px;color:var(--t2);margin-top:2px">.xlsx, .xls, .csv</div>
+          </div>
+        </label>
+      </div>
+      <div id="impPreview" style="display:none;margin-top:14px">
+        <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--t1)">ตัวอย่างข้อมูล <span id="impPreviewCount" style="color:var(--t2);font-weight:500"></span></div>
+        <div class="att-table-wrap" style="max-height:280px;overflow-y:auto">
+          <table class="att-table" id="impPreviewTable"></table>
+        </div>
+        <div style="font-size:12px;color:var(--t2);margin-top:8px" id="impSummary"></div>
+      </div>
+    </div>
+    <div class="modal-ft" style="padding:18px 24px 22px">
+      <button class="sm-btn-cancel" onclick="closeModal('attImportModal')">ยกเลิก</button>
+      <button class="lot-btn-save" id="impConfirmBtn" onclick="confirmAttImport()" disabled style="opacity:.5;cursor:not-allowed">นำเข้าข้อมูล</button>
     </div>
   </div>
 </div>
@@ -11456,6 +11503,7 @@ function renderAttendance(el){
 
   const actions = `
     <button class="btn-ghost" onclick="openLeaveModal()">${I.calendar} ขอลา</button>
+    ${isAdmin? `<button class="btn-ghost" onclick="openAttImportModal()">${I.upload} Import</button>` : ''}
     ${isAdmin? `<button class="btn-ghost" onclick="openAttSettings()">${I.settings||''} ตั้งค่า</button>` : ''}
     ${isAdmin? `<button class="btn-ghost" onclick="exportAttendanceExcel()">${I.download} Export</button>` : ''}`;
 
@@ -11852,6 +11900,238 @@ function adminClearCheckOut(recId){
   try { logActivity('update','attendance', recId, 'ยกเลิก check-out'); } catch(_){}
   saveAll(); rerender();
 }
+
+// ===== ATTENDANCE IMPORT (Excel/CSV) =====
+let _impParsedRows = []; // [{ name, checkInStr, checkOutStr, matchedUser }]
+
+function openAttImportModal(){
+  _impParsedRows = [];
+  document.getElementById('fImpDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('fImpFile').value = '';
+  document.getElementById('impFileName').textContent = 'เลือกไฟล์ Excel หรือ CSV';
+  document.getElementById('impPreview').style.display = 'none';
+  const btn = document.getElementById('impConfirmBtn');
+  btn.disabled = true;
+  btn.style.opacity = '.5';
+  btn.style.cursor = 'not-allowed';
+  document.getElementById('attImportModal').classList.add('show');
+}
+
+function _normalizeName(s){ return String(s||'').trim().toLowerCase().replace(/\s+/g,' '); }
+
+function _matchUserByName(name){
+  if(!name) return null;
+  const target = _normalizeName(name);
+  // Exact
+  let m = USERS.find(u => _normalizeName(u.name) === target);
+  if(m) return m;
+  // By email local-part
+  m = USERS.find(u => _normalizeName(u.email||'').split('@')[0] === target);
+  if(m) return m;
+  // Contains / startsWith
+  m = USERS.find(u => _normalizeName(u.name).includes(target) || target.includes(_normalizeName(u.name)));
+  if(m) return m;
+  // By initials
+  m = USERS.find(u => _normalizeName(u.init||'') === target);
+  return m || null;
+}
+
+function _excelTimeToDate(val, dateStr){
+  if(val == null || val === '') return null;
+  // If already a Date
+  if(val instanceof Date) return val;
+  // If number → Excel serial time (0-1 fraction of day, or full date)
+  if(typeof val === 'number'){
+    if(val > 1 && val < 600000){
+      // Excel date serial
+      const epoch = new Date(Date.UTC(1899, 11, 30));
+      const ms = val * 24 * 3600 * 1000;
+      const d = new Date(epoch.getTime() + ms);
+      // Combine date-part of dateStr with time-part of d
+      const base = new Date(dateStr + 'T00:00:00');
+      base.setHours(d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds());
+      return base;
+    }
+    if(val >= 0 && val <= 1){
+      // Fraction of day
+      const totalSec = Math.round(val * 86400);
+      const h = Math.floor(totalSec / 3600);
+      const m = Math.floor((totalSec % 3600) / 60);
+      const s = totalSec % 60;
+      const base = new Date(dateStr + 'T00:00:00');
+      base.setHours(h, m, s);
+      return base;
+    }
+  }
+  // String parsing
+  const str = String(val).trim();
+  if(!str) return null;
+  // Try HH:MM or HH:MM:SS
+  let mm = str.match(/(\d{1,2})[:.](\d{1,2})(?:[:.](\d{1,2}))?\s*(AM|PM|am|pm)?/);
+  if(mm){
+    let h = parseInt(mm[1],10);
+    const min = parseInt(mm[2],10);
+    const sec = parseInt(mm[3]||'0',10);
+    const ampm = (mm[4]||'').toUpperCase();
+    if(ampm === 'PM' && h < 12) h += 12;
+    if(ampm === 'AM' && h === 12) h = 0;
+    const base = new Date(dateStr + 'T00:00:00');
+    base.setHours(h, min, sec);
+    return base;
+  }
+  // Try ISO
+  const d = new Date(str);
+  if(!isNaN(d.getTime())) return d;
+  return null;
+}
+
+async function handleAttImportFile(ev){
+  const file = ev.target.files && ev.target.files[0];
+  if(!file) return;
+  document.getElementById('impFileName').textContent = file.name;
+  if(typeof XLSX === 'undefined'){
+    alert('ไลบรารี Excel กำลังโหลด — กรุณารอสักครู่แล้วเลือกไฟล์อีกครั้ง');
+    return;
+  }
+  try {
+    const ab = await file.arrayBuffer();
+    const wb = XLSX.read(ab, { cellDates: true });
+    const sheetName = wb.SheetNames[0];
+    const sheet = wb.Sheets[sheetName];
+    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: true, defval: null });
+    if(!rows.length){ alert('ไฟล์ว่าง'); return; }
+    // Skip header row(s) — detect if first row has non-time values
+    let startIdx = 0;
+    const first = rows[0] || [];
+    const firstHasTime = _excelTimeToDate(first[1], '2026-01-01') || _excelTimeToDate(first[2], '2026-01-01');
+    if(!firstHasTime) startIdx = 1;
+    _impParsedRows = rows.slice(startIdx).map(r => {
+      if(!r || (r[0]==null && r[1]==null && r[2]==null)) return null;
+      const name = r[0]==null ? '' : String(r[0]).trim();
+      if(!name) return null;
+      const u = _matchUserByName(name);
+      return {
+        name,
+        rawIn: r[1],
+        rawOut: r[2],
+        matchedUser: u,
+      };
+    }).filter(Boolean);
+    _renderImpPreview();
+  } catch(err){
+    console.error(err);
+    alert('อ่านไฟล์ไม่สำเร็จ: ' + (err.message||err));
+  }
+}
+
+function _renderImpPreview(){
+  const dateStr = document.getElementById('fImpDate').value || new Date().toISOString().slice(0,10);
+  const tbl = document.getElementById('impPreviewTable');
+  const matched = _impParsedRows.filter(r => r.matchedUser).length;
+  const unmatched = _impParsedRows.length - matched;
+  tbl.innerHTML = `<thead><tr><th>ชื่อในไฟล์</th><th>เชื่อมกับสมาชิก</th><th>เวลาเข้า</th><th>เวลาออก</th><th>สถานะ</th></tr></thead>
+    <tbody>${_impParsedRows.map(r => {
+      const inDate = _excelTimeToDate(r.rawIn, dateStr);
+      const outDate = _excelTimeToDate(r.rawOut, dateStr);
+      const settings = _userWorkSettings(r.matchedUser);
+      let status = 'normal';
+      if(inDate){
+        const startMin = _timeToMinutes(settings.start);
+        const nowMin = inDate.getHours()*60 + inDate.getMinutes();
+        if(nowMin - startMin - attendanceSettings.lateGracePeriod > 0) status = 'late';
+      } else {
+        status = 'absent';
+      }
+      return `<tr>
+        <td><b>${escapeHtmlN(r.name)}</b></td>
+        <td>${r.matchedUser? `<span class="sales-userchip" style="background:${r.matchedUser.color||'#888'}">${r.matchedUser.init||(r.matchedUser.name||'?')[0]}</span> ${escapeHtmlN(r.matchedUser.name)}` : '<span style="color:#dc2626">ไม่พบ — จะข้าม</span>'}</td>
+        <td>${inDate? _fmtTime(inDate) : '—'}</td>
+        <td>${outDate? _fmtTime(outDate) : '—'}</td>
+        <td>${r.matchedUser? `<span class="att-status-pill ${status}">${_attStatusLabel(status)}</span>` : '—'}</td>
+      </tr>`;
+    }).join('')}</tbody>`;
+  document.getElementById('impPreviewCount').textContent = `· พบ ${_impParsedRows.length} แถว`;
+  document.getElementById('impSummary').innerHTML = `<b style="color:#059669">${matched}</b> รายชื่อจับคู่กับสมาชิกได้${unmatched? ` · <b style="color:#dc2626">${unmatched}</b> ไม่พบในระบบ (จะข้าม)`:''}`;
+  document.getElementById('impPreview').style.display = 'block';
+  const btn = document.getElementById('impConfirmBtn');
+  if(matched > 0){
+    btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+  } else {
+    btn.disabled = true; btn.style.opacity = '.5'; btn.style.cursor = 'not-allowed';
+  }
+}
+
+function confirmAttImport(){
+  const dateStr = document.getElementById('fImpDate').value;
+  if(!dateStr){ alert('กรุณาเลือกวันที่'); return; }
+  const matched = _impParsedRows.filter(r => r.matchedUser);
+  if(matched.length === 0){ alert('ไม่มีรายชื่อที่จับคู่ได้'); return; }
+  const dupes = matched.filter(r => attendanceRecords.find(a => a.userId === r.matchedUser.id && a.date === dateStr));
+  const msg = `นำเข้า ${matched.length} record ลงวันที่ ${dateStr}\n` +
+              (dupes.length>0 ? `\n⚠️ มี ${dupes.length} คนที่มี record อยู่แล้วในวันนั้น — จะถูกเขียนทับ\n` : '') +
+              `\nยืนยัน?`;
+  if(!confirm(msg)) return;
+  let created = 0, updated = 0;
+  matched.forEach(r => {
+    const u = r.matchedUser;
+    const inDate = _excelTimeToDate(r.rawIn, dateStr);
+    const outDate = _excelTimeToDate(r.rawOut, dateStr);
+    const settings = _userWorkSettings(u);
+    let status = 'normal';
+    let lateMin = 0;
+    let otHours = 0;
+    let earlyLeaveMin = 0;
+    let totalHours = 0;
+    if(inDate){
+      const startMin = _timeToMinutes(settings.start);
+      const nowMin = inDate.getHours()*60 + inDate.getMinutes();
+      lateMin = Math.max(0, nowMin - startMin - attendanceSettings.lateGracePeriod);
+      if(lateMin > 0) status = 'late';
+    } else {
+      status = 'absent';
+    }
+    if(outDate && inDate){
+      const otMin = _timeToMinutes(settings.otAfter);
+      const endMin = _timeToMinutes(settings.end);
+      const outNowMin = outDate.getHours()*60 + outDate.getMinutes();
+      earlyLeaveMin = Math.max(0, endMin - outNowMin);
+      otHours = outNowMin > otMin ? (outNowMin - otMin)/60 : 0;
+      totalHours = (outDate - inDate) / 3600000;
+    }
+    const existingIdx = attendanceRecords.findIndex(a => a.userId === u.id && a.date === dateStr);
+    const rec = {
+      userId: u.id,
+      date: dateStr,
+      checkIn: inDate ? { time: inDate.toISOString(), lat:null, lng:null, photo:null, distance:null, _source:'import' } : null,
+      checkOut: outDate ? { time: outDate.toISOString(), lat:null, lng:null, photo:null, distance:null, _source:'import' } : null,
+      status,
+      lateMinutes: Math.round(lateMin),
+      otHours: Math.round(otHours*10)/10,
+      earlyLeaveMinutes: Math.round(earlyLeaveMin),
+      totalHours: Math.round(totalHours*10)/10,
+      _source: 'import',
+    };
+    if(existingIdx >= 0){
+      attendanceRecords[existingIdx] = { ...attendanceRecords[existingIdx], ...rec, updatedAt: Date.now() };
+      updated++;
+    } else {
+      attendanceRecords.push({ id: nextAttendanceId++, ...rec, createdAt: Date.now() });
+      created++;
+    }
+  });
+  try { logActivity('create','attendance', null, `Import ${matched.length} record วันที่ ${dateStr}`); } catch(_){}
+  saveAll();
+  closeModal('attImportModal');
+  alert(`✓ นำเข้าสำเร็จ\n\nสร้างใหม่ ${created} · เขียนทับ ${updated}`);
+  rerender();
+}
+
+// Re-render preview when date changes
+document.addEventListener('change', e => {
+  if(e.target && e.target.id === 'fImpDate' && _impParsedRows.length > 0){
+    _renderImpPreview();
+  }
+});
 
 function exportAttendanceExcel(){
   try {
