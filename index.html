@@ -1499,13 +1499,15 @@ svg{display:block;flex-shrink:0}
 
 /* Mobile responsive — topbar + filter rows */
 @media (max-width:780px){
-  .topbar{padding:10px 14px;gap:8px}
-  .tb-text-wrap .tb-title{font-size:15px}
+  .topbar{padding:10px 14px;gap:8px;flex-wrap:wrap}
+  .topbar-title{flex:1 1 100%;min-width:0;order:1}
+  .topbar-actions{flex:1 1 100%;order:2;justify-content:flex-start;flex-wrap:wrap;gap:6px;padding-top:4px;border-top:1px solid var(--border);margin-top:4px;padding-bottom:2px}
+  .tb-text-wrap .tb-title{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .tb-text-wrap .tb-sub{font-size:11px}
-  .fb-brand{gap:8px}
-  .fb-brand-sub{padding-left:10px}
-  .fb-brand-label{font-size:13px}
-  .fb-brand-meta{font-size:10.5px;max-width:160px}
+  .fb-brand{gap:8px;min-width:0}
+  .fb-brand-sub{padding-left:10px;min-width:0}
+  .fb-brand-label{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fb-brand-meta{font-size:10.5px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .fb-logo,.ws-logo,.kn-logo,.db-logo,.lib-logo,.doc-logo,.tr-logo,.mt-logo,.at-logo,.tm-logo,.sl-logo,.ac-logo,.cl-logo{height:30px}
   .lot-logo-img{height:32px}
   .topbar-actions{gap:6px}
@@ -2379,15 +2381,22 @@ svg{display:block;flex-shrink:0}
       <div class="upload-info-bar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
         <div>
-          <div style="font-weight:700;margin-bottom:3px">รูปแบบไฟล์ Excel/CSV ที่รองรับ</div>
-          <div>คอลัมน์: <b>ชื่อ</b> | <b>เวลาเข้า</b> | <b>เวลาออก</b> (แถวแรกคือ header ระบบจะข้ามให้)</div>
+          <div style="font-weight:700;margin-bottom:3px">รูปแบบไฟล์ที่รองรับ (.xlsx / .xls / .csv)</div>
+          <div><b>3 คอลัมน์</b>: ชื่อ · เวลาเข้า · เวลาออก (ใช้วันที่เริ่มกับทุกแถว)</div>
+          <div><b>4 คอลัมน์</b>: ชื่อ · วันที่ · เวลาเข้า · เวลาออก (ใช้วันที่จากไฟล์ กรองตามช่วงที่เลือก)</div>
         </div>
       </div>
-      <div class="lot-fld" style="margin-top:12px">
-        <label class="lot-fld-lbl">วันที่ของข้อมูล <span style="color:#dc2626">*</span></label>
-        <input type="date" id="fImpDate"/>
-        <div style="font-size:11px;color:var(--t2);margin-top:4px">ระบบจะใช้วันที่นี้กับทุก record ในไฟล์</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+        <div class="lot-fld">
+          <label class="lot-fld-lbl">วันที่เริ่ม <span style="color:#dc2626">*</span></label>
+          <input type="date" id="fImpDateStart"/>
+        </div>
+        <div class="lot-fld">
+          <label class="lot-fld-lbl">วันที่จบ</label>
+          <input type="date" id="fImpDateEnd"/>
+        </div>
       </div>
+      <div style="font-size:11px;color:var(--t2);margin-top:-4px;margin-bottom:8px">ถ้าไฟล์ไม่มีคอลัมน์วันที่ → จะใช้ "วันที่เริ่ม" กับทุกแถว · ถ้ามี → กรองเฉพาะที่อยู่ในช่วง</div>
       <div class="lot-fld">
         <label class="leave-attach-upload" id="impFileLabel">
           <input type="file" id="fImpFile" accept=".xlsx,.xls,.csv" onchange="handleAttImportFile(event)"/>
@@ -12123,7 +12132,9 @@ let _impParsedRows = []; // [{ name, checkInStr, checkOutStr, matchedUser }]
 
 function openAttImportModal(){
   _impParsedRows = [];
-  document.getElementById('fImpDate').value = new Date().toISOString().slice(0,10);
+  const today = new Date().toISOString().slice(0,10);
+  document.getElementById('fImpDateStart').value = today;
+  document.getElementById('fImpDateEnd').value = today;
   document.getElementById('fImpFile').value = '';
   document.getElementById('impFileName').textContent = 'เลือกไฟล์ Excel หรือ CSV';
   document.getElementById('impPreview').style.display = 'none';
@@ -12132,6 +12143,27 @@ function openAttImportModal(){
   btn.style.opacity = '.5';
   btn.style.cursor = 'not-allowed';
   document.getElementById('attImportModal').classList.add('show');
+}
+
+function _parseRowDate(val){
+  if(val == null || val === '') return null;
+  if(val instanceof Date && !isNaN(val.getTime())) return val.toISOString().slice(0,10);
+  if(typeof val === 'number'){
+    // Excel serial
+    const epoch = new Date(Date.UTC(1899, 11, 30));
+    const d = new Date(epoch.getTime() + val * 86400000);
+    return d.toISOString().slice(0,10);
+  }
+  const str = String(val).trim();
+  // Try DD/MM/YYYY or DD-MM-YYYY
+  let m = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if(m){ return `${m[3]}-${String(m[2]).padStart(2,'0')}-${String(m[1]).padStart(2,'0')}`; }
+  // YYYY-MM-DD or YYYY/MM/DD
+  m = str.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+  if(m){ return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`; }
+  const d = new Date(str);
+  if(!isNaN(d.getTime())) return d.toISOString().slice(0,10);
+  return null;
 }
 
 function _normalizeName(s){ return String(s||'').trim().toLowerCase().replace(/\s+/g,' '); }
@@ -12217,20 +12249,28 @@ async function handleAttImportFile(ev){
     const sheet = wb.Sheets[sheetName];
     const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: true, defval: null });
     if(!rows.length){ alert('ไฟล์ว่าง'); return; }
-    // Skip header row(s) — detect if first row has non-time values
+    // Detect column count from first non-empty row + skip header if first row has non-numeric values
+    const sampleRow = rows.find(r => r && r.some(c => c != null && c !== ''));
+    const colCount = sampleRow ? sampleRow.length : 3;
+    const hasDateCol = colCount >= 4; // name, date, in, out
     let startIdx = 0;
     const first = rows[0] || [];
-    const firstHasTime = _excelTimeToDate(first[1], '2026-01-01') || _excelTimeToDate(first[2], '2026-01-01');
-    if(!firstHasTime) startIdx = 1;
+    // Check if first row is header — if any of cell 1+ can't be parsed as time/date, treat as header
+    const inIdx = hasDateCol ? 2 : 1;
+    const outIdx = hasDateCol ? 3 : 2;
+    const firstParseable = _excelTimeToDate(first[inIdx], '2026-01-01');
+    if(!firstParseable) startIdx = 1;
     _impParsedRows = rows.slice(startIdx).map(r => {
-      if(!r || (r[0]==null && r[1]==null && r[2]==null)) return null;
+      if(!r || (r[0]==null && r[inIdx]==null && r[outIdx]==null)) return null;
       const name = r[0]==null ? '' : String(r[0]).trim();
       if(!name) return null;
       const u = _matchUserByName(name);
+      const rowDate = hasDateCol ? _parseRowDate(r[1]) : null;
       return {
         name,
-        rawIn: r[1],
-        rawOut: r[2],
+        rowDate,
+        rawIn: r[inIdx],
+        rawOut: r[outIdx],
         matchedUser: u,
       };
     }).filter(Boolean);
@@ -12242,15 +12282,24 @@ async function handleAttImportFile(ev){
 }
 
 function _renderImpPreview(){
-  const dateStr = document.getElementById('fImpDate').value || new Date().toISOString().slice(0,10);
+  const dateStart = document.getElementById('fImpDateStart').value || new Date().toISOString().slice(0,10);
+  const dateEnd = document.getElementById('fImpDateEnd').value || dateStart;
   const tbl = document.getElementById('impPreviewTable');
-  const matched = _impParsedRows.filter(r => r.matchedUser).length;
-  const unmatched = _impParsedRows.length - matched;
-  tbl.innerHTML = `<thead><tr><th>ชื่อในไฟล์</th><th>เชื่อมกับสมาชิก</th><th>เวลาเข้า</th><th>เวลาออก</th><th>สถานะ</th></tr></thead>
-    <tbody>${_impParsedRows.map(r => {
-      const inDate = _excelTimeToDate(r.rawIn, dateStr);
-      const outDate = _excelTimeToDate(r.rawOut, dateStr);
-      const settings = _userWorkSettings(r.matchedUser, dateStr);
+  // Apply date range filter
+  const inRange = (d) => d >= dateStart && d <= dateEnd;
+  const usableRows = _impParsedRows.map(r => {
+    const useDate = r.rowDate || dateStart;
+    const inRangeOk = !r.rowDate || inRange(r.rowDate);
+    return { ...r, useDate, inRangeOk };
+  });
+  const matched = usableRows.filter(r => r.matchedUser && r.inRangeOk).length;
+  const unmatched = usableRows.filter(r => !r.matchedUser).length;
+  const outOfRange = usableRows.filter(r => r.matchedUser && !r.inRangeOk).length;
+  tbl.innerHTML = `<thead><tr><th>ชื่อในไฟล์</th><th>วันที่</th><th>เชื่อมกับสมาชิก</th><th>เวลาเข้า</th><th>เวลาออก</th><th>สถานะ</th></tr></thead>
+    <tbody>${usableRows.map(r => {
+      const inDate = _excelTimeToDate(r.rawIn, r.useDate);
+      const outDate = _excelTimeToDate(r.rawOut, r.useDate);
+      const settings = _userWorkSettings(r.matchedUser, r.useDate);
       let status = 'normal';
       if(settings.isDayOff && inDate){
         status = 'holiday';
@@ -12261,16 +12310,18 @@ function _renderImpPreview(){
       } else {
         status = settings.isDayOff ? 'holiday' : 'absent';
       }
-      return `<tr>
+      const skipReason = !r.matchedUser ? 'ไม่พบสมาชิก' : (!r.inRangeOk ? 'นอกช่วงวันที่' : '');
+      return `<tr ${skipReason?'style="opacity:.5"':''}>
         <td><b>${escapeHtmlN(r.name)}</b></td>
-        <td>${r.matchedUser? `<span class="sales-userchip" style="background:${r.matchedUser.color||'#888'}">${r.matchedUser.init||(r.matchedUser.name||'?')[0]}</span> ${escapeHtmlN(r.matchedUser.name)}` : '<span style="color:#dc2626">ไม่พบ — จะข้าม</span>'}</td>
+        <td>${r.useDate}${r.rowDate?'':' <span style="color:var(--t2);font-size:10px">(default)</span>'}</td>
+        <td>${r.matchedUser? `<span class="sales-userchip" style="background:${r.matchedUser.color||'#888'}">${r.matchedUser.init||(r.matchedUser.name||'?')[0]}</span> ${escapeHtmlN(r.matchedUser.name)}` : '<span style="color:#dc2626">ไม่พบ</span>'}</td>
         <td>${inDate? _fmtTime(inDate) : '—'}</td>
         <td>${outDate? _fmtTime(outDate) : '—'}</td>
-        <td>${r.matchedUser? `<span class="att-status-pill ${status}">${_attStatusLabel(status)}</span>` : '—'}</td>
+        <td>${skipReason? `<span style="color:#dc2626;font-size:11px">⊘ ${skipReason}</span>` : `<span class="att-status-pill ${status}">${_attStatusLabel(status)}</span>`}</td>
       </tr>`;
     }).join('')}</tbody>`;
-  document.getElementById('impPreviewCount').textContent = `· พบ ${_impParsedRows.length} แถว`;
-  document.getElementById('impSummary').innerHTML = `<b style="color:#059669">${matched}</b> รายชื่อจับคู่กับสมาชิกได้${unmatched? ` · <b style="color:#dc2626">${unmatched}</b> ไม่พบในระบบ (จะข้าม)`:''}`;
+  document.getElementById('impPreviewCount').textContent = `· พบ ${usableRows.length} แถว`;
+  document.getElementById('impSummary').innerHTML = `<b style="color:#059669">${matched}</b> นำเข้าได้${unmatched? ` · <b style="color:#dc2626">${unmatched}</b> ไม่พบสมาชิก`:''}${outOfRange? ` · <b style="color:#f59e0b">${outOfRange}</b> นอกช่วงวันที่`:''}`;
   document.getElementById('impPreview').style.display = 'block';
   const btn = document.getElementById('impConfirmBtn');
   if(matched > 0){
@@ -12281,18 +12332,26 @@ function _renderImpPreview(){
 }
 
 function confirmAttImport(){
-  const dateStr = document.getElementById('fImpDate').value;
-  if(!dateStr){ alert('กรุณาเลือกวันที่'); return; }
-  const matched = _impParsedRows.filter(r => r.matchedUser);
-  if(matched.length === 0){ alert('ไม่มีรายชื่อที่จับคู่ได้'); return; }
-  const dupes = matched.filter(r => attendanceRecords.find(a => a.userId === r.matchedUser.id && a.date === dateStr));
-  const msg = `นำเข้า ${matched.length} record ลงวันที่ ${dateStr}\n` +
-              (dupes.length>0 ? `\n⚠️ มี ${dupes.length} คนที่มี record อยู่แล้วในวันนั้น — จะถูกเขียนทับ\n` : '') +
+  const dateStart = document.getElementById('fImpDateStart').value;
+  const dateEnd = document.getElementById('fImpDateEnd').value || dateStart;
+  if(!dateStart){ alert('กรุณาเลือกวันที่เริ่ม'); return; }
+  if(dateEnd < dateStart){ alert('วันที่จบต้องไม่ก่อนวันที่เริ่ม'); return; }
+  const inRange = (d) => d >= dateStart && d <= dateEnd;
+  const matched = _impParsedRows.filter(r => r.matchedUser && (!r.rowDate || inRange(r.rowDate)));
+  if(matched.length === 0){ alert('ไม่มี record ที่จับคู่ได้และอยู่ในช่วงวันที่'); return; }
+  const dupes = matched.filter(r => {
+    const date = r.rowDate || dateStart;
+    return attendanceRecords.find(a => a.userId === r.matchedUser.id && a.date === date);
+  });
+  const dateScope = dateStart === dateEnd ? dateStart : `${dateStart} ถึง ${dateEnd}`;
+  const msg = `นำเข้า ${matched.length} record ในช่วง ${dateScope}\n` +
+              (dupes.length>0 ? `\n⚠️ มี ${dupes.length} record ซ้ำในระบบ — จะถูกเขียนทับ\n` : '') +
               `\nยืนยัน?`;
   if(!confirm(msg)) return;
   let created = 0, updated = 0;
   matched.forEach(r => {
     const u = r.matchedUser;
+    const dateStr = r.rowDate || dateStart;
     const inDate = _excelTimeToDate(r.rawIn, dateStr);
     const outDate = _excelTimeToDate(r.rawOut, dateStr);
     const settings = _userWorkSettings(u, dateStr);
@@ -12340,16 +12399,16 @@ function confirmAttImport(){
       created++;
     }
   });
-  try { logActivity('create','attendance', null, `Import ${matched.length} record วันที่ ${dateStr}`); } catch(_){}
+  try { logActivity('create','attendance', null, `Import ${matched.length} record ช่วง ${dateScope}`); } catch(_){}
   saveAll();
   closeModal('attImportModal');
   alert(`✓ นำเข้าสำเร็จ\n\nสร้างใหม่ ${created} · เขียนทับ ${updated}`);
   rerender();
 }
 
-// Re-render preview when date changes
+// Re-render preview when date range changes
 document.addEventListener('change', e => {
-  if(e.target && e.target.id === 'fImpDate' && _impParsedRows.length > 0){
+  if(e.target && (e.target.id === 'fImpDateStart' || e.target.id === 'fImpDateEnd') && _impParsedRows.length > 0){
     _renderImpPreview();
   }
 });
