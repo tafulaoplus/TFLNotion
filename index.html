@@ -426,6 +426,22 @@
   .tm-logo{height:38px}
 }
 
+/* ===== SYNC STATUS BADGE ===== */
+.sync-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:10px;font-size:11.5px;font-weight:700;cursor:default;user-select:none;font-feature-settings:'tnum';transition:all .15s ease}
+.sync-badge::before{content:'';width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sync-badge.ok{background:rgba(16,185,129,.12);color:#059669}
+.sync-badge.ok::before{background:#10b981;box-shadow:0 0 8px rgba(16,185,129,.6)}
+.sync-badge.wait{background:rgba(245,158,11,.15);color:#b45309}
+.sync-badge.wait::before{background:#f59e0b;animation:syncPulse 1s ease-in-out infinite}
+.sync-badge.off{background:var(--bg-soft);color:var(--t2)}
+.sync-badge.off::before{background:#9ca3af}
+.sync-badge.err{background:rgba(239,68,68,.15);color:#dc2626}
+.sync-badge.err::before{background:#ef4444}
+[data-theme="dark"] .sync-badge.ok{background:rgba(52,211,153,.18);color:#34d399}
+[data-theme="dark"] .sync-badge.wait{background:rgba(251,191,36,.18);color:#fbbf24}
+[data-theme="dark"] .sync-badge.err{background:rgba(248,113,113,.18);color:#f87171}
+@keyframes syncPulse{0%,100%{opacity:1}50%{opacity:.3}}
+
 /* ===== NOTIFICATION SYSTEM ===== */
 .notif-btn{position:relative;background:transparent;border:1px solid var(--border-2);border-radius:10px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t1);transition:background .15s ease,border-color .15s ease;flex-shrink:0}
 .notif-btn:hover{background:var(--bg-hover);border-color:var(--brand)}
@@ -3062,14 +3078,36 @@ let neonLastUpdatedAt = null;
 let neonSyncTimer = null;
 let neonPollTimer = null;
 let neonSyncInProgress = false;
+let neonStatus = 'offline'; // offline | connecting | online | error
+let neonLastError = '';
 const NEON_API = '/api';
 
+function setNeonStatus(s, err){
+  neonStatus = s;
+  neonLastError = err || '';
+  try { updateSyncBadge(); } catch(_){}
+}
+function updateSyncBadge(){
+  const el = document.getElementById('syncBadge');
+  if(!el) return;
+  const map = {
+    offline:  { cls:'off',  txt:'Offline',  title:'ใช้งานออฟไลน์ — ข้อมูลเก็บใน localStorage' },
+    connecting:{ cls:'wait',txt:'Connecting',title:'กำลังเชื่อมต่อ Neon...' },
+    online:   { cls:'ok',   txt:'Online',   title:'เชื่อม Neon แล้ว — ข้อมูล sync อัตโนมัติ' },
+    error:    { cls:'err',  txt:'Sync Error',title:'เชื่อม Neon ไม่ได้: '+neonLastError },
+  };
+  const s = map[neonStatus] || map.offline;
+  el.className = 'sync-badge ' + s.cls;
+  el.textContent = s.txt;
+  el.title = s.title;
+}
+
 async function initNeonSync(){
-  // Skip if running on file:// (no API)
   if(location.protocol === 'file:'){
-    console.log('[Neon] Disabled on file:// protocol');
+    setNeonStatus('offline');
     return false;
   }
+  setNeonStatus('connecting');
   try {
     const r = await fetch(`${NEON_API}/health`, { cache: 'no-store' });
     if(!r.ok) throw new Error('Health check failed: ' + r.status);
@@ -3077,11 +3115,13 @@ async function initNeonSync(){
     if(!data.ok) throw new Error(data.error || 'Health not ok');
     neonEnabled = true;
     console.log(`[Neon] ✓ Connected to ${data.db} (${data.version})`);
+    setNeonStatus('online');
     await loadFromNeon();
     startNeonPolling();
     return true;
   } catch(e){
-    console.log('[Neon] Not available — falling back to localStorage / Firebase');
+    console.warn('[Neon] connection failed:', e.message);
+    setNeonStatus('error', e.message);
     return false;
   }
 }
@@ -3128,7 +3168,17 @@ function applyRemoteWorkspace(data){
     try { updateNotifBadge(); } catch(_){}
   }
   if(Array.isArray(data.salesEvents)){
-    salesEvents = data.salesEvents;
+    const localById = {};
+    salesEvents.forEach(s => { localById[s.id] = s; });
+    salesEvents = data.salesEvents.map(s => {
+      if(s && s.result && s.result._receiptStripped){
+        const local = localById[s.id];
+        if(local && local.result && local.result.receiptData){
+          return { ...s, result: { ...s.result, receiptData: local.result.receiptData, receiptName: local.result.receiptName, receiptType: local.result.receiptType } };
+        }
+      }
+      return s;
+    });
     const maxSid = salesEvents.reduce((m,s)=>Math.max(m, s.id||0), 0);
     nextSalesId = Math.max(nextSalesId, maxSid + 1);
   }
@@ -3157,6 +3207,17 @@ function applyRemoteWorkspace(data){
   }
 }
 
+function _slimSalesForSync(arr){
+  if(!Array.isArray(arr)) return arr;
+  return arr.map(s => {
+    if(s && s.result && typeof s.result.receiptData === 'string' && s.result.receiptData.length > 200000){
+      const { receiptData, ...rest } = s.result;
+      return { ...s, result: { ...rest, _receiptStripped: true } };
+    }
+    return s;
+  });
+}
+
 function syncToNeon(){
   if(!neonEnabled) return;
   clearTimeout(neonSyncTimer);
@@ -3174,9 +3235,9 @@ function syncToNeon(){
         columnWidths: columnWidths,
         nextTaskId: nextTaskId,
         nextDocId: nextDocId,
-        notifications: notifications,
-        salesEvents: salesEvents,
-        activityLog: activityLog,
+        notifications: notifications.slice(-200),
+        salesEvents: _slimSalesForSync(salesEvents),
+        activityLog: activityLog.slice(-500),
         lotterySales: lotterySales,
         lotterySettings: lotterySettings,
         _updatedBy: currentUser ? currentUser.name : 'unknown',
@@ -3189,11 +3250,15 @@ function syncToNeon(){
       if(r.ok){
         const data = await r.json();
         neonLastUpdatedAt = data.updatedAt;
+        setNeonStatus('online');
       } else {
-        console.warn('[Neon] Sync HTTP error', r.status);
+        const txt = await r.text().catch(()=>('HTTP '+r.status));
+        console.warn('[Neon] Sync HTTP error', r.status, txt);
+        setNeonStatus('error', 'HTTP '+r.status);
       }
     } catch(e){
       console.warn('[Neon] Sync failed:', e.message);
+      setNeonStatus('error', e.message);
     } finally {
       neonSyncInProgress = false;
     }
@@ -4300,6 +4365,7 @@ function navigateTo(id){
   if(el){ el.classList.add('active'); renderView(id,el); }
   renderSidebar();
   try { updateNotifBadge(); } catch(_){}
+  try { updateSyncBadge(); } catch(_){}
   // Auto-close mobile sidebar on navigate
   if(window.innerWidth <= 980) closeSidebar();
 }
@@ -4410,7 +4476,8 @@ function topbarFB(label, sub, actions=''){
 
 // ============ NOTIFICATION SYSTEM ============
 function notifBellHTML(){
-  return `<button class="notif-btn" onclick="toggleNotifPanel(event)" title="แจ้งเตือน" type="button">
+  return `<span class="sync-badge off" id="syncBadge" title="กำลังเชื่อมต่อ..." onclick="if(neonStatus==='error'||neonStatus==='offline'){initNeonSync();}">Offline</span>
+  <button class="notif-btn" onclick="toggleNotifPanel(event)" title="แจ้งเตือน" type="button">
     ${I.bell}
     <span class="notif-badge" id="notifBadge" style="display:none">0</span>
   </button>`;

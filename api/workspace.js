@@ -13,7 +13,8 @@ export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
       const rows = await sql`
-        SELECT data, updated_at, updated_by
+        SELECT data, updated_at, updated_by,
+               octet_length(data::text) AS size_bytes
         FROM workspace_snapshot
         WHERE workspace_id = ${wsId}
         LIMIT 1
@@ -22,36 +23,69 @@ export default async function handler(req, res) {
         return res.json({ ok: true, exists: false, data: null });
       }
       const r = rows[0];
+      const sizeBytes = Number(r.size_bytes) || 0;
+      // Vercel response limit ~4.5MB. Strip heavy fields if oversized.
+      let data = r.data || {};
+      if (sizeBytes > 3 * 1024 * 1024 && Array.isArray(data.salesEvents)) {
+        data = {
+          ...data,
+          salesEvents: data.salesEvents.map(s => {
+            if (s && s.result && s.result.receiptData) {
+              const { receiptData, ...resultRest } = s.result;
+              return { ...s, result: { ...resultRest, _receiptStripped: true } };
+            }
+            return s;
+          }),
+        };
+      }
       return res.json({
         ok: true,
         exists: true,
         updatedAt: r.updated_at,
         updatedBy: r.updated_by,
-        ...r.data,
+        _sizeBytes: sizeBytes,
+        ...data,
       });
     }
 
     if (req.method === 'POST') {
       const body = req.body || {};
-      // Vercel parses JSON automatically; if not, parse manually
       const payload = typeof body === 'string' ? JSON.parse(body) : body;
       const updatedBy = payload._updatedBy || 'unknown';
 
-      // Strip server-managed keys before storing
       const dataToStore = { ...payload };
       delete dataToStore._updatedBy;
       delete dataToStore.updatedAt;
       delete dataToStore.fetchedAt;
 
+      // Defensive: strip large base64 receiptData server-side too
+      if (Array.isArray(dataToStore.salesEvents)) {
+        dataToStore.salesEvents = dataToStore.salesEvents.map(s => {
+          if (s && s.result && typeof s.result.receiptData === 'string' && s.result.receiptData.length > 200_000) {
+            const { receiptData, ...rest } = s.result;
+            return { ...s, result: { ...rest, _receiptStripped: true } };
+          }
+          return s;
+        });
+      }
+      // Cap activityLog and notifications to last N to prevent unbounded growth
+      if (Array.isArray(dataToStore.activityLog) && dataToStore.activityLog.length > 500) {
+        dataToStore.activityLog = dataToStore.activityLog.slice(-500);
+      }
+      if (Array.isArray(dataToStore.notifications) && dataToStore.notifications.length > 200) {
+        dataToStore.notifications = dataToStore.notifications.slice(-200);
+      }
+
+      const json = JSON.stringify(dataToStore);
       await sql`
         INSERT INTO workspace_snapshot (workspace_id, data, updated_by)
-        VALUES (${wsId}, ${JSON.stringify(dataToStore)}::jsonb, ${updatedBy})
+        VALUES (${wsId}, ${json}::jsonb, ${updatedBy})
         ON CONFLICT (workspace_id) DO UPDATE
         SET data = EXCLUDED.data,
             updated_at = NOW(),
             updated_by = EXCLUDED.updated_by
       `;
-      return res.json({ ok: true, updatedAt: new Date().toISOString() });
+      return res.json({ ok: true, updatedAt: new Date().toISOString(), sizeBytes: json.length });
     }
 
     res.setHeader('Allow', 'GET, POST');
