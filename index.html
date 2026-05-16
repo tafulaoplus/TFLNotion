@@ -1200,6 +1200,8 @@
 .att-heat-stats .s-dot.absent{background:#ef4444}
 .att-heat-stats .s-dot.leave{background:#a78bfa}
 .att-heat-cell.weekend{background:var(--bg-soft)}
+.att-heat-cell.holiday{background:linear-gradient(135deg,#fef3c7,#fde68a);border-color:#fcd34d}
+[data-theme="dark"] .att-heat-cell.holiday{background:linear-gradient(135deg,rgba(251,191,36,.15),rgba(217,119,6,.1));border-color:rgba(251,191,36,.35)}
 .att-heat-cell .att-heat-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--t2);opacity:.4;font-size:11px}
 .att-heat-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:12px;color:var(--t2)}
 .att-heat-legend > span{display:flex;align-items:center;gap:5px}
@@ -2527,6 +2529,18 @@ svg{display:block;flex-shrink:0}
         <button class="btn-ghost" onclick="copyScheduleFromAdmin()" style="font-size:12px">↓ คัดลอกจาก admin</button>
         <button class="btn-ghost" onclick="resetScheduleToDefault()" style="font-size:12px">↻ คืนค่าดีฟอลต์</button>
       </div>
+
+      <div class="sm-section-hdr" style="margin:18px 0 10px">
+        <div class="sm-section-hdr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <div class="sm-section-hdr-title">วันหยุดพิเศษ / เทศกาล</div>
+        <div class="sm-section-hdr-sub">ไม่นับมาสาย/OT ในวันที่เพิ่มไว้</div>
+      </div>
+      <div id="holidayAddRow" style="display:grid;grid-template-columns:140px 1fr auto;gap:8px;margin-bottom:10px">
+        <input type="date" id="fHoliDate" style="padding:9px 12px;border:1.5px solid var(--border-2);border-radius:10px;font-family:inherit"/>
+        <input type="text" id="fHoliName" placeholder="ชื่อวันหยุด เช่น สงกรานต์, ปีใหม่ลาว" style="padding:9px 12px;border:1.5px solid var(--border-2);border-radius:10px;font-family:inherit;font-size:13.5px"/>
+        <button class="btn-primary" onclick="addHoliday()" style="padding:9px 16px">+ เพิ่ม</button>
+      </div>
+      <div id="holidayList" style="max-height:200px;overflow-y:auto"></div>
     </div>
     <div class="modal-ft" style="padding:18px 24px 22px">
       <button class="sm-btn-cancel" onclick="closeModal('attSettingsModal')">ยกเลิก</button>
@@ -3476,6 +3490,8 @@ let attMonth = new Date().toISOString().slice(0,7);
 let attHistoryFilterDate = '';
 let attHistoryFilterUser = 0;
 let _leaveAttachmentData = null;
+let attendanceHolidays = []; // [{id, date, name, type}]
+let nextHolidayId = 1;
 let notifications = [];
 let nextNotifId = 1;
 let notifCheckTimer = null;
@@ -3729,6 +3745,11 @@ function applyRemoteWorkspace(data){
     nextLeaveId = Math.max(nextLeaveId, maxLv + 1);
   }
   if(data.attendanceSettings) Object.assign(attendanceSettings, data.attendanceSettings);
+  if(Array.isArray(data.attendanceHolidays)){
+    attendanceHolidays = data.attendanceHolidays;
+    const maxH = attendanceHolidays.reduce((m,h)=>Math.max(m, h.id||0), 0);
+    nextHolidayId = Math.max(nextHolidayId, maxH + 1);
+  }
   saveAllLocal();
   if(currentUser){
     try { refreshDbTables(); } catch(_){}
@@ -3779,6 +3800,7 @@ function syncToNeon(){
         attendanceRecords: _slimAttendanceForSync(attendanceRecords),
         leaveRequests: leaveRequests,
         attendanceSettings: attendanceSettings,
+        attendanceHolidays: attendanceHolidays,
         _updatedBy: currentUser ? currentUser.name : 'unknown',
       };
       const r = await fetch(`${NEON_API}/workspace`, {
@@ -4065,6 +4087,8 @@ function saveAllLocal(){
     localStorage.setItem('tfl_leave', JSON.stringify(leaveRequests));
     localStorage.setItem('tfl_nextLeaveId', String(nextLeaveId));
     localStorage.setItem('tfl_attendanceSettings', JSON.stringify(attendanceSettings));
+    localStorage.setItem('tfl_attendanceHolidays', JSON.stringify(attendanceHolidays));
+    localStorage.setItem('tfl_nextHolidayId', String(nextHolidayId));
   } catch(e){ console.warn('Save failed:', e); }
 }
 
@@ -4142,6 +4166,12 @@ function loadAll(){
     if(maxLv >= nextLeaveId) nextLeaveId = maxLv + 1;
     const attS = localStorage.getItem('tfl_attendanceSettings');
     if(attS){ const obj = JSON.parse(attS); if(obj) Object.assign(attendanceSettings, obj); }
+    const hol = localStorage.getItem('tfl_attendanceHolidays');
+    if(hol){ const arr = JSON.parse(hol); if(Array.isArray(arr)) attendanceHolidays = arr; }
+    const holi = localStorage.getItem('tfl_nextHolidayId');
+    if(holi) nextHolidayId = Math.max(parseInt(holi,10)||1, 1);
+    const maxH = attendanceHolidays.reduce((m,h)=>Math.max(m, parseInt(h.id,10)||0), 0);
+    if(maxH >= nextHolidayId) nextHolidayId = maxH + 1;
   } catch(e){ console.warn('Load failed:', e); }
 }
 
@@ -11221,16 +11251,33 @@ const _DAY_KEYS = ['sun','mon','tue','wed','thu','fri','sat'];
 const _DAY_LABELS_TH = { sun:'อา', mon:'จ', tue:'อ', wed:'พ', thu:'พฤ', fri:'ศ', sat:'ส' };
 const _DAY_LABELS_TH_FULL = { sun:'อาทิตย์', mon:'จันทร์', tue:'อังคาร', wed:'พุธ', thu:'พฤหัสบดี', fri:'ศุกร์', sat:'เสาร์' };
 
+function _findHoliday(dateStr){
+  if(!dateStr) return null;
+  return attendanceHolidays.find(h => h.date === dateStr) || null;
+}
+
 function _userWorkSettings(u, dateStr){
   const date = dateStr ? new Date(dateStr) : new Date();
+  const isoDate = dateStr || date.toISOString().slice(0,10);
   const dayKey = _DAY_KEYS[date.getDay()];
   const role = u?.role || 'member';
-  // Ensure role schedule exists (auto-init for new/missing roles using defaults)
   if(!attendanceSettings.roleSchedules) attendanceSettings.roleSchedules = {};
   if(!attendanceSettings.roleSchedules[role]) attendanceSettings.roleSchedules[role] = _freshRoleSchedule();
   const roleSch = attendanceSettings.roleSchedules[role];
   const todaySch = roleSch[dayKey];
-  // Per-user override wins, then role-day, then default fallback
+  const holiday = _findHoliday(isoDate);
+  // Holiday overrides role schedule
+  if(holiday){
+    return {
+      start: u?.workStart || todaySch?.start || attendanceSettings.defaultWorkStart,
+      end: u?.workEnd || todaySch?.end || attendanceSettings.defaultWorkEnd,
+      otAfter: u?.otAfter || attendanceSettings.defaultOtAfter,
+      isDayOff: true,
+      dayLabel: _DAY_LABELS_TH_FULL[dayKey],
+      holidayName: holiday.name,
+      isHolidayEvent: true,
+    };
+  }
   if(todaySch === null){
     return {
       start: u?.workStart || attendanceSettings.defaultWorkStart,
@@ -11352,7 +11399,8 @@ async function doCheckInOut(purpose){
   if(purpose === 'in'){
     if(rec && rec.checkIn){ alert('คุณเช็คอินไปแล้ววันนี้'); return; }
     if(settings.isDayOff){
-      if(!confirm(`วัน${settings.dayLabel}เป็นวันหยุดของ Role "${currentUser.role}"\n\nต้องการเช็คอินทำงานพิเศษหรือไม่?`)){
+      const reason = settings.holidayName ? `วันนี้เป็น "${settings.holidayName}" (วันหยุดพิเศษ)` : `วัน${settings.dayLabel}เป็นวันหยุดของ Role "${currentUser.role}"`;
+      if(!confirm(`${reason}\n\nต้องการเช็คอินทำงานพิเศษหรือไม่?`)){
         return;
       }
     }
@@ -11488,6 +11536,56 @@ function setAttView(v){ attendanceView = v; rerender(); }
 let _editRoleKey = 'admin';
 let _editRoleSchedules = null; // local clone while editing
 
+function _renderHolidayList(){
+  const list = document.getElementById('holidayList');
+  if(!list) return;
+  const sorted = attendanceHolidays.slice().sort((a,b) => a.date.localeCompare(b.date));
+  if(sorted.length === 0){
+    list.innerHTML = '<div style="padding:18px;text-align:center;color:var(--t2);font-size:12.5px;background:var(--bg-soft);border-radius:10px">ยังไม่มีวันหยุดพิเศษ</div>';
+    return;
+  }
+  list.innerHTML = sorted.map(h => {
+    const d = new Date(h.date);
+    const dayName = ['อา','จ','อ','พ','พฤ','ศ','ส'][d.getDay()];
+    return `<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg-soft);border-radius:10px;margin-bottom:6px">
+      <div style="width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#fef3c7,#fde68a);color:#b45309;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;flex-shrink:0;flex-direction:column;line-height:1.1">
+        <div style="font-size:14px">${d.getDate()}</div>
+        <div style="font-size:9px;opacity:.8">${['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][d.getMonth()]}</div>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13.5px;font-weight:700;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtmlN(h.name)}</div>
+        <div style="font-size:11.5px;color:var(--t2)">${h.date} · วัน${_DAY_LABELS_TH_FULL[_DAY_KEYS[d.getDay()]]}</div>
+      </div>
+      <button onclick="removeHoliday(${h.id})" title="ลบ" style="background:none;border:none;color:#dc2626;cursor:pointer;font-size:18px;font-weight:700;padding:6px;border-radius:6px">×</button>
+    </div>`;
+  }).join('');
+}
+
+function addHoliday(){
+  const date = document.getElementById('fHoliDate').value;
+  const name = document.getElementById('fHoliName').value.trim();
+  if(!date){ alert('กรุณาเลือกวันที่'); return; }
+  if(!name){ alert('กรุณาใส่ชื่อวันหยุด'); return; }
+  if(attendanceHolidays.find(h => h.date === date)){
+    if(!confirm(`มีวันหยุดในวันที่ ${date} อยู่แล้ว — เขียนทับ?`)) return;
+    attendanceHolidays = attendanceHolidays.filter(h => h.date !== date);
+  }
+  attendanceHolidays.push({ id: nextHolidayId++, date, name, type: 'festival' });
+  try { logActivity('create','holiday', null, `${date} ${name}`); } catch(_){}
+  document.getElementById('fHoliDate').value = '';
+  document.getElementById('fHoliName').value = '';
+  _renderHolidayList();
+}
+
+function removeHoliday(id){
+  const h = attendanceHolidays.find(x => x.id === id);
+  if(!h) return;
+  if(!confirm(`ลบวันหยุด "${h.name}" (${h.date})?`)) return;
+  attendanceHolidays = attendanceHolidays.filter(x => x.id !== id);
+  try { logActivity('delete','holiday', id, `${h.date} ${h.name}`); } catch(_){}
+  _renderHolidayList();
+}
+
 function openAttSettings(){
   document.getElementById('fAttCompanyName').value = attendanceSettings.companyName||'';
   document.getElementById('fAttLat').value = attendanceSettings.companyLat;
@@ -11503,6 +11601,7 @@ function openAttSettings(){
   _editRoleKey = 'admin';
   _renderRoleTabs();
   _renderRoleSchedule();
+  _renderHolidayList();
   document.getElementById('attSettingsModal').classList.add('show');
 }
 
@@ -11663,7 +11762,7 @@ function renderAttendance(el){
           <div class="att-date">${dateText}</div>
           <div class="att-state"><span class="att-state-dot"></span>${stateLabel}</div>
           <div class="att-current-info">
-            ${settings.isDayOff? `วัน${settings.dayLabel} = <b>วันหยุด</b> ของคุณ — เช็คอินได้แต่จะนับเป็นวันหยุด<br>` : ''}
+            ${settings.isDayOff? `${settings.holidayName? `🎉 <b>${escapeHtmlN(settings.holidayName)}</b> (วันหยุดพิเศษ)` : `วัน${settings.dayLabel} = <b>วันหยุด</b>`} — เช็คอินได้แต่จะนับเป็นวันหยุด<br>` : ''}
             ${todayRec?.checkIn? `เช็คอินเมื่อ <b>${_fmtTime(todayRec.checkIn.time)}</b> · ${todayRec.status==='late'?`<b>มาสาย ${todayRec.lateMinutes} นาที</b>`:todayRec.status==='holiday'?'<b>วันหยุด</b>':'<b>ตรงเวลา</b>'}<br>`: (settings.isDayOff?'':'พร้อมเริ่มงาน · เวลางาน <b>'+settings.start+' - '+settings.end+'</b><br>') }
             ${todayRec?.checkOut? `เช็คเอาท์เมื่อ <b>${_fmtTime(todayRec.checkOut.time)}</b> · รวม <b>${todayRec.totalHours}h</b>${todayRec.otHours>0?` · OT <b>${todayRec.otHours}h</b>`:''}`:''}
           </div>
@@ -11890,6 +11989,7 @@ function _renderAdminAttDashboard(allUsers, today){
     const dow = new Date(y, m-1, d).getDay();
     const isWeekend = dow === 0 || dow === 6;
     const isToday = dateStr === today;
+    const holiday = _findHoliday(dateStr);
     const dayRecs = attendanceRecords.filter(a => a.date === dateStr);
     const norm = dayRecs.filter(r => r.status==='normal' || r.status==='wfh').length;
     const late = dayRecs.filter(r => r.status==='late').length;
@@ -11897,14 +11997,17 @@ function _renderAdminAttDashboard(allUsers, today){
     const totalPresent = dayRecs.length + onLeave;
     const abs = Math.max(0, allUsers.length - totalPresent);
     const hasData = dayRecs.length > 0 || onLeave > 0;
-    heatCells += `<div class="att-heat-cell ${isWeekend?'weekend':''} ${isToday?'today':''}" title="${dateStr}">
-      <div class="att-heat-day">${d}</div>
+    const titleAttr = holiday ? `${dateStr} · ${holiday.name}` : dateStr;
+    const cellClass = holiday ? 'holiday' : (isWeekend ? 'weekend' : '');
+    heatCells += `<div class="att-heat-cell ${cellClass} ${isToday?'today':''}" title="${titleAttr}">
+      <div class="att-heat-day">${d}${holiday?' 🎉':''}</div>
+      ${holiday? `<div style="font-size:9px;color:#b45309;font-weight:700;line-height:1.1;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtmlN(holiday.name)}</div>`:''}
       ${hasData? `<div class="att-heat-stats">
         ${norm>0?`<div class="s-row"><span class="s-dot normal"></span>${norm}</div>`:''}
         ${late>0?`<div class="s-row"><span class="s-dot late"></span>${late}</div>`:''}
         ${onLeave>0?`<div class="s-row"><span class="s-dot leave"></span>${onLeave}</div>`:''}
-        ${abs>0 && !isWeekend?`<div class="s-row"><span class="s-dot absent"></span>${abs}</div>`:''}
-      </div>` : (isWeekend?'<div class="att-heat-empty">หยุด</div>':'<div class="att-heat-empty">—</div>')}
+        ${abs>0 && !isWeekend && !holiday?`<div class="s-row"><span class="s-dot absent"></span>${abs}</div>`:''}
+      </div>` : (holiday?'':(isWeekend?'<div class="att-heat-empty">หยุด</div>':'<div class="att-heat-empty">—</div>'))}
     </div>`;
   }
   const totalSoFar = startDow + daysInMonth;
@@ -11997,6 +12100,7 @@ function _renderAdminAttDashboard(allUsers, today){
         <span><span class="l-dot" style="background:#f59e0b"></span>มาสาย</span>
         <span><span class="l-dot" style="background:#a78bfa"></span>ลา (อนุมัติ)</span>
         <span><span class="l-dot" style="background:#ef4444"></span>ขาด</span>
+        <span><span class="l-dot" style="background:#fcd34d"></span>🎉 วันหยุดพิเศษ</span>
         <span style="margin-left:auto;font-style:italic;color:var(--t2)">ตัวเลข = จำนวนคน · กรอบม่วง = วันนี้</span>
       </div>
     </div>
