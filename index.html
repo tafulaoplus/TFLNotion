@@ -1235,6 +1235,10 @@
 /* ===== LOTTERY (ยอดขาย) ===== */
 .lot-logo-img{height:48px;width:auto;flex-shrink:0;object-fit:contain}
 [data-theme="dark"] .lot-logo-img{filter:brightness(1.1)}
+.lot-logo-svg{height:52px;width:52px;flex-shrink:0;border-radius:50%;box-shadow:0 4px 14px rgba(30,167,214,.35);transition:transform .25s ease,filter .25s ease}
+.lot-logo-svg:hover{transform:rotate(8deg)}
+[data-theme="dark"] .lot-logo-svg{filter:drop-shadow(0 0 14px rgba(30,167,214,.45))}
+@media (max-width:680px){.lot-logo-svg{height:40px;width:40px}}
 .lot-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
 .lot-period-pills{display:inline-flex;background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:3px;gap:2px}
 .lot-period-pill{background:none;border:none;padding:8px 14px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:700;border-radius:8px;transition:all .15s ease;font-family:inherit}
@@ -10837,10 +10841,42 @@ function toggleChecklist(id){
 // ========== MY TASKS ==========
 // ============ LOTTERY SALES (ยอดขาย) ============
 function topbarLottery(label, sub, actions=''){
+  const logo = `<svg class="lot-logo-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-label="LAO LOTTERY">
+    <defs>
+      <radialGradient id="lotBg" cx="50%" cy="40%" r="60%">
+        <stop offset="0%" stop-color="#5dc1ed"/>
+        <stop offset="100%" stop-color="#1ea7d6"/>
+      </radialGradient>
+      <path id="lotTopArc" d="M 28,100 a 72,72 0 0,1 144,0"/>
+      <path id="lotBotArc" d="M 32,108 a 68,68 0 0,0 136,0"/>
+    </defs>
+    <circle cx="100" cy="100" r="97" fill="url(#lotBg)" stroke="#d4af37" stroke-width="3"/>
+    <circle cx="100" cy="100" r="91" fill="none" stroke="#fff" stroke-width="1.5"/>
+    <text font-family="Inter,system-ui,sans-serif" font-weight="900" font-size="22" fill="#fff" letter-spacing="1">
+      <textPath href="#lotTopArc" startOffset="50%" text-anchor="middle">ຫວຍພັດທະນາ</textPath>
+    </text>
+    <line x1="68" y1="156" x2="82" y2="138" stroke="#1a1a1a" stroke-width="3" stroke-linecap="round"/>
+    <line x1="132" y1="156" x2="118" y2="138" stroke="#1a1a1a" stroke-width="3" stroke-linecap="round"/>
+    <ellipse cx="100" cy="120" rx="40" ry="32" fill="#fff" stroke="#1a1a1a" stroke-width="2.5"/>
+    <ellipse cx="100" cy="120" rx="40" ry="10" fill="none" stroke="#666" stroke-width=".8"/>
+    <ellipse cx="100" cy="120" rx="22" ry="32" fill="none" stroke="#666" stroke-width=".8"/>
+    <circle cx="86" cy="128" r="8" fill="#fbbf24" stroke="#1a1a1a" stroke-width=".8"/>
+    <text x="86" y="132" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="9" fill="#dc2626">?</text>
+    <circle cx="100" cy="135" r="8" fill="#fbbf24" stroke="#1a1a1a" stroke-width=".8"/>
+    <text x="100" y="139" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="9" fill="#dc2626">?</text>
+    <circle cx="114" cy="128" r="8" fill="#fbbf24" stroke="#1a1a1a" stroke-width=".8"/>
+    <text x="114" y="132" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="9" fill="#dc2626">?</text>
+    <rect x="92" y="73" width="22" height="22" rx="2" fill="#dc2626" stroke="#1a1a1a" stroke-width="1.5"/>
+    <text x="103" y="91" text-anchor="middle" font-family="Inter,sans-serif" font-weight="900" font-size="18" fill="#fff">9</text>
+    <line x1="60" y1="150" x2="140" y2="150" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+    <text font-family="Inter,system-ui,sans-serif" font-weight="900" font-size="14" fill="#dc2626" letter-spacing="2.5">
+      <textPath href="#lotBotArc" startOffset="50%" text-anchor="middle">LAO LOTTERY</textPath>
+    </text>
+  </svg>`;
   return `<div class="topbar">
     <div class="topbar-title">
       <div class="fb-brand">
-        <img class="lot-logo-img" src="https://tflao.com/logo/Logotop.png" alt="TFL+" onerror="this.style.display='none'"/>
+        ${logo}
         <div class="fb-brand-sub">
           <div class="fb-brand-label">${label||''}</div>
           ${sub?`<div class="fb-brand-meta">${sub}</div>`:''}
@@ -11162,7 +11198,7 @@ function renderLottery(el){
     <button class="btn-ghost" onclick="exportLotteryPDF()">${I.download} PDF</button>
     <button class="btn-primary" onclick="openLotteryModal()">${I.plus} เพิ่มงวด</button>`;
 
-  el.innerHTML = topbarLottery('ยอดขาย หวยพัฒนาลาว', `${lotterySales.length} งวดในระบบ · ${range.label} ${records.length} งวด`, actions) + `
+  el.innerHTML = topbarLottery('สรุปงวดหวย', `${lotterySales.length} งวดในระบบ · ${range.label} ${records.length} งวด`, actions) + `
     <div class="page-content" style="max-width:1400px" id="lotteryReportRoot">
 
       <div class="lot-toolbar">
