@@ -792,9 +792,13 @@
 [data-theme="dark"] .event-result-badge{background:rgba(52,211,153,.18);color:#34d399}
 [data-theme="dark"] .event-result-badge.pending{background:rgba(251,191,36,.18);color:#fbbf24}
 .event-actions{display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
-.event-actions .btn-record{background:var(--brand);color:#fff;border:none;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12.5px;font-weight:700;white-space:nowrap;transition:all .15s ease}
-.event-actions .btn-record:hover{filter:brightness(.95);transform:translateY(-1px)}
-.event-actions .btn-record.recorded{background:var(--bg-soft);color:var(--t1);border:1px solid var(--border)}
+.event-actions .btn-record{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;border:none;border-radius:9px;cursor:pointer;box-shadow:0 4px 12px rgba(124,58,237,.3);transition:all .15s ease;position:relative}
+.event-actions .btn-record:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(124,58,237,.4)}
+.event-actions .btn-record svg{width:16px;height:16px}
+.event-actions .btn-record.recorded{background:#dcfce7;color:#059669;box-shadow:none;border:1px solid #bbf7d0}
+.event-actions .btn-record.recorded:hover{background:#bbf7d0}
+[data-theme="dark"] .event-actions .btn-record.recorded{background:rgba(52,211,153,.18);color:#34d399;border-color:rgba(52,211,153,.3)}
+[data-theme="dark"] .event-actions .btn-record.recorded:hover{background:rgba(52,211,153,.28)}
 .event-actions .icon-btn{background:none;border:none;cursor:pointer;color:var(--t2);padding:6px;border-radius:6px;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center}
 .event-actions .icon-btn:hover{background:var(--bg-hover);color:var(--t1)}
 .event-actions .icon-btn.danger:hover{color:#dc2626}
@@ -10188,7 +10192,7 @@ function renderSales(el){
             </div>
           </div>
           <div class="event-actions" onclick="event.stopPropagation()">
-            ${canEdit? `<button class="btn-record ${hasResult?'recorded':''}" onclick="openSalesResultModal(${e.id})">${hasResult?'แก้ผลงาน':'บันทึกผลงาน'}</button>`:''}
+            ${canEdit? `<button class="btn-record ${hasResult?'recorded':''}" onclick="openSalesResultModal(${e.id})" title="${hasResult?'แก้ผลงาน':'บันทึกผลงาน'}">${hasResult? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><polyline points="9 11 12 14 16 9"/></svg>'}</button>`:''}
             ${canEdit? `<button class="icon-btn" onclick="openSalesModal(${e.id})" title="แก้ไข">${I.edit}</button>
             <button class="icon-btn danger" onclick="deleteSalesEvent(${e.id})" title="ลบ">${I.trash}</button>`:''}
           </div>
