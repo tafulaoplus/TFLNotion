@@ -441,6 +441,7 @@
 [data-theme="dark"] .sync-badge.wait{background:rgba(251,191,36,.18);color:#fbbf24}
 [data-theme="dark"] .sync-badge.err{background:rgba(248,113,113,.18);color:#f87171}
 @keyframes syncPulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 /* ===== NOTIFICATION SYSTEM ===== */
 .notif-btn{position:relative;background:transparent;border:1px solid var(--border-2);border-radius:10px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t1);transition:background .15s ease,border-color .15s ease;flex-shrink:0}
@@ -3412,10 +3413,79 @@ function loadAll(){
 }
 
 function resetAllData(){
-  if(!confirm('ล้างข้อมูลทั้งหมด? (สมาชิก/งาน/เอกสาร/โน้ต) — ยกเลิกไม่ได้')) return;
-  ['tfl_users','tfl_tasks','tfl_documents','tfl_opts','tfl_colwidths','tfl_nextTaskId','tfl_nextDocId','tfl_notes','tfl_drive_clientid'].forEach(k=>localStorage.removeItem(k));
+  if(!confirm('ล้างข้อมูล localStorage ฝั่ง browser นี้เท่านั้น? — ข้อมูลใน Neon (ออนไลน์) จะยังอยู่')) return;
+  Object.keys(localStorage).filter(k => k.startsWith('tfl_')).forEach(k => localStorage.removeItem(k));
   sessionStorage.removeItem('tfl_drive_token');
+  sessionStorage.removeItem('tfl_session_user');
   location.reload();
+}
+
+async function resetWorkspaceCloud(){
+  const msg = '⚠️ ล้างข้อมูล Neon ทั้งหมด!\n\n' +
+              '• ผู้ใช้ทั้งหมด (ยกเว้นคุณ)\n' +
+              '• งาน / โน้ต / เอกสาร / Live\n' +
+              '• ยอดขาย / ออกพื้นที่ / Activity Log\n\n' +
+              'จะสร้าง workspace ใหม่โดยมีคุณเป็น admin คนเดียว\n\n' +
+              'พิมพ์ RESET เพื่อยืนยัน:';
+  const conf = prompt(msg);
+  if(conf !== 'RESET') return;
+  if(!currentUser){ alert('ต้อง login ก่อน'); return; }
+  try {
+    const me = { ...currentUser, role: 'admin', pin: currentUser.pin || '' };
+    const freshPayload = {
+      users: [me],
+      tasks: [],
+      documents: [],
+      opts: {
+        status: [
+          { id: 'todo',       label: 'ยังไม่ได้เริ่ม',         color: '#6b7280', bg: '#f3f4f6' },
+          { id: 'inprogress', label: 'อยู่ระหว่างดำเนินการ',  color: '#1d4ed8', bg: '#dbeafe' },
+          { id: 'review',     label: 'แก้ไข',                  color: '#b45309', bg: '#fef3c7' },
+          { id: 'done',       label: 'เสร็จ',                  color: '#059669', bg: '#d1fae5' },
+        ],
+        priority: [
+          { id: 'low',  label: 'ต่ำ',   color: '#059669', bg: '#d1fae5' },
+          { id: 'mid',  label: 'กลาง', color: '#b45309', bg: '#fef3c7' },
+          { id: 'high', label: 'สูง',  color: '#dc2626', bg: '#fee2e2' },
+        ],
+        type: [
+          { id: 'doc',   label: 'เอกสาร',     color: '#7c3aed', bg: '#f3eafe' },
+          { id: 'video', label: 'คลิปวิดีโอ', color: '#be185d', bg: '#fce7f3' },
+          { id: 'task',  label: 'งานทั่วไป',  color: '#1d4ed8', bg: '#dbeafe' },
+        ],
+      },
+      notes: [],
+      liveSessions: [],
+      columnWidths: { emoji:50, name:280, status:170, assignees:170, due:150, priority:110, type:140, desc:240, file:200, actions:80 },
+      nextTaskId: 100,
+      nextDocId: 100,
+      notifications: [],
+      salesEvents: [],
+      activityLog: [{
+        id: 1, userId: me.id, userName: me.name,
+        action: 'reset', entityType: 'workspace', entityId: null,
+        details: 'รีเซ็ต workspace ทั้งหมด',
+        timestamp: Date.now(),
+      }],
+      lotterySales: [],
+      lotterySettings: { monthlyTarget: 50000000 },
+      _updatedBy: me.name,
+    };
+    const r = await fetch(`${NEON_API}/workspace`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(freshPayload),
+    });
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    // Wipe local + sessionStorage
+    Object.keys(localStorage).filter(k => k.startsWith('tfl_')).forEach(k => localStorage.removeItem(k));
+    sessionStorage.removeItem('tfl_drive_token');
+    sessionStorage.removeItem('tfl_session_user');
+    alert('✓ Workspace รีเซ็ตเรียบร้อย — กำลังโหลดใหม่');
+    location.reload();
+  } catch(e){
+    alert('Reset ไม่สำเร็จ: ' + e.message);
+  }
 }
 
 // ========== EXPORT / IMPORT ==========
@@ -4158,6 +4228,11 @@ function renderUserDropdown(){
       <span class="user-dd-icon">${I.cloud}</span>
       <span id="neonPushLabel">ดันข้อมูลขึ้น Neon DB</span>
     </div>
+    ${currentUser.role==='admin'? `<div class="user-dd-divider"></div>
+    <div class="user-dd-item danger" onclick="resetWorkspaceCloud()">
+      <span class="user-dd-icon">${I.trash}</span>
+      <span>รีเซ็ต Workspace (ทั้งหมด)</span>
+    </div>`:''}
     <div class="user-dd-divider"></div>
     <div class="user-dd-item danger" onclick="logout()">
       <span class="user-dd-icon">${I.logout}</span>
@@ -11779,18 +11854,42 @@ document.addEventListener('keydown',e=>{
   }
 });
 
-// Init
+// Init — Neon-first boot sequence
 loadSavedTheme();
 loadAll();
 ensureAllAvatars();
 setupIcons();
 document.addEventListener('mousedown', popupClose);
-initLogin();
-tryAutoLogin();
-// Init Neon (primary) — auto-detect /api/ availability
-if(document.readyState === 'complete') initNeonSync();
-else window.addEventListener('load', initNeonSync);
-// Init Firebase (fallback) — only if FIREBASE_CONFIG.apiKey is set
+
+// Show login with loading placeholder immediately
+showLoginLoading();
+
+async function bootApp(){
+  // Always try Neon first if available (https://). Wait up to ~5s for data.
+  if(location.protocol !== 'file:'){
+    try { await initNeonSync(); } catch(_){}
+  }
+  // After Neon (success or failure), USERS array is correct
+  ensureAllAvatars();
+  renderLoginUsers();
+  if(USERS.length) selectUser(USERS[0].id);
+  hideLoginLoading();
+  if(tryAutoLogin()) return;
+}
+function showLoginLoading(){
+  const cards = document.getElementById('userCards');
+  if(cards){
+    cards.innerHTML = '<div style="padding:32px;text-align:center;color:var(--t2);font-size:13px"><div class="spinner" style="margin:0 auto 12px;width:32px;height:32px;border:3px solid #e9e5f5;border-top-color:#7c3aed;border-radius:50%;animation:spin 1s linear infinite"></div>กำลังเชื่อมต่อข้อมูล...</div>';
+  }
+}
+function hideLoginLoading(){ /* renderLoginUsers replaces content */ }
+
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', bootApp);
+} else {
+  bootApp();
+}
+// Firebase fallback
 if(document.readyState === 'complete') initFirebaseSync();
 else window.addEventListener('load', initFirebaseSync);
 </script>
