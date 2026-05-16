@@ -3471,12 +3471,18 @@ async function resetWorkspaceCloud(){
       lotterySettings: { monthlyTarget: 50000000 },
       _updatedBy: me.name,
     };
+    // Step 1: wipe corrupt/oversized snapshot row directly
+    try { await fetch(`${NEON_API}/wipe-snapshot`, { method:'POST' }); } catch(_){}
+    // Step 2: push fresh slim data
     const r = await fetch(`${NEON_API}/workspace`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(freshPayload),
     });
-    if(!r.ok) throw new Error('HTTP '+r.status);
+    if(!r.ok){
+      const txt = await r.text().catch(()=>'');
+      throw new Error('HTTP '+r.status+' '+txt.slice(0,200));
+    }
     // Wipe local + sessionStorage
     Object.keys(localStorage).filter(k => k.startsWith('tfl_')).forEach(k => localStorage.removeItem(k));
     sessionStorage.removeItem('tfl_drive_token');

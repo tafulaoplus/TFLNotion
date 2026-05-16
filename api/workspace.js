@@ -12,39 +12,73 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      const rows = await sql`
-        SELECT data, updated_at, updated_by,
-               octet_length(data::text) AS size_bytes
+      // First check size cheaply
+      const meta = await sql`
+        SELECT octet_length(data::text) AS size_bytes, updated_at, updated_by
         FROM workspace_snapshot
         WHERE workspace_id = ${wsId}
         LIMIT 1
       `;
-      if (!rows.length) {
+      if (!meta.length) {
         return res.json({ ok: true, exists: false, data: null });
       }
-      const r = rows[0];
-      const sizeBytes = Number(r.size_bytes) || 0;
-      // Vercel response limit ~4.5MB. Strip heavy fields if oversized.
-      let data = r.data || {};
-      if (sizeBytes > 3 * 1024 * 1024 && Array.isArray(data.salesEvents)) {
-        data = {
-          ...data,
-          salesEvents: data.salesEvents.map(s => {
-            if (s && s.result && s.result.receiptData) {
-              const { receiptData, ...resultRest } = s.result;
-              return { ...s, result: { ...resultRest, _receiptStripped: true } };
-            }
-            return s;
-          }),
-        };
+      const sizeBytes = Number(meta[0].size_bytes) || 0;
+      // If oversized, fetch only critical fields via JSON paths (skip large arrays)
+      if (sizeBytes > 2 * 1024 * 1024) {
+        const slim = await sql`
+          SELECT
+            data->'users' AS users,
+            data->'opts' AS opts,
+            data->'columnWidths' AS column_widths,
+            (data->'nextTaskId')::int AS next_task_id,
+            (data->'nextDocId')::int AS next_doc_id,
+            data->'lotterySales' AS lottery_sales,
+            data->'lotterySettings' AS lottery_settings,
+            updated_at, updated_by
+          FROM workspace_snapshot
+          WHERE workspace_id = ${wsId}
+          LIMIT 1
+        `;
+        const s = slim[0] || {};
+        return res.json({
+          ok: true,
+          exists: true,
+          updatedAt: s.updated_at,
+          updatedBy: s.updated_by,
+          _sizeBytes: sizeBytes,
+          _slimMode: true,
+          _warning: 'Workspace data oversized — only critical fields returned. Run /api/wipe-snapshot to reset.',
+          users: s.users || [],
+          opts: s.opts || null,
+          columnWidths: s.column_widths || null,
+          nextTaskId: s.next_task_id || 100,
+          nextDocId: s.next_doc_id || 100,
+          lotterySales: s.lottery_sales || [],
+          lotterySettings: s.lottery_settings || {},
+          tasks: [],
+          documents: [],
+          notes: [],
+          liveSessions: [],
+          notifications: [],
+          salesEvents: [],
+          activityLog: [],
+        });
       }
+      // Normal path
+      const rows = await sql`
+        SELECT data, updated_at, updated_by
+        FROM workspace_snapshot
+        WHERE workspace_id = ${wsId}
+        LIMIT 1
+      `;
+      const r = rows[0];
       return res.json({
         ok: true,
         exists: true,
         updatedAt: r.updated_at,
         updatedBy: r.updated_by,
         _sizeBytes: sizeBytes,
-        ...data,
+        ...(r.data || {}),
       });
     }
 
