@@ -10202,43 +10202,33 @@ function renderSales(el){
     </div>
   </div>`;
 
-  // Per-member ranking
+  // Top events by member signups
   let rankPanel = '';
-  if(isAdmin){
-    const groups = {};
-    events.forEach(e => {
-      const uids = Array.isArray(e.assignees) && e.assignees.length ? e.assignees : [e.userId];
-      uids.forEach(uid => {
-        if(!groups[uid]) groups[uid] = {events:0, members:0, cost:0};
-        groups[uid].events++;
-        groups[uid].members += +e.result?.members||0;
-        groups[uid].cost += _eventTotalCost(e);
-      });
-    });
-    const ranked = USERS.map(u=>({u, g: groups[u.id]||{events:0,members:0,cost:0}}))
-      .filter(({g})=>g.events>0)
-      .sort((a,b)=>b.g.members - a.g.members || b.g.events - a.g.events);
-    const maxMembers = Math.max(1, ...ranked.map(r=>r.g.members));
-    rankPanel = `<div class="sd-panel">
-      <h3 class="sd-panel-title">อันดับสมาชิก <span class="sd-tag">ตามจำนวนผู้สมัคร</span></h3>
-      ${ranked.length===0? '<div style="color:var(--t2);font-size:13px;padding:20px 0;text-align:center">ยังไม่มีข้อมูล</div>' :
-        `<div class="member-rank">
-          ${ranked.slice(0,8).map(({u,g}, i) => {
-            const posCls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
-            return `<div class="member-rank-row">
-              <div class="member-rank-pos ${posCls}">${i+1}</div>
-              <div class="assignee-avatar" style="background:${u.color||'#3b82f6'};width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px">${u.init||(u.name||'?')[0]}</div>
-              <div class="member-rank-info">
-                <div class="member-rank-name">${escapeHtmlN(u.name)}</div>
-                <div class="member-rank-stats">${g.events} งาน · ${g.members} สมาชิกใหม่ · ${_fmtBaht(g.cost)}</div>
-              </div>
-              <div class="member-rank-bar"><div class="b" style="width:${g.members/maxMembers*100}%"></div></div>
-            </div>`;
-          }).join('')}
-        </div>`
-      }
-    </div>`;
-  }
+  const topEvents = events
+    .map(e => ({ e, members: +e.result?.members || 0 }))
+    .filter(x => x.members > 0)
+    .sort((a,b) => b.members - a.members);
+  const maxMembers = Math.max(1, ...topEvents.map(x=>x.members));
+  rankPanel = `<div class="sd-panel">
+    <h3 class="sd-panel-title">อีเว้นท์ที่มีคนสมัครเยอะที่สุด <span class="sd-tag">เรียงจากมาก→น้อย</span></h3>
+    ${topEvents.length===0? '<div style="color:var(--t2);font-size:13px;padding:20px 0;text-align:center">ยังไม่มีข้อมูล</div>' :
+      `<div class="member-rank">
+        ${topEvents.slice(0,8).map(({e, members}, i) => {
+          const posCls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+          const cat = e.category || 'field';
+          const catLabel = {booth:'ออกบูธ', field:'ลงพื้นที่', event:'อีเว้นท์', visit:'เยี่ยมลูกค้า'}[cat] || 'ลงพื้นที่';
+          return `<div class="member-rank-row" onclick="openSalesDetail(${e.id})" style="cursor:pointer">
+            <div class="member-rank-pos ${posCls}">${i+1}</div>
+            <div class="member-rank-info">
+              <div class="member-rank-name">${escapeHtmlN(e.title || e.location || 'กิจกรรม')}</div>
+              <div class="member-rank-stats">${_fmtThaiDate(e.startDate||e.date)} · ${catLabel} · <b style="color:#10b981">${members.toLocaleString()} คน</b></div>
+            </div>
+            <div class="member-rank-bar"><div class="b" style="width:${members/maxMembers*100}%"></div></div>
+          </div>`;
+        }).join('')}
+      </div>`
+    }
+  </div>`;
 
   // Aggregated problems
   const allProblems = events.filter(e => e.result?.problems).map(e => ({
