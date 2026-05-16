@@ -1425,8 +1425,8 @@ svg{display:block;flex-shrink:0}
 .feat-icon{width:24px;height:24px;border-radius:7px;background:var(--p100);color:var(--p600);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .login-box{background:#fff;border-radius:20px;padding:32px;width:430px;box-shadow:var(--shadow-lg);border:1px solid var(--border)}
 .login-logo{display:flex;align-items:center;gap:10px;margin-bottom:20px}
-.login-logo-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 6px 14px rgba(15,15,35,.18);overflow:hidden;position:relative;flex-shrink:0;background:#0f0f23}
-.login-logo-icon img,.login-logo-icon svg{width:100%;height:100%;object-fit:cover;display:block}
+.login-logo-icon{width:44px;height:44px;border-radius:11px;color:#fff;box-shadow:0 6px 14px rgba(15,15,35,.18);overflow:hidden;position:relative;flex-shrink:0;background:transparent}
+.login-logo-icon > img,.login-logo-icon > svg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
 .login-logo-icon .brand-img-dark{display:none}
 [data-theme="dark"] .login-logo-icon .brand-img-light{display:none}
 [data-theme="dark"] .login-logo-icon .brand-img-dark{display:block}
@@ -1476,8 +1476,8 @@ svg{display:block;flex-shrink:0}
 /* SIDEBAR */
 .sidebar{width:240px;min-width:240px;background:var(--bg-sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;user-select:none}
 .sb-brand{padding:20px 18px 16px;display:flex;align-items:center;gap:10px}
-.sb-brand-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 4px 10px rgba(15,15,35,.18);overflow:hidden;position:relative;flex-shrink:0;background:#0f0f23}
-.sb-brand-icon img,.sb-brand-icon svg{width:100%;height:100%;object-fit:cover;display:block}
+.sb-brand-icon{width:42px;height:42px;border-radius:11px;color:#fff;box-shadow:0 4px 10px rgba(15,15,35,.18);overflow:hidden;position:relative;flex-shrink:0;background:transparent}
+.sb-brand-icon > img,.sb-brand-icon > svg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
 .sb-brand-icon .brand-img-dark{display:none}
 [data-theme="dark"] .sb-brand-icon .brand-img-light{display:none}
 [data-theme="dark"] .sb-brand-icon .brand-img-dark{display:block}
