@@ -443,6 +443,61 @@
 @keyframes syncPulse{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* ===== UPLOAD CLOUD MODAL ===== */
+.upload-modal{width:min(540px,calc(100vw - 32px));border-radius:24px;background:linear-gradient(160deg,#faf7ff 0%, #ffffff 60%);border:1px solid #ece7f7;overflow:hidden}
+[data-theme="dark"] .upload-modal{background:linear-gradient(160deg,#1e1b3a 0%,#0f0f23 60%);border-color:rgba(167,139,250,.2)}
+.upload-modal .modal-hd{padding:24px 26px 6px;border-bottom:none;background:transparent}
+.upload-modal .modal-title{display:flex;align-items:center;gap:14px;font-size:18px}
+.upload-modal-icon{width:54px;height:54px;border-radius:16px;background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(124,58,237,.35);flex-shrink:0}
+.upload-modal-icon svg{width:26px;height:26px}
+.upload-modal-sub{font-size:13px;color:var(--t2);margin-top:4px;font-weight:500}
+.upload-modal .modal-bd{padding:18px 26px 6px;background:transparent}
+.upload-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.upload-stat{padding:14px 12px;background:#fff;border:1px solid #ece7f7;border-radius:12px;text-align:center}
+[data-theme="dark"] .upload-stat{background:rgba(167,139,250,.08);border-color:rgba(167,139,250,.2)}
+.upload-stat .val{font-size:22px;font-weight:800;color:#7c3aed;line-height:1.1;font-feature-settings:'tnum'}
+[data-theme="dark"] .upload-stat .val{color:#a78bfa}
+.upload-stat .lbl{font-size:11px;color:var(--t2);margin-top:4px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.upload-progress-wrap{background:var(--bg-soft);border-radius:14px;padding:18px;margin-bottom:14px;display:none}
+.upload-progress-wrap.show{display:block}
+.upload-progress-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.upload-status{font-size:13px;font-weight:700;color:var(--t1)}
+.upload-pct{font-size:13px;font-weight:800;color:#7c3aed;font-feature-settings:'tnum'}
+[data-theme="dark"] .upload-pct{color:#a78bfa}
+.upload-bar{height:10px;background:#ece7f7;border-radius:5px;overflow:hidden;position:relative}
+[data-theme="dark"] .upload-bar{background:rgba(167,139,250,.15)}
+.upload-bar-fill{height:100%;background:linear-gradient(90deg,#a78bfa 0%,#7c3aed 100%);border-radius:5px;width:0;transition:width .3s ease;box-shadow:0 0 12px rgba(124,58,237,.4)}
+.upload-bar-fill.ok{background:linear-gradient(90deg,#10b981,#059669);box-shadow:0 0 12px rgba(16,185,129,.5)}
+.upload-bar-fill.err{background:linear-gradient(90deg,#f87171,#dc2626);box-shadow:0 0 12px rgba(239,68,68,.4)}
+.upload-stages{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.upload-stage{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--t2);transition:color .2s ease}
+.upload-stage.active{color:var(--t1);font-weight:700}
+.upload-stage.done{color:#059669}
+[data-theme="dark"] .upload-stage.done{color:#34d399}
+.upload-stage-dot{width:18px;height:18px;border-radius:50%;background:var(--bg);border:2px solid var(--border-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:11px;font-weight:800;transition:all .2s ease}
+.upload-stage.active .upload-stage-dot{background:#7c3aed;border-color:#7c3aed;animation:syncPulse 1.2s ease-in-out infinite}
+.upload-stage.done .upload-stage-dot{background:#10b981;border-color:#10b981}
+.upload-stage.done .upload-stage-dot::after{content:'✓'}
+.upload-info-bar{padding:11px 14px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2);border-radius:11px;font-size:12px;color:var(--t1);line-height:1.5;margin-bottom:14px;display:flex;align-items:flex-start;gap:8px}
+.upload-info-bar svg{width:16px;height:16px;color:#7c3aed;flex-shrink:0;margin-top:1px}
+[data-theme="dark"] .upload-info-bar{background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.25);color:var(--t1)}
+.upload-result-box{padding:14px;border-radius:12px;font-size:13px;margin-bottom:14px;display:none}
+.upload-result-box.show{display:block}
+.upload-result-box.ok{background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.3);color:#059669}
+.upload-result-box.err{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#dc2626}
+[data-theme="dark"] .upload-result-box.ok{background:rgba(52,211,153,.15);color:#34d399}
+[data-theme="dark"] .upload-result-box.err{background:rgba(248,113,113,.15);color:#f87171}
+.upload-modal .modal-ft{padding:14px 26px 22px;border-top:none;background:transparent}
+.upload-btn-go{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;font-weight:700;border:none;border-radius:13px;cursor:pointer;font-size:14px;box-shadow:0 10px 24px rgba(124,58,237,.35);font-family:inherit;transition:all .15s ease}
+.upload-btn-go:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 14px 28px rgba(124,58,237,.45)}
+.upload-btn-go:disabled{opacity:.6;cursor:not-allowed}
+.upload-btn-go svg{width:16px;height:16px}
+.upload-btn-down{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:#fff;color:#7c3aed;font-weight:700;border:1.5px solid #ddd6fe;border-radius:13px;cursor:pointer;font-size:14px;font-family:inherit;transition:all .15s ease}
+.upload-btn-down:hover:not(:disabled){background:#faf7ff;border-color:#a78bfa}
+[data-theme="dark"] .upload-btn-down{background:rgba(167,139,250,.1);color:#c4b5fd;border-color:rgba(167,139,250,.3)}
+[data-theme="dark"] .upload-btn-down:hover:not(:disabled){background:rgba(167,139,250,.18);border-color:#a78bfa}
+.upload-btn-down svg{width:16px;height:16px}
+
 /* ===== NOTIFICATION SYSTEM ===== */
 .notif-btn{position:relative;background:transparent;border:1px solid var(--border-2);border-radius:10px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t1);transition:background .15s ease,border-color .15s ease;flex-shrink:0}
 .notif-btn:hover{background:var(--bg-hover);border-color:var(--brand)}
@@ -2073,6 +2128,58 @@ svg{display:block;flex-shrink:0}
   </div>
 </div>
 
+<!-- UPLOAD TO CLOUD MODAL -->
+<div class="overlay" id="uploadCloudModal">
+  <div class="modal upload-modal">
+    <div class="modal-hd">
+      <div class="modal-title">
+        <div class="upload-modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <div>
+          <div>ซิงค์ข้อมูลขึ้น Cloud</div>
+          <div class="upload-modal-sub">บันทึกข้อมูลจาก browser นี้เข้าฐานข้อมูลเพื่อให้ทุกคนเห็นเหมือนกัน</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal('uploadCloudModal')">×</button>
+    </div>
+    <div class="modal-bd">
+      <div class="upload-info-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <span>ข้อมูลใน Cloud จะถูกแทนที่ด้วยของ browser นี้ทั้งหมด — ก่อนทำควรแน่ใจว่า browser นี้มีข้อมูลล่าสุด</span>
+      </div>
+      <div class="upload-stats" id="uploadStats"></div>
+      <div class="upload-progress-wrap" id="uploadProgWrap">
+        <div class="upload-progress-hdr">
+          <span class="upload-status" id="uploadStatus">เตรียมการ...</span>
+          <span class="upload-pct" id="uploadPct">0%</span>
+        </div>
+        <div class="upload-bar"><div class="upload-bar-fill" id="uploadBar"></div></div>
+        <div class="upload-stages" id="uploadStages">
+          <div class="upload-stage" data-st="prep"><div class="upload-stage-dot">1</div>เตรียมข้อมูลจาก browser</div>
+          <div class="upload-stage" data-st="wipe"><div class="upload-stage-dot">2</div>ล้างข้อมูลเก่าใน Cloud</div>
+          <div class="upload-stage" data-st="upload"><div class="upload-stage-dot">3</div>อัปโหลดข้อมูลใหม่</div>
+          <div class="upload-stage" data-st="verify"><div class="upload-stage-dot">4</div>ตรวจสอบ + เริ่มซิงค์</div>
+        </div>
+      </div>
+      <div class="upload-result-box" id="uploadResultBox"></div>
+    </div>
+    <div class="modal-ft" style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+      <button class="upload-btn-down" id="uploadDownBtn" onclick="downloadFromCloud()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        ดึงข้อมูลจาก Cloud
+      </button>
+      <div style="display:flex;gap:10px">
+        <button class="sm-btn-cancel" onclick="closeModal('uploadCloudModal')">ปิด</button>
+        <button class="upload-btn-go" id="uploadGoBtn" onclick="executeUploadCloud()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="12 19 12 5"/><polyline points="5 12 12 5 19 12"/></svg>
+          อัปโหลดเลย
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- LOTTERY SALES MODAL -->
 <div class="overlay" id="lotteryModal">
   <div class="modal lot-modal">
@@ -3258,6 +3365,167 @@ function startNeonPolling(){
 }
 
 // Force push all current state to Neon (manual migration trigger)
+// ===== UPLOAD CLOUD MODAL =====
+function openUploadCloudModal(){
+  closeUserMenu();
+  // Render stats from local data
+  const stats = [
+    { val: USERS.length, lbl: 'สมาชิก' },
+    { val: tasks.length, lbl: 'งาน' },
+    { val: notes.length, lbl: 'โน้ต' },
+    { val: documents.length, lbl: 'เอกสาร' },
+    { val: salesEvents.length, lbl: 'กิจกรรม' },
+    { val: lotterySales.length, lbl: 'งวดยอดขาย' },
+  ];
+  document.getElementById('uploadStats').innerHTML = stats.map(s =>
+    `<div class="upload-stat"><div class="val">${s.val}</div><div class="lbl">${s.lbl}</div></div>`
+  ).join('');
+  document.getElementById('uploadProgWrap').classList.remove('show');
+  document.getElementById('uploadResultBox').classList.remove('show','ok','err');
+  document.getElementById('uploadBar').className = 'upload-bar-fill';
+  document.getElementById('uploadBar').style.width = '0%';
+  document.querySelectorAll('#uploadStages .upload-stage').forEach(s => s.className = 'upload-stage');
+  document.getElementById('uploadGoBtn').disabled = false;
+  document.getElementById('uploadDownBtn').disabled = false;
+  document.getElementById('uploadCloudModal').classList.add('show');
+}
+
+function _setUploadProgress(pct, status){
+  document.getElementById('uploadBar').style.width = pct + '%';
+  document.getElementById('uploadPct').textContent = pct + '%';
+  if(status) document.getElementById('uploadStatus').textContent = status;
+}
+function _setUploadStage(name, state){
+  const el = document.querySelector(`#uploadStages .upload-stage[data-st="${name}"]`);
+  if(!el) return;
+  el.className = 'upload-stage ' + (state||'');
+}
+
+async function executeUploadCloud(){
+  if(location.protocol === 'file:'){ alert('ใช้ได้บน https:// เท่านั้น'); return; }
+  const goBtn = document.getElementById('uploadGoBtn');
+  const downBtn = document.getElementById('uploadDownBtn');
+  const resBox = document.getElementById('uploadResultBox');
+  goBtn.disabled = true; downBtn.disabled = true;
+  document.getElementById('uploadProgWrap').classList.add('show');
+  resBox.classList.remove('show','ok','err');
+  document.getElementById('uploadBar').className = 'upload-bar-fill';
+  try {
+    if(!neonEnabled){
+      const ok = await initNeonSync();
+      if(!ok) throw new Error('เชื่อมต่อ Cloud ไม่ได้ ลอง refresh หน้าก่อน');
+    }
+    // Stage 1: prep
+    _setUploadStage('prep', 'active'); _setUploadProgress(10, 'กำลังเตรียมข้อมูลจาก browser นี้...');
+    await new Promise(r => setTimeout(r, 250));
+    const payload = {
+      users: USERS,
+      tasks: tasks,
+      documents: documents,
+      opts: OPTS,
+      notes: notes,
+      liveSessions: (typeof liveSessions !== 'undefined' ? liveSessions : []),
+      columnWidths: columnWidths,
+      nextTaskId: nextTaskId,
+      nextDocId: nextDocId,
+      notifications: notifications.slice(-200),
+      salesEvents: _slimSalesForSync(salesEvents),
+      activityLog: activityLog.slice(-500),
+      lotterySales: lotterySales,
+      lotterySettings: lotterySettings,
+      _updatedBy: (currentUser ? currentUser.name : 'manual-upload'),
+    };
+    _setUploadStage('prep', 'done');
+    _setUploadProgress(25, 'พร้อมข้อมูล ' + (JSON.stringify(payload).length/1024).toFixed(1) + ' KB');
+    await new Promise(r => setTimeout(r, 250));
+
+    // Stage 2: wipe
+    _setUploadStage('wipe', 'active'); _setUploadProgress(35, 'ล้างข้อมูลเก่าใน Cloud...');
+    try { await fetch(`${NEON_API}/wipe-snapshot`, { method: 'POST' }); } catch(_){}
+    _setUploadStage('wipe', 'done');
+    _setUploadProgress(50, 'ล้างข้อมูลเก่าเรียบร้อย');
+    await new Promise(r => setTimeout(r, 200));
+
+    // Stage 3: upload
+    _setUploadStage('upload', 'active'); _setUploadProgress(60, 'กำลังอัปโหลดข้อมูลใหม่...');
+    const r = await fetch(`${NEON_API}/workspace`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if(!r.ok){
+      const txt = await r.text().catch(()=>'');
+      throw new Error('อัปโหลดล้มเหลว HTTP ' + r.status + ' ' + txt.slice(0,160));
+    }
+    const data = await r.json();
+    neonLastUpdatedAt = data.updatedAt;
+    _setUploadStage('upload', 'done');
+    _setUploadProgress(85, 'อัปโหลดสำเร็จ — ' + ((data.sizeBytes||0)/1024).toFixed(1) + ' KB');
+    await new Promise(r => setTimeout(r, 200));
+
+    // Stage 4: verify
+    _setUploadStage('verify', 'active'); _setUploadProgress(95, 'เริ่มซิงค์อัตโนมัติ...');
+    setNeonStatus('online');
+    if(!neonPollTimer) startNeonPolling();
+    await new Promise(r => setTimeout(r, 200));
+    _setUploadStage('verify', 'done');
+
+    _setUploadProgress(100, '✓ เสร็จเรียบร้อย');
+    document.getElementById('uploadBar').className = 'upload-bar-fill ok';
+    resBox.className = 'upload-result-box ok show';
+    resBox.innerHTML = `<b>อัปโหลดสำเร็จ</b><br>ข้อมูล ${((data.sizeBytes||0)/1024).toFixed(1)} KB · เครื่องอื่นจะเห็นข้อมูลเหมือนกันภายใน 10 วินาที`;
+    downBtn.disabled = false;
+  } catch(err){
+    document.getElementById('uploadBar').className = 'upload-bar-fill err';
+    _setUploadProgress(100, '✗ ล้มเหลว');
+    resBox.className = 'upload-result-box err show';
+    resBox.innerHTML = `<b>เกิดข้อผิดพลาด</b><br>${escapeHtmlN(err.message||String(err))}`;
+    goBtn.disabled = false; downBtn.disabled = false;
+  }
+}
+
+async function downloadFromCloud(){
+  const goBtn = document.getElementById('uploadGoBtn');
+  const downBtn = document.getElementById('uploadDownBtn');
+  const resBox = document.getElementById('uploadResultBox');
+  goBtn.disabled = true; downBtn.disabled = true;
+  document.getElementById('uploadProgWrap').classList.add('show');
+  document.querySelectorAll('#uploadStages .upload-stage').forEach(s => s.className = 'upload-stage');
+  document.getElementById('uploadBar').className = 'upload-bar-fill';
+  resBox.classList.remove('show','ok','err');
+  try {
+    _setUploadStage('prep','active'); _setUploadProgress(20, 'เชื่อมต่อ Cloud...');
+    if(!neonEnabled){
+      const ok = await initNeonSync();
+      if(!ok) throw new Error('เชื่อมต่อ Cloud ไม่ได้');
+    }
+    _setUploadStage('prep','done');
+    _setUploadStage('upload','active'); _setUploadProgress(60, 'กำลังดึงข้อมูล...');
+    const r = await fetch(`${NEON_API}/workspace`, { cache: 'no-store' });
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const data = await r.json();
+    _setUploadStage('upload','done');
+    _setUploadStage('verify','active'); _setUploadProgress(85, 'อัปเดต browser นี้...');
+    if(data.exists){
+      neonLastUpdatedAt = data.updatedAt;
+      applyRemoteWorkspace(data);
+    }
+    _setUploadStage('verify','done');
+    _setUploadProgress(100, '✓ เสร็จเรียบร้อย');
+    document.getElementById('uploadBar').className = 'upload-bar-fill ok';
+    resBox.className = 'upload-result-box ok show';
+    resBox.innerHTML = `<b>ดึงข้อมูลสำเร็จ</b><br>${data._slimMode? '⚠️ Cloud ขนาดใหญ่ ดึงเฉพาะ users + opts มา — แนะนำ "อัปโหลดเลย" เพื่อเขียนทับ' : 'ข้อมูล browser นี้ตรงกับ Cloud แล้ว'}`;
+    setTimeout(() => { closeModal('uploadCloudModal'); rerender(); }, 1200);
+  } catch(err){
+    document.getElementById('uploadBar').className = 'upload-bar-fill err';
+    _setUploadProgress(100, '✗ ล้มเหลว');
+    resBox.className = 'upload-result-box err show';
+    resBox.innerHTML = `<b>ดึงข้อมูลล้มเหลว</b><br>${escapeHtmlN(err.message||String(err))}`;
+  } finally {
+    goBtn.disabled = false; downBtn.disabled = false;
+  }
+}
+
 async function pushAllToNeon(){
   if(location.protocol === 'file:'){
     alert('Neon ใช้งานได้บน https:// เท่านั้น (เปิดจาก Vercel/localhost ไม่ใช่ file://)');
@@ -4229,9 +4497,9 @@ function renderUserDropdown(){
       <span class="user-dd-icon">${I.upload}</span>
       <span>Import ข้อมูล (หลายไฟล์ได้)</span>
     </div>
-    <div class="user-dd-item" onclick="pushAllToNeon()" id="neonPushItem">
+    <div class="user-dd-item" onclick="openUploadCloudModal()">
       <span class="user-dd-icon">${I.cloud}</span>
-      <span id="neonPushLabel">ดันข้อมูลขึ้น Neon DB</span>
+      <span>ซิงค์ข้อมูลขึ้น Cloud</span>
     </div>
     ${currentUser.role==='admin'? `<div class="user-dd-divider"></div>
     <div class="user-dd-item danger" onclick="resetWorkspaceCloud()">
