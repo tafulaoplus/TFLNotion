@@ -2304,7 +2304,9 @@ svg{display:block;flex-shrink:0}
 @media (max-width:1200px){.notes-grid{column-count:3}}
 @media (max-width:880px){.notes-grid{column-count:2}}
 @media (max-width:560px){.notes-grid{column-count:1}}
-.note-card{break-inside:avoid;border:1px solid rgba(17,24,39,.1);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .15s;position:relative;display:inline-block;width:100%;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.note-card{break-inside:avoid;border:1px solid rgba(17,24,39,.1);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .15s;position:relative;display:inline-block;width:100%;margin-bottom:14px;box-shadow:var(--shadow-sm);color:#1a1a1a}
+.note-card .note-title,.note-card .note-body{color:#1a1a1a !important}
+.note-card .note-meta,.note-card time{color:rgba(26,26,26,.65) !important}
 .note-card:hover{box-shadow:var(--shadow-md);border-color:rgba(17,24,39,.16)}
 .note-pin-btn{position:absolute;top:8px;right:8px;width:28px;height:28px;border:none;background:transparent;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:all .12s;color:var(--t2)}
 .note-card:hover .note-pin-btn{opacity:.7}
