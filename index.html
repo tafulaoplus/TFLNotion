@@ -1152,6 +1152,67 @@
 .att-leave-actions .ap:hover{background:#059669}
 .att-leave-actions .rj:hover{background:#dc2626}
 
+/* Rankings & Heatmap */
+.att-month-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px;padding:14px 16px;background:var(--bg-soft);border-radius:12px}
+.att-month-bar label{font-size:12px;color:var(--t2);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.att-month-bar input[type=month]{padding:8px 14px;border:1.5px solid var(--border-2);border-radius:10px;font-size:13px;font-family:inherit;background:var(--bg);color:var(--t1);font-weight:600}
+.att-rank-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
+@media (max-width:880px){.att-rank-grid{grid-template-columns:1fr}}
+.att-rank-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.att-rank-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.att-rank-title{font-size:14px;font-weight:800;color:var(--t1);display:flex;align-items:center;gap:8px}
+.att-rank-title svg{width:18px;height:18px}
+.att-rank-title.late{color:#dc2626}
+.att-rank-title.star{color:#059669}
+[data-theme="dark"] .att-rank-title.late{color:#f87171}
+[data-theme="dark"] .att-rank-title.star{color:#34d399}
+.att-rank-list{display:flex;flex-direction:column;gap:8px}
+.att-rank-row{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--bg-soft);border-radius:10px}
+.att-rank-pos{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;background:var(--bg);color:var(--t2)}
+.att-rank-pos.gold{background:linear-gradient(135deg,#fbbf24,#d97706);color:#fff}
+.att-rank-pos.silver{background:linear-gradient(135deg,#94a3b8,#475569);color:#fff}
+.att-rank-pos.bronze{background:linear-gradient(135deg,#fb923c,#c2410c);color:#fff}
+.att-rank-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px;flex-shrink:0}
+.att-rank-info{flex:1;min-width:0}
+.att-rank-name{font-size:13.5px;font-weight:700;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.att-rank-meta{font-size:11.5px;color:var(--t2)}
+.att-rank-val{font-size:14px;font-weight:800;font-feature-settings:'tnum';flex-shrink:0}
+.att-rank-val.late{color:#dc2626}
+.att-rank-val.star{color:#059669}
+[data-theme="dark"] .att-rank-val.late{color:#f87171}
+[data-theme="dark"] .att-rank-val.star{color:#34d399}
+
+.att-heatmap-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:22px;box-shadow:var(--shadow)}
+.att-heat-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:14px}
+.att-heat-dow{font-size:11px;font-weight:700;color:var(--t2);text-align:center;padding:4px 0;text-transform:uppercase;letter-spacing:.3px}
+.att-heat-cell{aspect-ratio:1;border:1px solid var(--border);border-radius:8px;padding:6px;display:flex;flex-direction:column;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;background:var(--bg);position:relative;overflow:hidden}
+.att-heat-cell:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.08);z-index:1}
+.att-heat-cell.other-mo{opacity:.3;cursor:default;pointer-events:none}
+.att-heat-cell.today{border:2px solid #7c3aed;box-shadow:0 0 0 2px rgba(124,58,237,.15)}
+.att-heat-day{font-size:11.5px;font-weight:700;color:var(--t1)}
+.att-heat-stats{display:flex;flex-direction:column;gap:2px;font-size:9.5px;font-weight:700;margin-top:auto;font-feature-settings:'tnum'}
+.att-heat-stats .s-row{display:flex;align-items:center;gap:3px}
+.att-heat-stats .s-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.att-heat-stats .s-dot.normal{background:#10b981}
+.att-heat-stats .s-dot.late{background:#f59e0b}
+.att-heat-stats .s-dot.absent{background:#ef4444}
+.att-heat-stats .s-dot.leave{background:#a78bfa}
+.att-heat-cell.weekend{background:var(--bg-soft)}
+.att-heat-cell .att-heat-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--t2);opacity:.4;font-size:11px}
+.att-heat-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:12px;color:var(--t2)}
+.att-heat-legend > span{display:flex;align-items:center;gap:5px}
+.att-heat-legend .l-dot{width:9px;height:9px;border-radius:50%}
+
+/* Leave attachment */
+.leave-attach-upload{display:flex;align-items:center;gap:10px;padding:11px;border:1.5px dashed var(--border-2);border-radius:10px;background:var(--bg-soft);cursor:pointer}
+.leave-attach-upload:hover{border-color:var(--brand)}
+.leave-attach-upload input{display:none}
+.leave-attach-upload .ic{width:34px;height:34px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--t2)}
+.leave-attach-preview{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;margin-top:8px}
+.leave-attach-preview img{width:48px;height:48px;border-radius:7px;object-fit:cover}
+.leave-attach-preview a{color:var(--brand);font-size:12.5px;text-decoration:none;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.leave-attach-preview .rm{background:none;border:none;color:#dc2626;cursor:pointer;font-size:18px;font-weight:700}
+
 /* Modal for attendance settings/leave */
 .att-modal{width:min(560px,calc(100vw - 32px));border-radius:22px;background:linear-gradient(160deg,#faf7ff 0%,#fff 60%);border:1px solid #ece7f7;overflow:hidden}
 [data-theme="dark"] .att-modal{background:linear-gradient(160deg,#1e1b3a 0%,#0f0f23 60%);border-color:rgba(167,139,250,.22)}
@@ -2263,6 +2324,18 @@ svg{display:block;flex-shrink:0}
         <label class="lot-fld-lbl">เหตุผล</label>
         <textarea id="fLeaveReason" rows="3" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
       </div>
+      <div class="lot-fld">
+        <label class="lot-fld-lbl">เอกสารแนบ (ใบรับรองแพทย์ ฯลฯ)</label>
+        <label class="leave-attach-upload">
+          <input type="file" id="fLeaveAttach" accept="image/*,application/pdf" onchange="handleLeaveAttachUpload(event)"/>
+          <div class="ic">${'<svg width=\'18\' height=\'18\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\'/><polyline points=\'17 8 12 3 7 8\'/><line x1=\'12\' y1=\'3\' x2=\'12\' y2=\'15\'/></svg>'}</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--t1)">อัพโหลดเอกสาร</div>
+            <div style="font-size:11.5px;color:var(--t2);margin-top:2px">รูปภาพหรือ PDF (≤ 3 MB)</div>
+          </div>
+        </label>
+        <div id="fLeaveAttachPreview"></div>
+      </div>
     </div>
     <div class="modal-ft" style="padding:18px 24px 22px">
       <button class="sm-btn-cancel" onclick="closeModal('leaveModal')">ยกเลิก</button>
@@ -3244,6 +3317,8 @@ let attendanceSettings = {
 let attendanceView = 'me'; // me | history | leave | admin
 let attendancePhotoData = null;
 let _leafletMap = null;
+let attMonth = new Date().toISOString().slice(0,7);
+let _leaveAttachmentData = null;
 let notifications = [];
 let nextNotifId = 1;
 let notifCheckTimer = null;
@@ -11157,7 +11232,31 @@ function openLeaveModal(){
   document.getElementById('fLeaveStart').value = today;
   document.getElementById('fLeaveEnd').value = today;
   document.getElementById('fLeaveReason').value = '';
+  _leaveAttachmentData = null;
+  _renderLeaveAttachPreview();
   document.getElementById('leaveModal').classList.add('show');
+}
+function handleLeaveAttachUpload(ev){
+  const file = ev.target.files && ev.target.files[0];
+  if(!file) return;
+  if(file.size > 3*1024*1024){ alert('ไฟล์ใหญ่เกิน 3 MB'); return; }
+  const r = new FileReader();
+  r.onload = e => {
+    _leaveAttachmentData = { name: file.name, type: file.type, data: e.target.result };
+    _renderLeaveAttachPreview();
+  };
+  r.readAsDataURL(file);
+}
+function _renderLeaveAttachPreview(){
+  const pv = document.getElementById('fLeaveAttachPreview');
+  if(!pv) return;
+  if(!_leaveAttachmentData){ pv.innerHTML = ''; return; }
+  const isImg = (_leaveAttachmentData.type||'').startsWith('image/');
+  pv.innerHTML = `<div class="leave-attach-preview">
+    ${isImg? `<img src="${_leaveAttachmentData.data}" alt=""/>` : `<div class="ic" style="width:48px;height:48px;background:var(--bg-hover);border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--t2);font-weight:700;font-size:11px">PDF</div>`}
+    <a href="${_leaveAttachmentData.data}" download="${escapeHtmlN(_leaveAttachmentData.name||'attachment')}">${escapeHtmlN(_leaveAttachmentData.name||'')}</a>
+    <button class="rm" onclick="_leaveAttachmentData=null;_renderLeaveAttachPreview()">×</button>
+  </div>`;
 }
 function submitLeaveRequest(){
   const type = document.getElementById('fLeaveType').value;
@@ -11171,9 +11270,13 @@ function submitLeaveRequest(){
     userId: currentUser.id,
     type, startDate, endDate, reason,
     status: 'pending',
+    attachment: _leaveAttachmentData ? _leaveAttachmentData.data : null,
+    attachmentName: _leaveAttachmentData ? _leaveAttachmentData.name : null,
+    attachmentType: _leaveAttachmentData ? _leaveAttachmentData.type : null,
     createdAt: Date.now(),
   };
   leaveRequests.push(rec);
+  _leaveAttachmentData = null;
   try { logActivity('create','leave', rec.id, `${type} ${startDate}→${endDate}`); } catch(_){}
   USERS.filter(u => u.role === 'admin').forEach(admin => {
     try { createNotif({ userId: admin.id, type:'info', title:'มีคำขอลาใหม่', body:`${currentUser.name} ขอ${type==='sick'?'ลาป่วย':type==='personal'?'ลากิจ':'ลาพักร้อน'} ${startDate}` }); } catch(_){}
@@ -11378,6 +11481,7 @@ function renderAttendance(el){
               <div class="att-leave-body">
                 <div class="att-leave-title">${escapeHtmlN(u?.name||'?')} <span class="att-status-pill ${l.type}">${_leaveTypeLabel(l.type)}</span></div>
                 <div class="att-leave-meta">${l.startDate} → ${l.endDate}${l.reason? ' · '+escapeHtmlN(l.reason):''}</div>
+                ${l.attachment? `<a href="${l.attachment}" target="_blank" download="${escapeHtmlN(l.attachmentName||'attachment')}" style="display:inline-flex;align-items:center;gap:5px;margin-top:6px;color:var(--brand);font-size:12px;font-weight:600;text-decoration:none">📎 ${escapeHtmlN(l.attachmentName||'เอกสารแนบ')}</a>`:''}
               </div>
               <div class="att-leave-actions">
                 <button class="ap" onclick="approveLeave(${l.id},'approved')">อนุมัติ</button>
@@ -11393,51 +11497,12 @@ function renderAttendance(el){
           <div class="att-leave-body">
             <div class="att-leave-title"><span class="att-status-pill ${l.type}">${_leaveTypeLabel(l.type)}</span> <span class="att-status-pill ${l.status==='approved'?'normal':l.status==='rejected'?'absent':'late'}">${l.status==='approved'?'อนุมัติ':l.status==='rejected'?'ปฏิเสธ':'รออนุมัติ'}</span></div>
             <div class="att-leave-meta">${l.startDate} → ${l.endDate}${l.reason? ' · '+escapeHtmlN(l.reason):''}</div>
+            ${l.attachment? `<a href="${l.attachment}" target="_blank" download="${escapeHtmlN(l.attachmentName||'attachment')}" style="display:inline-flex;align-items:center;gap:5px;margin-top:6px;color:var(--brand);font-size:12px;font-weight:600;text-decoration:none">📎 ${escapeHtmlN(l.attachmentName||'เอกสารแนบ')}</a>`:''}
           </div>
         </div>`).join('')}</div>`}`;
   } else if(attendanceView === 'admin'){
-    const filterDate = today;
-    const todayRecs = attendanceRecords.filter(a => a.date === filterDate);
-    const presentIds = new Set(todayRecs.map(r => r.userId));
     const allUsers = USERS;
-    const present = todayRecs.length;
-    const lateCount = todayRecs.filter(r => r.status==='late').length;
-    const absent = allUsers.filter(u => !presentIds.has(u.id)).length;
-    const otTotal = todayRecs.reduce((a,r)=>a+(+r.otHours||0),0);
-    body = `
-      <div class="att-kpi-row">
-        <div class="att-kpi normal"><div class="att-kpi-lbl">มาทำงาน</div><div class="att-kpi-val">${present}</div><div class="att-kpi-sub">/ ${allUsers.length} คน</div></div>
-        <div class="att-kpi late"><div class="att-kpi-lbl">มาสาย</div><div class="att-kpi-val">${lateCount}</div><div class="att-kpi-sub">คนวันนี้</div></div>
-        <div class="att-kpi absent"><div class="att-kpi-lbl">ขาด/ยังไม่เช็คอิน</div><div class="att-kpi-val">${absent}</div><div class="att-kpi-sub">คน</div></div>
-        <div class="att-kpi ot"><div class="att-kpi-lbl">OT รวมวันนี้</div><div class="att-kpi-val">${otTotal.toFixed(1)}h</div><div class="att-kpi-sub">ชั่วโมง</div></div>
-      </div>
-      <h3 class="sales-section-title" style="font-size:15px;margin:0 0 12px">รายงานวันนี้ — ${filterDate}</h3>
-      <div class="att-table-wrap">
-        <table class="att-table">
-          <thead><tr><th>สมาชิก</th><th>เช็คอิน</th><th>เช็คเอาท์</th><th>รวม</th><th>มาสาย</th><th>OT</th><th>สถานะ</th><th>ภาพ</th></tr></thead>
-          <tbody>${allUsers.map(u => {
-            const r = todayRecs.find(x => x.userId === u.id);
-            if(!r){
-              return `<tr>
-                <td><span class="sales-userchip" style="background:${u.color||'#888'}">${u.init||(u.name||'?')[0]}</span> ${escapeHtmlN(u.name)}</td>
-                <td colspan="5" style="color:var(--t2)">ยังไม่ได้เช็คอิน</td>
-                <td><span class="att-status-pill absent">ไม่มี</span></td>
-                <td>—</td>
-              </tr>`;
-            }
-            return `<tr>
-              <td><span class="sales-userchip" style="background:${u.color||'#888'}">${u.init||(u.name||'?')[0]}</span> ${escapeHtmlN(u.name)}</td>
-              <td>${r.checkIn? _fmtTime(r.checkIn.time):'—'}</td>
-              <td>${r.checkOut? _fmtTime(r.checkOut.time):'—'}</td>
-              <td>${r.totalHours||0}h</td>
-              <td>${r.lateMinutes? r.lateMinutes+'m':'—'}</td>
-              <td>${r.otHours? r.otHours+'h':'—'}</td>
-              <td><span class="att-status-pill ${r.status}">${_attStatusLabel(r.status)}</span></td>
-              <td>${r.checkIn?.photo? `<img class="att-mini-photo" src="${r.checkIn.photo}" onclick="window.open(this.src,'_blank')"/>` : '—'}</td>
-            </tr>`;
-          }).join('')}</tbody>
-        </table>
-      </div>`;
+    body = _renderAdminAttDashboard(allUsers, today);
   }
 
   el.innerHTML = topbarLottery('ระบบลงเวลา', `${USERS.length} สมาชิก · ${attendanceSettings.companyName}`, actions).replace('lot-logo-img','lot-logo-img" style="display:none') + `
@@ -11449,6 +11514,213 @@ function renderAttendance(el){
   if(attendanceView === 'me'){
     setTimeout(() => { try { _renderAttMap(null, null); _attRequestLocation(); } catch(e){ console.warn(e); } }, 50);
   }
+}
+
+function setAttMonth(v){ attMonth = v; rerender(); }
+
+function _renderAdminAttDashboard(allUsers, today){
+  const month = attMonth || today.slice(0,7);
+  const monthRecs = attendanceRecords.filter(a => a.date.startsWith(month));
+  const todayRecs = attendanceRecords.filter(a => a.date === today);
+  const monthLeaves = leaveRequests.filter(l => l.status === 'approved' && (l.startDate.startsWith(month) || l.endDate.startsWith(month)));
+
+  // KPI for the month
+  const totalDays = new Set(monthRecs.map(r => r.date)).size || 1;
+  const monthLate = monthRecs.filter(r => r.status==='late').length;
+  const monthAbsent = (allUsers.length * totalDays) - monthRecs.length;
+  const monthOtTotal = monthRecs.reduce((a,r)=>a+(+r.otHours||0),0);
+  const monthPresent = monthRecs.length;
+
+  // Today KPI
+  const presentIds = new Set(todayRecs.map(r => r.userId));
+  const presentToday = todayRecs.length;
+  const lateToday = todayRecs.filter(r => r.status==='late').length;
+  const absentToday = allUsers.filter(u => !presentIds.has(u.id)).length;
+  const onLeaveToday = leaveRequests.filter(l => l.status==='approved' && l.startDate <= today && l.endDate >= today).length;
+
+  // Rankings — most late this month
+  const lateByUser = {};
+  monthRecs.forEach(r => {
+    if(!lateByUser[r.userId]) lateByUser[r.userId] = { count:0, totalMin:0 };
+    if(r.status === 'late'){
+      lateByUser[r.userId].count++;
+      lateByUser[r.userId].totalMin += +r.lateMinutes||0;
+    }
+  });
+  const topLate = allUsers.map(u => ({ u, ...((lateByUser[u.id])||{count:0,totalMin:0}) }))
+    .filter(x => x.count > 0)
+    .sort((a,b) => b.totalMin - a.totalMin || b.count - a.count)
+    .slice(0, 5);
+
+  // Rankings — most on-time / excellent (no late, most days present)
+  const statsByUser = {};
+  allUsers.forEach(u => { statsByUser[u.id] = { present:0, normal:0, late:0, ot:0 }; });
+  monthRecs.forEach(r => {
+    if(!statsByUser[r.userId]) statsByUser[r.userId] = { present:0, normal:0, late:0, ot:0 };
+    statsByUser[r.userId].present++;
+    if(r.status === 'normal') statsByUser[r.userId].normal++;
+    if(r.status === 'late') statsByUser[r.userId].late++;
+    statsByUser[r.userId].ot += +r.otHours||0;
+  });
+  const topExcellent = allUsers.map(u => ({ u, ...statsByUser[u.id] }))
+    .filter(x => x.present > 0)
+    .sort((a,b) => (a.late - b.late) || (b.normal - a.normal) || (b.ot - a.ot))
+    .slice(0, 5);
+
+  // Heatmap
+  const [y, m] = month.split('-').map(Number);
+  const firstDay = new Date(y, m-1, 1);
+  const startDow = firstDay.getDay();
+  const daysInMonth = new Date(y, m, 0).getDate();
+  const dowLabels = ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'];
+  let heatCells = '';
+  for(let i=0; i<startDow; i++){
+    heatCells += `<div class="att-heat-cell other-mo"></div>`;
+  }
+  for(let d=1; d<=daysInMonth; d++){
+    const dateStr = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dow = new Date(y, m-1, d).getDay();
+    const isWeekend = dow === 0 || dow === 6;
+    const isToday = dateStr === today;
+    const dayRecs = attendanceRecords.filter(a => a.date === dateStr);
+    const norm = dayRecs.filter(r => r.status==='normal' || r.status==='wfh').length;
+    const late = dayRecs.filter(r => r.status==='late').length;
+    const onLeave = leaveRequests.filter(l => l.status==='approved' && l.startDate <= dateStr && l.endDate >= dateStr).length;
+    const totalPresent = dayRecs.length + onLeave;
+    const abs = Math.max(0, allUsers.length - totalPresent);
+    const hasData = dayRecs.length > 0 || onLeave > 0;
+    heatCells += `<div class="att-heat-cell ${isWeekend?'weekend':''} ${isToday?'today':''}" title="${dateStr}">
+      <div class="att-heat-day">${d}</div>
+      ${hasData? `<div class="att-heat-stats">
+        ${norm>0?`<div class="s-row"><span class="s-dot normal"></span>${norm}</div>`:''}
+        ${late>0?`<div class="s-row"><span class="s-dot late"></span>${late}</div>`:''}
+        ${onLeave>0?`<div class="s-row"><span class="s-dot leave"></span>${onLeave}</div>`:''}
+        ${abs>0 && !isWeekend?`<div class="s-row"><span class="s-dot absent"></span>${abs}</div>`:''}
+      </div>` : (isWeekend?'<div class="att-heat-empty">หยุด</div>':'<div class="att-heat-empty">—</div>')}
+    </div>`;
+  }
+  const totalSoFar = startDow + daysInMonth;
+  const trailing = (7 - (totalSoFar % 7)) % 7;
+  for(let i=0; i<trailing; i++){
+    heatCells += `<div class="att-heat-cell other-mo"></div>`;
+  }
+
+  return `
+    <div class="att-month-bar">
+      <label>เดือน</label>
+      <input type="month" value="${month}" onchange="setAttMonth(this.value)"/>
+      <span style="margin-left:auto;font-size:12px;color:var(--t2)">รายงานเดือน ${month}</span>
+    </div>
+
+    <div class="att-kpi-row">
+      <div class="att-kpi normal"><div class="att-kpi-lbl">มาทำงานวันนี้</div><div class="att-kpi-val">${presentToday}/${allUsers.length}</div><div class="att-kpi-sub">${Math.round(presentToday/Math.max(1,allUsers.length)*100)}% ของทีม</div></div>
+      <div class="att-kpi late"><div class="att-kpi-lbl">มาสายวันนี้</div><div class="att-kpi-val">${lateToday}</div><div class="att-kpi-sub">เดือนนี้รวม ${monthLate} ครั้ง</div></div>
+      <div class="att-kpi absent"><div class="att-kpi-lbl">ขาด/ลาวันนี้</div><div class="att-kpi-val">${absentToday-onLeaveToday}<small style="font-size:14px;color:var(--t2)"> +${onLeaveToday} ลา</small></div><div class="att-kpi-sub">คน</div></div>
+      <div class="att-kpi ot"><div class="att-kpi-lbl">OT รวมเดือนนี้</div><div class="att-kpi-val">${monthOtTotal.toFixed(1)}h</div><div class="att-kpi-sub">${monthPresent} record ทั้งเดือน</div></div>
+    </div>
+
+    <div class="att-rank-grid">
+      <div class="att-rank-card">
+        <div class="att-rank-hdr">
+          <div class="att-rank-title late">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            มาสายมากที่สุด
+          </div>
+          <span style="font-size:11px;color:var(--t2)">เดือนนี้</span>
+        </div>
+        ${topLate.length===0? '<div style="color:var(--t2);font-size:13px;padding:18px 0;text-align:center">ทุกคนมาตรงเวลา 🎉</div>' :
+          `<div class="att-rank-list">
+            ${topLate.map((x,i) => {
+              const cls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+              return `<div class="att-rank-row">
+                <div class="att-rank-pos ${cls}">${i+1}</div>
+                <div class="att-rank-av" style="background:${x.u.color||'#888'}">${x.u.init||(x.u.name||'?')[0]}</div>
+                <div class="att-rank-info">
+                  <div class="att-rank-name">${escapeHtmlN(x.u.name)}</div>
+                  <div class="att-rank-meta">${x.count} ครั้ง · เฉลี่ย ${Math.round(x.totalMin/x.count)} นาที/ครั้ง</div>
+                </div>
+                <div class="att-rank-val late">${x.totalMin}m</div>
+              </div>`;
+            }).join('')}
+          </div>`}
+      </div>
+
+      <div class="att-rank-card">
+        <div class="att-rank-hdr">
+          <div class="att-rank-title star">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            พนักงานดีเด่น
+          </div>
+          <span style="font-size:11px;color:var(--t2)">ตรงเวลา + ทำงานเยอะ</span>
+        </div>
+        ${topExcellent.length===0? '<div style="color:var(--t2);font-size:13px;padding:18px 0;text-align:center">ยังไม่มีข้อมูล</div>' :
+          `<div class="att-rank-list">
+            ${topExcellent.map((x,i) => {
+              const cls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+              const onTimePct = x.present>0 ? Math.round(x.normal/x.present*100) : 0;
+              return `<div class="att-rank-row">
+                <div class="att-rank-pos ${cls}">${i+1}</div>
+                <div class="att-rank-av" style="background:${x.u.color||'#888'}">${x.u.init||(x.u.name||'?')[0]}</div>
+                <div class="att-rank-info">
+                  <div class="att-rank-name">${escapeHtmlN(x.u.name)}</div>
+                  <div class="att-rank-meta">${x.present} วัน · ตรงเวลา ${onTimePct}% · OT ${x.ot.toFixed(1)}h</div>
+                </div>
+                <div class="att-rank-val star">${onTimePct}%</div>
+              </div>`;
+            }).join('')}
+          </div>`}
+      </div>
+    </div>
+
+    <div class="att-heatmap-card">
+      <div class="att-rank-hdr">
+        <div class="att-rank-title" style="color:var(--t1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          ปฏิทินการเข้างาน
+        </div>
+        <span style="font-size:11px;color:var(--t2)">${month}</span>
+      </div>
+      <div class="att-heat-grid">
+        ${dowLabels.map(d => `<div class="att-heat-dow">${d}</div>`).join('')}
+        ${heatCells}
+      </div>
+      <div class="att-heat-legend">
+        <span><span class="l-dot" style="background:#10b981"></span>ปกติ</span>
+        <span><span class="l-dot" style="background:#f59e0b"></span>มาสาย</span>
+        <span><span class="l-dot" style="background:#a78bfa"></span>ลา (อนุมัติ)</span>
+        <span><span class="l-dot" style="background:#ef4444"></span>ขาด</span>
+        <span style="margin-left:auto;font-style:italic;color:var(--t2)">ตัวเลข = จำนวนคน · กรอบม่วง = วันนี้</span>
+      </div>
+    </div>
+
+    <h3 class="sales-section-title" style="font-size:15px;margin:0 0 12px">รายงานวันนี้ — ${today}</h3>
+    <div class="att-table-wrap">
+      <table class="att-table">
+        <thead><tr><th>สมาชิก</th><th>เช็คอิน</th><th>เช็คเอาท์</th><th>รวม</th><th>มาสาย</th><th>OT</th><th>สถานะ</th><th>ภาพ</th></tr></thead>
+        <tbody>${allUsers.map(u => {
+          const r = todayRecs.find(x => x.userId === u.id);
+          if(!r){
+            const onLeave = leaveRequests.find(l => l.status==='approved' && l.userId===u.id && l.startDate <= today && l.endDate >= today);
+            return `<tr>
+              <td><span class="sales-userchip" style="background:${u.color||'#888'}">${u.init||(u.name||'?')[0]}</span> ${escapeHtmlN(u.name)}</td>
+              <td colspan="5" style="color:var(--t2)">${onLeave?'อยู่ในช่วงลา':'ยังไม่ได้เช็คอิน'}</td>
+              <td><span class="att-status-pill ${onLeave?onLeave.type:'absent'}">${onLeave?_leaveTypeLabel(onLeave.type):'ไม่มี'}</span></td>
+              <td>—</td>
+            </tr>`;
+          }
+          return `<tr>
+            <td><span class="sales-userchip" style="background:${u.color||'#888'}">${u.init||(u.name||'?')[0]}</span> ${escapeHtmlN(u.name)}</td>
+            <td>${r.checkIn? _fmtTime(r.checkIn.time):'—'}</td>
+            <td>${r.checkOut? _fmtTime(r.checkOut.time):'—'}</td>
+            <td>${r.totalHours||0}h</td>
+            <td>${r.lateMinutes? r.lateMinutes+'m':'—'}</td>
+            <td>${r.otHours? r.otHours+'h':'—'}</td>
+            <td><span class="att-status-pill ${r.status}">${_attStatusLabel(r.status)}</span></td>
+            <td>${r.checkIn?.photo? `<img class="att-mini-photo" src="${r.checkIn.photo}" onclick="window.open(this.src,'_blank')"/>` : '—'}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+    </div>`;
 }
 
 function _attStatusLabel(s){
