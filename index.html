@@ -1690,16 +1690,30 @@ svg{display:block;flex-shrink:0}
 .tb-text-wrap .tb-sub{font-size:12.5px;color:var(--t2);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .topbar-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 
+/* Topbar overflow menu button (mobile) */
+.topbar-more-btn{display:none;width:36px;height:36px;border:1px solid var(--border-2);background:var(--bg);border-radius:10px;cursor:pointer;color:var(--t1);font-size:20px;line-height:1;align-items:center;justify-content:center;font-weight:700;transition:background .15s ease,border-color .15s ease}
+.topbar-more-btn:hover{background:var(--bg-hover);border-color:var(--brand)}
+.actions-group{display:contents}
+
 /* Mobile responsive — topbar + filter rows */
 @media (max-width:980px){
   .topbar-title{padding-left:48px}
 }
 @media (max-width:780px){
-  .topbar{padding:10px 12px;gap:6px;flex-direction:column;align-items:stretch;overflow:hidden}
-  .topbar-title{width:100%;min-width:0;padding-left:48px}
-  .topbar-actions{width:100%;justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:6px;padding-top:6px;padding-bottom:2px;border-top:1px solid var(--border);min-height:40px}
+  .topbar{padding:10px 12px;gap:6px;align-items:center;flex-wrap:nowrap;overflow:visible;position:relative}
+  .topbar-title{flex:1;min-width:0;padding-left:48px}
+  .topbar-actions{flex:0 0 auto;justify-content:flex-end;gap:6px}
   .topbar-actions > *{flex-shrink:0}
-  .topbar-actions::-webkit-scrollbar{height:0;display:none}
+  .topbar-more-btn{display:flex}
+  .actions-group{display:none;position:absolute;top:calc(100% + 6px);right:12px;flex-direction:column;background:var(--bg);border:1px solid var(--border-2);border-radius:14px;padding:8px;box-shadow:0 14px 40px rgba(17,24,39,.18);z-index:50;min-width:220px;gap:4px;animation:popIn .15s ease}
+  [data-theme="dark"] .actions-group{box-shadow:0 14px 40px rgba(0,0,0,.5)}
+  .actions-group.show{display:flex}
+  .actions-group > *{width:100%!important;justify-content:flex-start!important;padding:10px 14px!important;border-radius:9px!important;font-size:13.5px!important}
+  .actions-group > .btn-primary,
+  .actions-group > .btn-ghost{box-shadow:none!important}
+  .actions-group .search-wrap{width:100%}
+  .actions-group .search-inp{width:100%!important;max-width:none!important}
+  @keyframes popIn{from{opacity:0;transform:translateY(-6px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
   .tb-text-wrap .tb-title{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .tb-text-wrap .tb-sub{font-size:11px}
   .fb-brand{gap:8px;min-width:0}
@@ -5598,7 +5612,8 @@ function topbarSimple(iconKey, label, sub, actions=''){
       </div>
     </div>
     <div class="topbar-actions">
-      ${actions}
+      <div class="actions-group">${actions}</div>
+      ${actions ? `<button class="topbar-more-btn" onclick="toggleTopbarMore(event)" title="เมนูเพิ่มเติม" type="button">⋯</button>` : ''}
       ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -5631,7 +5646,8 @@ function topbarFB(label, sub, actions=''){
       </div>
     </div>
     <div class="topbar-actions">
-      ${actions}
+      <div class="actions-group">${actions}</div>
+      ${actions ? `<button class="topbar-more-btn" onclick="toggleTopbarMore(event)" title="เมนูเพิ่มเติม" type="button">⋯</button>` : ''}
       ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons">
@@ -5648,6 +5664,30 @@ function topbarFB(label, sub, actions=''){
 }
 
 // ============ NOTIFICATION SYSTEM ============
+function toggleTopbarMore(e){
+  if(e){ e.stopPropagation(); e.preventDefault(); }
+  const tb = e.currentTarget.closest('.topbar');
+  if(!tb) return;
+  const group = tb.querySelector('.actions-group');
+  if(!group) return;
+  const willShow = !group.classList.contains('show');
+  document.querySelectorAll('.actions-group.show').forEach(g => g.classList.remove('show'));
+  if(willShow){
+    group.classList.add('show');
+    setTimeout(() => {
+      document.addEventListener('click', _closeTopbarMore, { once: true });
+    }, 0);
+  }
+}
+function _closeTopbarMore(e){
+  const all = document.querySelectorAll('.actions-group.show');
+  all.forEach(g => {
+    if(!g.contains(e.target) && !e.target.closest('.topbar-more-btn')){
+      g.classList.remove('show');
+    }
+  });
+}
+
 function notifBellHTML(){
   return `<span class="sync-badge off" id="syncBadge" title="คลิกเพื่อ sync ทันที" onclick="forceSyncNow()">Offline</span>
   <button class="notif-btn" onclick="toggleNotifPanel(event)" title="แจ้งเตือน" type="button">
@@ -5929,7 +5969,8 @@ function topbarAllTasks(label, sub, actions=''){
       </div>
     </div>
     <div class="topbar-actions">
-      ${actions}
+      <div class="actions-group">${actions}</div>
+      ${actions ? `<button class="topbar-more-btn" onclick="toggleTopbarMore(event)" title="เมนูเพิ่มเติม" type="button">⋯</button>` : ''}
       ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -5963,7 +6004,8 @@ function topbarTeam(label, sub, actions=''){
       </div>
     </div>
     <div class="topbar-actions">
-      ${actions}
+      <div class="actions-group">${actions}</div>
+      ${actions ? `<button class="topbar-more-btn" onclick="toggleTopbarMore(event)" title="เมนูเพิ่มเติม" type="button">⋯</button>` : ''}
       ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -6004,7 +6046,8 @@ function topbarDoc(label, sub, actions=''){
       </div>
     </div>
     <div class="topbar-actions">
-      ${actions}
+      <div class="actions-group">${actions}</div>
+      ${actions ? `<button class="topbar-more-btn" onclick="toggleTopbarMore(event)" title="เมนูเพิ่มเติม" type="button">⋯</button>` : ''}
       ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -6042,7 +6085,8 @@ function topbarTrack(label, sub, actions=''){
       </div>
     </div>
     <div class="topbar-actions">
-      ${actions}
+      <div class="actions-group">${actions}</div>
+      ${actions ? `<button class="topbar-more-btn" onclick="toggleTopbarMore(event)" title="เมนูเพิ่มเติม" type="button">⋯</button>` : ''}
       ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -6076,7 +6120,8 @@ function topbarMyTask(label, sub, actions=''){
       </div>
     </div>
     <div class="topbar-actions">
-      ${actions}
+      <div class="actions-group">${actions}</div>
+      ${actions ? `<button class="topbar-more-btn" onclick="toggleTopbarMore(event)" title="เมนูเพิ่มเติม" type="button">⋯</button>` : ''}
       ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -6110,7 +6155,8 @@ function topbarDash(label, sub, actions=''){
       </div>
     </div>
     <div class="topbar-actions">
-      ${actions}
+      <div class="actions-group">${actions}</div>
+      ${actions ? `<button class="topbar-more-btn" onclick="toggleTopbarMore(event)" title="เมนูเพิ่มเติม" type="button">⋯</button>` : ''}
       ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -6143,7 +6189,8 @@ function topbarLib(label, sub, actions=''){
       </div>
     </div>
     <div class="topbar-actions">
-      ${actions}
+      <div class="actions-group">${actions}</div>
+      ${actions ? `<button class="topbar-more-btn" onclick="toggleTopbarMore(event)" title="เมนูเพิ่มเติม" type="button">⋯</button>` : ''}
       ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -6178,7 +6225,8 @@ function topbarNote(label, sub, actions=''){
       </div>
     </div>
     <div class="topbar-actions">
-      ${actions}
+      <div class="actions-group">${actions}</div>
+      ${actions ? `<button class="topbar-more-btn" onclick="toggleTopbarMore(event)" title="เมนูเพิ่มเติม" type="button">⋯</button>` : ''}
       ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons">
@@ -6219,7 +6267,8 @@ function topbarWS(label, sub, actions=''){
       </div>
     </div>
     <div class="topbar-actions">
-      ${actions}
+      <div class="actions-group">${actions}</div>
+      ${actions ? `<button class="topbar-more-btn" onclick="toggleTopbarMore(event)" title="เมนูเพิ่มเติม" type="button">⋯</button>` : ''}
       ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons">
@@ -6244,7 +6293,8 @@ function topbar(title, sub, actions=''){
       </div>
     </div>
     <div class="topbar-actions">
-      ${actions}
+      <div class="actions-group">${actions}</div>
+      ${actions ? `<button class="topbar-more-btn" onclick="toggleTopbarMore(event)" title="เมนูเพิ่มเติม" type="button">⋯</button>` : ''}
       ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons">
@@ -6278,8 +6328,12 @@ function setTheme(theme){
 function loadSavedTheme(){
   try {
     const saved = localStorage.getItem('tfl_theme');
-    if(saved === 'dark') setTheme('dark');
-  } catch(e){}
+    // Default to dark mode when no preference saved
+    if(saved === 'light') setTheme('light');
+    else setTheme('dark');
+  } catch(e){
+    setTheme('dark');
+  }
 }
 
 // ========== DASHBOARD ==========
@@ -11194,7 +11248,8 @@ function topbarLottery(label, sub, actions=''){
       </div>
     </div>
     <div class="topbar-actions">
-      ${actions}
+      <div class="actions-group">${actions}</div>
+      ${actions ? `<button class="topbar-more-btn" onclick="toggleTopbarMore(event)" title="เมนูเพิ่มเติม" type="button">⋯</button>` : ''}
       ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -13231,7 +13286,8 @@ function topbarCalendar(label, sub, actions=''){
       </div>
     </div>
     <div class="topbar-actions">
-      ${actions}
+      <div class="actions-group">${actions}</div>
+      ${actions ? `<button class="topbar-more-btn" onclick="toggleTopbarMore(event)" title="เมนูเพิ่มเติม" type="button">⋯</button>` : ''}
       ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -13476,7 +13532,8 @@ function topbarActivity(label, sub, actions=''){
       </div>
     </div>
     <div class="topbar-actions">
-      ${actions}
+      <div class="actions-group">${actions}</div>
+      ${actions ? `<button class="topbar-more-btn" onclick="toggleTopbarMore(event)" title="เมนูเพิ่มเติม" type="button">⋯</button>` : ''}
       ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
@@ -13592,7 +13649,8 @@ function topbarSales(label, sub, actions=''){
       </div>
     </div>
     <div class="topbar-actions">
-      ${actions}
+      <div class="actions-group">${actions}</div>
+      ${actions ? `<button class="topbar-more-btn" onclick="toggleTopbarMore(event)" title="เมนูเพิ่มเติม" type="button">⋯</button>` : ''}
       ${notifBellHTML()}
       <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
         <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
