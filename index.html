@@ -540,6 +540,51 @@
   .sl-logo{height:38px}
 }
 
+/* ===== ACTIVITY LOG ===== */
+.activity-list{background:var(--bg);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.activity-row{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border-bottom:1px solid var(--border);transition:background .12s ease}
+.activity-row:last-child{border-bottom:none}
+.activity-row:hover{background:var(--bg-hover)}
+.activity-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;flex-shrink:0}
+.activity-content{flex:1;min-width:0}
+.activity-text{font-size:13.5px;color:var(--t1);line-height:1.5}
+.activity-text b{font-weight:700}
+.activity-text .act-action{font-weight:700}
+.activity-text .act-action.create{color:#059669}
+.activity-text .act-action.update{color:#1d4ed8}
+.activity-text .act-action.delete{color:#dc2626}
+.activity-text .act-action.login{color:#7c3aed}
+[data-theme="dark"] .activity-text .act-action.create{color:#34d399}
+[data-theme="dark"] .activity-text .act-action.update{color:#60a5fa}
+[data-theme="dark"] .activity-text .act-action.delete{color:#f87171}
+[data-theme="dark"] .activity-text .act-action.login{color:#a78bfa}
+.activity-detail{font-size:12px;color:var(--t2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.activity-time{font-size:11.5px;color:var(--t2);opacity:.75;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.activity-entity{display:inline-block;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:700;background:var(--bg-hover);color:var(--t2);margin-left:6px}
+
+/* ===== ACTIVITY brand logo ===== */
+:root {
+  --ac-c1:    #818cf8;
+  --ac-c2:    #3b82f6;
+  --ac-c3:    #10b981;
+  --ac-c4:    #f59e0b;
+  --ac-text:  #0f172a;
+  --ac-acc:   #6366f1;
+}
+[data-theme="dark"] {
+  --ac-c1:    #a5b4fc;
+  --ac-c2:    #60a5fa;
+  --ac-c3:    #34d399;
+  --ac-c4:    #fbbf24;
+  --ac-text:  #f1f5f9;
+  --ac-acc:   #818cf8;
+}
+.ac-logo{height:50px;width:auto;flex-shrink:0;transition:filter .25s ease}
+[data-theme="dark"] .ac-logo{filter:drop-shadow(0 0 14px rgba(129,140,248,.3))}
+@media (max-width:680px){
+  .ac-logo{height:38px}
+}
+
 /* ===== IMPORT PROGRESS MODAL ===== */
 .import-modal{background:#fff;border-radius:18px;width:560px;max-width:95vw;max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(17,24,39,.25);border:1px solid var(--border);animation:modalIn .25s ease}
 .import-hd{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
@@ -1508,6 +1553,7 @@ svg{display:block;flex-shrink:0}
       <div id="viewFbLive" class="view"></div>
       <div id="viewFbLiveAuto" class="view"></div>
       <div id="viewSales" class="view"></div>
+      <div id="viewActivity" class="view"></div>
     </div>
   </div>
 </div>
@@ -2175,6 +2221,11 @@ let nextSalesId = 1;
 let salesFilterMonth = '';
 let salesFilterUser = 0;
 let editSalesId = null;
+let activityLog = [];
+let nextActivityId = 1;
+let activityFilterUser = 0;
+let activityFilterAction = '';
+let activityFilterDate = '';
 let notifications = [];
 let nextNotifId = 1;
 let notifCheckTimer = null;
@@ -2372,6 +2423,11 @@ function applyRemoteWorkspace(data){
     const maxSid = salesEvents.reduce((m,s)=>Math.max(m, s.id||0), 0);
     nextSalesId = Math.max(nextSalesId, maxSid + 1);
   }
+  if(Array.isArray(data.activityLog)){
+    activityLog = data.activityLog;
+    const maxAid = activityLog.reduce((m,a)=>Math.max(m, a.id||0), 0);
+    nextActivityId = Math.max(nextActivityId, maxAid + 1);
+  }
   saveAllLocal();
   if(currentUser){
     try { refreshDbTables(); } catch(_){}
@@ -2405,6 +2461,7 @@ function syncToNeon(){
         nextDocId: nextDocId,
         notifications: notifications,
         salesEvents: salesEvents,
+        activityLog: activityLog,
         _updatedBy: currentUser ? currentUser.name : 'unknown',
       };
       const r = await fetch(`${NEON_API}/workspace`, {
@@ -2508,6 +2565,8 @@ function saveAllLocal(){
     localStorage.setItem('tfl_nextNotifId', String(nextNotifId));
     localStorage.setItem('tfl_sales', JSON.stringify(salesEvents));
     localStorage.setItem('tfl_nextSalesId', String(nextSalesId));
+    localStorage.setItem('tfl_activity', JSON.stringify(activityLog));
+    localStorage.setItem('tfl_nextActivityId', String(nextActivityId));
   } catch(e){ console.warn('Save failed:', e); }
 }
 
@@ -2550,6 +2609,12 @@ function loadAll(){
     if(ssi) nextSalesId = Math.max(parseInt(ssi,10)||1, 1);
     const maxSid = salesEvents.reduce((m,s)=>Math.max(m, parseInt(s.id,10)||0), 0);
     if(maxSid >= nextSalesId) nextSalesId = maxSid + 1;
+    const ac = localStorage.getItem('tfl_activity');
+    if(ac){ const arr = JSON.parse(ac); if(Array.isArray(arr)) activityLog = arr; }
+    const aci = localStorage.getItem('tfl_nextActivityId');
+    if(aci) nextActivityId = Math.max(parseInt(aci,10)||1, 1);
+    const maxAid = activityLog.reduce((m,a)=>Math.max(m, parseInt(a.id,10)||0), 0);
+    if(maxAid >= nextActivityId) nextActivityId = maxAid + 1;
   } catch(e){ console.warn('Load failed:', e); }
 }
 
@@ -2992,6 +3057,7 @@ function doLogin(u){
   } catch(e){}
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('app').style.display='block';
+  try { logActivity('login', 'user', u.id, `เข้าระบบ`); saveAllLocal(); syncToNeon(); } catch(_){}
   initApp();
 }
 
@@ -3158,10 +3224,10 @@ function initApp(){
   let startView = 'dashboard';
   try {
     const saved = localStorage.getItem('tfl_currentView');
-    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbLiveAuto','sales'];
+    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbLiveAuto','sales','activity'];
     if(saved && validViews.includes(saved)){
       // Check role permission
-      if((saved === 'allTasks' || saved === 'members') && currentUser.role !== 'admin'){
+      if((saved === 'allTasks' || saved === 'members' || saved === 'activity') && currentUser.role !== 'admin'){
         startView = 'dashboard';
       } else if((saved === 'fbLive' || saved === 'fbLiveAuto') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
         startView = 'dashboard';
@@ -3223,6 +3289,9 @@ function renderSidebar(){
       </div>
       <div class="nav-item ${currentView==='members'?'active':''}" onclick="navigateTo('members')">
         <span class="nav-icon">${I.users}</span><span class="nav-label">จัดการสมาชิก</span>
+      </div>
+      <div class="nav-item ${currentView==='activity'?'active':''}" onclick="navigateTo('activity')">
+        <span class="nav-icon">${I.history}</span><span class="nav-label">Activity Log</span>
       </div>`;
   }
   document.getElementById('sidebarNav').innerHTML = html;
@@ -3487,7 +3556,7 @@ function navigateTo(id){
   if((id === 'fbLive' || id === 'fbLiveAuto') && currentUser && currentUser.role !== 'admin' && currentUser.role !== 'social'){
     id = 'dashboard';
   }
-  if((id === 'allTasks' || id === 'members') && currentUser && currentUser.role !== 'admin'){
+  if((id === 'allTasks' || id === 'members' || id === 'activity') && currentUser && currentUser.role !== 'admin'){
     id = 'dashboard';
   }
   if(id === 'members') currentMemberId = null;
@@ -3525,7 +3594,7 @@ function renderView(id,el){
   setTimeout(()=>el.classList.remove('fade-in'),300);
   ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,notes:renderNotes,taskBoard:renderTaskBoard,
     myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbLiveAuto:renderFbLiveAuto,
-    sales:renderSales}[id]||(()=>{}))(el);
+    sales:renderSales,activity:renderActivity}[id]||(()=>{}))(el);
 }
 
 function rerender(){ const el=document.getElementById('view'+cap(currentView)); if(el) renderView(currentView,el); }
@@ -9016,6 +9085,141 @@ function toggleChecklist(id){
 }
 
 // ========== MY TASKS ==========
+// ============ ACTIVITY LOG ============
+function logActivity(action, entityType, entityId, details){
+  if(!currentUser) return;
+  try {
+    activityLog.push({
+      id: nextActivityId++,
+      userId: currentUser.id,
+      userName: currentUser.name,
+      action,
+      entityType,
+      entityId: entityId||null,
+      details: details||'',
+      timestamp: Date.now(),
+    });
+    if(activityLog.length > 1000){
+      activityLog = activityLog.slice(activityLog.length - 1000);
+    }
+  } catch(_){}
+}
+
+function topbarActivity(label, sub, actions=''){
+  const logo = `<svg class="ac-logo" viewBox="0 0 820 460" xmlns="http://www.w3.org/2000/svg" aria-label="ACTIVITY">
+    <circle cx="180" cy="230" r="150" fill="none" stroke="var(--ac-c1)" stroke-width="20"/>
+    <path d="M180 130 V 230 L 250 280" fill="none" stroke="var(--ac-c2)" stroke-width="20" stroke-linecap="round"/>
+    <circle cx="60"  cy="130" r="20" fill="var(--ac-c3)"/>
+    <circle cx="300" cy="130" r="20" fill="var(--ac-c4)"/>
+    <circle cx="60"  cy="330" r="20" fill="var(--ac-c4)"/>
+    <circle cx="300" cy="330" r="20" fill="var(--ac-c3)"/>
+    <text x="380" y="200" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="140" letter-spacing="-4" fill="var(--ac-text)">ACTI</text>
+    <text x="380" y="340" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="140" letter-spacing="-4" fill="var(--ac-acc)">VITY</text>
+  </svg>`;
+  return `<div class="topbar">
+    <div class="topbar-title">
+      <div class="fb-brand">
+        ${logo}
+        <div class="fb-brand-sub">
+          <div class="fb-brand-label">${label||''}</div>
+          ${sub?`<div class="fb-brand-meta">${sub}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      ${actions}
+      ${notifBellHTML()}
+      <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
+        <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+        <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+      </button>
+    </div>
+  </div>`;
+}
+
+function setActivityUser(v){ activityFilterUser = parseInt(v,10)||0; rerender(); }
+function setActivityAction(v){ activityFilterAction = v||''; rerender(); }
+function setActivityDate(v){ activityFilterDate = v||''; rerender(); }
+function clearActivityFilters(){ activityFilterUser=0; activityFilterAction=''; activityFilterDate=''; rerender(); }
+function clearActivityLog(){
+  if(!confirm('ล้าง Activity Log ทั้งหมด? — ยกเลิกไม่ได้')) return;
+  activityLog = [];
+  saveAll();
+  rerender();
+}
+
+function renderActivity(el){
+  let logs = activityLog.slice();
+  if(activityFilterUser) logs = logs.filter(a => a.userId === activityFilterUser);
+  if(activityFilterAction) logs = logs.filter(a => a.action === activityFilterAction);
+  if(activityFilterDate){
+    const d = new Date(activityFilterDate);
+    const start = d.getTime();
+    const end = start + 24*3600*1000;
+    logs = logs.filter(a => a.timestamp >= start && a.timestamp < end);
+  }
+  logs.sort((a,b) => (b.timestamp||0) - (a.timestamp||0));
+
+  const actionLabels = {create:'สร้าง', update:'แก้ไข', delete:'ลบ', login:'เข้าระบบ', logout:'ออกจากระบบ', assign:'มอบหมาย'};
+  const entityLabels = {task:'งาน', sales:'กิจกรรม', note:'โน้ต', user:'สมาชิก', live:'Live', document:'เอกสาร'};
+
+  const rowsHtml = logs.length === 0 ?
+    `<div class="empty-state">ยังไม่มี Activity Log</div>` :
+    `<div class="activity-list">
+      ${logs.slice(0, 300).map(a => {
+        const u = USERS.find(x => x.id === a.userId);
+        const color = u?.color || '#888';
+        const init = u?.init || (u?.name||'?')[0] || '?';
+        const actLabel = actionLabels[a.action] || a.action;
+        const entLabel = entityLabels[a.entityType] || a.entityType || '';
+        return `<div class="activity-row">
+          <div class="activity-avatar" style="background:${color}">${init}</div>
+          <div class="activity-content">
+            <div class="activity-text">
+              <b>${escapeHtmlN(a.userName||u?.name||'unknown')}</b>
+              <span class="act-action ${a.action}">${actLabel}</span>
+              ${entLabel? `<span class="activity-entity">${entLabel}</span>` : ''}
+            </div>
+            ${a.details? `<div class="activity-detail">${escapeHtmlN(a.details)}</div>` : ''}
+          </div>
+          <div class="activity-time">${timeAgoN(a.timestamp)}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+  const actions = `
+    <button class="btn-ghost" onclick="clearActivityFilters()">ล้างตัวกรอง</button>
+    <button class="btn-ghost" onclick="clearActivityLog()" style="color:#dc2626">ล้าง Log</button>`;
+
+  el.innerHTML = topbarActivity('Activity Log', `${activityLog.length} รายการทั้งหมด · แสดง ${Math.min(logs.length, 300)} รายการ`, actions) + `
+    <div class="page-content" style="max-width:1200px">
+      <div class="sales-filter-row">
+        <div class="sales-filter-field">
+          <label>สมาชิก</label>
+          <select onchange="setActivityUser(this.value)">
+            <option value="0">ทั้งหมด</option>
+            ${USERS.map(u=>`<option value="${u.id}" ${activityFilterUser==u.id?'selected':''}>${escapeHtmlN(u.name)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="sales-filter-field">
+          <label>การกระทำ</label>
+          <select onchange="setActivityAction(this.value)">
+            <option value="">ทั้งหมด</option>
+            <option value="create" ${activityFilterAction==='create'?'selected':''}>สร้าง</option>
+            <option value="update" ${activityFilterAction==='update'?'selected':''}>แก้ไข</option>
+            <option value="delete" ${activityFilterAction==='delete'?'selected':''}>ลบ</option>
+            <option value="login" ${activityFilterAction==='login'?'selected':''}>เข้าระบบ</option>
+          </select>
+        </div>
+        <div class="sales-filter-field">
+          <label>วันที่</label>
+          <input type="date" value="${activityFilterDate}" onchange="setActivityDate(this.value)"/>
+        </div>
+      </div>
+      ${rowsHtml}
+    </div>`;
+}
+
 // ============ SALES / EVENT TRACKER ============
 function topbarSales(label, sub, actions=''){
   const logo = `<svg class="sl-logo" viewBox="0 0 820 460" xmlns="http://www.w3.org/2000/svg" aria-label="SALES">
@@ -9206,9 +9410,14 @@ function saveSalesEvent(){
     };
     if(editSalesId){
       const i = salesEvents.findIndex(s => s.id === editSalesId);
-      if(i >= 0) salesEvents[i] = {...salesEvents[i], ...data, updatedAt: Date.now()};
+      if(i >= 0){
+        salesEvents[i] = {...salesEvents[i], ...data, updatedAt: Date.now()};
+        try { logActivity('update', 'sales', editSalesId, `${data.location||''} (${data.date})`); } catch(_){}
+      }
     } else {
-      salesEvents.push({id: nextSalesId++, ...data, createdAt: Date.now()});
+      const newEvent = {id: nextSalesId++, ...data, createdAt: Date.now()};
+      salesEvents.push(newEvent);
+      try { logActivity('create', 'sales', newEvent.id, `${data.location||''} (${data.date})`); } catch(_){}
     }
     saveAll();
     closeModal('salesModal');
@@ -9221,7 +9430,9 @@ function saveSalesEvent(){
 
 function deleteSalesEvent(id){
   if(!confirm('ลบกิจกรรมนี้?')) return;
+  const e = salesEvents.find(s => s.id === id);
   salesEvents = salesEvents.filter(s => s.id !== id);
+  try { if(e) logActivity('delete', 'sales', id, `${e.location||''} (${e.date||''})`); } catch(_){}
   saveAll();
   rerender();
 }
@@ -9508,11 +9719,13 @@ function saveTask(){
         tasks[i] = {...tasks[i], ...data};
         savedTask = tasks[i];
         try { notifyTaskAssigned(savedTask, prevAssignees); } catch(_){}
+        try { logActivity('update', 'task', savedTask.id, savedTask.name); } catch(_){}
       }
     } else {
       savedTask = {id: nextTaskId++, ...data};
       tasks.push(savedTask);
       try { notifyTaskAssigned(savedTask, []); } catch(_){}
+      try { logActivity('create', 'task', savedTask.id, savedTask.name); } catch(_){}
     }
     saveAll();
     closeModal('taskModal');
@@ -9526,7 +9739,9 @@ function saveTask(){
 
 function deleteTask(id){
   if(!confirm('ลบงานนี้?')) return;
+  const t = tasks.find(x => x.id === id);
   tasks=tasks.filter(t=>t.id!==id);
+  try { if(t) logActivity('delete', 'task', id, t.name); } catch(_){}
   saveAll();
   refreshDbTables(); renderSidebar();
 }
