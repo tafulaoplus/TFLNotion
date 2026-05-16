@@ -1239,6 +1239,74 @@
 [data-theme="dark"] .att-modal{background:linear-gradient(160deg,#1e1b3a 0%,#0f0f23 60%);border-color:rgba(167,139,250,.22)}
 
 /* ===== LOTTERY (ยอดขาย) ===== */
+/* ===== DASHBOARD V2 (ภาพรวม) ===== */
+.dash-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+@media (max-width:1100px){.dash-kpi-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.dash-kpi-grid{grid-template-columns:1fr}}
+.dash-kpi{display:flex;align-items:flex-start;gap:14px;padding:18px 18px;background:var(--bg);border:1px solid var(--border);border-radius:16px;box-shadow:0 2px 10px rgba(17,24,39,.04);transition:transform .15s ease,box-shadow .15s ease}
+.dash-kpi:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(17,24,39,.08)}
+.dash-kpi-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff}
+.dash-kpi-icon svg{width:24px;height:24px}
+.dash-kpi-icon.purple{background:linear-gradient(135deg,#a78bfa,#7c3aed);box-shadow:0 6px 16px rgba(124,58,237,.25)}
+.dash-kpi-icon.blue{background:linear-gradient(135deg,#60a5fa,#2563eb);box-shadow:0 6px 16px rgba(37,99,235,.25)}
+.dash-kpi-icon.pink{background:linear-gradient(135deg,#f472b6,#be185d);box-shadow:0 6px 16px rgba(190,24,93,.25)}
+.dash-kpi-icon.green{background:linear-gradient(135deg,#34d399,#059669);box-shadow:0 6px 16px rgba(5,150,105,.25)}
+.dash-kpi-body{flex:1;min-width:0}
+.dash-kpi-lbl{font-size:12px;color:var(--t2);font-weight:600;margin-bottom:6px}
+.dash-kpi-val{font-size:24px;font-weight:800;color:var(--t1);line-height:1.1;letter-spacing:-.5px;font-feature-settings:'tnum'}
+.dash-kpi-trend{font-size:11.5px;font-weight:700;margin-top:6px}
+.dash-kpi-trend.up{color:#059669}
+.dash-kpi-trend.down{color:#dc2626}
+.dash-kpi-trend.neutral{color:var(--t2);font-weight:600}
+[data-theme="dark"] .dash-kpi-trend.up{color:#34d399}
+[data-theme="dark"] .dash-kpi-trend.down{color:#f87171}
+
+.dash-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+@media (max-width:980px){.dash-row{grid-template-columns:1fr}}
+.dash-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 2px 10px rgba(17,24,39,.04)}
+.dash-card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.dash-card-title{font-size:15px;font-weight:800;color:var(--t1)}
+.dash-card-link{font-size:12px;font-weight:700;color:#7c3aed;cursor:pointer;text-decoration:none}
+.dash-card-link:hover{text-decoration:underline}
+[data-theme="dark"] .dash-card-link{color:#a78bfa}
+
+/* Live list rows */
+.dash-live-row{display:flex;align-items:center;gap:12px;padding:11px 8px;border-bottom:1px solid var(--border);transition:background .12s ease}
+.dash-live-row:last-child{border-bottom:none}
+.dash-live-row:hover{background:var(--bg-hover)}
+.dash-live-thumb{width:60px;height:42px;border-radius:8px;flex-shrink:0;background:#0f0f23;overflow:hidden}
+.dash-live-info{flex:1;min-width:0}
+.dash-live-title{font-size:13px;font-weight:700;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dash-live-time{font-size:11px;color:var(--t2);margin-top:2px}
+.dash-live-badge{padding:3px 9px;border-radius:8px;font-size:10.5px;font-weight:700;background:#dbeafe;color:#1d4ed8;flex-shrink:0;white-space:nowrap}
+.dash-live-badge.on{background:#fee2e2;color:#dc2626;animation:pulseDot 1.5s ease-in-out infinite}
+[data-theme="dark"] .dash-live-badge{background:rgba(96,165,250,.2);color:#60a5fa}
+[data-theme="dark"] .dash-live-badge.on{background:rgba(248,113,113,.2);color:#f87171}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.7}}
+.dash-live-viewers{font-size:11.5px;color:var(--t2);font-weight:600;flex-shrink:0;white-space:nowrap}
+
+/* Activity rows */
+.dash-act-row{display:flex;align-items:flex-start;gap:11px;padding:10px 0;border-bottom:1px solid var(--border)}
+.dash-act-row:last-child{border-bottom:none}
+.dash-act-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px;flex-shrink:0}
+.dash-act-body{flex:1;min-width:0}
+.dash-act-text{font-size:13px;color:var(--t1);line-height:1.4}
+.dash-act-sub{font-size:11.5px;color:var(--t2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dash-act-time{font-size:11px;color:var(--t2);flex-shrink:0;white-space:nowrap}
+
+/* Todo list */
+.dash-todo-row{display:flex;align-items:center;gap:10px;padding:11px 8px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s ease}
+.dash-todo-row:last-child{border-bottom:none}
+.dash-todo-row:hover{background:var(--bg-hover)}
+.dash-todo-check{width:18px;height:18px;border:2px solid var(--border-2);border-radius:5px;flex-shrink:0}
+.dash-todo-name{flex:1;font-size:13.5px;color:var(--t1);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dash-todo-tag{padding:2px 8px;border-radius:7px;font-size:10.5px;font-weight:700;white-space:nowrap;flex-shrink:0}
+.dash-todo-due{font-size:11.5px;color:var(--t2);font-weight:600;flex-shrink:0;white-space:nowrap;min-width:54px;text-align:right}
+.dash-todo-due.today{color:#7c3aed;font-weight:800}
+.dash-todo-due.overdue{color:#dc2626;font-weight:800}
+[data-theme="dark"] .dash-todo-due.today{color:#a78bfa}
+[data-theme="dark"] .dash-todo-due.overdue{color:#f87171}
+
 /* Universal simple icon-only page logo */
 .simple-logo-icon{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,#a78bfa 0%,#7c3aed 100%);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(124,58,237,.3);flex-shrink:0;transition:transform .2s ease}
 .simple-logo-icon:hover{transform:rotate(-6deg) scale(1.04)}
@@ -6114,107 +6182,211 @@ function loadSavedTheme(){
 
 // ========== DASHBOARD ==========
 function renderDashboard(el){
-  const isAdmin=currentUser.role==='admin';
-  const mine=tasks.filter(t=>t.assignees.includes(currentUser.id));
-  const myDone=mine.filter(t=>t.status==='done').length;
-  const myPend=mine.filter(t=>t.status!=='done').length;
-  const allDone=tasks.filter(t=>t.status==='done').length;
-  const pct = mine.length ? Math.round(myDone/mine.length*100) : 0;
+  const isAdmin = currentUser.role === 'admin';
+  const today = new Date().toISOString().slice(0,10);
+  const yesterday = (() => { const d=new Date(); d.setDate(d.getDate()-1); return d.toISOString().slice(0,10); })();
+  const monthStart = today.slice(0,8)+'01';
 
-  el.innerHTML = topbarDash('ภาพรวม', `วันนี้ ${new Date().toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'})}`) + `
-  <div class="page-content">
-    <div class="page-head">
-      <div class="page-title">สวัสดี ${currentUser.name}</div>
-      <div class="page-sub">วันนี้มีงานรออยู่ <b style="color:var(--p600)">${myPend}</b> รายการ · ความคืบหน้า <b style="color:var(--p600)">${pct}%</b></div>
-    </div>
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon-wrap">
-          <div class="stat-icon" style="background:var(--p100);color:var(--p600)">${I.layers}</div>
-          <span class="stat-trend">งานของฉัน</span>
+  // ===== KPI calculations =====
+  const salesToday = lotterySales.filter(l => l.date === today).reduce((a,r)=>a+(+r.salesTotal||0), 0);
+  const salesYesterday = lotterySales.filter(l => l.date === yesterday).reduce((a,r)=>a+(+r.salesTotal||0), 0);
+  const salesGrowth = salesYesterday > 0 ? ((salesToday-salesYesterday)/salesYesterday*100) : 0;
+
+  const liveToday = (typeof liveSessions !== 'undefined' && Array.isArray(liveSessions))
+    ? liveSessions.filter(L => (L.date||'') === today)
+    : [];
+  const liveLive = liveToday.filter(L => L.status === 'live' || L.isLive);
+  const totalViewers = liveToday.reduce((a,L)=>a+(+L.viewers||+L.peakViewers||0), 0);
+
+  const newMembersToday = lotterySales.filter(l => l.date === today).reduce((a,r)=>a+(+r.newMembers||0), 0);
+  const newMembersYesterday = lotterySales.filter(l => l.date === yesterday).reduce((a,r)=>a+(+r.newMembers||0), 0);
+  const membersGrowth = newMembersYesterday > 0 ? ((newMembersToday-newMembersYesterday)/newMembersYesterday*100) : 0;
+
+  const myTodo = tasks.filter(t => t.assignees && t.assignees.includes(currentUser.id) && t.status !== 'done');
+  const urgentSoon = myTodo.filter(t => t.due && t.due <= today).length;
+
+  // ===== Sales last 7 days for chart =====
+  const sales7d = [];
+  for(let i=6; i>=0; i--){
+    const d = new Date();
+    d.setDate(d.getDate()-i);
+    const ds = d.toISOString().slice(0,10);
+    const v = lotterySales.filter(l => l.date === ds).reduce((a,r)=>a+(+r.salesTotal||0), 0);
+    sales7d.push({ date: ds, label: d.getDate()+' '+['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][d.getMonth()], value: v });
+  }
+  const sum7d = sales7d.reduce((a,d)=>a+d.value, 0);
+
+  // ===== Live list today =====
+  const liveListHtml = liveToday.length === 0
+    ? `<div style="padding:32px;text-align:center;color:var(--t2);font-size:13px">ยังไม่มีไลฟ์วันนี้</div>`
+    : liveToday.slice(0,4).map(L => {
+        const isLive = L.status === 'live' || L.isLive;
+        const time = L.startTime ? `${L.startTime}${L.endTime?' - '+L.endTime:''}` : '';
+        const viewers = +L.peakViewers || +L.viewers || 0;
+        return `<div class="dash-live-row">
+          <div class="dash-live-thumb" style="background:linear-gradient(135deg,#0f0f23,#1e1b3a);color:#fff;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;padding:4px;text-align:center;line-height:1.1">${escapeHtml(L.title||'Live').slice(0,12)}</div>
+          <div class="dash-live-info">
+            <div class="dash-live-title">${escapeHtml(L.title||'Live')}</div>
+            <div class="dash-live-time">${time}</div>
+          </div>
+          <span class="dash-live-badge ${isLive?'on':''}">${isLive?'กำลังถ่ายทอด':'รอเริ่ม'}</span>
+          <div class="dash-live-viewers">👥 ${viewers.toLocaleString()} คน</div>
+        </div>`;
+      }).join('');
+
+  // ===== Recent activity =====
+  const recentActs = activityLog.slice().sort((a,b)=>(b.timestamp||0)-(a.timestamp||0)).slice(0,5);
+  const activityHtml = recentActs.length === 0
+    ? `<div style="padding:32px;text-align:center;color:var(--t2);font-size:13px">ยังไม่มีกิจกรรม</div>`
+    : recentActs.map(a => {
+        const u = USERS.find(x => x.id === a.userId);
+        const actionTxt = {create:'สร้าง', update:'อัปเดต', delete:'ลบ', login:'เข้าระบบ', checkin:'เช็คอิน', checkout:'เช็คเอาท์'}[a.action] || a.action;
+        const entTxt = {task:'งาน', sales:'กิจกรรม', note:'โน้ต', user:'สมาชิก', live:'Live', document:'เอกสาร', attendance:'ลงเวลา', holiday:'วันหยุด', lottery:'หวย', leave:'ลา'}[a.entityType] || '';
+        return `<div class="dash-act-row">
+          <div class="dash-act-av" style="background:${u?.color||'#888'}">${u?.init||(u?.name||'?')[0]||'?'}</div>
+          <div class="dash-act-body">
+            <div class="dash-act-text"><b>${escapeHtml(a.userName||u?.name||'?')}</b> ${actionTxt}${entTxt?' '+entTxt:''}</div>
+            ${a.details? `<div class="dash-act-sub">${escapeHtml(a.details).slice(0,60)}</div>` : ''}
+          </div>
+          <div class="dash-act-time">${timeAgoN(a.timestamp)}</div>
+        </div>`;
+      }).join('');
+
+  // ===== Tasks to do =====
+  const todoListHtml = myTodo.length === 0
+    ? `<div style="padding:32px;text-align:center;color:var(--t2);font-size:13px">เคลียร์งานหมดแล้ว 🎉</div>`
+    : myTodo.slice(0,5).map(t => {
+        const pri = OPTS.priority.find(p => p.id === t.priority);
+        const overdue = t.due && t.due < today;
+        const dueLabel = !t.due ? '—' : (t.due===today?'วันนี้' : overdue?'เลยกำหนด' : `${new Date(t.due).getDate()} ${['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][new Date(t.due).getMonth()]}`);
+        return `<div class="dash-todo-row" onclick="openTaskDetail(${t.id})">
+          <div class="dash-todo-check"></div>
+          <div class="dash-todo-name">${escapeHtml(t.name)}</div>
+          ${pri? `<span class="dash-todo-tag" style="background:${pri.bg};color:${pri.color}">${pri.label}</span>` : ''}
+          <span class="dash-todo-due ${overdue?'overdue':t.due===today?'today':''}">${dueLabel}</span>
+        </div>`;
+      }).join('');
+
+  // ===== Chart =====
+  const W = 700, H = 200, P = {top:20, right:20, bottom:28, left:50};
+  const innerW = W - P.left - P.right;
+  const innerH = H - P.top - P.bottom;
+  const maxV = Math.max(...sales7d.map(d=>d.value), 1);
+  const niceMax = _niceMax(maxV);
+  const step = niceMax / 4;
+  const xStep = innerW / (sales7d.length - 1);
+  const pts = sales7d.map((d,i) => ({
+    x: P.left + i*xStep,
+    y: P.top + innerH - (d.value / niceMax * innerH),
+    label: d.date.slice(8,10)+' '+_thaiMonthShort(d.date.slice(5,7)),
+    value: d.value,
+  }));
+  const path = pts.map((p,i)=>(i===0?'M':'L')+p.x+','+p.y).join(' ');
+  const area = path + ` L ${pts[pts.length-1].x},${P.top+innerH} L ${pts[0].x},${P.top+innerH} Z`;
+  const yLines = [0,1,2,3,4].map(i => {
+    const y = P.top + innerH - (i*step / niceMax * innerH);
+    return `<line x1="${P.left}" y1="${y}" x2="${W-P.right}" y2="${y}" stroke="var(--border)" ${i>0?'stroke-dasharray="2 4"':''}/>
+      <text x="${P.left-8}" y="${y+4}" text-anchor="end" fill="var(--t2)" font-size="11" font-weight="600">${_formatK(i*step)}</text>`;
+  }).join('');
+  const xLabels = pts.map(p => `<text x="${p.x}" y="${P.top+innerH+20}" text-anchor="middle" fill="var(--t2)" font-size="11" font-weight="600">${p.label}</text>`).join('');
+  const dots = pts.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4.5" fill="#7c3aed" stroke="#fff" stroke-width="2"><title>${p.label}\n${p.value.toLocaleString()} Kip</title></circle>`).join('');
+
+  el.innerHTML = topbarSimple('dashboard', 'ภาพรวม', `วันนี้ ${new Date().toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'})}`) + `
+    <div class="page-content" style="max-width:1400px">
+      <div class="dash-kpi-grid">
+        <div class="dash-kpi">
+          <div class="dash-kpi-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <div class="dash-kpi-body">
+            <div class="dash-kpi-lbl">ยอดขายวันนี้</div>
+            <div class="dash-kpi-val">฿${salesToday.toLocaleString()}</div>
+            <div class="dash-kpi-trend ${salesGrowth>=0?'up':'down'}">${salesGrowth>=0?'▲':'▼'} ${Math.abs(salesGrowth).toFixed(1)}% จากเมื่อวาน</div>
+          </div>
         </div>
-        <div class="stat-val">${mine.length}</div>
-        <div class="stat-sub">เสร็จแล้ว ${myDone} รายการ</div>
+        <div class="dash-kpi">
+          <div class="dash-kpi-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div>
+          <div class="dash-kpi-body">
+            <div class="dash-kpi-lbl">คนดู Live ตอนนี้</div>
+            <div class="dash-kpi-val">${totalViewers.toLocaleString()}</div>
+            <div class="dash-kpi-trend ${liveLive.length>0?'up':'neutral'}">${liveLive.length>0?'● กำลังถ่ายทอด '+liveLive.length+' รายการ':'ไม่มี Live ขณะนี้'}</div>
+          </div>
+        </div>
+        <div class="dash-kpi">
+          <div class="dash-kpi-icon pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
+          <div class="dash-kpi-body">
+            <div class="dash-kpi-lbl">สมาชิกใหม่</div>
+            <div class="dash-kpi-val">${newMembersToday.toLocaleString()}</div>
+            <div class="dash-kpi-trend ${membersGrowth>=0?'up':'down'}">${membersGrowth>=0?'▲':'▼'} ${Math.abs(membersGrowth).toFixed(1)}% จากเมื่อวาน</div>
+          </div>
+        </div>
+        <div class="dash-kpi">
+          <div class="dash-kpi-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+          <div class="dash-kpi-body">
+            <div class="dash-kpi-lbl">งานที่ต้องทำ</div>
+            <div class="dash-kpi-val">${myTodo.length}</div>
+            <div class="dash-kpi-trend ${urgentSoon>0?'down':'neutral'}">${urgentSoon>0?'▼ '+urgentSoon+' งานใกล้หมดเวลา':'ทันเวลา'}</div>
+          </div>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-icon-wrap">
-          <div class="stat-icon" style="background:#dbeafe;color:#1d4ed8">${I.zap}</div>
-          <span class="stat-trend" style="background:#dbeafe;color:#1d4ed8">กำลังทำ</span>
+
+      <div class="dash-row">
+        <div class="dash-card">
+          <div class="dash-card-hd">
+            <div class="dash-card-title">ไลฟ์สดวันนี้</div>
+            <a class="dash-card-link" onclick="navigateTo('fbLive')">ดูทั้งหมด</a>
+          </div>
+          ${liveListHtml}
         </div>
-        <div class="stat-val">${mine.filter(t=>t.status==='inprogress').length}</div>
-        <div class="stat-sub">งานที่กำลังดำเนินการ</div>
+        <div class="dash-card">
+          <div class="dash-card-hd">
+            <div class="dash-card-title">กิจกรรมล่าสุด</div>
+            <a class="dash-card-link" onclick="${isAdmin?"navigateTo('activity')":''}">${isAdmin?'ดูทั้งหมด':''}</a>
+          </div>
+          ${activityHtml}
+        </div>
       </div>
-      ${isAdmin?`
-      <div class="stat-card">
-        <div class="stat-icon-wrap">
-          <div class="stat-icon" style="background:#d1fae5;color:#059669">${I.trending}</div>
-          <span class="stat-trend">งานทั้งหมด</span>
+
+      <div class="dash-row">
+        <div class="dash-card">
+          <div class="dash-card-hd">
+            <div class="dash-card-title">ยอดขาย 7 วันที่ผ่านมา</div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="text-align:right">
+                <div style="font-size:11px;color:var(--t2)">ยอดรวม</div>
+                <div style="font-size:16px;font-weight:800;color:var(--t1);font-feature-settings:'tnum'">฿${sum7d.toLocaleString()}</div>
+              </div>
+              <span style="padding:5px 12px;background:var(--bg-soft);border-radius:8px;font-size:11.5px;font-weight:700;color:var(--t2)">7 วัน</span>
+            </div>
+          </div>
+          <div style="width:100%;overflow-x:auto">
+            <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;min-width:${W}px;height:${H}px;display:block">
+              <defs>
+                <linearGradient id="dashChartGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#a78bfa" stop-opacity=".35"/>
+                  <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              ${yLines}
+              <path d="${area}" fill="url(#dashChartGrad)"/>
+              <path d="${path}" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              ${dots}
+              ${xLabels}
+            </svg>
+          </div>
         </div>
-        <div class="stat-val">${tasks.length}</div>
-        <div class="stat-sub">เสร็จแล้ว ${allDone} รายการ</div>
+        <div class="dash-card">
+          <div class="dash-card-hd">
+            <div class="dash-card-title">งานที่ต้องทำ</div>
+            <a class="dash-card-link" onclick="openNewTask('todo')">+ เพิ่มงาน</a>
+          </div>
+          ${todoListHtml}
+          ${myTodo.length > 5 ? `<div style="text-align:center;margin-top:8px"><a class="dash-card-link" onclick="navigateTo('myTasks')">ดูทั้งหมด ${myTodo.length} งาน →</a></div>`:''}
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-icon-wrap">
-          <div class="stat-icon" style="background:#fce7f3;color:#be185d">${I.users}</div>
-          <span class="stat-trend" style="background:#fce7f3;color:#be185d">ทีม</span>
-        </div>
-        <div class="stat-val">${USERS.length}</div>
-        <div class="stat-sub">สมาชิกในทีม</div>
-      </div>`:`
-      <div class="stat-card">
-        <div class="stat-icon-wrap">
-          <div class="stat-icon" style="background:#d1fae5;color:#059669">${I.award}</div>
-          <span class="stat-trend">เสร็จแล้ว</span>
-        </div>
-        <div class="stat-val">${myDone}</div>
-        <div class="stat-sub">งานที่สำเร็จ</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon-wrap">
-          <div class="stat-icon" style="background:#fef3c7;color:#b45309">${I.folder}</div>
-          <span class="stat-trend" style="background:#fef3c7;color:#b45309">เอกสาร</span>
-        </div>
-        <div class="stat-val">${documents.length}</div>
-        <div class="stat-sub">ในไลบรารี</div>
-      </div>`}
-    </div>
-    <div class="two-col">
-      <div class="panel">
-        <div class="panel-hd">
-          <div class="panel-title">งานล่าสุดของฉัน</div>
-          <a class="panel-link" onclick="navigateTo('myTasks')">ดูทั้งหมด →</a>
-        </div>
-        ${mine.slice(0,6).map(t=>{
-          const av=t.assignees.map(id=>{
-            const u=USERS.find(x=>x.id===id);
-            if(!u) return '';
-            return u.avatar
-              ? `<span class="cav" style="background:url('${u.avatar}') center/cover;color:transparent;margin-right:-4px;border:2px solid #fff">${u.init}</span>`
-              : `<span class="cav" style="background:${u.color};margin-right:-4px;border:2px solid #fff">${u.init}</span>`;
-          }).join('');
-          const pri = OPTS.priority.find(p=>p.id===t.priority);
-          return `<div class="panel-list-row" onclick="openTaskDetail(${t.id})">
-            <span style="font-size:17px;width:22px">${t.emoji||'📝'}</span>
-            <span style="font-size:13px;flex:1;font-weight:500;${t.status==='done'?'text-decoration:line-through;color:var(--t3)':''}">${t.name}</span>
-            <span style="display:flex;align-items:center">${av}</span>
-            ${pri?`<span class="tag" style="background:${pri.bg};color:${pri.color}">${pri.label}</span>`:''}
-          </div>`;
-        }).join('') || '<div class="empty" style="padding:30px"><div class="empty-txt">ยังไม่มีงาน</div></div>'}
-      </div>
-      <div class="panel">
-        <div class="panel-hd">
-          <div class="panel-title">เอกสารล่าสุด</div>
-          <a class="panel-link" onclick="navigateTo('library')">ดูทั้งหมด →</a>
-        </div>
-        ${documents.slice(0,6).map(d=>`
-          <div class="panel-list-row">
-            <span style="font-size:18px">${d.icon}</span>
-            <span style="font-size:13px;flex:1;font-weight:500">${d.name}</span>
-            <span style="font-size:11.5px;color:var(--t3);font-weight:500">${d.upd}</span>
-          </div>`).join('')}
-      </div>
-    </div>
-  </div>`;
+    </div>`;
+}
+
+function _thaiMonthShort(m){
+  return ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][parseInt(m,10)] || '';
 }
 
 // ========== LIBRARY ==========
