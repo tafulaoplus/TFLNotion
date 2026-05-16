@@ -465,6 +465,81 @@
   .notif-panel{right:8px;left:8px;width:auto;top:60px}
 }
 
+/* ===== SALES / EVENT TRACKER ===== */
+.sales-kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:22px}
+.sales-kpi{display:flex;align-items:center;gap:14px;padding:18px;background:var(--bg);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);transition:transform .2s ease,box-shadow .2s ease}
+.sales-kpi:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(17,24,39,.08)}
+.sales-kpi .k-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;background:linear-gradient(135deg,#fef3c7,#fde68a);flex-shrink:0}
+.sales-kpi:nth-child(2) .k-icon{background:linear-gradient(135deg,#dbeafe,#bfdbfe)}
+.sales-kpi:nth-child(3) .k-icon{background:linear-gradient(135deg,#dcfce7,#bbf7d0)}
+.sales-kpi:nth-child(4) .k-icon{background:linear-gradient(135deg,#f3e8ff,#e9d5ff)}
+.sales-kpi .k-val{font-size:24px;font-weight:800;color:var(--t1);line-height:1.1}
+.sales-kpi .k-lbl{font-size:12px;color:var(--t2);margin-top:2px}
+.sales-filter-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px;padding:14px;background:var(--bg-soft);border-radius:12px}
+.sales-filter-field{display:flex;flex-direction:column;gap:4px;min-width:160px}
+.sales-filter-field label{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px}
+.sales-filter-field input,.sales-filter-field select{padding:8px 12px;border:1px solid var(--border-2);border-radius:8px;font-size:13px;background:var(--bg);color:var(--t1)}
+.sales-section{margin-bottom:30px}
+.sales-section-title{font-size:16px;font-weight:700;color:var(--t1);margin:0 0 14px}
+.sales-member-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.sales-mcard{padding:18px;background:var(--bg);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow)}
+.sales-mhdr{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.sales-mavatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px;flex-shrink:0}
+.sales-mname{font-weight:700;color:var(--t1);font-size:14px}
+.sales-mrole{font-size:11px;color:var(--t2);text-transform:capitalize}
+.sales-mstats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding-top:12px;border-top:1px solid var(--border)}
+.sales-mstats > div{text-align:center}
+.sales-mstats span{display:block;font-size:18px;font-weight:800;color:var(--t1);line-height:1.1}
+.sales-mstats label{font-size:10.5px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px}
+.sales-table{width:100%;border-collapse:collapse;background:var(--bg);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.sales-table thead{background:var(--bg-soft)}
+.sales-table th{padding:12px 14px;text-align:left;font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.sales-table th.num,.sales-table td.num{text-align:right;font-feature-settings:'tnum'}
+.sales-table td{padding:12px 14px;font-size:13px;color:var(--t1);border-bottom:1px solid var(--border);vertical-align:middle}
+.sales-table tbody tr:hover{background:var(--bg-hover)}
+.sales-table tbody tr:last-child td{border-bottom:none}
+.sales-userchip{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;color:#fff;font-size:11px;font-weight:800;margin-right:4px;vertical-align:middle}
+.sales-cat{display:inline-block;padding:3px 9px;border-radius:10px;font-size:11px;font-weight:700}
+.sales-cat.booth{background:#fef3c7;color:#b45309}
+.sales-cat.field{background:#dbeafe;color:#1d4ed8}
+.sales-cat.event{background:#f3e8ff;color:#7c3aed}
+.sales-cat.visit{background:#dcfce7;color:#059669}
+[data-theme="dark"] .sales-cat.booth{background:rgba(251,191,36,.2);color:#fbbf24}
+[data-theme="dark"] .sales-cat.field{background:rgba(96,165,250,.2);color:#60a5fa}
+[data-theme="dark"] .sales-cat.event{background:rgba(167,139,250,.2);color:#a78bfa}
+[data-theme="dark"] .sales-cat.visit{background:rgba(52,211,153,.2);color:#34d399}
+.sales-notes{max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--t2);font-size:12.5px}
+.sales-actions{white-space:nowrap;text-align:right}
+.sales-actions .icon-btn{background:none;border:none;cursor:pointer;color:var(--t2);padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center}
+.sales-actions .icon-btn:hover{background:var(--bg-hover);color:var(--t1)}
+.sales-actions .icon-btn[title="ลบ"]:hover{color:#dc2626}
+.empty-state{text-align:center;padding:60px 20px;color:var(--t2);font-size:14px;background:var(--bg-soft);border-radius:12px}
+
+/* ===== SALES (ออกพื้นที่) brand logo ===== */
+:root {
+  --sl-b1:    #fbbf24;
+  --sl-b2:    #3b82f6;
+  --sl-b3:    #10b981;
+  --sl-b4:    #ec4899;
+  --sl-pin:   #ef4444;
+  --sl-text:  #0f172a;
+  --sl-acc:   #10b981;
+}
+[data-theme="dark"] {
+  --sl-b1:    #fcd34d;
+  --sl-b2:    #60a5fa;
+  --sl-b3:    #34d399;
+  --sl-b4:    #f472b6;
+  --sl-pin:   #f87171;
+  --sl-text:  #f1f5f9;
+  --sl-acc:   #34d399;
+}
+.sl-logo{height:50px;width:auto;flex-shrink:0;transition:filter .25s ease}
+[data-theme="dark"] .sl-logo{filter:drop-shadow(0 0 14px rgba(52,211,153,.28))}
+@media (max-width:680px){
+  .sl-logo{height:38px}
+}
+
 /* ===== IMPORT PROGRESS MODAL ===== */
 .import-modal{background:#fff;border-radius:18px;width:560px;max-width:95vw;max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(17,24,39,.25);border:1px solid var(--border);animation:modalIn .25s ease}
 .import-hd{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
@@ -1432,6 +1507,60 @@ svg{display:block;flex-shrink:0}
       <div id="viewMembers" class="view"></div>
       <div id="viewFbLive" class="view"></div>
       <div id="viewFbLiveAuto" class="view"></div>
+      <div id="viewSales" class="view"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SALES EVENT MODAL -->
+<div class="overlay" id="salesModal">
+  <div class="modal" style="width:600px">
+    <div class="modal-hd">
+      <div class="modal-title" id="salesModalTitle">เพิ่มกิจกรรมใหม่</div>
+      <button class="modal-close" onclick="closeModal('salesModal')">×</button>
+    </div>
+    <div class="modal-bd">
+      <div class="form-row">
+        <div class="form-field">
+          <label>วันที่ *</label>
+          <input type="date" id="fSalesDate"/>
+        </div>
+        <div class="form-field">
+          <label>ประเภท</label>
+          <select id="fSalesCategory">
+            <option value="field">ลงพื้นที่</option>
+            <option value="booth">ออกบูธ</option>
+            <option value="event">อีเว้นท์</option>
+            <option value="visit">เยี่ยมลูกค้า</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-field" id="fSalesUserWrap" style="display:none">
+        <label>สมาชิก (Admin มอบหมายให้)</label>
+        <select id="fSalesUser"></select>
+      </div>
+      <div class="form-field">
+        <label>สถานที่ / ชื่ออีเว้นท์</label>
+        <input type="text" id="fSalesLocation" placeholder="เช่น ตลาดนัด ABC, ห้างฯ XYZ"/>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>จำนวนลูกค้าที่หาได้</label>
+          <input type="number" id="fSalesCustomers" min="0" placeholder="0"/>
+        </div>
+        <div class="form-field">
+          <label>ยอดขาย (ถ้ามี)</label>
+          <input type="number" id="fSalesSales" min="0" step="0.01" placeholder="0"/>
+        </div>
+      </div>
+      <div class="form-field">
+        <label>หมายเหตุ</label>
+        <textarea id="fSalesNotes" rows="3" placeholder="บันทึกรายละเอียดเพิ่มเติม..."></textarea>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn-ghost" onclick="closeModal('salesModal')">ยกเลิก</button>
+      <button class="btn-primary" onclick="saveSalesEvent()">บันทึก</button>
     </div>
   </div>
 </div>
@@ -1954,6 +2083,9 @@ const I = {
   settings:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09A1.65 1.65 0 0 0 10 3.09V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
   trophy:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>',
   activity:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+  mapPin:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+  calendar:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  history:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><polyline points="3 3 3 8 8 8"/><polyline points="12 7 12 12 16 14"/></svg>',
   shield:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
   globe:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
   sun:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>',
@@ -2038,6 +2170,11 @@ let documents = [
 ];
 
 let currentUser = null;
+let salesEvents = [];
+let nextSalesId = 1;
+let salesFilterMonth = '';
+let salesFilterUser = 0;
+let editSalesId = null;
 let notifications = [];
 let nextNotifId = 1;
 let notifCheckTimer = null;
@@ -2230,6 +2367,11 @@ function applyRemoteWorkspace(data){
     nextNotifId = Math.max(nextNotifId, maxId + 1);
     try { updateNotifBadge(); } catch(_){}
   }
+  if(Array.isArray(data.salesEvents)){
+    salesEvents = data.salesEvents;
+    const maxSid = salesEvents.reduce((m,s)=>Math.max(m, s.id||0), 0);
+    nextSalesId = Math.max(nextSalesId, maxSid + 1);
+  }
   saveAllLocal();
   if(currentUser){
     try { refreshDbTables(); } catch(_){}
@@ -2262,6 +2404,7 @@ function syncToNeon(){
         nextTaskId: nextTaskId,
         nextDocId: nextDocId,
         notifications: notifications,
+        salesEvents: salesEvents,
         _updatedBy: currentUser ? currentUser.name : 'unknown',
       };
       const r = await fetch(`${NEON_API}/workspace`, {
@@ -2363,6 +2506,8 @@ function saveAllLocal(){
     if(typeof liveSessions !== 'undefined') localStorage.setItem('tfl_live_sessions', JSON.stringify(liveSessions));
     localStorage.setItem('tfl_notifications', JSON.stringify(notifications));
     localStorage.setItem('tfl_nextNotifId', String(nextNotifId));
+    localStorage.setItem('tfl_sales', JSON.stringify(salesEvents));
+    localStorage.setItem('tfl_nextSalesId', String(nextSalesId));
   } catch(e){ console.warn('Save failed:', e); }
 }
 
@@ -2399,6 +2544,12 @@ function loadAll(){
     if(nni) nextNotifId = Math.max(parseInt(nni,10)||1, 1);
     const maxNotifId = notifications.reduce((m,n)=>Math.max(m, parseInt(n.id,10)||0), 0);
     if(maxNotifId >= nextNotifId) nextNotifId = maxNotifId + 1;
+    const ss = localStorage.getItem('tfl_sales');
+    if(ss){ const arr = JSON.parse(ss); if(Array.isArray(arr)) salesEvents = arr; }
+    const ssi = localStorage.getItem('tfl_nextSalesId');
+    if(ssi) nextSalesId = Math.max(parseInt(ssi,10)||1, 1);
+    const maxSid = salesEvents.reduce((m,s)=>Math.max(m, parseInt(s.id,10)||0), 0);
+    if(maxSid >= nextSalesId) nextSalesId = maxSid + 1;
   } catch(e){ console.warn('Load failed:', e); }
 }
 
@@ -3007,7 +3158,7 @@ function initApp(){
   let startView = 'dashboard';
   try {
     const saved = localStorage.getItem('tfl_currentView');
-    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbLiveAuto'];
+    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbLiveAuto','sales'];
     if(saved && validViews.includes(saved)){
       // Check role permission
       if((saved === 'allTasks' || saved === 'members') && currentUser.role !== 'admin'){
@@ -3034,6 +3185,7 @@ function renderSidebar(){
     {id:'notes', icon:I.note, label:'Note'},
     {id:'taskBoard', icon:I.grid, label:'ติดตามงาน'},
     {id:'myTasks', icon:I.check, label:'งานของฉัน'},
+    {id:'sales', icon:I.mapPin, label:'ออกพื้นที่'},
   ];
   let html = '<div class="nav-sec">เมนูหลัก</div>';
   items.forEach(it => {
@@ -3372,7 +3524,8 @@ function renderView(id,el){
   el.classList.add('fade-in');
   setTimeout(()=>el.classList.remove('fade-in'),300);
   ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,notes:renderNotes,taskBoard:renderTaskBoard,
-    myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbLiveAuto:renderFbLiveAuto}[id]||(()=>{}))(el);
+    myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbLiveAuto:renderFbLiveAuto,
+    sales:renderSales}[id]||(()=>{}))(el);
 }
 
 function rerender(){ const el=document.getElementById('view'+cap(currentView)); if(el) renderView(currentView,el); }
@@ -8863,6 +9016,216 @@ function toggleChecklist(id){
 }
 
 // ========== MY TASKS ==========
+// ============ SALES / EVENT TRACKER ============
+function topbarSales(label, sub, actions=''){
+  const logo = `<svg class="sl-logo" viewBox="0 0 820 460" xmlns="http://www.w3.org/2000/svg" aria-label="SALES">
+    <path d="M180 50 C 250 50, 290 110, 290 170 C 290 240, 180 360, 180 360 C 180 360, 70 240, 70 170 C 70 110, 110 50, 180 50 Z" fill="var(--sl-pin)"/>
+    <circle cx="180" cy="170" r="42" fill="#fff"/>
+    <circle cx="180" cy="170" r="22" fill="var(--sl-pin)"/>
+    <rect x="40"  y="380" width="80" height="40" rx="10" fill="var(--sl-b1)"/>
+    <rect x="140" y="380" width="80" height="40" rx="10" fill="var(--sl-b2)"/>
+    <rect x="240" y="380" width="80" height="40" rx="10" fill="var(--sl-b3)"/>
+    <text x="380" y="200" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="140" letter-spacing="-4" fill="var(--sl-text)">FIELD</text>
+    <text x="380" y="340" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="140" letter-spacing="-4" fill="var(--sl-acc)">WORK</text>
+  </svg>`;
+  return `<div class="topbar">
+    <div class="topbar-title">
+      <div class="fb-brand">
+        ${logo}
+        <div class="fb-brand-sub">
+          <div class="fb-brand-label">${label||''}</div>
+          ${sub?`<div class="fb-brand-meta">${sub}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      ${actions}
+      ${notifBellHTML()}
+      <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
+        <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+        <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+      </button>
+    </div>
+  </div>`;
+}
+
+function setSalesMonth(v){ salesFilterMonth = v||''; rerender(); }
+function setSalesUser(v){ salesFilterUser = parseInt(v,10)||0; rerender(); }
+
+function renderSales(el){
+  const isAdmin = currentUser.role === 'admin';
+  const month = salesFilterMonth || new Date().toISOString().slice(0,7);
+  let events = isAdmin ? salesEvents.slice() : salesEvents.filter(s => s.userId === currentUser.id);
+  if(isAdmin && salesFilterUser) events = events.filter(s => s.userId === salesFilterUser);
+  if(month) events = events.filter(s => (s.date||'').startsWith(month));
+
+  const totalEvents = events.length;
+  const sumCustomers = events.reduce((a,e)=>a+(+e.customers||0), 0);
+  const sumSales = events.reduce((a,e)=>a+(+e.sales||0), 0);
+  const avgCustomers = totalEvents ? Math.round(sumCustomers/totalEvents) : 0;
+
+  let perMemberHtml = '';
+  if(isAdmin){
+    const groups = {};
+    events.forEach(e => {
+      if(!groups[e.userId]) groups[e.userId] = {events:0, customers:0, sales:0};
+      groups[e.userId].events++;
+      groups[e.userId].customers += +e.customers||0;
+      groups[e.userId].sales += +e.sales||0;
+    });
+    const ranked = USERS.map(u=>({u, g: groups[u.id]||{events:0,customers:0,sales:0}}))
+      .sort((a,b)=>b.g.customers - a.g.customers || b.g.events - a.g.events);
+    perMemberHtml = `
+      <div class="sales-section">
+        <h3 class="sales-section-title">${I.barChart} สรุปต่อสมาชิก</h3>
+        <div class="sales-member-grid">
+          ${ranked.map(({u,g}) => `<div class="sales-mcard">
+            <div class="sales-mhdr">
+              <div class="sales-mavatar" style="background:${u.color||'#3b82f6'}">${u.init||(u.name||'?')[0]}</div>
+              <div><div class="sales-mname">${escapeHtmlN(u.name)}</div><div class="sales-mrole">${escapeHtmlN(u.role)}</div></div>
+            </div>
+            <div class="sales-mstats">
+              <div><span>${g.events}</span><label>กิจกรรม</label></div>
+              <div><span>${g.customers}</span><label>ลูกค้า</label></div>
+              <div><span>${g.sales? '฿'+g.sales.toLocaleString() : '—'}</span><label>ยอดขาย</label></div>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  const sortedEvents = events.sort((a,b)=>(b.date||'').localeCompare(a.date||'') || b.id - a.id);
+  const rowsHtml = sortedEvents.length === 0 ?
+    `<div class="empty-state">ยังไม่มีบันทึกกิจกรรมในเดือนนี้ — กด "เพิ่มกิจกรรม" เพื่อเริ่มต้น</div>` :
+    `<div style="overflow-x:auto"><table class="sales-table">
+      <thead><tr>
+        <th>วันที่</th>
+        <th>สถานที่</th>
+        ${isAdmin?'<th>สมาชิก</th>':''}
+        <th>ประเภท</th>
+        <th class="num">ลูกค้า</th>
+        <th class="num">ยอดขาย</th>
+        <th>หมายเหตุ</th>
+        <th></th>
+      </tr></thead>
+      <tbody>
+        ${sortedEvents.map(e => {
+          const u = USERS.find(x=>x.id===e.userId);
+          const canEdit = isAdmin || e.userId === currentUser.id;
+          const cat = e.category || 'field';
+          const catLabel = {booth:'ออกบูธ', field:'ลงพื้นที่', event:'อีเว้นท์', visit:'เยี่ยมลูกค้า'}[cat] || 'ลงพื้นที่';
+          return `<tr>
+            <td>${escapeHtmlN(e.date||'')}</td>
+            <td>${escapeHtmlN(e.location||'—')}</td>
+            ${isAdmin? `<td>${u? `<span class="sales-userchip" style="background:${u.color||'#888'}">${u.init||(u.name||'?')[0]}</span> ${escapeHtmlN(u.name)}` : '—'}</td>`:''}
+            <td><span class="sales-cat ${cat}">${catLabel}</span></td>
+            <td class="num">${e.customers||0}</td>
+            <td class="num">${e.sales?'฿'+(+e.sales).toLocaleString():'—'}</td>
+            <td class="sales-notes" title="${escapeHtmlN(e.notes||'')}">${escapeHtmlN(e.notes||'')}</td>
+            <td class="sales-actions">
+              ${canEdit? `<button class="icon-btn" onclick="openSalesModal(${e.id})" title="แก้ไข">${I.edit}</button>
+              <button class="icon-btn" onclick="deleteSalesEvent(${e.id})" title="ลบ">${I.trash}</button>` : ''}
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table></div>`;
+
+  const actions = `<button class="btn-primary" onclick="openSalesModal()">${I.plus} เพิ่มกิจกรรม</button>`;
+  const subText = isAdmin ? `${USERS.length} สมาชิก · ${totalEvents} กิจกรรมในช่วงนี้` : `${totalEvents} กิจกรรมในช่วงนี้`;
+
+  el.innerHTML = topbarSales('ออกพื้นที่ / อีเว้นท์', subText, actions) + `
+    <div class="page-content" style="max-width:1400px">
+      <div class="sales-kpi-row">
+        <div class="sales-kpi"><div class="k-icon">📅</div><div><div class="k-val">${totalEvents}</div><div class="k-lbl">กิจกรรม</div></div></div>
+        <div class="sales-kpi"><div class="k-icon">👥</div><div><div class="k-val">${sumCustomers.toLocaleString()}</div><div class="k-lbl">ลูกค้าทั้งหมด</div></div></div>
+        <div class="sales-kpi"><div class="k-icon">💰</div><div><div class="k-val">${sumSales? '฿'+sumSales.toLocaleString() : '—'}</div><div class="k-lbl">ยอดขายรวม</div></div></div>
+        <div class="sales-kpi"><div class="k-icon">📈</div><div><div class="k-val">${avgCustomers}</div><div class="k-lbl">ลูกค้าเฉลี่ย/ครั้ง</div></div></div>
+      </div>
+      <div class="sales-filter-row">
+        <div class="sales-filter-field">
+          <label>เดือน</label>
+          <input type="month" value="${month}" onchange="setSalesMonth(this.value)"/>
+        </div>
+        ${isAdmin? `<div class="sales-filter-field">
+          <label>สมาชิก</label>
+          <select onchange="setSalesUser(this.value)">
+            <option value="0">ทั้งหมด</option>
+            ${USERS.map(u=>`<option value="${u.id}" ${salesFilterUser==u.id?'selected':''}>${escapeHtmlN(u.name)}</option>`).join('')}
+          </select>
+        </div>` : ''}
+      </div>
+      ${perMemberHtml}
+      <div class="sales-section">
+        <h3 class="sales-section-title">📋 รายการกิจกรรม</h3>
+        ${rowsHtml}
+      </div>
+    </div>`;
+}
+
+function openSalesModal(id){
+  editSalesId = id || null;
+  let e = id ? salesEvents.find(s=>s.id===id) : null;
+  const isAdmin = currentUser.role === 'admin';
+  const today = new Date().toISOString().slice(0,10);
+  const userOpts = USERS.map(u=>`<option value="${u.id}" ${(e?.userId||currentUser.id)===u.id?'selected':''}>${escapeHtmlN(u.name)}</option>`).join('');
+  document.getElementById('salesModalTitle').textContent = id? 'แก้ไขกิจกรรม' : 'เพิ่มกิจกรรมใหม่';
+  document.getElementById('fSalesDate').value = e?.date || today;
+  document.getElementById('fSalesCategory').value = e?.category || 'field';
+  document.getElementById('fSalesLocation').value = e?.location || '';
+  document.getElementById('fSalesCustomers').value = e?.customers || '';
+  document.getElementById('fSalesSales').value = e?.sales || '';
+  document.getElementById('fSalesNotes').value = e?.notes || '';
+  const userWrap = document.getElementById('fSalesUserWrap');
+  if(userWrap){
+    if(isAdmin){
+      userWrap.style.display = '';
+      document.getElementById('fSalesUser').innerHTML = userOpts;
+    } else {
+      userWrap.style.display = 'none';
+    }
+  }
+  openModal('salesModal');
+}
+
+function saveSalesEvent(){
+  try {
+    const dateEl = document.getElementById('fSalesDate');
+    const date = dateEl.value;
+    if(!date){ alert('กรุณาเลือกวันที่'); dateEl.focus(); return; }
+    const isAdmin = currentUser.role === 'admin';
+    const userId = isAdmin ? (parseInt(document.getElementById('fSalesUser').value,10) || currentUser.id) : currentUser.id;
+    const data = {
+      userId,
+      date,
+      category: document.getElementById('fSalesCategory').value || 'field',
+      location: document.getElementById('fSalesLocation').value.trim(),
+      customers: parseInt(document.getElementById('fSalesCustomers').value,10) || 0,
+      sales: parseFloat(document.getElementById('fSalesSales').value) || 0,
+      notes: document.getElementById('fSalesNotes').value.trim(),
+    };
+    if(editSalesId){
+      const i = salesEvents.findIndex(s => s.id === editSalesId);
+      if(i >= 0) salesEvents[i] = {...salesEvents[i], ...data, updatedAt: Date.now()};
+    } else {
+      salesEvents.push({id: nextSalesId++, ...data, createdAt: Date.now()});
+    }
+    saveAll();
+    closeModal('salesModal');
+    rerender();
+  } catch(err) {
+    console.error('saveSalesEvent error:', err);
+    alert('บันทึกไม่สำเร็จ: ' + (err.message || err));
+  }
+}
+
+function deleteSalesEvent(id){
+  if(!confirm('ลบกิจกรรมนี้?')) return;
+  salesEvents = salesEvents.filter(s => s.id !== id);
+  saveAll();
+  rerender();
+}
+
 function renderMyTasks(el){
   const mine=tasks.filter(t=>t.assignees.includes(currentUser.id));
   const actions = `<button class="btn-primary" onclick="openNewTask('todo')">${I.plus} งานใหม่</button>`;
