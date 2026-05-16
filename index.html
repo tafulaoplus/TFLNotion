@@ -2862,12 +2862,9 @@ const I = {
 };
 
 // ========== DATA ==========
-let USERS = [
-  {id:1,name:'Tafu Lao Plus',init:'T',role:'admin',color:'#8b5cf6',email:'tafu@tfl.com'},
-  {id:2,name:'noungning',init:'N',role:'member',color:'#3b82f6',email:'noungning@tfl.com'},
-  {id:3,name:'paylay',init:'P',role:'member',color:'#f59e0b',email:'paylay@tfl.com'},
-  {id:4,name:'Noii VINUTDA',init:'NV',role:'member',color:'#10b981',email:'noii@tfl.com'},
-];
+let USERS = [];
+// Seed users that should never appear (legacy hardcoded defaults)
+const _LEGACY_SEED_EMAILS = new Set(['tafu@tfl.com','noungning@tfl.com','paylay@tfl.com','noii@tfl.com']);
 
 let OPTS = {
   status: [
@@ -2901,34 +2898,8 @@ const TAG_COLORS = [
 
 const COLORS = ['#8b5cf6','#3b82f6','#f59e0b','#10b981','#ec4899','#06b6d4','#ef4444','#84cc16','#f97316','#a855f7'];
 
-let tasks = [
-  {id:1,emoji:'💬',name:'ลงข้อความ Bordcast ภาษาลาว',desc:'แก้ไข *ใส่อิโมจิด้วย',assignees:[3],priority:'high',type:'doc',status:'done',due:'2026-03-16',file:'https://docs.google.com'},
-  {id:2,emoji:'🎵',name:'หาคลิป TIKTOK ตลกที่น่าทำคอนเทนต์',desc:'หาลึงคอนเทนต์',assignees:[3],priority:'mid',type:'video',status:'done',due:'2026-03-16',file:'https://docs.google.com'},
-  {id:3,emoji:'🍯',name:'รำเชื้อๆ',desc:'',assignees:[2],priority:'mid',type:'doc',status:'inprogress',due:'2026-03-16',file:''},
-  {id:4,emoji:'📄',name:'อวยพรแขับ',desc:'อวยพรแขวยขวบของอุดบุยขวนต่ง',assignees:[4],priority:'mid',type:'doc',status:'done',due:'2026-03-16',file:'https://docs.google.com'},
-  {id:5,emoji:'📄',name:'อวยพรแขับอุยขวง',desc:'อวยพรแขวยขวบของอุดบุยขวนต่ง',assignees:[3],priority:'mid',type:'doc',status:'done',due:'2026-03-16',file:'https://docs.google.com'},
-  {id:6,emoji:'📄',name:'อวยพรแขับอุยขวง',desc:'อวยพรแขวยขวบของอุดบุยขวนต่ง',assignees:[2],priority:'mid',type:'doc',status:'done',due:'2026-03-16',file:'https://docs.google.com'},
-  {id:7,emoji:'✅',name:'อุดบิบทุยออบเขขั้ง',desc:'',assignees:[2],priority:'mid',type:'video',status:'inprogress',due:'2026-03-16',file:'https://docs.google.com'},
-  {id:8,emoji:'✅',name:'ทำสคริปจำลองการออกบิทให้ผู้ใหญ่ดูความพร้อม',desc:'',assignees:[4,3],priority:'high',type:'video',status:'inprogress',due:'2026-03-19',file:''},
-  {id:9,emoji:'✅',name:'หาเพจแนวสารคดีที่จริงจัง',desc:'',assignees:[3],priority:'mid',type:'doc',status:'done',due:'2026-03-17',file:'https://www.facebook.com'},
-  {id:10,emoji:'✅',name:'อุดพฌดรัดดอวลำวอย',desc:'Product',assignees:[3],priority:'mid',type:'doc',status:'done',due:'2026-03-17',file:'https://www.tiktok.com'},
-  {id:11,emoji:'✅',name:'ติดต่อเพจล่าวอวง',desc:'',assignees:[2],priority:'high',type:'doc',status:'done',due:'2026-03-17',file:'https://docs.google.com'},
-  {id:12,emoji:'✅',name:'อุดทรับวัฒเบขบักลั่ง',desc:'',assignees:[3],priority:'mid',type:'doc',status:'done',due:'2026-03-17',file:'https://docs.google.com'},
-  {id:13,emoji:'✅',name:'ใบทุยสะอิบผู้ไยุยข',desc:'',assignees:[4],priority:'mid',type:'doc',status:'done',due:'2026-03-18',file:''},
-  {id:14,emoji:'✅',name:'ติดตามอับขีเขาดละรหวบ',desc:'อับฮี',assignees:[3],priority:'mid',type:'doc',status:'done',due:'2026-03-19',file:'https://docs.google.com'},
-  {id:15,emoji:'✅',name:'อุดความรับเชื่อทับวัม',desc:'',assignees:[3],priority:'mid',type:'doc',status:'inprogress',due:'2026-03-20',file:''},
-  {id:16,emoji:'✅',name:'ติดต่อ ตั้งวัด',desc:'สำลัดเขลือ แก่วักดุ้ยอู่บ่อๆ ดู้ยตุย',assignees:[2],priority:'low',type:'doc',status:'done',due:'2026-03-20',file:''},
-  {id:17,emoji:'✅',name:'ทุ่ยออบดเขับซบบ่ว',desc:'ทุ่ยตามทะแสะ',assignees:[3],priority:'mid',type:'video',status:'done',due:'2026-03-18',file:''},
-];
-
-let documents = [
-  {id:1,icon:'📋',name:'แผนการลงตลาด',by:1,ws:'ศูนย์รวมเอกสาร',upd:'18 มี.ค.',vis:'เมื่อสักครู่'},
-  {id:2,icon:'🦄',name:'ติดตามงาน TFL+ (พนักงาน)',by:1,ws:'TFL+ Work Space',upd:'20 มี.ค.',vis:'เมื่อสักครู่'},
-  {id:3,icon:'🎯',name:'เป้าหมายลงพื้นที่',by:1,ws:'TFL+ Work Space',upd:'19 มี.ค.',vis:'27 มี.ค.'},
-  {id:4,icon:'📄',name:'งานชั้น',by:1,ws:'Leader',upd:'17 มี.ค.',vis:'เมื่อสักครู่'},
-  {id:5,icon:'📊',name:'รายงานยอดขาย Q1',by:1,ws:'ศูนย์รวมเอกสาร',upd:'18 มี.ค.',vis:'เมื่อสักครู่'},
-  {id:6,icon:'🎨',name:'Artwork | แนวทางหวย',by:1,ws:'งานชั้น',upd:'16 มี.ค.',vis:'16 มี.ค.'},
-];
+let tasks = [];
+let documents = [];
 
 let currentUser = null;
 let salesEvents = [];
@@ -3373,7 +3344,14 @@ function saveAll(){
 function loadAll(){
   try {
     const u = localStorage.getItem('tfl_users');
-    if(u){ const arr = JSON.parse(u); if(Array.isArray(arr) && arr.length) USERS = arr; }
+    if(u){
+      const arr = JSON.parse(u);
+      if(Array.isArray(arr)){
+        // Drop legacy hardcoded seed users
+        const cleaned = arr.filter(x => !_LEGACY_SEED_EMAILS.has((x.email||'').toLowerCase()));
+        if(cleaned.length) USERS = cleaned;
+      }
+    }
     const t = localStorage.getItem('tfl_tasks');
     if(t){ const arr = JSON.parse(t); if(Array.isArray(arr)) tasks = arr; }
     const d = localStorage.getItem('tfl_documents');
@@ -3898,15 +3876,28 @@ function initLogin(){
 }
 
 function renderLoginUsers(){
-  document.getElementById('userCards').innerHTML = USERS.map(u=>{
+  const cards = document.getElementById('userCards');
+  if(!cards) return;
+  if(USERS.length === 0){
+    const isErr = (typeof neonStatus !== 'undefined' && neonStatus === 'error');
+    cards.innerHTML = `
+      <div style="padding:32px 20px;text-align:center;color:var(--t2)">
+        <div style="font-size:32px;margin-bottom:10px;opacity:.5">${isErr?'⚠️':'👥'}</div>
+        <div style="font-size:14px;font-weight:700;color:var(--t1);margin-bottom:6px">${isErr?'เชื่อมต่อข้อมูลไม่ได้':'ยังไม่มีบัญชีผู้ใช้'}</div>
+        <div style="font-size:12.5px;line-height:1.5;margin-bottom:16px">${isErr?'ตรวจสอบเครือข่ายหรือลองโหลดใหม่':'กด "เพิ่มสมาชิก" ด้านบนเพื่อสร้าง admin คนแรก'}</div>
+        ${isErr? `<button class="btn-cancel" onclick="bootApp()" style="padding:9px 18px;border-radius:9px;font-weight:700">ลองเชื่อมต่อใหม่</button>`:''}
+      </div>`;
+    return;
+  }
+  cards.innerHTML = USERS.map(u=>{
     const av = u.avatar
       ? `<span class="uav-img" style="width:36px;height:36px;background-image:url('${u.avatar}')"></span>`
-      : `<div class="uav" style="background:${u.color}">${u.init}</div>`;
+      : `<div class="uav" style="background:${u.color||'#8b5cf6'}">${u.init||(u.name||'?')[0]}</div>`;
     return `<div class="user-card" id="uc_${u.id}" onclick="selectUser(${u.id})">
       ${av}
       <div class="uinfo">
         <div class="uname">${escapeHtml(u.name)}</div>
-        <div class="uemail">${escapeHtml(u.email)}</div>
+        <div class="uemail">${escapeHtml(u.email||'')}</div>
       </div>
       <span class="rbadge ${u.role==='admin'?'r-admin':u.role==='social'?'role-social':'r-member'}">${u.role==='admin'?'Admin':u.role==='social'?'Social':'Member'}</span>
       <div class="check">${I.check}</div>
