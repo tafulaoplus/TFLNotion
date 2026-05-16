@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TFL+ Workspace</title>
-<link rel="icon" type="image/png" href="https://tflao.com/logo/ws-dark.png">
-<link rel="apple-touch-icon" href="https://tflao.com/logo/ws-dark.png">
+<link rel="icon" type="image/png" href="/ws-dark.png">
+<link rel="apple-touch-icon" href="/ws-dark.png">
 <meta name="theme-color" content="#0f0f23">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1251,6 +1251,9 @@
 .lot-logo-svg{height:46px;width:auto;flex-shrink:0;transition:filter .25s ease}
 [data-theme="dark"] .lot-logo-svg{filter:drop-shadow(0 0 12px rgba(30,167,214,.45))}
 @media (max-width:680px){.lot-logo-svg{height:34px}}
+.lot-logo-img-real{height:48px;width:auto;flex-shrink:0;object-fit:contain;display:block}
+[data-theme="dark"] .lot-logo-img-real{filter:drop-shadow(0 0 12px rgba(30,167,214,.4))}
+@media (max-width:680px){.lot-logo-img-real{height:36px}}
 .lot-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
 .lot-period-pills{display:inline-flex;background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:3px;gap:2px}
 .lot-period-pill{background:none;border:none;padding:8px 14px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:700;border-radius:8px;transition:all .15s ease;font-family:inherit}
@@ -4735,8 +4738,8 @@ function setupIcons(){
   document.getElementById('featIco3').innerHTML = I.check;
   const wsLogoHtml = `
     ${I.tflHorse}
-    <img class="brand-img-light" src="https://tflao.com/logo/ws-light.png" alt="TFL+" onerror="this.remove()"/>
-    <img class="brand-img-dark" src="https://tflao.com/logo/ws-dark.png" alt="TFL+" onerror="this.remove()"/>`;
+    <img class="brand-img-light" src="/ws-light.png" alt="TFL+" onerror="this.remove()"/>
+    <img class="brand-img-dark" src="/ws-dark.png" alt="TFL+" onerror="this.remove()"/>`;
   document.getElementById('loginLogoIco').innerHTML = wsLogoHtml;
   document.getElementById('addBtnIco').innerHTML = I.plus;
   document.getElementById('brandIco').innerHTML = wsLogoHtml;
@@ -10905,24 +10908,7 @@ function toggleChecklist(id){
 // ========== MY TASKS ==========
 // ============ LOTTERY SALES (ยอดขาย) ============
 function topbarLottery(label, sub, actions=''){
-  const logo = `<svg class="lot-logo-svg" viewBox="0 0 900 180" xmlns="http://www.w3.org/2000/svg" aria-label="หวยพัฒนาลาว">
-    <defs>
-      <linearGradient id="lotGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#1ea7d6"/>
-        <stop offset="100%" stop-color="#0e7490"/>
-      </linearGradient>
-    </defs>
-    <rect x="14" y="22" width="140" height="140" rx="20" fill="none" stroke="url(#lotGrad2)" stroke-width="12"/>
-    <line x1="58" y1="56" x2="48" y2="42" stroke="url(#lotGrad2)" stroke-width="6" stroke-linecap="round"/>
-    <line x1="110" y1="56" x2="120" y2="42" stroke="url(#lotGrad2)" stroke-width="6" stroke-linecap="round"/>
-    <ellipse cx="84" cy="92" rx="38" ry="28" fill="none" stroke="url(#lotGrad2)" stroke-width="6"/>
-    <ellipse cx="84" cy="92" rx="38" ry="9" fill="none" stroke="url(#lotGrad2)" stroke-width="3"/>
-    <circle cx="72" cy="100" r="8" fill="url(#lotGrad2)"/>
-    <circle cx="84" cy="104" r="8" fill="url(#lotGrad2)"/>
-    <circle cx="96" cy="100" r="8" fill="url(#lotGrad2)"/>
-    <line x1="46" y1="126" x2="122" y2="126" stroke="url(#lotGrad2)" stroke-width="5" stroke-linecap="round"/>
-    <text x="180" y="128" font-family="Anuphan,'IBM Plex Sans Thai','Noto Sans Thai',Inter,sans-serif" font-weight="900" font-size="116" letter-spacing="-3" fill="url(#lotGrad2)">หวยพัฒนาลาว</text>
-  </svg>`;
+  const logo = `<img class="lot-logo-img-real" src="/lao-lottery.png" alt="หวยพัฒนาลาว"/>`;
   return `<div class="topbar">
     <div class="topbar-title">
       <div class="fb-brand">
