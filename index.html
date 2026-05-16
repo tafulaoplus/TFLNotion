@@ -807,6 +807,17 @@
 .cat-pill.field{background:#dbeafe;color:#1d4ed8}
 .cat-pill.event{background:#f3e8ff;color:#7c3aed}
 .cat-pill.visit{background:#dcfce7;color:#059669}
+/* Sales comparison chart */
+.sales-chart-panel{margin-bottom:24px}
+.sales-chart-hd{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.sales-chart-hd .h-l{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800;color:var(--t1)}
+.chart-tabs{display:inline-flex;background:var(--bg-soft);border-radius:10px;padding:3px;gap:2px}
+.chart-tab{background:none;border:none;padding:7px 14px;cursor:pointer;color:var(--t2);font-size:12.5px;font-weight:700;border-radius:8px;transition:all .15s ease;font-family:inherit}
+.chart-tab:hover{color:var(--t1)}
+.chart-tab.active{background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;box-shadow:0 4px 12px rgba(124,58,237,.25)}
+.chart-sum{font-size:12.5px;color:var(--t2);font-weight:600;background:var(--bg-soft);padding:5px 12px;border-radius:10px}
+.chart-wrap{width:100%;overflow-x:auto;overflow-y:hidden}
+.chart-empty{padding:48px 20px;text-align:center;color:var(--t2);font-size:13.5px;background:var(--bg-soft);border-radius:10px}
 /* Event detail modal */
 .evt-detail-hero{padding:20px;background:linear-gradient(135deg,#f5f3ff 0%,#ede9fe 100%);border-radius:14px;margin-bottom:18px}
 [data-theme="dark"] .evt-detail-hero{background:linear-gradient(135deg,#1e293b 0%,#312e81 100%)}
@@ -2749,6 +2760,7 @@ let nextSalesId = 1;
 let salesFilterMonth = '';
 let salesFilterUser = 0;
 let editSalesId = null;
+let salesChartMetric = 'members';
 let activityLog = [];
 let nextActivityId = 1;
 let activityFilterUser = 0;
@@ -10026,6 +10038,104 @@ function topbarSales(label, sub, actions=''){
 function setSalesMonth(v){ salesFilterMonth = v||''; rerender(); }
 function setSalesUser(v){ salesFilterUser = parseInt(v,10)||0; rerender(); }
 
+function setSalesChart(m){ salesChartMetric = m; rerender(); }
+function _niceMax(n){
+  if(n<=0) return 5;
+  const log = Math.floor(Math.log10(n));
+  const pow = Math.pow(10, log);
+  const norm = n / pow;
+  let nice = norm<=1?1:norm<=2?2:norm<=5?5:10;
+  return nice * pow;
+}
+function _formatK(n){
+  n = Math.round(n);
+  if(n >= 1000) return (Math.round(n/100)/10).toFixed(1).replace(/\.0$/,'')+'K';
+  return n.toString();
+}
+function _shortLabel(s){
+  if(!s) return '';
+  return s.length > 12 ? s.slice(0,11)+'…' : s;
+}
+function renderSalesChart(events){
+  const sorted = events.slice().sort((a,b)=>(a.startDate||a.date||'').localeCompare(b.startDate||b.date||''));
+  const metric = salesChartMetric;
+  const getVal = e => {
+    if(metric === 'members') return +e.result?.members || 0;
+    return (e.result?.giveaways||[]).reduce((a,g)=>a+(+g.qty||0), 0);
+  };
+  const metricLabel = metric==='members' ? 'คน' : 'ชิ้น';
+  const data = sorted.map(e => ({
+    label: _shortLabel(e.title || e.location || 'งาน'),
+    value: getVal(e),
+  }));
+  const sum = data.reduce((a,d)=>a+d.value, 0);
+  const tabs = `<div class="chart-tabs">
+    <button class="chart-tab ${metric==='members'?'active':''}" onclick="setSalesChart('members')">คนสมัคร</button>
+    <button class="chart-tab ${metric==='giveaways'?'active':''}" onclick="setSalesChart('giveaways')">ของแจก</button>
+  </div>`;
+  if(data.length === 0){
+    return `<div class="sd-panel sales-chart-panel">
+      <div class="sales-chart-hd">
+        <div class="h-l">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          เปรียบเทียบกิจกรรม
+        </div>
+        ${tabs}
+      </div>
+      <div class="chart-empty">ยังไม่มีกิจกรรมในเดือนนี้</div>
+    </div>`;
+  }
+  const W = Math.max(900, data.length * 110);
+  const H = 300;
+  const P = {top:30, right:30, bottom:46, left:60};
+  const innerW = W - P.left - P.right;
+  const innerH = H - P.top - P.bottom;
+  const maxV = Math.max(...data.map(d=>d.value), 1);
+  const maxNice = _niceMax(maxV);
+  const step = maxNice / 4;
+  const xStep = data.length > 1 ? innerW / (data.length - 1) : 0;
+  const points = data.map((d,i) => ({
+    x: P.left + (data.length > 1 ? i * xStep : innerW/2),
+    y: P.top + innerH - (d.value / maxNice * innerH),
+    value: d.value,
+    label: d.label,
+  }));
+  const pathD = points.map((p,i)=>(i===0?'M':'L')+p.x+','+p.y).join(' ');
+  const areaD = pathD + ` L ${points[points.length-1].x},${P.top+innerH} L ${points[0].x},${P.top+innerH} Z`;
+  const yLines = [0,1,2,3,4].map(i => {
+    const y = P.top + innerH - (i*step / maxNice * innerH);
+    return `<line x1="${P.left}" y1="${y}" x2="${W-P.right}" y2="${y}" stroke="var(--border)" stroke-width="1" ${i>0?'stroke-dasharray="2 4"':''}/>
+      <text x="${P.left-12}" y="${y+4}" text-anchor="end" fill="var(--t2)" font-size="11" font-weight="600">${_formatK(i*step)}</text>`;
+  }).join('');
+  const xLabels = points.map(p => `<text x="${p.x}" y="${P.top+innerH+22}" text-anchor="middle" fill="var(--t2)" font-size="11" font-weight="600">${escapeHtmlN(p.label)}</text>`).join('');
+  const dots = points.map(p => `<g><circle cx="${p.x}" cy="${p.y}" r="5" fill="#7c3aed"/><circle cx="${p.x}" cy="${p.y}" r="9" fill="#7c3aed" fill-opacity="0"><title>${escapeHtmlN(p.label)}\n${p.value.toLocaleString()} ${metricLabel}</title></circle></g>`).join('');
+  return `<div class="sd-panel sales-chart-panel">
+    <div class="sales-chart-hd">
+      <div class="h-l">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        เปรียบเทียบกิจกรรม
+      </div>
+      ${tabs}
+      <div class="chart-sum">รวม ${sum.toLocaleString()} ${metricLabel}</div>
+    </div>
+    <div class="chart-wrap">
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;min-width:${W}px;height:${H}px;display:block">
+        <defs>
+          <linearGradient id="salesChartGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#a78bfa" stop-opacity=".4"/>
+            <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        ${yLines}
+        <path d="${areaD}" fill="url(#salesChartGrad)"/>
+        <path d="${pathD}" fill="none" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        ${dots}
+        ${xLabels}
+      </svg>
+    </div>
+  </div>`;
+}
+
 function _eventBelongsToUser(e, uid){
   if(Array.isArray(e.assignees) && e.assignees.includes(uid)) return true;
   return e.userId === uid;
@@ -10243,6 +10353,8 @@ function renderSales(el){
           <div class="sd-sub">เฉลี่ย ${_fmtBaht(avgCostPerMember)} / สมาชิก</div>
         </div>
       </div>
+
+      ${renderSalesChart(events)}
 
       <div class="sd-panels">
         ${costPanel}
