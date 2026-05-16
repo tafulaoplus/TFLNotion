@@ -636,6 +636,44 @@
 .cat-pill.field{background:#dbeafe;color:#1d4ed8}
 .cat-pill.event{background:#f3e8ff;color:#7c3aed}
 .cat-pill.visit{background:#dcfce7;color:#059669}
+/* Event detail modal */
+.evt-detail-hero{padding:20px;background:linear-gradient(135deg,#f5f3ff 0%,#ede9fe 100%);border-radius:14px;margin-bottom:18px}
+[data-theme="dark"] .evt-detail-hero{background:linear-gradient(135deg,#1e293b 0%,#312e81 100%)}
+.evt-detail-hero h2{margin:0 0 8px;font-size:22px;font-weight:800;color:var(--t1)}
+.evt-detail-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--t2);margin-top:10px}
+.evt-detail-meta > div{display:flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(255,255,255,.6);border-radius:10px;backdrop-filter:blur(8px)}
+[data-theme="dark"] .evt-detail-meta > div{background:rgba(15,23,42,.5)}
+.evt-detail-meta a{color:var(--brand);text-decoration:none;font-weight:600}
+.evt-detail-desc{margin-top:14px;font-size:13.5px;line-height:1.6;color:var(--t1);padding:12px;background:rgba(255,255,255,.5);border-radius:10px}
+[data-theme="dark"] .evt-detail-desc{background:rgba(15,23,42,.4)}
+.evt-detail-assignees{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.evt-detail-assignees .ea-chip{display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;background:#fff;border-radius:20px;font-size:12.5px;font-weight:600;color:var(--t1)}
+[data-theme="dark"] .evt-detail-assignees .ea-chip{background:#0f172a;color:var(--t1)}
+.evt-detail-assignees .ea-chip .ea-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:11px}
+.evt-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:18px}
+.evt-stat{padding:14px;background:var(--bg);border:1px solid var(--border);border-radius:12px;text-align:center}
+.evt-stat .lbl{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.evt-stat .val{font-size:22px;font-weight:800;color:var(--t1);line-height:1.1}
+.evt-stat .sub{font-size:11px;color:var(--t2);margin-top:3px}
+.evt-stat.members{border-top:3px solid #10b981}
+.evt-stat.giveaway{border-top:3px solid #f59e0b}
+.evt-stat.cost{border-top:3px solid #ef4444}
+.evt-detail-section{margin-bottom:18px}
+.evt-detail-section h4{margin:0 0 10px;font-size:13px;font-weight:800;color:var(--t1);text-transform:uppercase;letter-spacing:.5px;padding-bottom:8px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.evt-detail-section h4 .tag{font-size:11px;color:var(--t2);background:var(--bg-soft);padding:3px 10px;border-radius:10px;font-weight:600;text-transform:none;letter-spacing:0}
+.evt-cost-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.evt-cost-cell{padding:12px;background:var(--bg-soft);border-radius:10px}
+.evt-cost-cell .l{font-size:11px;color:var(--t2);font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.evt-cost-cell .v{font-size:16px;font-weight:800;color:var(--t1);margin-top:4px;font-feature-settings:'tnum'}
+.evt-giveaway-list,.evt-problems{display:flex;flex-direction:column;gap:8px}
+.evt-give-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg-soft);border-radius:10px;font-size:13.5px}
+.evt-give-row .n{font-weight:600;color:var(--t1)}
+.evt-give-row .q{font-weight:800;color:#f59e0b;font-feature-settings:'tnum'}
+.evt-no-result{padding:24px;text-align:center;background:var(--bg-soft);border:1.5px dashed var(--border-2);border-radius:12px;color:var(--t2);font-size:13.5px}
+.evt-no-result button{margin-top:10px}
+.evt-receipt-box{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg-soft);border-radius:10px}
+.evt-receipt-box img{width:64px;height:64px;border-radius:8px;object-fit:cover}
+.evt-receipt-box a{flex:1;color:var(--brand);text-decoration:none;font-weight:600;font-size:13px}
 [data-theme="dark"] .cat-pill.booth{background:rgba(251,191,36,.18);color:#fbbf24}
 [data-theme="dark"] .cat-pill.field{background:rgba(96,165,250,.18);color:#60a5fa}
 [data-theme="dark"] .cat-pill.event{background:rgba(167,139,250,.18);color:#a78bfa}
@@ -1806,6 +1844,18 @@ svg{display:block;flex-shrink:0}
       <button class="btn-ghost" onclick="closeModal('salesModal')">ยกเลิก</button>
       <button class="btn-primary" onclick="saveSalesEvent()">บันทึก</button>
     </div>
+  </div>
+</div>
+
+<!-- SALES DETAIL MODAL -->
+<div class="overlay" id="salesDetailModal">
+  <div class="modal sales-modal">
+    <div class="modal-hd">
+      <div class="modal-title">รายละเอียดกิจกรรม</div>
+      <button class="modal-close" onclick="closeModal('salesDetailModal')">×</button>
+    </div>
+    <div class="modal-bd" id="salesDetailBody"></div>
+    <div class="modal-ft" id="salesDetailFooter"></div>
   </div>
 </div>
 
@@ -9533,7 +9583,7 @@ function onCalEvtClick(eid){
   if(type === 'task'){
     if(typeof openTaskDetail === 'function') openTaskDetail(id);
   } else if(type === 'sales'){
-    openSalesModal(id);
+    openSalesDetail(id);
   } else if(type === 'live'){
     navigateTo('fbLive');
   }
@@ -9904,7 +9954,7 @@ function renderSales(el){
         const d = sd ? new Date(sd) : null;
         const assignees = (Array.isArray(e.assignees) && e.assignees.length) ? e.assignees : (e.userId? [e.userId] : []);
         const hasResult = !!(e.result && e.result.submittedAt);
-        return `<div class="event-row" onclick="openSalesModal(${e.id})">
+        return `<div class="event-row" onclick="openSalesDetail(${e.id})">
           <div class="event-date-box">
             <div class="d-day">${d? d.getDate(): '?'}</div>
             <div class="d-mo">${d? monthShort[d.getMonth()]: ''}</div>
@@ -10093,6 +10143,100 @@ function deleteSalesEvent(id){
   try { if(e) logActivity('delete', 'sales', id, `${e.title||e.location||''} (${e.date||''})`); } catch(_){}
   saveAll();
   rerender();
+}
+
+function openSalesDetail(id){
+  const e = salesEvents.find(s => s.id === id);
+  if(!e){ alert('ไม่พบกิจกรรม'); return; }
+  const canEdit = currentUser.role==='admin' || _eventBelongsToUser(e, currentUser.id);
+  const r = e.result || null;
+  const hasResult = !!(r && r.submittedAt);
+  const cat = e.category || 'field';
+  const catLabel = {booth:'ออกบูธ', field:'ลงพื้นที่', event:'อีเว้นท์', visit:'เยี่ยมลูกค้า'}[cat] || 'ลงพื้นที่';
+  const assignees = (Array.isArray(e.assignees) && e.assignees.length) ? e.assignees : (e.userId? [e.userId] : []);
+  const totalCost = _eventTotalCost(e);
+  const totalGiveaway = (r?.giveaways||[]).reduce((a,g)=>a+(+g.qty||0), 0);
+
+  const resultHtml = hasResult ? `
+    <div class="evt-stats">
+      <div class="evt-stat members">
+        <div class="lbl">สมาชิกใหม่</div>
+        <div class="val">${(r.members||0).toLocaleString()}</div>
+        <div class="sub">คนที่สมัครจากกิจกรรมนี้</div>
+      </div>
+      <div class="evt-stat giveaway">
+        <div class="lbl">ของแจก</div>
+        <div class="val">${totalGiveaway.toLocaleString()}</div>
+        <div class="sub">${(r.giveaways||[]).length} รายการ</div>
+      </div>
+      <div class="evt-stat cost">
+        <div class="lbl">ค่าใช้จ่ายรวม</div>
+        <div class="val">${_fmtBaht(totalCost)}</div>
+        <div class="sub">${r.members? _fmtBaht(totalCost/r.members)+' / สมาชิก' : '—'}</div>
+      </div>
+    </div>
+
+    <div class="evt-detail-section">
+      <h4>ค่าใช้จ่ายแยกประเภท</h4>
+      <div class="evt-cost-grid">
+        <div class="evt-cost-cell"><div class="l">ค่าน้ำมัน</div><div class="v">${_fmtBaht(r.costFuel)}</div></div>
+        <div class="evt-cost-cell"><div class="l">ค่าอาหาร</div><div class="v">${_fmtBaht(r.costFood)}</div></div>
+        <div class="evt-cost-cell"><div class="l">ค่าเดินทาง</div><div class="v">${_fmtBaht(r.costTravel)}</div></div>
+        <div class="evt-cost-cell"><div class="l">ค่าเช่าสถานที่</div><div class="v">${_fmtBaht(r.costRent)}</div></div>
+      </div>
+      ${r.receiptData? `<div style="margin-top:10px"><div class="evt-receipt-box">
+        ${(r.receiptType||'').startsWith('image/')? `<img src="${r.receiptData}" alt=""/>` : `<div class="receipt-upload-icon" style="width:64px;height:64px;flex-shrink:0">PDF</div>`}
+        <a href="${r.receiptData}" download="${escapeHtmlN(r.receiptName||'receipt')}">${escapeHtmlN(r.receiptName||'ใบเสร็จ')}</a>
+      </div></div>`:''}
+    </div>
+
+    ${(r.giveaways||[]).length? `<div class="evt-detail-section">
+      <h4>รายการของแจก <span class="tag">${totalGiveaway} ชิ้น</span></h4>
+      <div class="evt-giveaway-list">
+        ${r.giveaways.map(g=>`<div class="evt-give-row"><span class="n">${escapeHtmlN(g.name)}</span><span class="q">${(+g.qty||0).toLocaleString()}</span></div>`).join('')}
+      </div>
+    </div>` : ''}
+
+    ${r.problems? `<div class="evt-detail-section">
+      <h4>ปัญหาที่พบ</h4>
+      <div class="evt-problems"><div class="problem-row">${escapeHtmlN(r.problems)}</div></div>
+    </div>` : ''}
+
+    <div style="font-size:11.5px;color:var(--t2);text-align:right;margin-top:14px">
+      บันทึกผลเมื่อ ${r.submittedAt? new Date(r.submittedAt).toLocaleString('th-TH') : '—'}
+    </div>
+  ` : `
+    <div class="evt-no-result">
+      <div style="font-size:14px;font-weight:700;color:var(--t1);margin-bottom:4px">ยังไม่ได้บันทึกผลงาน</div>
+      <div>กดปุ่ม "บันทึกผลงาน" เพื่อกรอกผลการดำเนินงาน</div>
+      ${canEdit? `<button class="btn-primary" onclick="closeModal('salesDetailModal'); openSalesResultModal(${e.id})" style="margin-top:12px">บันทึกผลงาน</button>` : ''}
+    </div>`;
+
+  document.getElementById('salesDetailBody').innerHTML = `
+    <div class="evt-detail-hero">
+      <h2>${escapeHtmlN(e.title || e.location || 'กิจกรรม')}</h2>
+      <span class="cat-pill ${cat}">${catLabel}</span>
+      <div class="evt-detail-meta">
+        <div>${I.calendar} ${_eventDateRange(e)}</div>
+        ${e.location? `<div>${I.mapPin} ${escapeHtmlN(e.location)}</div>` : ''}
+        ${e.gpsLink? `<div><a href="${escapeHtmlN(e.gpsLink)}" target="_blank" rel="noopener">เปิดแผนที่ Google</a></div>` : ''}
+      </div>
+      ${e.description? `<div class="evt-detail-desc">${escapeHtmlN(e.description)}</div>` : ''}
+      <div class="evt-detail-assignees">
+        ${assignees.map(uid => {
+          const u = USERS.find(x=>x.id===uid);
+          if(!u) return '';
+          return `<div class="ea-chip"><div class="ea-av" style="background:${u.color||'#888'}">${escapeHtmlN(u.init||(u.name||'?')[0])}</div>${escapeHtmlN(u.name)}</div>`;
+        }).join('')}
+      </div>
+    </div>
+    ${resultHtml}`;
+
+  document.getElementById('salesDetailFooter').innerHTML = `
+    <button class="btn-ghost" onclick="closeModal('salesDetailModal')">ปิด</button>
+    ${canEdit? `<button class="btn-ghost" onclick="closeModal('salesDetailModal'); openSalesModal(${e.id})">แก้ไขข้อมูล</button>
+      <button class="btn-primary" onclick="closeModal('salesDetailModal'); openSalesResultModal(${e.id})">${hasResult?'แก้ผลงาน':'บันทึกผลงาน'}</button>` : ''}`;
+  document.getElementById('salesDetailModal').classList.add('show');
 }
 
 function exportSalesReport(){
