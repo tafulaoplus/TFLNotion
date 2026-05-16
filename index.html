@@ -11696,7 +11696,7 @@ function _renderAdminAttDashboard(allUsers, today){
     <h3 class="sales-section-title" style="font-size:15px;margin:0 0 12px">รายงานวันนี้ — ${today}</h3>
     <div class="att-table-wrap">
       <table class="att-table">
-        <thead><tr><th>สมาชิก</th><th>เช็คอิน</th><th>เช็คเอาท์</th><th>รวม</th><th>มาสาย</th><th>OT</th><th>สถานะ</th><th>ภาพ</th></tr></thead>
+        <thead><tr><th>สมาชิก</th><th>เช็คอิน</th><th>เช็คเอาท์</th><th>รวม</th><th>มาสาย</th><th>OT</th><th>สถานะ</th><th>ภาพ</th><th>จัดการ</th></tr></thead>
         <tbody>${allUsers.map(u => {
           const r = todayRecs.find(x => x.userId === u.id);
           if(!r){
@@ -11705,6 +11705,7 @@ function _renderAdminAttDashboard(allUsers, today){
               <td><span class="sales-userchip" style="background:${u.color||'#888'}">${u.init||(u.name||'?')[0]}</span> ${escapeHtmlN(u.name)}</td>
               <td colspan="5" style="color:var(--t2)">${onLeave?'อยู่ในช่วงลา':'ยังไม่ได้เช็คอิน'}</td>
               <td><span class="att-status-pill ${onLeave?onLeave.type:'absent'}">${onLeave?_leaveTypeLabel(onLeave.type):'ไม่มี'}</span></td>
+              <td>—</td>
               <td>—</td>
             </tr>`;
           }
@@ -11717,6 +11718,36 @@ function _renderAdminAttDashboard(allUsers, today){
             <td>${r.otHours? r.otHours+'h':'—'}</td>
             <td><span class="att-status-pill ${r.status}">${_attStatusLabel(r.status)}</span></td>
             <td>${r.checkIn?.photo? `<img class="att-mini-photo" src="${r.checkIn.photo}" onclick="window.open(this.src,'_blank')"/>` : '—'}</td>
+            <td style="white-space:nowrap">
+              ${r.checkOut? `<button class="icon-btn" onclick="adminClearCheckOut(${r.id})" title="ล้างเฉพาะ check-out" style="background:none;border:none;cursor:pointer;color:var(--t2);padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">↩</button>`:''}
+              <button class="icon-btn" onclick="adminCancelCheckIn(${r.id})" title="ยกเลิกการเช็คอินทั้งหมด" style="background:none;border:none;cursor:pointer;color:#f59e0b;padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">⊘</button>
+              <button class="icon-btn" onclick="adminDeleteAttendance(${r.id})" title="ลบประวัติ" style="background:none;border:none;cursor:pointer;color:#dc2626;padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">${I.trash}</button>
+            </td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+    </div>
+
+    <h3 class="sales-section-title" style="font-size:15px;margin:24px 0 12px">ประวัติทั้งหมดในเดือน ${month}</h3>
+    <div class="att-table-wrap">
+      <table class="att-table">
+        <thead><tr><th>วันที่</th><th>สมาชิก</th><th>เช็คอิน</th><th>เช็คเอาท์</th><th>รวม</th><th>มาสาย</th><th>OT</th><th>สถานะ</th><th>จัดการ</th></tr></thead>
+        <tbody>${monthRecs.sort((a,b) => b.date.localeCompare(a.date) || (b.id-a.id)).map(r => {
+          const u = USERS.find(x => x.id === r.userId);
+          return `<tr>
+            <td>${r.date}</td>
+            <td>${u? `<span class="sales-userchip" style="background:${u.color||'#888'}">${u.init||(u.name||'?')[0]}</span> ${escapeHtmlN(u.name)}` : '?'}</td>
+            <td>${r.checkIn? _fmtTime(r.checkIn.time):'—'}</td>
+            <td>${r.checkOut? _fmtTime(r.checkOut.time):'—'}</td>
+            <td>${r.totalHours||0}h</td>
+            <td>${r.lateMinutes? r.lateMinutes+'m':'—'}</td>
+            <td>${r.otHours? r.otHours+'h':'—'}</td>
+            <td><span class="att-status-pill ${r.status}">${_attStatusLabel(r.status)}</span></td>
+            <td style="white-space:nowrap">
+              ${r.checkOut? `<button class="icon-btn" onclick="adminClearCheckOut(${r.id})" title="ล้าง check-out" style="background:none;border:none;cursor:pointer;color:var(--t2);padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">↩</button>`:''}
+              <button class="icon-btn" onclick="adminCancelCheckIn(${r.id})" title="ยกเลิก check-in" style="background:none;border:none;cursor:pointer;color:#f59e0b;padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">⊘</button>
+              <button class="icon-btn" onclick="adminDeleteAttendance(${r.id})" title="ลบ" style="background:none;border:none;cursor:pointer;color:#dc2626;padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">${I.trash}</button>
+            </td>
           </tr>`;
         }).join('')}</tbody>
       </table>
@@ -11728,6 +11759,39 @@ function _attStatusLabel(s){
 }
 function _leaveTypeLabel(s){
   return ({sick:'ลาป่วย', personal:'ลากิจ', vacation:'พักร้อน'})[s] || s;
+}
+
+function adminCancelCheckIn(recId){
+  const r = attendanceRecords.find(x => x.id === recId);
+  if(!r) return;
+  const u = USERS.find(x => x.id === r.userId);
+  if(!confirm(`ยกเลิกการเช็คอินของ "${u?.name||'ผู้ใช้'}" วันที่ ${r.date}?\n\n· รีเซ็ตเป็นยังไม่เช็คอิน\n· ลบข้อมูล check-in/out/ภาพ/OT ทิ้ง`)) return;
+  attendanceRecords = attendanceRecords.filter(x => x.id !== recId);
+  try { logActivity('delete','attendance', recId, `ยกเลิก check-in ของ ${u?.name||'?'} (${r.date})`); } catch(_){}
+  try { createNotif({ userId: r.userId, type:'info', title:'การเช็คอินถูกยกเลิก', body:`Admin ยกเลิกการเช็คอินของคุณวันที่ ${r.date}` }); } catch(_){}
+  saveAll(); rerender();
+}
+
+function adminDeleteAttendance(recId){
+  const r = attendanceRecords.find(x => x.id === recId);
+  if(!r) return;
+  const u = USERS.find(x => x.id === r.userId);
+  if(!confirm(`ลบประวัติการลงเวลานี้ทิ้ง?\n\nสมาชิก: ${u?.name||'?'}\nวันที่: ${r.date}\n\nการลบไม่สามารถย้อนกลับได้`)) return;
+  attendanceRecords = attendanceRecords.filter(x => x.id !== recId);
+  try { logActivity('delete','attendance', recId, `ลบประวัติ ${u?.name||'?'} (${r.date})`); } catch(_){}
+  saveAll(); rerender();
+}
+
+function adminClearCheckOut(recId){
+  const r = attendanceRecords.find(x => x.id === recId);
+  if(!r || !r.checkOut) return;
+  if(!confirm('ล้างเฉพาะการเช็คเอาท์ออก (เก็บการเช็คอินไว้)?')) return;
+  r.checkOut = null;
+  r.totalHours = 0;
+  r.otHours = 0;
+  r.earlyLeaveMinutes = 0;
+  try { logActivity('update','attendance', recId, 'ยกเลิก check-out'); } catch(_){}
+  saveAll(); rerender();
 }
 
 function exportAttendanceExcel(){
