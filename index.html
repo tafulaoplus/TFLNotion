@@ -993,6 +993,94 @@
   .cl-logo{height:38px}
 }
 
+/* ===== LOTTERY (ยอดขาย) ===== */
+.lot-logo-img{height:48px;width:auto;flex-shrink:0;object-fit:contain}
+[data-theme="dark"] .lot-logo-img{filter:brightness(1.1)}
+.lot-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
+.lot-period-pills{display:inline-flex;background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:3px;gap:2px}
+.lot-period-pill{background:none;border:none;padding:8px 14px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:700;border-radius:8px;transition:all .15s ease;font-family:inherit}
+.lot-period-pill:hover{color:var(--t1)}
+.lot-period-pill.active{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 4px 12px rgba(16,185,129,.25)}
+.lot-target-card{padding:18px 22px;background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:#fff;border-radius:16px;margin-bottom:20px;display:flex;align-items:center;gap:18px;box-shadow:0 10px 30px rgba(16,185,129,.25)}
+.lot-target-info{flex:1;min-width:0}
+.lot-target-lbl{font-size:12px;font-weight:600;opacity:.9;text-transform:uppercase;letter-spacing:.5px}
+.lot-target-val{font-size:22px;font-weight:800;margin-top:4px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.lot-target-val .sep{opacity:.6;font-weight:600;font-size:16px}
+.lot-target-val .of{font-size:14px;font-weight:600;opacity:.85}
+.lot-target-bar{margin-top:10px;height:8px;background:rgba(255,255,255,.25);border-radius:4px;overflow:hidden}
+.lot-target-bar .b{height:100%;background:#fff;border-radius:4px;transition:width .5s ease;box-shadow:0 0 12px rgba(255,255,255,.5)}
+.lot-target-meta{font-size:11.5px;opacity:.95;margin-top:6px;display:flex;gap:14px;flex-wrap:wrap}
+.lot-target-edit{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;font-weight:700;padding:8px 14px;border-radius:10px;cursor:pointer;font-size:12.5px;backdrop-filter:blur(8px);transition:all .15s ease;flex-shrink:0;font-family:inherit}
+.lot-target-edit:hover{background:rgba(255,255,255,.28)}
+.lot-kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:22px}
+.lot-kpi{padding:18px;background:var(--bg);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.lot-kpi::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:var(--ac,#10b981)}
+.lot-kpi.sales::before{background:linear-gradient(90deg,#10b981,#059669)}
+.lot-kpi.prize::before{background:linear-gradient(90deg,#f59e0b,#d97706)}
+.lot-kpi.profit::before{background:linear-gradient(90deg,#3b82f6,#1d4ed8)}
+.lot-kpi.member::before{background:linear-gradient(90deg,#a78bfa,#7c3aed)}
+.lot-kpi.active::before{background:linear-gradient(90deg,#06b6d4,#0891b2)}
+.lot-kpi.growth::before{background:linear-gradient(90deg,#ec4899,#be185d)}
+.lot-kpi-lbl{font-size:11.5px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.lot-kpi-val{font-size:22px;font-weight:800;color:var(--t1);line-height:1.1;font-feature-settings:'tnum'}
+.lot-kpi-sub{font-size:11.5px;color:var(--t2);margin-top:6px}
+.lot-kpi-sub.up{color:#10b981;font-weight:700}
+.lot-kpi-sub.down{color:#ef4444;font-weight:700}
+.lot-best{padding:16px 18px;background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #fcd34d;border-radius:14px;display:flex;align-items:center;gap:14px;margin-bottom:22px}
+[data-theme="dark"] .lot-best{background:linear-gradient(135deg,rgba(251,191,36,.15),rgba(217,119,6,.1));border-color:rgba(251,191,36,.3)}
+.lot-best-medal{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#fbbf24,#d97706);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px;font-weight:800;box-shadow:0 6px 14px rgba(217,119,6,.3)}
+.lot-best-info{flex:1;min-width:0}
+.lot-best-lbl{font-size:11px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.5px}
+[data-theme="dark"] .lot-best-lbl{color:#fbbf24}
+.lot-best-val{font-size:18px;font-weight:800;color:#1f1147;margin-top:3px}
+[data-theme="dark"] .lot-best-val{color:#f1f5f9}
+.lot-best-sub{font-size:12px;color:#78350f;margin-top:2px}
+[data-theme="dark"] .lot-best-sub{color:#fcd34d}
+.lot-table-wrap{background:var(--bg);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.lot-table{width:100%;border-collapse:collapse}
+.lot-table thead{background:var(--bg-soft)}
+.lot-table th{padding:12px 14px;text-align:left;font-size:11.5px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border)}
+.lot-table td{padding:12px 14px;font-size:13px;color:var(--t1);border-bottom:1px solid var(--border);font-feature-settings:'tnum'}
+.lot-table tbody tr:hover{background:var(--bg-hover)}
+.lot-table tbody tr:last-child td{border-bottom:none}
+.lot-table .num{text-align:right;font-weight:700}
+.lot-table .profit-cell{font-weight:800;color:#059669}
+[data-theme="dark"] .lot-table .profit-cell{color:#34d399}
+.lot-table .loss-cell{font-weight:800;color:#dc2626}
+[data-theme="dark"] .lot-table .loss-cell{color:#f87171}
+
+/* Lottery modal */
+.lot-modal{width:min(640px,calc(100vw - 32px));border-radius:22px;background:linear-gradient(160deg,#f0fdf4 0%,#fff 60%);border:1px solid #d1fae5;overflow:hidden;position:relative}
+[data-theme="dark"] .lot-modal{background:linear-gradient(160deg,#022c22 0%,#0f172a 60%);border-color:rgba(16,185,129,.25)}
+.lot-modal .modal-hd{border-bottom:none;background:transparent;padding:24px 26px 6px}
+.lot-modal .modal-title{display:flex;align-items:center;gap:12px;font-size:20px}
+.lot-modal-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(16,185,129,.3)}
+.lot-modal .modal-bd{padding:14px 26px}
+.lot-fld{margin-bottom:14px}
+.lot-fld-lbl{display:block;font-size:13px;font-weight:700;color:var(--t1);margin-bottom:6px}
+.lot-fld-lbl .req{color:#dc2626}
+.lot-fld input,.lot-fld textarea{width:100%;padding:11px 14px;border:1.5px solid #d1fae5;border-radius:11px;font-size:14px;color:var(--t1);background:#fff;font-family:inherit;transition:all .15s ease}
+[data-theme="dark"] .lot-fld input,[data-theme="dark"] .lot-fld textarea{background:rgba(16,185,129,.06);border-color:rgba(16,185,129,.25);color:#f1f5f9}
+.lot-fld input:focus,.lot-fld textarea:focus{outline:none;border-color:#10b981;box-shadow:0 0 0 4px rgba(16,185,129,.15)}
+.lot-fld textarea{resize:vertical;min-height:80px;line-height:1.55}
+.lot-modal .modal-ft{padding:18px 26px 22px;border-top:none;background:transparent;display:flex;justify-content:flex-end;gap:10px}
+.lot-btn-save{padding:11px 24px;background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:#fff;font-weight:700;border:none;border-radius:12px;cursor:pointer;font-size:14px;box-shadow:0 8px 18px rgba(16,185,129,.3);font-family:inherit}
+.lot-btn-save:hover{transform:translateY(-1px);box-shadow:0 12px 24px rgba(16,185,129,.4)}
+
+/* ===== LOTTERY brand logo ===== */
+:root {
+  --lot-c1:#10b981;
+  --lot-c2:#059669;
+  --lot-text:#0f172a;
+  --lot-acc:#10b981;
+}
+[data-theme="dark"] {
+  --lot-c1:#34d399;
+  --lot-c2:#10b981;
+  --lot-text:#f1f5f9;
+  --lot-acc:#34d399;
+}
+
 /* ===== IMPORT PROGRESS MODAL ===== */
 .import-modal{background:#fff;border-radius:18px;width:560px;max-width:95vw;max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(17,24,39,.25);border:1px solid var(--border);animation:modalIn .25s ease}
 .import-hd{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
@@ -1963,6 +2051,77 @@ svg{display:block;flex-shrink:0}
       <div id="viewSales" class="view"></div>
       <div id="viewActivity" class="view"></div>
       <div id="viewCalendar" class="view"></div>
+      <div id="viewLottery" class="view"></div>
+    </div>
+  </div>
+</div>
+
+<!-- LOTTERY SALES MODAL -->
+<div class="overlay" id="lotteryModal">
+  <div class="modal lot-modal">
+    <div class="modal-hd">
+      <div class="modal-title">
+        <div class="lot-modal-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <span id="lotteryModalTitle">เพิ่มงวดยอดขาย</span>
+      </div>
+      <button class="modal-close" onclick="closeModal('lotteryModal')">×</button>
+    </div>
+    <div class="modal-bd">
+      <div class="lot-fld">
+        <label class="lot-fld-lbl">วันที่ <span class="req">*</span></label>
+        <input type="date" id="fLotDate"/>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="lot-fld">
+          <label class="lot-fld-lbl">ยอดขายรวม (Kip)</label>
+          <input type="number" id="fLotSales" min="0" step="1" placeholder="0"/>
+        </div>
+        <div class="lot-fld">
+          <label class="lot-fld-lbl">ยอดถูกรางวัล (Kip)</label>
+          <input type="number" id="fLotPrize" min="0" step="1" placeholder="0"/>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="lot-fld">
+          <label class="lot-fld-lbl">ผู้สมัครใหม่</label>
+          <input type="number" id="fLotNewMembers" min="0" placeholder="0"/>
+        </div>
+        <div class="lot-fld">
+          <label class="lot-fld-lbl">ผู้ใช้งาน Active</label>
+          <input type="number" id="fLotActive" min="0" placeholder="0"/>
+        </div>
+      </div>
+      <div class="lot-fld">
+        <label class="lot-fld-lbl">หมายเหตุ</label>
+        <textarea id="fLotNotes" placeholder="บันทึกเพิ่มเติม..."></textarea>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="sm-btn-cancel" onclick="closeModal('lotteryModal')">ยกเลิก</button>
+      <button class="lot-btn-save" onclick="saveLotterySale()">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOTTERY TARGET MODAL -->
+<div class="overlay" id="lotteryTargetModal">
+  <div class="modal lot-modal" style="width:min(440px,calc(100vw - 32px))">
+    <div class="modal-hd">
+      <div class="modal-title">
+        <div class="lot-modal-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+        ตั้งเป้ายอดขายเดือน
+      </div>
+      <button class="modal-close" onclick="closeModal('lotteryTargetModal')">×</button>
+    </div>
+    <div class="modal-bd">
+      <div class="lot-fld">
+        <label class="lot-fld-lbl">เป้ายอดขายต่อเดือน (Kip)</label>
+        <input type="number" id="fLotTarget" min="0" step="1000" placeholder="50000000"/>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="sm-btn-cancel" onclick="closeModal('lotteryTargetModal')">ยกเลิก</button>
+      <button class="lot-btn-save" onclick="saveLotteryTarget()">บันทึก</button>
     </div>
   </div>
 </div>
@@ -2770,6 +2929,12 @@ let calendarMonth = new Date().toISOString().slice(0,7);
 let calendarMode = 'month';
 let calendarFilterUser = 0;
 let calendarFilterType = '';
+let lotterySales = [];
+let nextLotteryId = 1;
+let editLotteryId = null;
+let lotteryFilter = '30d';
+let lotteryChartMode = 'daily';
+let lotterySettings = { monthlyTarget: 50000000 };
 let notifications = [];
 let nextNotifId = 1;
 let notifCheckTimer = null;
@@ -2972,6 +3137,12 @@ function applyRemoteWorkspace(data){
     const maxAid = activityLog.reduce((m,a)=>Math.max(m, a.id||0), 0);
     nextActivityId = Math.max(nextActivityId, maxAid + 1);
   }
+  if(Array.isArray(data.lotterySales)){
+    lotterySales = data.lotterySales;
+    const maxLid = lotterySales.reduce((m,l)=>Math.max(m, l.id||0), 0);
+    nextLotteryId = Math.max(nextLotteryId, maxLid + 1);
+  }
+  if(data.lotterySettings) Object.assign(lotterySettings, data.lotterySettings);
   saveAllLocal();
   if(currentUser){
     try { refreshDbTables(); } catch(_){}
@@ -3006,6 +3177,8 @@ function syncToNeon(){
         notifications: notifications,
         salesEvents: salesEvents,
         activityLog: activityLog,
+        lotterySales: lotterySales,
+        lotterySettings: lotterySettings,
         _updatedBy: currentUser ? currentUser.name : 'unknown',
       };
       const r = await fetch(`${NEON_API}/workspace`, {
@@ -3111,6 +3284,9 @@ function saveAllLocal(){
     localStorage.setItem('tfl_nextSalesId', String(nextSalesId));
     localStorage.setItem('tfl_activity', JSON.stringify(activityLog));
     localStorage.setItem('tfl_nextActivityId', String(nextActivityId));
+    localStorage.setItem('tfl_lottery', JSON.stringify(lotterySales));
+    localStorage.setItem('tfl_nextLotteryId', String(nextLotteryId));
+    localStorage.setItem('tfl_lotterySettings', JSON.stringify(lotterySettings));
   } catch(e){ console.warn('Save failed:', e); }
 }
 
@@ -3159,6 +3335,14 @@ function loadAll(){
     if(aci) nextActivityId = Math.max(parseInt(aci,10)||1, 1);
     const maxAid = activityLog.reduce((m,a)=>Math.max(m, parseInt(a.id,10)||0), 0);
     if(maxAid >= nextActivityId) nextActivityId = maxAid + 1;
+    const lt = localStorage.getItem('tfl_lottery');
+    if(lt){ const arr = JSON.parse(lt); if(Array.isArray(arr)) lotterySales = arr; }
+    const lti = localStorage.getItem('tfl_nextLotteryId');
+    if(lti) nextLotteryId = Math.max(parseInt(lti,10)||1, 1);
+    const maxLid = lotterySales.reduce((m,l)=>Math.max(m, parseInt(l.id,10)||0), 0);
+    if(maxLid >= nextLotteryId) nextLotteryId = maxLid + 1;
+    const lts = localStorage.getItem('tfl_lotterySettings');
+    if(lts){ const obj = JSON.parse(lts); if(obj) Object.assign(lotterySettings, obj); }
   } catch(e){ console.warn('Load failed:', e); }
 }
 
@@ -3768,10 +3952,10 @@ function initApp(){
   let startView = 'dashboard';
   try {
     const saved = localStorage.getItem('tfl_currentView');
-    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbLiveAuto','sales','activity','calendar'];
+    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbLiveAuto','sales','activity','calendar','lottery'];
     if(saved && validViews.includes(saved)){
       // Check role permission
-      if((saved === 'allTasks' || saved === 'members' || saved === 'activity') && currentUser.role !== 'admin'){
+      if((saved === 'allTasks' || saved === 'members' || saved === 'activity' || saved === 'lottery') && currentUser.role !== 'admin'){
         startView = 'dashboard';
       } else if((saved === 'fbLive' || saved === 'fbLiveAuto') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
         startView = 'dashboard';
@@ -3837,6 +4021,9 @@ function renderSidebar(){
       </div>
       <div class="nav-item ${currentView==='activity'?'active':''}" onclick="navigateTo('activity')">
         <span class="nav-icon">${I.history}</span><span class="nav-label">Activity Log</span>
+      </div>
+      <div class="nav-item ${currentView==='lottery'?'active':''}" onclick="navigateTo('lottery')">
+        <span class="nav-icon">${I.trending}</span><span class="nav-label">ยอดขาย</span>
       </div>`;
   }
   document.getElementById('sidebarNav').innerHTML = html;
@@ -4101,7 +4288,7 @@ function navigateTo(id){
   if((id === 'fbLive' || id === 'fbLiveAuto') && currentUser && currentUser.role !== 'admin' && currentUser.role !== 'social'){
     id = 'dashboard';
   }
-  if((id === 'allTasks' || id === 'members' || id === 'activity') && currentUser && currentUser.role !== 'admin'){
+  if((id === 'allTasks' || id === 'members' || id === 'activity' || id === 'lottery') && currentUser && currentUser.role !== 'admin'){
     id = 'dashboard';
   }
   if(id === 'members') currentMemberId = null;
@@ -4139,7 +4326,7 @@ function renderView(id,el){
   setTimeout(()=>el.classList.remove('fade-in'),300);
   ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,notes:renderNotes,taskBoard:renderTaskBoard,
     myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbLiveAuto:renderFbLiveAuto,
-    sales:renderSales,activity:renderActivity,calendar:renderCalendar}[id]||(()=>{}))(el);
+    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery}[id]||(()=>{}))(el);
 }
 
 function rerender(){ const el=document.getElementById('view'+cap(currentView)); if(el) renderView(currentView,el); }
@@ -9630,6 +9817,468 @@ function toggleChecklist(id){
 }
 
 // ========== MY TASKS ==========
+// ============ LOTTERY SALES (ยอดขาย) ============
+function topbarLottery(label, sub, actions=''){
+  return `<div class="topbar">
+    <div class="topbar-title">
+      <div class="fb-brand">
+        <img class="lot-logo-img" src="https://tflao.com/logo/Logotop.png" alt="TFL+" onerror="this.style.display='none'"/>
+        <div class="fb-brand-sub">
+          <div class="fb-brand-label">${label||''}</div>
+          ${sub?`<div class="fb-brand-meta">${sub}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      ${actions}
+      ${notifBellHTML()}
+      <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
+        <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+        <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+      </button>
+    </div>
+  </div>`;
+}
+
+function _fmtKip(n){ return (Math.round(+n||0)).toLocaleString('en-US') + ' Kip'; }
+function _fmtKipShort(n){
+  n = +n||0;
+  if(Math.abs(n) >= 1e9) return (n/1e9).toFixed(2).replace(/\.?0+$/,'') + 'B';
+  if(Math.abs(n) >= 1e6) return (n/1e6).toFixed(2).replace(/\.?0+$/,'') + 'M';
+  if(Math.abs(n) >= 1e3) return (n/1e3).toFixed(1).replace(/\.?0+$/,'') + 'K';
+  return String(Math.round(n));
+}
+
+function setLotteryFilter(v){ lotteryFilter = v; rerender(); }
+function setLotteryChart(v){ lotteryChartMode = v; rerender(); }
+
+function _getLotteryRange(){
+  const now = new Date();
+  const today = now.toISOString().slice(0,10);
+  let start, end = today, label;
+  if(lotteryFilter === 'today'){ start = today; label = 'วันนี้'; }
+  else if(lotteryFilter === '7d'){
+    const d = new Date(now); d.setDate(d.getDate()-6);
+    start = d.toISOString().slice(0,10); label = '7 วันล่าสุด';
+  } else if(lotteryFilter === '30d'){
+    const d = new Date(now); d.setDate(d.getDate()-29);
+    start = d.toISOString().slice(0,10); label = '30 วันล่าสุด';
+  } else if(lotteryFilter === 'month'){
+    start = today.slice(0,8) + '01'; label = 'เดือนนี้';
+  } else if(lotteryFilter === 'year'){
+    start = today.slice(0,4) + '-01-01'; label = 'ปีนี้';
+  } else { start = '1900-01-01'; label = 'ทั้งหมด'; }
+  return { start, end, label };
+}
+
+function _filteredLottery(){
+  const { start, end } = _getLotteryRange();
+  return lotterySales.filter(l => l.date >= start && l.date <= end).sort((a,b)=>a.date.localeCompare(b.date));
+}
+
+function openLotteryModal(id){
+  editLotteryId = id || null;
+  const L = id ? lotterySales.find(x=>x.id===id) : null;
+  document.getElementById('lotteryModalTitle').textContent = id? 'แก้ไขงวดยอดขาย' : 'เพิ่มงวดยอดขาย';
+  document.getElementById('fLotDate').value = L?.date || new Date().toISOString().slice(0,10);
+  document.getElementById('fLotSales').value = L?.salesTotal || '';
+  document.getElementById('fLotPrize').value = L?.prizeTotal || '';
+  document.getElementById('fLotNewMembers').value = L?.newMembers || '';
+  document.getElementById('fLotActive').value = L?.activeUsers || '';
+  document.getElementById('fLotNotes').value = L?.notes || '';
+  document.getElementById('lotteryModal').classList.add('show');
+}
+
+function saveLotterySale(){
+  try {
+    const date = document.getElementById('fLotDate').value;
+    if(!date){ alert('กรุณาเลือกวันที่'); return; }
+    const data = {
+      date,
+      salesTotal: parseFloat(document.getElementById('fLotSales').value) || 0,
+      prizeTotal: parseFloat(document.getElementById('fLotPrize').value) || 0,
+      newMembers: parseInt(document.getElementById('fLotNewMembers').value,10) || 0,
+      activeUsers: parseInt(document.getElementById('fLotActive').value,10) || 0,
+      notes: document.getElementById('fLotNotes').value.trim(),
+    };
+    if(editLotteryId){
+      const i = lotterySales.findIndex(x => x.id === editLotteryId);
+      if(i >= 0){
+        lotterySales[i] = {...lotterySales[i], ...data, updatedAt: Date.now()};
+        try { logActivity('update', 'lottery', editLotteryId, `งวด ${date}`); } catch(_){}
+      }
+    } else {
+      const rec = {id: nextLotteryId++, ...data, createdAt: Date.now()};
+      lotterySales.push(rec);
+      try { logActivity('create', 'lottery', rec.id, `งวด ${date}`); } catch(_){}
+    }
+    saveAll();
+    closeModal('lotteryModal');
+    rerender();
+  } catch(err){
+    console.error('saveLotterySale error:', err);
+    alert('บันทึกไม่สำเร็จ');
+  }
+}
+
+function deleteLotterySale(id){
+  if(!confirm('ลบงวดนี้?')) return;
+  const L = lotterySales.find(x => x.id === id);
+  lotterySales = lotterySales.filter(x => x.id !== id);
+  try { if(L) logActivity('delete', 'lottery', id, `งวด ${L.date}`); } catch(_){}
+  saveAll();
+  rerender();
+}
+
+function openLotteryTargetModal(){
+  document.getElementById('fLotTarget').value = lotterySettings.monthlyTarget || 50000000;
+  document.getElementById('lotteryTargetModal').classList.add('show');
+}
+function saveLotteryTarget(){
+  const v = parseFloat(document.getElementById('fLotTarget').value) || 0;
+  lotterySettings.monthlyTarget = v;
+  saveAll();
+  closeModal('lotteryTargetModal');
+  rerender();
+}
+
+function renderLotteryChart(data, metricKey, color){
+  if(data.length === 0) return `<div class="chart-empty">ยังไม่มีข้อมูลในช่วงนี้</div>`;
+  const W = Math.max(900, data.length * 90);
+  const H = 280;
+  const P = {top:30, right:30, bottom:46, left:80};
+  const innerW = W - P.left - P.right;
+  const innerH = H - P.top - P.bottom;
+  const maxV = Math.max(...data.map(d=>+d[metricKey]||0), 1);
+  const maxNice = _niceMax(maxV);
+  const step = maxNice / 4;
+  const xStep = data.length > 1 ? innerW / (data.length - 1) : 0;
+  const points = data.map((d,i) => ({
+    x: P.left + (data.length > 1 ? i * xStep : innerW/2),
+    y: P.top + innerH - ((+d[metricKey]||0) / maxNice * innerH),
+    value: +d[metricKey]||0,
+    label: d.label,
+  }));
+  const pathD = points.map((p,i)=>(i===0?'M':'L')+p.x+','+p.y).join(' ');
+  const areaD = pathD + ` L ${points[points.length-1].x},${P.top+innerH} L ${points[0].x},${P.top+innerH} Z`;
+  const yLines = [0,1,2,3,4].map(i => {
+    const y = P.top + innerH - (i*step / maxNice * innerH);
+    return `<line x1="${P.left}" y1="${y}" x2="${W-P.right}" y2="${y}" stroke="var(--border)" stroke-width="1" ${i>0?'stroke-dasharray="2 4"':''}/>
+      <text x="${P.left-12}" y="${y+4}" text-anchor="end" fill="var(--t2)" font-size="11" font-weight="600">${_fmtKipShort(i*step)}</text>`;
+  }).join('');
+  const xLabels = points.map(p => `<text x="${p.x}" y="${P.top+innerH+22}" text-anchor="middle" fill="var(--t2)" font-size="11" font-weight="600">${escapeHtmlN(p.label)}</text>`).join('');
+  const dots = points.map(p => `<g><circle cx="${p.x}" cy="${p.y}" r="5" fill="${color}"/><circle cx="${p.x}" cy="${p.y}" r="9" fill="${color}" fill-opacity="0"><title>${escapeHtmlN(p.label)}\n${p.value.toLocaleString()}</title></circle></g>`).join('');
+  const gradId = 'lotChartGrad-' + Math.random().toString(36).slice(2,8);
+  return `<div class="chart-wrap">
+    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;min-width:${W}px;height:${H}px;display:block">
+      <defs>
+        <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${color}" stop-opacity=".4"/>
+          <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      ${yLines}
+      <path d="${areaD}" fill="url(#${gradId})"/>
+      <path d="${pathD}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      ${dots}
+      ${xLabels}
+    </svg>
+  </div>`;
+}
+
+function _groupLottery(records, mode){
+  // mode: 'daily' | 'weekly' | 'monthly'
+  if(mode === 'daily'){
+    return records.map(r => ({
+      label: r.date.slice(8,10)+'/'+r.date.slice(5,7),
+      date: r.date,
+      salesTotal: +r.salesTotal||0,
+      prizeTotal: +r.prizeTotal||0,
+      profit: (+r.salesTotal||0) - (+r.prizeTotal||0),
+      newMembers: +r.newMembers||0,
+      activeUsers: +r.activeUsers||0,
+    }));
+  }
+  const groups = {};
+  records.forEach(r => {
+    let key, label;
+    if(mode === 'weekly'){
+      const d = new Date(r.date);
+      const day = d.getDay();
+      const monday = new Date(d); monday.setDate(d.getDate() - (day===0?6:day-1));
+      key = monday.toISOString().slice(0,10);
+      label = 'W ' + key.slice(5);
+    } else { // monthly
+      key = r.date.slice(0,7);
+      label = key.slice(5)+'/'+key.slice(2,4);
+    }
+    if(!groups[key]) groups[key] = {key, label, salesTotal:0, prizeTotal:0, newMembers:0, activeUsers:0, count:0};
+    groups[key].salesTotal += +r.salesTotal||0;
+    groups[key].prizeTotal += +r.prizeTotal||0;
+    groups[key].newMembers += +r.newMembers||0;
+    groups[key].activeUsers += +r.activeUsers||0;
+    groups[key].count++;
+  });
+  return Object.values(groups).map(g => ({
+    label: g.label,
+    salesTotal: g.salesTotal,
+    prizeTotal: g.prizeTotal,
+    profit: g.salesTotal - g.prizeTotal,
+    newMembers: g.newMembers,
+    activeUsers: g.count ? Math.round(g.activeUsers/g.count) : 0,
+  })).sort((a,b)=>a.label.localeCompare(b.label));
+}
+
+function renderLottery(el){
+  const records = _filteredLottery();
+  const range = _getLotteryRange();
+  const sumSales = records.reduce((a,r)=>a+(+r.salesTotal||0), 0);
+  const sumPrize = records.reduce((a,r)=>a+(+r.prizeTotal||0), 0);
+  const sumProfit = sumSales - sumPrize;
+  const sumNew = records.reduce((a,r)=>a+(+r.newMembers||0), 0);
+  const avgActive = records.length ? Math.round(records.reduce((a,r)=>a+(+r.activeUsers||0), 0) / records.length) : 0;
+
+  // Growth: this period vs equal-length previous period
+  const today = new Date().toISOString().slice(0,10);
+  let prevSales = 0;
+  if(range.start && lotteryFilter !== 'all'){
+    const days = Math.round((new Date(range.end) - new Date(range.start))/86400000) + 1;
+    const prevEnd = new Date(range.start); prevEnd.setDate(prevEnd.getDate()-1);
+    const prevStart = new Date(prevEnd); prevStart.setDate(prevStart.getDate()-(days-1));
+    const ps = prevStart.toISOString().slice(0,10);
+    const pe = prevEnd.toISOString().slice(0,10);
+    prevSales = lotterySales.filter(l => l.date >= ps && l.date <= pe).reduce((a,r)=>a+(+r.salesTotal||0), 0);
+  }
+  const growth = prevSales > 0 ? ((sumSales - prevSales) / prevSales * 100) : 0;
+
+  // Best period
+  const bestRec = records.slice().sort((a,b)=>(+b.salesTotal||0)-(+a.salesTotal||0))[0];
+
+  // Target progress (this month vs target)
+  const monthStart = today.slice(0,8)+'01';
+  const monthSales = lotterySales.filter(l => l.date >= monthStart && l.date <= today).reduce((a,r)=>a+(+r.salesTotal||0), 0);
+  const target = +lotterySettings.monthlyTarget || 50000000;
+  const pct = target > 0 ? Math.min(100, monthSales/target*100) : 0;
+  const remaining = Math.max(0, target - monthSales);
+
+  // Chart data
+  const grouped = _groupLottery(records, lotteryChartMode);
+  const salesChart = renderLotteryChart(grouped, 'salesTotal', '#10b981');
+  const memberChart = renderLotteryChart(grouped, 'newMembers', '#a78bfa');
+  const profitChart = renderLotteryChart(grouped, 'profit', '#3b82f6');
+
+  // Table
+  const tableHtml = records.length === 0 ?
+    `<div class="empty-state">ยังไม่มีข้อมูลในช่วง "${range.label}"</div>` :
+    `<div class="lot-table-wrap"><table class="lot-table">
+      <thead><tr>
+        <th>วันที่</th>
+        <th class="num">ยอดขาย (Kip)</th>
+        <th class="num">รางวัล (Kip)</th>
+        <th class="num">กำไร (Kip)</th>
+        <th class="num">สมาชิกใหม่</th>
+        <th class="num">Active</th>
+        <th>หมายเหตุ</th>
+        <th></th>
+      </tr></thead>
+      <tbody>
+        ${records.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(r => {
+          const profit = (+r.salesTotal||0) - (+r.prizeTotal||0);
+          return `<tr>
+            <td>${escapeHtmlN(r.date)}</td>
+            <td class="num">${(+r.salesTotal||0).toLocaleString()}</td>
+            <td class="num">${(+r.prizeTotal||0).toLocaleString()}</td>
+            <td class="num ${profit>=0?'profit-cell':'loss-cell'}">${profit.toLocaleString()}</td>
+            <td class="num">${(+r.newMembers||0).toLocaleString()}</td>
+            <td class="num">${(+r.activeUsers||0).toLocaleString()}</td>
+            <td style="color:var(--t2);font-size:12px">${escapeHtmlN(r.notes||'')}</td>
+            <td class="sales-actions">
+              <button class="icon-btn" onclick="openLotteryModal(${r.id})" title="แก้ไข">${I.edit}</button>
+              <button class="icon-btn danger" onclick="deleteLotterySale(${r.id})" title="ลบ">${I.trash}</button>
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table></div>`;
+
+  const actions = `
+    <button class="btn-ghost" onclick="exportLotteryExcel()">${I.download} Excel</button>
+    <button class="btn-ghost" onclick="exportLotteryPDF()">${I.download} PDF</button>
+    <button class="btn-primary" onclick="openLotteryModal()">${I.plus} เพิ่มงวด</button>`;
+
+  el.innerHTML = topbarLottery('ยอดขาย หวยพัฒนาลาว', `${lotterySales.length} งวดในระบบ · ${range.label} ${records.length} งวด`, actions) + `
+    <div class="page-content" style="max-width:1400px" id="lotteryReportRoot">
+
+      <div class="lot-toolbar">
+        <div class="lot-period-pills">
+          <button class="lot-period-pill ${lotteryFilter==='today'?'active':''}" onclick="setLotteryFilter('today')">วันนี้</button>
+          <button class="lot-period-pill ${lotteryFilter==='7d'?'active':''}" onclick="setLotteryFilter('7d')">7 วัน</button>
+          <button class="lot-period-pill ${lotteryFilter==='30d'?'active':''}" onclick="setLotteryFilter('30d')">30 วัน</button>
+          <button class="lot-period-pill ${lotteryFilter==='month'?'active':''}" onclick="setLotteryFilter('month')">เดือนนี้</button>
+          <button class="lot-period-pill ${lotteryFilter==='year'?'active':''}" onclick="setLotteryFilter('year')">ปีนี้</button>
+          <button class="lot-period-pill ${lotteryFilter==='all'?'active':''}" onclick="setLotteryFilter('all')">ทั้งหมด</button>
+        </div>
+      </div>
+
+      <div class="lot-target-card">
+        <div style="width:54px;height:54px;border-radius:14px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;backdrop-filter:blur(8px)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </div>
+        <div class="lot-target-info">
+          <div class="lot-target-lbl">เป้ายอดขายเดือนนี้</div>
+          <div class="lot-target-val">
+            ${_fmtKipShort(monthSales)} <span class="sep">/</span> <span class="of">${_fmtKipShort(target)} Kip</span>
+            <span style="font-size:14px;font-weight:600;opacity:.9;margin-left:4px">(${pct.toFixed(1)}%)</span>
+          </div>
+          <div class="lot-target-bar"><div class="b" style="width:${pct}%"></div></div>
+          <div class="lot-target-meta">
+            <span>ทำได้ ${monthSales.toLocaleString()} Kip</span>
+            ${remaining>0? `<span>· ขาดอีก ${remaining.toLocaleString()} Kip</span>` : '<span>· ✓ ทะลุเป้าแล้ว</span>'}
+          </div>
+        </div>
+        <button class="lot-target-edit" onclick="openLotteryTargetModal()">แก้ไขเป้า</button>
+      </div>
+
+      <div class="lot-kpi-grid">
+        <div class="lot-kpi sales">
+          <div class="lot-kpi-lbl">ยอดขายรวม</div>
+          <div class="lot-kpi-val">${_fmtKipShort(sumSales)}</div>
+          <div class="lot-kpi-sub">${sumSales.toLocaleString()} Kip</div>
+        </div>
+        <div class="lot-kpi prize">
+          <div class="lot-kpi-lbl">ยอดถูกรางวัลรวม</div>
+          <div class="lot-kpi-val">${_fmtKipShort(sumPrize)}</div>
+          <div class="lot-kpi-sub">${sumPrize.toLocaleString()} Kip</div>
+        </div>
+        <div class="lot-kpi profit">
+          <div class="lot-kpi-lbl">กำไรสุทธิรวม</div>
+          <div class="lot-kpi-val" style="color:${sumProfit>=0?'#059669':'#dc2626'}">${_fmtKipShort(sumProfit)}</div>
+          <div class="lot-kpi-sub">${sumSales>0? (sumProfit/sumSales*100).toFixed(1)+'% margin' : '—'}</div>
+        </div>
+        <div class="lot-kpi member">
+          <div class="lot-kpi-lbl">สมาชิกใหม่รวม</div>
+          <div class="lot-kpi-val">${sumNew.toLocaleString()}</div>
+          <div class="lot-kpi-sub">เฉลี่ย ${records.length? Math.round(sumNew/records.length):0} คน/งวด</div>
+        </div>
+        <div class="lot-kpi active">
+          <div class="lot-kpi-lbl">Active เฉลี่ย/งวด</div>
+          <div class="lot-kpi-val">${avgActive.toLocaleString()}</div>
+          <div class="lot-kpi-sub">${records.length} งวดที่บันทึก</div>
+        </div>
+        <div class="lot-kpi growth">
+          <div class="lot-kpi-lbl">เติบโต vs งวดก่อน</div>
+          <div class="lot-kpi-val" style="color:${growth>=0?'#10b981':'#ef4444'}">${growth>=0?'+':''}${growth.toFixed(1)}%</div>
+          <div class="lot-kpi-sub ${growth>=0?'up':'down'}">${growth>=0?'▲':'▼'} เทียบช่วงก่อน</div>
+        </div>
+      </div>
+
+      ${bestRec? `<div class="lot-best">
+        <div class="lot-best-medal">★</div>
+        <div class="lot-best-info">
+          <div class="lot-best-lbl">งวดที่ขายดีที่สุดในช่วงนี้</div>
+          <div class="lot-best-val">${escapeHtmlN(bestRec.date)} — ${_fmtKip(bestRec.salesTotal)}</div>
+          <div class="lot-best-sub">รางวัล ${_fmtKip(bestRec.prizeTotal)} · สมาชิกใหม่ ${bestRec.newMembers||0} คน</div>
+        </div>
+      </div>` : ''}
+
+      <div class="sd-panel" style="margin-bottom:18px">
+        <div class="sales-chart-hd">
+          <div class="h-l">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+            ยอดขาย (Kip)
+          </div>
+          <div class="chart-tabs">
+            <button class="chart-tab ${lotteryChartMode==='daily'?'active':''}" onclick="setLotteryChart('daily')">รายวัน</button>
+            <button class="chart-tab ${lotteryChartMode==='weekly'?'active':''}" onclick="setLotteryChart('weekly')">รายสัปดาห์</button>
+            <button class="chart-tab ${lotteryChartMode==='monthly'?'active':''}" onclick="setLotteryChart('monthly')">รายเดือน</button>
+          </div>
+          <div class="chart-sum">รวม ${_fmtKipShort(sumSales)}</div>
+        </div>
+        ${salesChart}
+      </div>
+
+      <div class="sd-panels">
+        <div class="sd-panel">
+          <div class="sales-chart-hd">
+            <div class="h-l">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+              สมาชิกใหม่
+            </div>
+            <div class="chart-sum">${sumNew.toLocaleString()} คน</div>
+          </div>
+          ${memberChart}
+        </div>
+        <div class="sd-panel">
+          <div class="sales-chart-hd">
+            <div class="h-l">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              กำไรสุทธิ
+            </div>
+            <div class="chart-sum" style="color:${sumProfit>=0?'#10b981':'#ef4444'}">${_fmtKipShort(sumProfit)} Kip</div>
+          </div>
+          ${profitChart}
+        </div>
+      </div>
+
+      <h3 class="sales-section-title" style="font-size:16px;margin:22px 0 12px">รายการงวด</h3>
+      ${tableHtml}
+    </div>`;
+}
+
+function exportLotteryExcel(){
+  try {
+    const records = _filteredLottery().sort((a,b)=>b.date.localeCompare(a.date));
+    const header = ['Date','Sales (Kip)','Prize (Kip)','Profit (Kip)','New Members','Active Users','Notes'];
+    const rows = records.map(r => [
+      r.date,
+      +r.salesTotal||0,
+      +r.prizeTotal||0,
+      (+r.salesTotal||0)-(+r.prizeTotal||0),
+      +r.newMembers||0,
+      +r.activeUsers||0,
+      (r.notes||'').replace(/"/g,'""'),
+    ]);
+    const csv = '﻿' + [header, ...rows].map(r => r.map(v => typeof v==='string' ? `"${v}"` : v).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `tfl-lottery-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  } catch(err){
+    console.error(err); alert('Export Excel ไม่สำเร็จ');
+  }
+}
+
+function exportLotteryPDF(){
+  try {
+    const root = document.getElementById('lotteryReportRoot');
+    if(!root){ alert('ไม่พบข้อมูล'); return; }
+    const range = _getLotteryRange();
+    const w = window.open('', '_blank', 'width=1100,height=850');
+    if(!w){ alert('Browser block popup — โปรดอนุญาต popup'); return; }
+    const styles = Array.from(document.styleSheets).map(s => {
+      try { return Array.from(s.cssRules).map(r => r.cssText).join('\n'); } catch(_){ return ''; }
+    }).join('\n');
+    w.document.write(`<!DOCTYPE html><html><head><title>TFL+ Lottery Report ${range.label}</title>
+      <style>${styles}
+        body{padding:24px;background:#fff;color:#0f172a;font-family:'Anuphan','IBM Plex Sans Thai','Inter',sans-serif}
+        .topbar,.topbar-actions,.lot-period-pills,.sales-actions,.lot-target-edit,.btn-ghost,.btn-primary,.chart-tabs,.modal,.overlay{display:none!important}
+        h1{margin:0 0 8px;font-size:24px}
+        @media print {@page{size:A4;margin:14mm}}
+      </style></head><body>
+      <h1>รายงานยอดขาย หวยพัฒนาลาว TFL+</h1>
+      <div style="color:#64748b;margin-bottom:24px">ช่วง: ${range.label} · พิมพ์เมื่อ ${new Date().toLocaleString('th-TH')}</div>
+      ${root.innerHTML}
+      <script>setTimeout(()=>window.print(), 600);<\/script>
+    </body></html>`);
+    w.document.close();
+  } catch(err){
+    console.error(err); alert('Export PDF ไม่สำเร็จ');
+  }
+}
+
 // ============ CALENDAR VIEW ============
 function topbarCalendar(label, sub, actions=''){
   const logo = `<svg class="cl-logo" viewBox="0 0 820 460" xmlns="http://www.w3.org/2000/svg" aria-label="CALENDAR">
