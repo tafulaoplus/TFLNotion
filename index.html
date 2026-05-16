@@ -515,6 +515,132 @@
 .sales-actions .icon-btn[title="ลบ"]:hover{color:#dc2626}
 .empty-state{text-align:center;padding:60px 20px;color:var(--t2);font-size:14px;background:var(--bg-soft);border-radius:12px}
 
+/* ===== SALES MODAL & DASHBOARD (rewrite) ===== */
+.sales-modal{width:min(820px,calc(100vw - 32px));max-height:calc(100vh - 64px)}
+.sales-modal .modal-bd{max-height:calc(100vh - 220px);overflow-y:auto}
+.sales-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:680px){.sales-grid-2{grid-template-columns:1fr}}
+.sales-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:680px){.sales-grid-3{grid-template-columns:1fr 1fr}}
+.sales-field-lbl{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.sales-field-lbl .req{color:#dc2626}
+.sales-modal input[type="text"],.sales-modal input[type="number"],.sales-modal input[type="date"],.sales-modal input[type="url"],.sales-modal select,.sales-modal textarea{width:100%;padding:10px 12px;border:1px solid var(--border-2);border-radius:9px;font-size:14px;background:var(--bg);color:var(--t1);transition:border-color .15s ease,box-shadow .15s ease}
+.sales-modal input:focus,.sales-modal select:focus,.sales-modal textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+.sales-modal textarea{resize:vertical;min-height:72px;font-family:inherit}
+.sales-section-hdr{display:flex;align-items:center;gap:8px;margin:18px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.sales-section-hdr h4{margin:0;font-size:13px;font-weight:800;color:var(--t1);text-transform:uppercase;letter-spacing:.5px}
+.sales-section-hdr .hdr-sub{font-size:11.5px;color:var(--t2);font-weight:500}
+.assignee-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.assignee-card{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;background:var(--bg);transition:all .15s ease;user-select:none}
+.assignee-card:hover{border-color:var(--brand);background:var(--bg-hover)}
+.assignee-card.sel{border-color:var(--brand);background:rgba(124,58,237,.08);box-shadow:0 0 0 1px var(--brand) inset}
+[data-theme="dark"] .assignee-card.sel{background:rgba(167,139,250,.12)}
+.assignee-card .assignee-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;flex-shrink:0}
+.assignee-card .assignee-info{flex:1;min-width:0}
+.assignee-card .assignee-name{font-size:13px;font-weight:600;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.assignee-card .assignee-role{font-size:11px;color:var(--t2);text-transform:capitalize}
+.assignee-card .assignee-check{width:18px;height:18px;border-radius:5px;border:2px solid var(--border-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--bg);transition:all .15s ease}
+.assignee-card.sel .assignee-check{background:var(--brand);border-color:var(--brand);color:#fff}
+.assignee-card .assignee-check svg{width:12px;height:12px;display:none}
+.assignee-card.sel .assignee-check svg{display:block}
+.gps-row{display:flex;gap:6px}
+.gps-row input{flex:1}
+.gps-row .gps-btn{padding:0 14px;background:var(--bg-hover);border:1px solid var(--border-2);border-radius:9px;cursor:pointer;color:var(--t1);font-size:12.5px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:4px;white-space:nowrap;transition:all .15s ease}
+.gps-row .gps-btn:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
+
+/* Result modal — giveaway list */
+.giveaway-list{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.giveaway-row{display:flex;gap:8px;align-items:center}
+.giveaway-row input[type="text"]{flex:1}
+.giveaway-row input[type="number"]{width:120px}
+.giveaway-row .rm-btn{background:var(--bg-hover);border:1px solid var(--border-2);border-radius:8px;width:36px;height:36px;cursor:pointer;color:#dc2626;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;line-height:1}
+.giveaway-row .rm-btn:hover{background:#fee2e2;border-color:#dc2626}
+[data-theme="dark"] .giveaway-row .rm-btn:hover{background:rgba(248,113,113,.15)}
+.add-giveaway-btn{background:var(--bg-hover);border:1.5px dashed var(--border-2);border-radius:9px;padding:9px;width:100%;cursor:pointer;color:var(--t2);font-size:13px;font-weight:600;transition:all .15s ease}
+.add-giveaway-btn:hover{border-color:var(--brand);color:var(--brand);background:var(--bg)}
+.receipt-upload{display:flex;align-items:center;gap:10px;padding:12px;border:1.5px dashed var(--border-2);border-radius:10px;background:var(--bg-soft);cursor:pointer;transition:all .15s ease}
+.receipt-upload:hover{border-color:var(--brand);background:var(--bg-hover)}
+.receipt-upload input{display:none}
+.receipt-upload-icon{width:42px;height:42px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--t2);flex-shrink:0}
+.receipt-preview{margin-top:8px;display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px}
+.receipt-preview img{width:60px;height:60px;border-radius:8px;object-fit:cover}
+.receipt-preview a{flex:1;color:var(--brand);font-size:13px;text-decoration:none;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.receipt-preview .rm{background:none;border:none;color:#dc2626;cursor:pointer;font-size:18px;font-weight:700}
+
+/* Dashboard rewrite — clean cards, no emoji */
+.sd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px}
+.sd-card{padding:20px;background:var(--bg);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.sd-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--ac,#3b82f6)}
+.sd-card.events::before{background:#3b82f6}
+.sd-card.members::before{background:#10b981}
+.sd-card.giveaway::before{background:#f59e0b}
+.sd-card.cost::before{background:#ef4444}
+.sd-card .sd-lbl{font-size:11.5px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.sd-card .sd-val{font-size:28px;font-weight:800;color:var(--t1);line-height:1.1}
+.sd-card .sd-sub{font-size:12px;color:var(--t2);margin-top:6px}
+.sd-panels{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:24px}
+@media (max-width:980px){.sd-panels{grid-template-columns:1fr}}
+.sd-panel{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:var(--shadow)}
+.sd-panel-title{font-size:14px;font-weight:800;color:var(--t1);margin:0 0 16px;display:flex;align-items:center;justify-content:space-between}
+.sd-panel-title .sd-tag{font-size:11px;color:var(--t2);background:var(--bg-soft);padding:3px 10px;border-radius:10px;font-weight:600;text-transform:none;letter-spacing:0}
+.cost-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:13px}
+.cost-bar-lbl{min-width:100px;color:var(--t2);font-weight:600}
+.cost-bar-wrap{flex:1;height:10px;background:var(--bg-hover);border-radius:5px;overflow:hidden}
+.cost-bar{height:100%;border-radius:5px;transition:width .3s ease}
+.cost-bar.fuel{background:linear-gradient(90deg,#fbbf24,#f59e0b)}
+.cost-bar.food{background:linear-gradient(90deg,#a78bfa,#7c3aed)}
+.cost-bar.travel{background:linear-gradient(90deg,#60a5fa,#2563eb)}
+.cost-bar.rent{background:linear-gradient(90deg,#f87171,#dc2626)}
+.cost-bar-val{min-width:90px;text-align:right;font-weight:700;color:var(--t1);font-feature-settings:'tnum'}
+.member-rank{display:flex;flex-direction:column;gap:10px}
+.member-rank-row{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--bg-soft);border-radius:10px}
+.member-rank-pos{width:24px;height:24px;border-radius:50%;background:var(--bg);color:var(--t2);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.member-rank-pos.gold{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#fff}
+.member-rank-pos.silver{background:linear-gradient(135deg,#94a3b8,#64748b);color:#fff}
+.member-rank-pos.bronze{background:linear-gradient(135deg,#fb923c,#c2410c);color:#fff}
+.member-rank-info{flex:1;min-width:0}
+.member-rank-name{font-size:13px;font-weight:700;color:var(--t1)}
+.member-rank-stats{font-size:11.5px;color:var(--t2)}
+.member-rank-bar{width:120px;height:6px;background:var(--bg-hover);border-radius:3px;overflow:hidden;flex-shrink:0}
+.member-rank-bar .b{height:100%;background:linear-gradient(90deg,#3b82f6,#7c3aed);border-radius:3px}
+.problem-list{display:flex;flex-direction:column;gap:10px}
+.problem-row{padding:12px;background:var(--bg-soft);border-left:3px solid #f59e0b;border-radius:8px;font-size:13px;color:var(--t1);line-height:1.5}
+.problem-row .pr-meta{font-size:11px;color:var(--t2);margin-top:4px;display:flex;gap:8px}
+.event-list-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.event-row{display:flex;gap:16px;padding:16px 20px;border-bottom:1px solid var(--border);align-items:flex-start;cursor:pointer;transition:background .12s ease}
+.event-row:last-child{border-bottom:none}
+.event-row:hover{background:var(--bg-hover)}
+.event-date-box{width:60px;text-align:center;background:var(--bg-soft);border-radius:10px;padding:8px 0;flex-shrink:0;border:1px solid var(--border)}
+.event-date-box .d-day{font-size:20px;font-weight:800;color:var(--t1);line-height:1}
+.event-date-box .d-mo{font-size:10.5px;color:var(--t2);font-weight:600;text-transform:uppercase;margin-top:2px}
+.event-info{flex:1;min-width:0}
+.event-title{font-size:15px;font-weight:700;color:var(--t1);margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.event-meta{font-size:12.5px;color:var(--t2);display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+.event-meta > span{display:inline-flex;align-items:center;gap:4px}
+.event-assignees{display:flex;gap:-6px;margin-top:8px}
+.event-assignees .a-av{width:26px;height:26px;border-radius:50%;color:#fff;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);margin-left:-6px}
+.event-assignees .a-av:first-child{margin-left:0}
+.event-result-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;background:#dcfce7;color:#059669}
+.event-result-badge.pending{background:#fef3c7;color:#b45309}
+[data-theme="dark"] .event-result-badge{background:rgba(52,211,153,.18);color:#34d399}
+[data-theme="dark"] .event-result-badge.pending{background:rgba(251,191,36,.18);color:#fbbf24}
+.event-actions{display:flex;gap:6px;align-items:center;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.event-actions .btn-record{background:var(--brand);color:#fff;border:none;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12.5px;font-weight:700;white-space:nowrap;transition:all .15s ease}
+.event-actions .btn-record:hover{filter:brightness(.95);transform:translateY(-1px)}
+.event-actions .btn-record.recorded{background:var(--bg-soft);color:var(--t1);border:1px solid var(--border)}
+.event-actions .icon-btn{background:none;border:none;cursor:pointer;color:var(--t2);padding:6px;border-radius:6px;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center}
+.event-actions .icon-btn:hover{background:var(--bg-hover);color:var(--t1)}
+.event-actions .icon-btn.danger:hover{color:#dc2626}
+.cat-pill{display:inline-block;padding:2px 9px;border-radius:9px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.cat-pill.booth{background:#fef3c7;color:#b45309}
+.cat-pill.field{background:#dbeafe;color:#1d4ed8}
+.cat-pill.event{background:#f3e8ff;color:#7c3aed}
+.cat-pill.visit{background:#dcfce7;color:#059669}
+[data-theme="dark"] .cat-pill.booth{background:rgba(251,191,36,.18);color:#fbbf24}
+[data-theme="dark"] .cat-pill.field{background:rgba(96,165,250,.18);color:#60a5fa}
+[data-theme="dark"] .cat-pill.event{background:rgba(167,139,250,.18);color:#a78bfa}
+[data-theme="dark"] .cat-pill.visit{background:rgba(52,211,153,.18);color:#34d399}
+
 /* ===== SALES (ออกพื้นที่) brand logo ===== */
 :root {
   --sl-b1:    #fbbf24;
@@ -1623,19 +1749,19 @@ svg{display:block;flex-shrink:0}
 
 <!-- SALES EVENT MODAL -->
 <div class="overlay" id="salesModal">
-  <div class="modal" style="width:600px">
+  <div class="modal sales-modal">
     <div class="modal-hd">
       <div class="modal-title" id="salesModalTitle">เพิ่มกิจกรรมใหม่</div>
       <button class="modal-close" onclick="closeModal('salesModal')">×</button>
     </div>
     <div class="modal-bd">
-      <div class="form-row">
-        <div class="form-field">
-          <label>วันที่ *</label>
-          <input type="date" id="fSalesDate"/>
-        </div>
-        <div class="form-field">
-          <label>ประเภท</label>
+      <div>
+        <div class="sales-field-lbl">ชื่องาน <span class="req">*</span></div>
+        <input type="text" id="fSalesTitle" placeholder="เช่น ออกบูธงานวันแม่ ห้างเซ็นทรัล"/>
+      </div>
+      <div class="sales-grid-2" style="margin-top:14px">
+        <div>
+          <div class="sales-field-lbl">ประเภทงาน</div>
           <select id="fSalesCategory">
             <option value="field">ลงพื้นที่</option>
             <option value="booth">ออกบูธ</option>
@@ -1643,33 +1769,111 @@ svg{display:block;flex-shrink:0}
             <option value="visit">เยี่ยมลูกค้า</option>
           </select>
         </div>
+        <div></div>
       </div>
-      <div class="form-field" id="fSalesUserWrap" style="display:none">
-        <label>สมาชิก (Admin มอบหมายให้)</label>
-        <select id="fSalesUser"></select>
+      <div class="sales-grid-2" style="margin-top:14px">
+        <div>
+          <div class="sales-field-lbl">วันที่เริ่ม <span class="req">*</span></div>
+          <input type="date" id="fSalesStartDate"/>
+        </div>
+        <div>
+          <div class="sales-field-lbl">วันที่จบ</div>
+          <input type="date" id="fSalesEndDate"/>
+        </div>
       </div>
-      <div class="form-field">
-        <label>สถานที่ / ชื่ออีเว้นท์</label>
+      <div style="margin-top:14px">
+        <div class="sales-field-lbl">สถานที่</div>
         <input type="text" id="fSalesLocation" placeholder="เช่น ตลาดนัด ABC, ห้างฯ XYZ"/>
       </div>
-      <div class="form-row">
-        <div class="form-field">
-          <label>จำนวนลูกค้าที่หาได้</label>
-          <input type="number" id="fSalesCustomers" min="0" placeholder="0"/>
-        </div>
-        <div class="form-field">
-          <label>ยอดขาย (ถ้ามี)</label>
-          <input type="number" id="fSalesSales" min="0" step="0.01" placeholder="0"/>
+      <div style="margin-top:14px">
+        <div class="sales-field-lbl">พิกัด GPS (Google Maps Link)</div>
+        <div class="gps-row">
+          <input type="url" id="fSalesGps" placeholder="https://maps.google.com/..."/>
+          <a class="gps-btn" id="fSalesGpsOpen" target="_blank" rel="noopener" style="display:none">เปิดแผนที่</a>
         </div>
       </div>
-      <div class="form-field">
-        <label>หมายเหตุ</label>
-        <textarea id="fSalesNotes" rows="3" placeholder="บันทึกรายละเอียดเพิ่มเติม..."></textarea>
+      <div style="margin-top:14px">
+        <div class="sales-field-lbl">รายละเอียดงาน</div>
+        <textarea id="fSalesDesc" rows="3" placeholder="วัตถุประสงค์ของงาน, สิ่งที่ต้องเตรียม..."></textarea>
       </div>
+      <div class="sales-section-hdr" style="margin-top:18px">
+        <h4>ผู้รับผิดชอบ</h4>
+        <span class="hdr-sub">เลือกได้มากกว่า 1 คน</span>
+      </div>
+      <div class="assignee-grid" id="fSalesAssigneeGrid"></div>
     </div>
     <div class="modal-ft">
       <button class="btn-ghost" onclick="closeModal('salesModal')">ยกเลิก</button>
       <button class="btn-primary" onclick="saveSalesEvent()">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- SALES RESULT MODAL -->
+<div class="overlay" id="salesResultModal">
+  <div class="modal sales-modal">
+    <div class="modal-hd">
+      <div class="modal-title" id="salesResultModalTitle">บันทึกผลงาน</div>
+      <button class="modal-close" onclick="closeModal('salesResultModal')">×</button>
+    </div>
+    <div class="modal-bd">
+      <div class="sales-grid-2">
+        <div>
+          <div class="sales-field-lbl">จำนวนสมัครสมาชิก</div>
+          <input type="number" id="fResMembers" min="0" placeholder="0"/>
+        </div>
+        <div></div>
+      </div>
+      <div style="margin-top:14px">
+        <div class="sales-field-lbl">ปัญหาที่พบ</div>
+        <textarea id="fResProblems" rows="3" placeholder="บันทึกปัญหา/อุปสรรค ที่เจอระหว่างทำงาน..."></textarea>
+      </div>
+      <div class="sales-section-hdr" style="margin-top:18px">
+        <h4>ของแจก</h4>
+        <span class="hdr-sub">เพิ่มได้หลายรายการ</span>
+      </div>
+      <div class="giveaway-list" id="fResGiveawayList"></div>
+      <button type="button" class="add-giveaway-btn" onclick="addGiveawayRow()">+ เพิ่มของแจก</button>
+      <div class="sales-section-hdr" style="margin-top:18px">
+        <h4>ค่าใช้จ่าย</h4>
+        <span class="hdr-sub">บาท</span>
+      </div>
+      <div class="sales-grid-2">
+        <div>
+          <div class="sales-field-lbl">ค่าน้ำมัน</div>
+          <input type="number" id="fResCostFuel" min="0" step="0.01" placeholder="0"/>
+        </div>
+        <div>
+          <div class="sales-field-lbl">ค่าอาหาร</div>
+          <input type="number" id="fResCostFood" min="0" step="0.01" placeholder="0"/>
+        </div>
+      </div>
+      <div class="sales-grid-2" style="margin-top:14px">
+        <div>
+          <div class="sales-field-lbl">ค่าเดินทาง</div>
+          <input type="number" id="fResCostTravel" min="0" step="0.01" placeholder="0"/>
+        </div>
+        <div>
+          <div class="sales-field-lbl">ค่าเช่าสถานที่</div>
+          <input type="number" id="fResCostRent" min="0" step="0.01" placeholder="0"/>
+        </div>
+      </div>
+      <div style="margin-top:14px">
+        <div class="sales-field-lbl">ใบเสร็จ (ค่าเช่าสถานที่)</div>
+        <label class="receipt-upload" id="fResReceiptLabel">
+          <input type="file" id="fResReceiptFile" accept="image/*,application/pdf" onchange="handleReceiptUpload(event)"/>
+          <div class="receipt-upload-icon">${'<svg width=\'20\' height=\'20\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\'/><polyline points=\'17 8 12 3 7 8\'/><line x1=\'12\' y1=\'3\' x2=\'12\' y2=\'15\'/></svg>'}</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--t1)">อัพโหลดใบเสร็จ</div>
+            <div style="font-size:11.5px;color:var(--t2);margin-top:2px">รูปภาพหรือ PDF</div>
+          </div>
+        </label>
+        <div id="fResReceiptPreview"></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn-ghost" onclick="closeModal('salesResultModal')">ยกเลิก</button>
+      <button class="btn-primary" onclick="saveSalesResult()">บันทึก</button>
     </div>
   </div>
 </div>
@@ -9211,17 +9415,25 @@ function getCalendarEvents(){
   const isAdmin = currentUser && currentUser.role === 'admin';
   const events = [];
   salesEvents.forEach(s => {
-    if(!s.date) return;
-    if(!isAdmin && s.userId !== currentUser.id) return;
-    if(calendarFilterUser && s.userId !== calendarFilterUser) return;
-    const u = USERS.find(x=>x.id===s.userId);
-    const catLabel = {booth:'ออกบูธ', field:'ลงพื้นที่', event:'อีเว้นท์', visit:'เยี่ยมลูกค้า'}[s.category||'field'] || 'ลงพื้นที่';
-    events.push({
-      id:'sales-'+s.id, refId: s.id, type:'sales',
-      date: s.date,
-      title: `📍 ${s.location||catLabel}${u?` · ${u.name}`:''}`,
-      cls: 'sales', meta: s,
-    });
+    const sd = s.startDate || s.date;
+    if(!sd) return;
+    if(!isAdmin && !_eventBelongsToUser(s, currentUser.id)) return;
+    if(calendarFilterUser && !_eventBelongsToUser(s, calendarFilterUser)) return;
+    const ed = s.endDate || sd;
+    // Expand to all days in range
+    const startD = new Date(sd);
+    const endD = new Date(ed);
+    if(isNaN(startD.getTime())) return;
+    for(let d = new Date(startD); d <= endD; d.setDate(d.getDate()+1)){
+      const dateStr = d.toISOString().slice(0,10);
+      const catLabel = {booth:'ออกบูธ', field:'ลงพื้นที่', event:'อีเว้นท์', visit:'เยี่ยมลูกค้า'}[s.category||'field'] || 'ลงพื้นที่';
+      events.push({
+        id:'sales-'+s.id+'-'+dateStr, refId: s.id, type:'sales',
+        date: dateStr,
+        title: s.title || s.location || catLabel,
+        cls: 'sales', meta: s,
+      });
+    }
   });
   return events;
 }
@@ -9314,8 +9526,10 @@ function renderCalCell(dateStr, dayNum, otherMo, eventsByDate, today){
 }
 
 function onCalEvtClick(eid){
-  const [type, idStr] = eid.split('-');
-  const id = parseInt(idStr, 10);
+  // eid format: "sales-{id}-{dateStr}" or "task-{id}"
+  const parts = eid.split('-');
+  const type = parts[0];
+  const id = parseInt(parts[1], 10);
   if(type === 'task'){
     if(typeof openTaskDetail === 'function') openTaskDetail(id);
   } else if(type === 'sales'){
@@ -9331,7 +9545,7 @@ function setupCalendarDragDrop(){
   evts.forEach(e => {
     e.addEventListener('dragstart', ev => {
       ev.dataTransfer.effectAllowed = 'move';
-      ev.dataTransfer.setData('text/plain', e.dataset.id);
+      ev.dataTransfer.setData('text/plain', `${e.dataset.type}:${e.dataset.refid}`);
       e.classList.add('dragging');
     });
     e.addEventListener('dragend', ev => {
@@ -9351,17 +9565,29 @@ function setupCalendarDragDrop(){
       const eid = ev.dataTransfer.getData('text/plain');
       const newDate = c.dataset.date;
       if(!eid || !newDate) return;
-      const [type, idStr] = eid.split('-');
+      const [type, idStr] = eid.split(':');
       const id = parseInt(idStr, 10);
       if(type === 'sales'){
         const s = salesEvents.find(x => x.id === id);
-        if(s && s.date !== newDate){
-          const oldDate = s.date;
-          s.date = newDate;
-          s.updatedAt = Date.now();
-          try { logActivity('update', 'sales', id, `เปลี่ยนวัน ${oldDate} → ${newDate}`); } catch(_){}
-          saveAll();
-          rerender();
+        if(s){
+          const oldStart = s.startDate || s.date;
+          if(oldStart !== newDate){
+            // Preserve duration
+            const startD = new Date(oldStart);
+            const endD = s.endDate ? new Date(s.endDate) : startD;
+            const dur = Math.max(0, Math.round((endD - startD)/(86400000)));
+            s.startDate = newDate;
+            s.date = newDate;
+            if(s.endDate){
+              const newEnd = new Date(newDate);
+              newEnd.setDate(newEnd.getDate() + dur);
+              s.endDate = newEnd.toISOString().slice(0,10);
+            }
+            s.updatedAt = Date.now();
+            try { logActivity('update', 'sales', id, `ย้ายวัน ${oldStart} → ${newDate}`); } catch(_){}
+            saveAll();
+            rerender();
+          }
         }
       }
     });
@@ -9539,97 +9765,188 @@ function topbarSales(label, sub, actions=''){
 function setSalesMonth(v){ salesFilterMonth = v||''; rerender(); }
 function setSalesUser(v){ salesFilterUser = parseInt(v,10)||0; rerender(); }
 
+function _eventBelongsToUser(e, uid){
+  if(Array.isArray(e.assignees) && e.assignees.includes(uid)) return true;
+  return e.userId === uid;
+}
+function _eventTotalCost(e){
+  const r = e.result || {};
+  return (+r.costFuel||0) + (+r.costFood||0) + (+r.costTravel||0) + (+r.costRent||0);
+}
+function _fmtBaht(n){ return '฿' + (Math.round((+n||0)*100)/100).toLocaleString('en-US'); }
+function _fmtThaiDate(s){
+  if(!s) return '—';
+  try { const d=new Date(s); return d.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'}); } catch(_){return s;}
+}
+function _eventDateRange(e){
+  if(!e.startDate && !e.date) return '—';
+  const sd = e.startDate || e.date;
+  const ed = e.endDate;
+  if(!ed || ed === sd) return _fmtThaiDate(sd);
+  return _fmtThaiDate(sd) + ' — ' + _fmtThaiDate(ed);
+}
+
 function renderSales(el){
   const isAdmin = currentUser.role === 'admin';
   const month = salesFilterMonth || new Date().toISOString().slice(0,7);
-  let events = isAdmin ? salesEvents.slice() : salesEvents.filter(s => s.userId === currentUser.id);
-  if(isAdmin && salesFilterUser) events = events.filter(s => s.userId === salesFilterUser);
-  if(month) events = events.filter(s => (s.date||'').startsWith(month));
+  let events = isAdmin ? salesEvents.slice() : salesEvents.filter(s => _eventBelongsToUser(s, currentUser.id));
+  if(isAdmin && salesFilterUser) events = events.filter(s => _eventBelongsToUser(s, salesFilterUser));
+  if(month) events = events.filter(s => (s.startDate||s.date||'').startsWith(month));
 
   const totalEvents = events.length;
-  const sumCustomers = events.reduce((a,e)=>a+(+e.customers||0), 0);
-  const sumSales = events.reduce((a,e)=>a+(+e.sales||0), 0);
-  const avgCustomers = totalEvents ? Math.round(sumCustomers/totalEvents) : 0;
+  const recordedEvents = events.filter(e => e.result && e.result.submittedAt).length;
+  const pendingEvents = totalEvents - recordedEvents;
+  const sumMembers = events.reduce((a,e)=>a+(+e.result?.members||0), 0);
+  const sumGiveaways = events.reduce((a,e)=>a + ((e.result?.giveaways||[]).reduce((b,g)=>b+(+g.qty||0), 0)), 0);
+  const sumFuel = events.reduce((a,e)=>a+(+e.result?.costFuel||0), 0);
+  const sumFood = events.reduce((a,e)=>a+(+e.result?.costFood||0), 0);
+  const sumTravel = events.reduce((a,e)=>a+(+e.result?.costTravel||0), 0);
+  const sumRent = events.reduce((a,e)=>a+(+e.result?.costRent||0), 0);
+  const sumCost = sumFuel+sumFood+sumTravel+sumRent;
+  const avgCostPerMember = sumMembers ? sumCost / sumMembers : 0;
 
-  let perMemberHtml = '';
+  // Cost breakdown bars
+  const maxCost = Math.max(sumFuel, sumFood, sumTravel, sumRent, 1);
+  const costPanel = `<div class="sd-panel">
+    <h3 class="sd-panel-title">ค่าใช้จ่ายแยกประเภท <span class="sd-tag">${_fmtBaht(sumCost)}</span></h3>
+    <div class="cost-bar-row">
+      <div class="cost-bar-lbl">ค่าน้ำมัน</div>
+      <div class="cost-bar-wrap"><div class="cost-bar fuel" style="width:${sumFuel/maxCost*100}%"></div></div>
+      <div class="cost-bar-val">${_fmtBaht(sumFuel)}</div>
+    </div>
+    <div class="cost-bar-row">
+      <div class="cost-bar-lbl">ค่าอาหาร</div>
+      <div class="cost-bar-wrap"><div class="cost-bar food" style="width:${sumFood/maxCost*100}%"></div></div>
+      <div class="cost-bar-val">${_fmtBaht(sumFood)}</div>
+    </div>
+    <div class="cost-bar-row">
+      <div class="cost-bar-lbl">ค่าเดินทาง</div>
+      <div class="cost-bar-wrap"><div class="cost-bar travel" style="width:${sumTravel/maxCost*100}%"></div></div>
+      <div class="cost-bar-val">${_fmtBaht(sumTravel)}</div>
+    </div>
+    <div class="cost-bar-row">
+      <div class="cost-bar-lbl">ค่าเช่าสถานที่</div>
+      <div class="cost-bar-wrap"><div class="cost-bar rent" style="width:${sumRent/maxCost*100}%"></div></div>
+      <div class="cost-bar-val">${_fmtBaht(sumRent)}</div>
+    </div>
+  </div>`;
+
+  // Per-member ranking
+  let rankPanel = '';
   if(isAdmin){
     const groups = {};
     events.forEach(e => {
-      if(!groups[e.userId]) groups[e.userId] = {events:0, customers:0, sales:0};
-      groups[e.userId].events++;
-      groups[e.userId].customers += +e.customers||0;
-      groups[e.userId].sales += +e.sales||0;
+      const uids = Array.isArray(e.assignees) && e.assignees.length ? e.assignees : [e.userId];
+      uids.forEach(uid => {
+        if(!groups[uid]) groups[uid] = {events:0, members:0, cost:0};
+        groups[uid].events++;
+        groups[uid].members += +e.result?.members||0;
+        groups[uid].cost += _eventTotalCost(e);
+      });
     });
-    const ranked = USERS.map(u=>({u, g: groups[u.id]||{events:0,customers:0,sales:0}}))
-      .sort((a,b)=>b.g.customers - a.g.customers || b.g.events - a.g.events);
-    perMemberHtml = `
-      <div class="sales-section">
-        <h3 class="sales-section-title">${I.barChart} สรุปต่อสมาชิก</h3>
-        <div class="sales-member-grid">
-          ${ranked.map(({u,g}) => `<div class="sales-mcard">
-            <div class="sales-mhdr">
-              <div class="sales-mavatar" style="background:${u.color||'#3b82f6'}">${u.init||(u.name||'?')[0]}</div>
-              <div><div class="sales-mname">${escapeHtmlN(u.name)}</div><div class="sales-mrole">${escapeHtmlN(u.role)}</div></div>
-            </div>
-            <div class="sales-mstats">
-              <div><span>${g.events}</span><label>กิจกรรม</label></div>
-              <div><span>${g.customers}</span><label>ลูกค้า</label></div>
-              <div><span>${g.sales? '฿'+g.sales.toLocaleString() : '—'}</span><label>ยอดขาย</label></div>
-            </div>
-          </div>`).join('')}
-        </div>
-      </div>`;
+    const ranked = USERS.map(u=>({u, g: groups[u.id]||{events:0,members:0,cost:0}}))
+      .filter(({g})=>g.events>0)
+      .sort((a,b)=>b.g.members - a.g.members || b.g.events - a.g.events);
+    const maxMembers = Math.max(1, ...ranked.map(r=>r.g.members));
+    rankPanel = `<div class="sd-panel">
+      <h3 class="sd-panel-title">อันดับสมาชิก <span class="sd-tag">ตามจำนวนผู้สมัคร</span></h3>
+      ${ranked.length===0? '<div style="color:var(--t2);font-size:13px;padding:20px 0;text-align:center">ยังไม่มีข้อมูล</div>' :
+        `<div class="member-rank">
+          ${ranked.slice(0,8).map(({u,g}, i) => {
+            const posCls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+            return `<div class="member-rank-row">
+              <div class="member-rank-pos ${posCls}">${i+1}</div>
+              <div class="assignee-avatar" style="background:${u.color||'#3b82f6'};width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px">${u.init||(u.name||'?')[0]}</div>
+              <div class="member-rank-info">
+                <div class="member-rank-name">${escapeHtmlN(u.name)}</div>
+                <div class="member-rank-stats">${g.events} งาน · ${g.members} สมาชิกใหม่ · ${_fmtBaht(g.cost)}</div>
+              </div>
+              <div class="member-rank-bar"><div class="b" style="width:${g.members/maxMembers*100}%"></div></div>
+            </div>`;
+          }).join('')}
+        </div>`
+      }
+    </div>`;
   }
 
-  const sortedEvents = events.sort((a,b)=>(b.date||'').localeCompare(a.date||'') || b.id - a.id);
-  const rowsHtml = sortedEvents.length === 0 ?
-    `<div class="empty-state">ยังไม่มีบันทึกกิจกรรมในเดือนนี้ — กด "เพิ่มกิจกรรม" เพื่อเริ่มต้น</div>` :
-    `<div style="overflow-x:auto"><table class="sales-table">
-      <thead><tr>
-        <th>วันที่</th>
-        <th>สถานที่</th>
-        ${isAdmin?'<th>สมาชิก</th>':''}
-        <th>ประเภท</th>
-        <th class="num">ลูกค้า</th>
-        <th class="num">ยอดขาย</th>
-        <th>หมายเหตุ</th>
-        <th></th>
-      </tr></thead>
-      <tbody>
-        ${sortedEvents.map(e => {
-          const u = USERS.find(x=>x.id===e.userId);
-          const canEdit = isAdmin || e.userId === currentUser.id;
-          const cat = e.category || 'field';
-          const catLabel = {booth:'ออกบูธ', field:'ลงพื้นที่', event:'อีเว้นท์', visit:'เยี่ยมลูกค้า'}[cat] || 'ลงพื้นที่';
-          return `<tr>
-            <td>${escapeHtmlN(e.date||'')}</td>
-            <td>${escapeHtmlN(e.location||'—')}</td>
-            ${isAdmin? `<td>${u? `<span class="sales-userchip" style="background:${u.color||'#888'}">${u.init||(u.name||'?')[0]}</span> ${escapeHtmlN(u.name)}` : '—'}</td>`:''}
-            <td><span class="sales-cat ${cat}">${catLabel}</span></td>
-            <td class="num">${e.customers||0}</td>
-            <td class="num">${e.sales?'฿'+(+e.sales).toLocaleString():'—'}</td>
-            <td class="sales-notes" title="${escapeHtmlN(e.notes||'')}">${escapeHtmlN(e.notes||'')}</td>
-            <td class="sales-actions">
-              ${canEdit? `<button class="icon-btn" onclick="openSalesModal(${e.id})" title="แก้ไข">${I.edit}</button>
-              <button class="icon-btn" onclick="deleteSalesEvent(${e.id})" title="ลบ">${I.trash}</button>` : ''}
-            </td>
-          </tr>`;
-        }).join('')}
-      </tbody>
-    </table></div>`;
+  // Aggregated problems
+  const allProblems = events.filter(e => e.result?.problems).map(e => ({
+    text: e.result.problems,
+    eventTitle: e.title || e.location || 'กิจกรรม',
+    date: e.startDate || e.date,
+    id: e.id,
+  }));
+  const problemsPanel = `<div class="sd-panel" style="margin-bottom:24px">
+    <h3 class="sd-panel-title">ปัญหาที่พบ <span class="sd-tag">${allProblems.length} รายการ</span></h3>
+    ${allProblems.length===0? '<div style="color:var(--t2);font-size:13px;padding:20px 0;text-align:center">ยังไม่มีรายงานปัญหา</div>' :
+      `<div class="problem-list">
+        ${allProblems.slice(0,10).map(p => `<div class="problem-row">
+          ${escapeHtmlN(p.text)}
+          <div class="pr-meta">
+            <span>${escapeHtmlN(p.eventTitle)}</span><span>·</span><span>${_fmtThaiDate(p.date)}</span>
+          </div>
+        </div>`).join('')}
+      </div>`
+    }
+  </div>`;
 
-  const actions = `<button class="btn-primary" onclick="openSalesModal()">${I.plus} เพิ่มกิจกรรม</button>`;
-  const subText = isAdmin ? `${USERS.length} สมาชิก · ${totalEvents} กิจกรรมในช่วงนี้` : `${totalEvents} กิจกรรมในช่วงนี้`;
+  // Event list
+  const sortedEvents = events.sort((a,b)=>(b.startDate||b.date||'').localeCompare(a.startDate||a.date||'') || b.id - a.id);
+  const monthShort = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  const eventListHtml = sortedEvents.length === 0 ?
+    `<div class="empty-state">ยังไม่มีบันทึกกิจกรรมในเดือนนี้ — กด "เพิ่มกิจกรรม" เพื่อเริ่มต้น</div>` :
+    `<div class="event-list-card">
+      ${sortedEvents.map(e => {
+        const canEdit = isAdmin || _eventBelongsToUser(e, currentUser.id);
+        const cat = e.category || 'field';
+        const catLabel = {booth:'ออกบูธ', field:'ลงพื้นที่', event:'อีเว้นท์', visit:'เยี่ยมลูกค้า'}[cat] || 'ลงพื้นที่';
+        const sd = e.startDate || e.date || '';
+        const d = sd ? new Date(sd) : null;
+        const assignees = (Array.isArray(e.assignees) && e.assignees.length) ? e.assignees : (e.userId? [e.userId] : []);
+        const hasResult = !!(e.result && e.result.submittedAt);
+        return `<div class="event-row" onclick="openSalesModal(${e.id})">
+          <div class="event-date-box">
+            <div class="d-day">${d? d.getDate(): '?'}</div>
+            <div class="d-mo">${d? monthShort[d.getMonth()]: ''}</div>
+          </div>
+          <div class="event-info">
+            <div class="event-title">
+              ${escapeHtmlN(e.title || e.location || 'กิจกรรม')}
+              <span class="cat-pill ${cat}">${catLabel}</span>
+              <span class="event-result-badge ${hasResult?'':'pending'}">${hasResult?'บันทึกผลแล้ว':'ยังไม่บันทึกผล'}</span>
+            </div>
+            <div class="event-meta">
+              <span>${_eventDateRange(e)}</span>
+              ${e.location? `<span>· ${escapeHtmlN(e.location)}</span>`:''}
+              ${e.gpsLink? `<span>· <a href="${escapeHtmlN(e.gpsLink)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:var(--brand);text-decoration:none">ดูแผนที่</a></span>`:''}
+              ${hasResult && e.result.members? `<span>· ${e.result.members} สมาชิกใหม่</span>`:''}
+              ${hasResult && _eventTotalCost(e)? `<span>· ${_fmtBaht(_eventTotalCost(e))}</span>`:''}
+            </div>
+            <div class="event-assignees">
+              ${assignees.map(uid => {
+                const u = USERS.find(x=>x.id===uid);
+                if(!u) return '';
+                return `<div class="a-av" style="background:${u.color||'#888'}" title="${escapeHtmlN(u.name)}">${escapeHtmlN(u.init||(u.name||'?')[0])}</div>`;
+              }).join('')}
+            </div>
+          </div>
+          <div class="event-actions" onclick="event.stopPropagation()">
+            ${canEdit? `<button class="btn-record ${hasResult?'recorded':''}" onclick="openSalesResultModal(${e.id})">${hasResult?'แก้ผลงาน':'บันทึกผลงาน'}</button>`:''}
+            ${canEdit? `<button class="icon-btn" onclick="openSalesModal(${e.id})" title="แก้ไข">${I.edit}</button>
+            <button class="icon-btn danger" onclick="deleteSalesEvent(${e.id})" title="ลบ">${I.trash}</button>`:''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+  const actions = `
+    <button class="btn-ghost" onclick="exportSalesReport()">${I.download} Export</button>
+    <button class="btn-primary" onclick="openSalesModal()">${I.plus} เพิ่มกิจกรรม</button>`;
+  const subText = `${totalEvents} กิจกรรม · ${recordedEvents} บันทึกผลแล้ว · ${pendingEvents} ยังไม่บันทึก`;
 
   el.innerHTML = topbarSales('ออกพื้นที่ / อีเว้นท์', subText, actions) + `
-    <div class="page-content" style="max-width:1400px">
-      <div class="sales-kpi-row">
-        <div class="sales-kpi"><div class="k-icon">📅</div><div><div class="k-val">${totalEvents}</div><div class="k-lbl">กิจกรรม</div></div></div>
-        <div class="sales-kpi"><div class="k-icon">👥</div><div><div class="k-val">${sumCustomers.toLocaleString()}</div><div class="k-lbl">ลูกค้าทั้งหมด</div></div></div>
-        <div class="sales-kpi"><div class="k-icon">💰</div><div><div class="k-val">${sumSales? '฿'+sumSales.toLocaleString() : '—'}</div><div class="k-lbl">ยอดขายรวม</div></div></div>
-        <div class="sales-kpi"><div class="k-icon">📈</div><div><div class="k-val">${avgCustomers}</div><div class="k-lbl">ลูกค้าเฉลี่ย/ครั้ง</div></div></div>
-      </div>
-      <div class="sales-filter-row">
+    <div class="page-content" style="max-width:1400px" id="salesReportRoot">
+      <div class="sales-filter-row" style="margin-bottom:18px">
         <div class="sales-filter-field">
           <label>เดือน</label>
           <input type="month" value="${month}" onchange="setSalesMonth(this.value)"/>
@@ -9642,65 +9959,123 @@ function renderSales(el){
           </select>
         </div>` : ''}
       </div>
-      ${perMemberHtml}
-      <div class="sales-section">
-        <h3 class="sales-section-title">📋 รายการกิจกรรม</h3>
-        ${rowsHtml}
+
+      <div class="sd-grid">
+        <div class="sd-card events">
+          <div class="sd-lbl">กิจกรรมทั้งหมด</div>
+          <div class="sd-val">${totalEvents}</div>
+          <div class="sd-sub">บันทึกผลแล้ว ${recordedEvents} · ค้าง ${pendingEvents}</div>
+        </div>
+        <div class="sd-card members">
+          <div class="sd-lbl">สมาชิกใหม่</div>
+          <div class="sd-val">${sumMembers.toLocaleString()}</div>
+          <div class="sd-sub">เฉลี่ย ${totalEvents? Math.round(sumMembers/totalEvents) : 0} คน / กิจกรรม</div>
+        </div>
+        <div class="sd-card giveaway">
+          <div class="sd-lbl">ของแจกทั้งหมด</div>
+          <div class="sd-val">${sumGiveaways.toLocaleString()}</div>
+          <div class="sd-sub">ชิ้นที่แจกไปทั้งหมด</div>
+        </div>
+        <div class="sd-card cost">
+          <div class="sd-lbl">ค่าใช้จ่ายรวม</div>
+          <div class="sd-val">${_fmtBaht(sumCost)}</div>
+          <div class="sd-sub">เฉลี่ย ${_fmtBaht(avgCostPerMember)} / สมาชิก</div>
+        </div>
       </div>
+
+      <div class="sd-panels">
+        ${costPanel}
+        ${rankPanel || `<div class="sd-panel">
+          <h3 class="sd-panel-title">ของแจกในเดือนนี้</h3>
+          ${(()=>{ const g={}; events.forEach(e=>(e.result?.giveaways||[]).forEach(it=>{g[it.name]=(g[it.name]||0)+(+it.qty||0)})); const arr=Object.entries(g).sort((a,b)=>b[1]-a[1]); return arr.length? `<div class="problem-list">${arr.slice(0,8).map(([n,q])=>`<div class="problem-row" style="border-left-color:#f59e0b"><b>${escapeHtmlN(n)}</b> <span style="float:right;font-weight:700;color:var(--t1)">${q}</span></div>`).join('')}</div>`:'<div style="color:var(--t2);font-size:13px;padding:20px 0;text-align:center">ยังไม่มีข้อมูล</div>';})()}
+        </div>`}
+      </div>
+
+      ${problemsPanel}
+
+      <h3 class="sales-section-title" style="font-size:16px;margin-bottom:12px">รายการกิจกรรม</h3>
+      ${eventListHtml}
     </div>`;
+}
+
+let _salesAssigneeSel = new Set();
+let _resReceiptData = null;
+let resultEventId = null;
+
+function _renderAssigneeGrid(){
+  const grid = document.getElementById('fSalesAssigneeGrid');
+  if(!grid) return;
+  grid.innerHTML = USERS.map(u => {
+    const sel = _salesAssigneeSel.has(u.id);
+    return `<div class="assignee-card ${sel?'sel':''}" onclick="toggleAssignee(${u.id})">
+      <div class="assignee-avatar" style="background:${u.color||'#3b82f6'}">${escapeHtmlN(u.init||(u.name||'?')[0])}</div>
+      <div class="assignee-info">
+        <div class="assignee-name">${escapeHtmlN(u.name)}</div>
+        <div class="assignee-role">${escapeHtmlN(u.role||'member')}</div>
+      </div>
+      <div class="assignee-check">${I.check}</div>
+    </div>`;
+  }).join('');
+}
+function toggleAssignee(uid){
+  if(_salesAssigneeSel.has(uid)) _salesAssigneeSel.delete(uid);
+  else _salesAssigneeSel.add(uid);
+  _renderAssigneeGrid();
 }
 
 function openSalesModal(id){
   editSalesId = id || null;
-  let e = id ? salesEvents.find(s=>s.id===id) : null;
-  const isAdmin = currentUser.role === 'admin';
+  const e = id ? salesEvents.find(s=>s.id===id) : null;
   const today = new Date().toISOString().slice(0,10);
-  const userOpts = USERS.map(u=>`<option value="${u.id}" ${(e?.userId||currentUser.id)===u.id?'selected':''}>${escapeHtmlN(u.name)}</option>`).join('');
   document.getElementById('salesModalTitle').textContent = id? 'แก้ไขกิจกรรม' : 'เพิ่มกิจกรรมใหม่';
-  document.getElementById('fSalesDate').value = e?.date || today;
+  document.getElementById('fSalesTitle').value = e?.title || '';
   document.getElementById('fSalesCategory').value = e?.category || 'field';
+  document.getElementById('fSalesStartDate').value = e?.startDate || e?.date || today;
+  document.getElementById('fSalesEndDate').value = e?.endDate || '';
   document.getElementById('fSalesLocation').value = e?.location || '';
-  document.getElementById('fSalesCustomers').value = e?.customers || '';
-  document.getElementById('fSalesSales').value = e?.sales || '';
-  document.getElementById('fSalesNotes').value = e?.notes || '';
-  const userWrap = document.getElementById('fSalesUserWrap');
-  if(userWrap){
-    if(isAdmin){
-      userWrap.style.display = '';
-      document.getElementById('fSalesUser').innerHTML = userOpts;
-    } else {
-      userWrap.style.display = 'none';
-    }
-  }
+  document.getElementById('fSalesGps').value = e?.gpsLink || '';
+  document.getElementById('fSalesDesc').value = e?.description || e?.notes || '';
+  const gpsBtn = document.getElementById('fSalesGpsOpen');
+  const initialGps = e?.gpsLink || '';
+  if(initialGps){ gpsBtn.href = initialGps; gpsBtn.style.display = ''; } else { gpsBtn.style.display = 'none'; }
+  document.getElementById('fSalesGps').oninput = function(){
+    if(this.value.trim()){ gpsBtn.href = this.value.trim(); gpsBtn.style.display = ''; }
+    else gpsBtn.style.display = 'none';
+  };
+  _salesAssigneeSel = new Set(Array.isArray(e?.assignees) ? e.assignees : (e?.userId ? [e.userId] : (currentUser ? [currentUser.id] : [])));
+  _renderAssigneeGrid();
   document.getElementById('salesModal').classList.add('show');
 }
 
 function saveSalesEvent(){
   try {
-    const dateEl = document.getElementById('fSalesDate');
-    const date = dateEl.value;
-    if(!date){ alert('กรุณาเลือกวันที่'); dateEl.focus(); return; }
-    const isAdmin = currentUser.role === 'admin';
-    const userId = isAdmin ? (parseInt(document.getElementById('fSalesUser').value,10) || currentUser.id) : currentUser.id;
+    const title = document.getElementById('fSalesTitle').value.trim();
+    if(!title){ alert('กรุณาระบุชื่องาน'); document.getElementById('fSalesTitle').focus(); return; }
+    const startDate = document.getElementById('fSalesStartDate').value;
+    if(!startDate){ alert('กรุณาเลือกวันที่เริ่ม'); return; }
+    const endDate = document.getElementById('fSalesEndDate').value || startDate;
+    const assignees = Array.from(_salesAssigneeSel);
+    if(assignees.length === 0){ alert('กรุณาเลือกผู้รับผิดชอบอย่างน้อย 1 คน'); return; }
     const data = {
-      userId,
-      date,
+      title,
       category: document.getElementById('fSalesCategory').value || 'field',
+      startDate, endDate, date: startDate,
       location: document.getElementById('fSalesLocation').value.trim(),
-      customers: parseInt(document.getElementById('fSalesCustomers').value,10) || 0,
-      sales: parseFloat(document.getElementById('fSalesSales').value) || 0,
-      notes: document.getElementById('fSalesNotes').value.trim(),
+      gpsLink: document.getElementById('fSalesGps').value.trim(),
+      description: document.getElementById('fSalesDesc').value.trim(),
+      assignees,
+      userId: assignees[0],
     };
     if(editSalesId){
       const i = salesEvents.findIndex(s => s.id === editSalesId);
       if(i >= 0){
         salesEvents[i] = {...salesEvents[i], ...data, updatedAt: Date.now()};
-        try { logActivity('update', 'sales', editSalesId, `${data.location||''} (${data.date})`); } catch(_){}
+        try { logActivity('update', 'sales', editSalesId, `${title} (${startDate})`); } catch(_){}
       }
     } else {
-      const newEvent = {id: nextSalesId++, ...data, createdAt: Date.now()};
+      const newEvent = {id: nextSalesId++, ...data, createdAt: Date.now(), result: null};
       salesEvents.push(newEvent);
-      try { logActivity('create', 'sales', newEvent.id, `${data.location||''} (${data.date})`); } catch(_){}
+      try { logActivity('create', 'sales', newEvent.id, `${title} (${startDate})`); } catch(_){}
     }
     saveAll();
     closeModal('salesModal');
@@ -9715,9 +10090,132 @@ function deleteSalesEvent(id){
   if(!confirm('ลบกิจกรรมนี้?')) return;
   const e = salesEvents.find(s => s.id === id);
   salesEvents = salesEvents.filter(s => s.id !== id);
-  try { if(e) logActivity('delete', 'sales', id, `${e.location||''} (${e.date||''})`); } catch(_){}
+  try { if(e) logActivity('delete', 'sales', id, `${e.title||e.location||''} (${e.date||''})`); } catch(_){}
   saveAll();
   rerender();
+}
+
+function exportSalesReport(){
+  try {
+    const root = document.getElementById('salesReportRoot');
+    if(!root){ alert('ไม่พบข้อมูลรายงาน'); return; }
+    const month = salesFilterMonth || new Date().toISOString().slice(0,7);
+    const w = window.open('', '_blank', 'width=1000,height=800');
+    if(!w){ alert('Browser block popup — โปรดอนุญาต popup ก่อน export'); return; }
+    const styles = Array.from(document.styleSheets).map(s => {
+      try { return Array.from(s.cssRules).map(r => r.cssText).join('\n'); } catch(_){ return ''; }
+    }).join('\n');
+    w.document.write(`<!DOCTYPE html><html><head><title>Field Work Report ${month}</title>
+      <style>${styles}
+        body{padding:24px;background:#fff;color:#0f172a}
+        .topbar,.topbar-actions,.event-actions,.modal,.overlay,.sales-filter-row{display:none!important}
+        @media print {@page{size:A4;margin:14mm}}
+      </style></head><body>
+      <h1 style="margin:0 0 8px">รายงานออกพื้นที่ / อีเว้นท์</h1>
+      <div style="color:#64748b;margin-bottom:24px">เดือน ${month} · พิมพ์เมื่อ ${new Date().toLocaleString('th-TH')}</div>
+      ${root.innerHTML.replace(/<button[^>]*>.*?<\/button>/g, '')}
+      <script>setTimeout(()=>window.print(), 500);<\/script>
+    </body></html>`);
+    w.document.close();
+  } catch(err){
+    console.error('exportSalesReport error', err);
+    alert('Export ไม่สำเร็จ: ' + (err.message||err));
+  }
+}
+
+// ===== RESULT MODAL =====
+function openSalesResultModal(eventId){
+  resultEventId = eventId;
+  const ev = salesEvents.find(s => s.id === eventId);
+  if(!ev){ alert('ไม่พบกิจกรรม'); return; }
+  const r = ev.result || {};
+  document.getElementById('salesResultModalTitle').textContent = `บันทึกผลงาน: ${ev.title||ev.location||'กิจกรรม'}`;
+  document.getElementById('fResMembers').value = r.members || '';
+  document.getElementById('fResProblems').value = r.problems || '';
+  document.getElementById('fResCostFuel').value = r.costFuel || '';
+  document.getElementById('fResCostFood').value = r.costFood || '';
+  document.getElementById('fResCostTravel').value = r.costTravel || '';
+  document.getElementById('fResCostRent').value = r.costRent || '';
+  // Giveaways
+  const list = document.getElementById('fResGiveawayList');
+  list.innerHTML = '';
+  const items = Array.isArray(r.giveaways) && r.giveaways.length ? r.giveaways : [{name:'',qty:''}];
+  items.forEach(it => addGiveawayRow(it.name||'', it.qty||''));
+  // Receipt
+  _resReceiptData = r.receiptData || null;
+  _renderReceiptPreview(r.receiptName);
+  document.getElementById('salesResultModal').classList.add('show');
+}
+
+function addGiveawayRow(name='', qty=''){
+  const list = document.getElementById('fResGiveawayList');
+  if(!list) return;
+  const row = document.createElement('div');
+  row.className = 'giveaway-row';
+  row.innerHTML = `
+    <input type="text" placeholder="ชื่อของแจก" value="${escapeHtmlN(name)}"/>
+    <input type="number" min="0" placeholder="จำนวน" value="${escapeHtmlN(qty)}"/>
+    <button type="button" class="rm-btn" onclick="this.parentNode.remove()" title="ลบ">×</button>`;
+  list.appendChild(row);
+}
+
+function handleReceiptUpload(ev){
+  const file = ev.target.files && ev.target.files[0];
+  if(!file) return;
+  if(file.size > 5*1024*1024){ alert('ไฟล์ใหญ่เกิน 5 MB'); return; }
+  const r = new FileReader();
+  r.onload = e => {
+    _resReceiptData = { name: file.name, type: file.type, data: e.target.result };
+    _renderReceiptPreview(file.name);
+  };
+  r.readAsDataURL(file);
+}
+
+function _renderReceiptPreview(name){
+  const pv = document.getElementById('fResReceiptPreview');
+  if(!pv) return;
+  if(!_resReceiptData){ pv.innerHTML = ''; return; }
+  const isImg = (_resReceiptData.type||'').startsWith('image/');
+  pv.innerHTML = `<div class="receipt-preview">
+    ${isImg? `<img src="${_resReceiptData.data}" alt=""/>` : `<div class="receipt-upload-icon" style="width:60px;height:60px">📄</div>`}
+    <a href="${_resReceiptData.data}" download="${escapeHtmlN(_resReceiptData.name||'receipt')}">${escapeHtmlN(_resReceiptData.name||name||'ใบเสร็จ')}</a>
+    <button class="rm" onclick="_resReceiptData=null; _renderReceiptPreview()">×</button>
+  </div>`;
+}
+
+function saveSalesResult(){
+  try {
+    if(!resultEventId) return;
+    const i = salesEvents.findIndex(s => s.id === resultEventId);
+    if(i < 0) return;
+    const giveaways = Array.from(document.querySelectorAll('#fResGiveawayList .giveaway-row')).map(row => {
+      const inps = row.querySelectorAll('input');
+      return { name: inps[0].value.trim(), qty: parseInt(inps[1].value,10) || 0 };
+    }).filter(g => g.name);
+    const result = {
+      members: parseInt(document.getElementById('fResMembers').value,10) || 0,
+      problems: document.getElementById('fResProblems').value.trim(),
+      giveaways,
+      costFuel: parseFloat(document.getElementById('fResCostFuel').value) || 0,
+      costFood: parseFloat(document.getElementById('fResCostFood').value) || 0,
+      costTravel: parseFloat(document.getElementById('fResCostTravel').value) || 0,
+      costRent: parseFloat(document.getElementById('fResCostRent').value) || 0,
+      receiptData: _resReceiptData ? _resReceiptData.data : null,
+      receiptName: _resReceiptData ? _resReceiptData.name : null,
+      receiptType: _resReceiptData ? _resReceiptData.type : null,
+      submittedAt: Date.now(),
+      submittedBy: currentUser ? currentUser.id : null,
+    };
+    salesEvents[i].result = result;
+    salesEvents[i].updatedAt = Date.now();
+    try { logActivity('update', 'sales', resultEventId, `บันทึกผลงาน: ${salesEvents[i].title||''}`); } catch(_){}
+    saveAll();
+    closeModal('salesResultModal');
+    rerender();
+  } catch(err) {
+    console.error('saveSalesResult error:', err);
+    alert('บันทึกไม่สำเร็จ: ' + (err.message || err));
+  }
 }
 
 function renderMyTasks(el){
