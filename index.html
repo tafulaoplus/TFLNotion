@@ -1537,6 +1537,7 @@ svg{display:block;flex-shrink:0}
   .chart-wrap svg{min-width:auto !important}
   .sd-panels,.att-rank-grid,.att-hero{grid-template-columns:1fr !important}
   .sd-grid,.att-kpi-row,.lot-kpi-grid,.sales-kpi-row{grid-template-columns:repeat(2,1fr)}
+  .lot-target-grid{grid-template-columns:1fr !important}
 }
 @media (max-width:480px){
   .topbar{padding:10px 12px}
@@ -2624,8 +2625,8 @@ svg{display:block;flex-shrink:0}
       <div class="upload-info-bar" style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#059669"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
         <div>
-          <div style="font-weight:700;margin-bottom:3px">รูปแบบหัวตาราง (19 คอลัมน์)</div>
-          <div style="font-size:11.5px;line-height:1.5">ลำดับ / วันที่ / งวดที่ / เลขที่ออก / เลข 1-6 ตัว (ขายได้) / รวมการซื้อ / เลข 1-6 ตัว (ถูกรางวัล) / รวมถูกรางวัล / ส่วนต่าง</div>
+          <div style="font-weight:700;margin-bottom:3px">รูปแบบหัวตาราง (21 คอลัมน์)</div>
+          <div style="font-size:11.5px;line-height:1.5">ลำดับ / วันที่ / งวดที่ / เลขที่ออก / เลข 1-6 ตัว (ขายได้) / รวมการซื้อ / เลข 1-6 ตัว (ถูกรางวัล) / รวมถูกรางวัล / ส่วนต่าง / <b>ผู้ใช้ใหม่</b> / <b>ผู้ใช้ในงวดนี้</b></div>
         </div>
       </div>
       <div class="lot-fld">
@@ -2712,18 +2713,29 @@ svg{display:block;flex-shrink:0}
 
 <!-- LOTTERY TARGET MODAL -->
 <div class="overlay" id="lotteryTargetModal">
-  <div class="modal lot-modal" style="width:min(440px,calc(100vw - 32px))">
+  <div class="modal lot-modal" style="width:min(480px,calc(100vw - 32px))">
     <div class="modal-hd">
       <div class="modal-title">
         <div class="lot-modal-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
-        ตั้งเป้ายอดขายเดือน
+        ตั้งเป้ายอดขาย
       </div>
       <button class="modal-close" onclick="closeModal('lotteryTargetModal')">×</button>
     </div>
     <div class="modal-bd">
       <div class="lot-fld">
-        <label class="lot-fld-lbl">เป้ายอดขายต่อเดือน (Kip)</label>
+        <label class="lot-fld-lbl">เป้าต่องวด (Kip)</label>
+        <input type="number" id="fLotTargetPeriod" min="0" step="1000" placeholder="5000000"/>
+        <div style="font-size:11px;color:var(--t2);margin-top:4px">ใช้กับงวดล่าสุดที่บันทึก</div>
+      </div>
+      <div class="lot-fld">
+        <label class="lot-fld-lbl">เป้าต่อเดือน (Kip)</label>
         <input type="number" id="fLotTarget" min="0" step="1000" placeholder="50000000"/>
+        <div style="font-size:11px;color:var(--t2);margin-top:4px">รวมยอดขายทั้งเดือนปัจจุบัน</div>
+      </div>
+      <div class="lot-fld">
+        <label class="lot-fld-lbl">เป้าต่อปี (Kip)</label>
+        <input type="number" id="fLotTargetYear" min="0" step="1000" placeholder="600000000"/>
+        <div style="font-size:11px;color:var(--t2);margin-top:4px">รวมยอดขายทั้งปีปัจจุบัน</div>
       </div>
     </div>
     <div class="modal-ft">
@@ -3514,7 +3526,7 @@ let nextLotteryId = 1;
 let editLotteryId = null;
 let lotteryFilter = '30d';
 let lotteryChartMode = 'daily';
-let lotterySettings = { monthlyTarget: 50000000 };
+let lotterySettings = { monthlyTarget: 50000000, periodTarget: 5000000, yearlyTarget: 600000000 };
 let attendanceRecords = [];
 let nextAttendanceId = 1;
 let leaveRequests = [];
@@ -10846,6 +10858,25 @@ function topbarLottery(label, sub, actions=''){
   </div>`;
 }
 
+function _renderLotTargetCard(label, sub, value, target, pct, gradient, shadowColor){
+  const remaining = Math.max(0, target - value);
+  const passed = value >= target;
+  return `<div class="lot-target-card" style="background:${gradient};box-shadow:0 10px 30px ${shadowColor};margin-bottom:0;padding:16px">
+    <div style="flex:1;min-width:0">
+      <div class="lot-target-lbl">${label}</div>
+      <div style="font-size:11px;opacity:.85;margin-bottom:6px">${sub}</div>
+      <div class="lot-target-val" style="font-size:18px">
+        ${_fmtKipShort(value)} <span class="sep">/</span> <span class="of">${_fmtKipShort(target)}</span>
+      </div>
+      <div class="lot-target-bar" style="margin-top:8px"><div class="b" style="width:${pct}%"></div></div>
+      <div class="lot-target-meta" style="font-size:11px">
+        <span><b>${pct.toFixed(1)}%</b></span>
+        ${passed? '<span>· ✓ ทะลุเป้า</span>' : `<span>· ขาด ${_fmtKipShort(remaining)}</span>`}
+      </div>
+    </div>
+  </div>`;
+}
+
 function _fmtKip(n){ return (Math.round(+n||0)).toLocaleString('en-US') + ' Kip'; }
 function _fmtKipShort(n){
   n = +n||0;
@@ -10941,12 +10972,15 @@ function deleteLotterySale(id){
 }
 
 function openLotteryTargetModal(){
+  document.getElementById('fLotTargetPeriod').value = lotterySettings.periodTarget || 5000000;
   document.getElementById('fLotTarget').value = lotterySettings.monthlyTarget || 50000000;
+  document.getElementById('fLotTargetYear').value = lotterySettings.yearlyTarget || 600000000;
   document.getElementById('lotteryTargetModal').classList.add('show');
 }
 function saveLotteryTarget(){
-  const v = parseFloat(document.getElementById('fLotTarget').value) || 0;
-  lotterySettings.monthlyTarget = v;
+  lotterySettings.periodTarget = parseFloat(document.getElementById('fLotTargetPeriod').value) || 0;
+  lotterySettings.monthlyTarget = parseFloat(document.getElementById('fLotTarget').value) || 0;
+  lotterySettings.yearlyTarget = parseFloat(document.getElementById('fLotTargetYear').value) || 0;
   saveAll();
   closeModal('lotteryTargetModal');
   rerender();
@@ -11064,12 +11098,23 @@ function renderLottery(el){
   // Best period
   const bestRec = records.slice().sort((a,b)=>(+b.salesTotal||0)-(+a.salesTotal||0))[0];
 
-  // Target progress (this month vs target)
+  // Target progress (3 levels)
   const monthStart = today.slice(0,8)+'01';
+  const yearStart = today.slice(0,4)+'-01-01';
   const monthSales = lotterySales.filter(l => l.date >= monthStart && l.date <= today).reduce((a,r)=>a+(+r.salesTotal||0), 0);
-  const target = +lotterySettings.monthlyTarget || 50000000;
-  const pct = target > 0 ? Math.min(100, monthSales/target*100) : 0;
-  const remaining = Math.max(0, target - monthSales);
+  const yearSales = lotterySales.filter(l => l.date >= yearStart && l.date <= today).reduce((a,r)=>a+(+r.salesTotal||0), 0);
+  const periodTarget = +lotterySettings.periodTarget || 5000000;
+  const monthlyTarget = +lotterySettings.monthlyTarget || 50000000;
+  const yearlyTarget = +lotterySettings.yearlyTarget || 600000000;
+  const latestPeriod = lotterySales.slice().sort((a,b)=>b.date.localeCompare(a.date))[0];
+  const periodSales = latestPeriod ? (+latestPeriod.salesTotal||0) : 0;
+  const periodPct = periodTarget > 0 ? Math.min(100, periodSales/periodTarget*100) : 0;
+  const monthPct = monthlyTarget > 0 ? Math.min(100, monthSales/monthlyTarget*100) : 0;
+  const yearPct = yearlyTarget > 0 ? Math.min(100, yearSales/yearlyTarget*100) : 0;
+  // Keep legacy vars
+  const target = monthlyTarget;
+  const pct = monthPct;
+  const remaining = Math.max(0, monthlyTarget - monthSales);
 
   // Chart data
   const grouped = _groupLottery(records, lotteryChartMode);
@@ -11131,23 +11176,13 @@ function renderLottery(el){
         </div>
       </div>
 
-      <div class="lot-target-card">
-        <div style="width:54px;height:54px;border-radius:14px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;backdrop-filter:blur(8px)">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-        </div>
-        <div class="lot-target-info">
-          <div class="lot-target-lbl">เป้ายอดขายเดือนนี้</div>
-          <div class="lot-target-val">
-            ${_fmtKipShort(monthSales)} <span class="sep">/</span> <span class="of">${_fmtKipShort(target)} Kip</span>
-            <span style="font-size:14px;font-weight:600;opacity:.9;margin-left:4px">(${pct.toFixed(1)}%)</span>
-          </div>
-          <div class="lot-target-bar"><div class="b" style="width:${pct}%"></div></div>
-          <div class="lot-target-meta">
-            <span>ทำได้ ${monthSales.toLocaleString()} Kip</span>
-            ${remaining>0? `<span>· ขาดอีก ${remaining.toLocaleString()} Kip</span>` : '<span>· ✓ ทะลุเป้าแล้ว</span>'}
-          </div>
-        </div>
-        <button class="lot-target-edit" onclick="openLotteryTargetModal()">แก้ไขเป้า</button>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px" class="lot-target-grid">
+        ${_renderLotTargetCard('งวดล่าสุด', latestPeriod ? `งวด ${latestPeriod.periodNo||latestPeriod.date}` : 'ยังไม่มีงวด', periodSales, periodTarget, periodPct, 'linear-gradient(135deg,#3b82f6 0%,#1d4ed8 100%)', 'rgba(59,130,246,.3)')}
+        ${_renderLotTargetCard('เดือนนี้', today.slice(0,7), monthSales, monthlyTarget, monthPct, 'linear-gradient(135deg,#10b981 0%,#059669 100%)', 'rgba(16,185,129,.3)')}
+        ${_renderLotTargetCard('ปีนี้', today.slice(0,4), yearSales, yearlyTarget, yearPct, 'linear-gradient(135deg,#a78bfa 0%,#7c3aed 100%)', 'rgba(124,58,237,.3)')}
+      </div>
+      <div style="text-align:right;margin-top:-12px;margin-bottom:18px">
+        <button class="btn-ghost" onclick="openLotteryTargetModal()" style="font-size:12px">⚙ ตั้งเป้าทั้ง 3 แบบ</button>
       </div>
 
       <div class="lot-kpi-grid">
@@ -11361,6 +11396,8 @@ async function handleLotteryImportFile(ev){
         prize6: num(r[16]),
         prizeTotal: num(r[17]),
         difference: num(r[18]),
+        newMembers: num(r[19]),
+        activeUsers: num(r[20]),
       };
     }).filter(Boolean);
     _renderLotImpPreview();
@@ -11377,9 +11414,11 @@ function _renderLotImpPreview(){
   const sumProfit = sumSales - sumPrize;
   tbl.innerHTML = `<thead><tr>
     <th>วันที่</th><th>งวด</th><th>เลขออก</th>
-    <th class="num">ขายได้รวม</th>
+    <th class="num">ขายได้</th>
     <th class="num">ถูกรางวัล</th>
     <th class="num">ส่วนต่าง</th>
+    <th class="num">สมาชิกใหม่</th>
+    <th class="num">Active</th>
   </tr></thead>
   <tbody>${_lotImpParsedRows.slice(0,50).map(r => {
     const profit = r.salesTotal - r.prizeTotal;
@@ -11390,9 +11429,11 @@ function _renderLotImpPreview(){
       <td class="num">${r.salesTotal.toLocaleString()}</td>
       <td class="num">${r.prizeTotal.toLocaleString()}</td>
       <td class="num" style="color:${profit>=0?'#059669':'#dc2626'};font-weight:800">${profit.toLocaleString()}</td>
+      <td class="num">${(r.newMembers||0).toLocaleString()}</td>
+      <td class="num">${(r.activeUsers||0).toLocaleString()}</td>
     </tr>`;
   }).join('')}
-  ${_lotImpParsedRows.length > 50 ? `<tr><td colspan="6" style="text-align:center;color:var(--t2);font-style:italic">... และอีก ${_lotImpParsedRows.length - 50} แถว</td></tr>` : ''}
+  ${_lotImpParsedRows.length > 50 ? `<tr><td colspan="8" style="text-align:center;color:var(--t2);font-style:italic">... และอีก ${_lotImpParsedRows.length - 50} แถว</td></tr>` : ''}
   </tbody>`;
   document.getElementById('lotImpPreviewCount').textContent = `· พบ ${_lotImpParsedRows.length} งวด`;
   document.getElementById('lotImpSummary').innerHTML = `รวมยอดขาย <b style="color:#059669">${_fmtKipShort(sumSales)} Kip</b> · รวมถูกรางวัล <b style="color:#f59e0b">${_fmtKipShort(sumPrize)} Kip</b> · กำไรสุทธิ <b style="color:${sumProfit>=0?'#059669':'#dc2626'}">${_fmtKipShort(sumProfit)} Kip</b>`;
@@ -11422,7 +11463,9 @@ function confirmLotteryImport(){
       prizeTotal: r.prizeTotal,
       salesBreakdown: { d1:r.sales1, d2:r.sales2, d3:r.sales3, d4:r.sales4, d5:r.sales5, d6:r.sales6 },
       prizeBreakdown: { d1:r.prize1, d2:r.prize2, d3:r.prize3, d4:r.prize4, d5:r.prize5, d6:r.prize6 },
-      newMembers: 0, activeUsers: 0, notes: '',
+      newMembers: r.newMembers || 0,
+      activeUsers: r.activeUsers || 0,
+      notes: '',
       _source: 'import',
     };
     const idx = lotterySales.findIndex(l => l.date === r.date);
