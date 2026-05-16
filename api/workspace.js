@@ -5,12 +5,25 @@
 // For normalized queries, see /api/users, /api/tasks (future).
 import { sql, applyCors, sendError, DEFAULT_WORKSPACE } from './_db.js';
 
+// Self-heal: ensure table exists on every call (cheap idempotent op)
+async function ensureTable() {
+  await sql`
+    CREATE TABLE IF NOT EXISTS workspace_snapshot (
+      workspace_id TEXT PRIMARY KEY,
+      data JSONB NOT NULL DEFAULT '{}'::jsonb,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_by TEXT
+    )
+  `;
+}
+
 export default async function handler(req, res) {
   applyCors(res);
   if (req.method === 'OPTIONS') return res.status(200).end();
   const wsId = (req.query && req.query.workspace) || DEFAULT_WORKSPACE;
 
   try {
+    await ensureTable();
     if (req.method === 'GET') {
       // First check size cheaply
       const meta = await sql`

@@ -14,6 +14,15 @@ export default async function handler(req, res) {
   }
   const wsId = (req.query && req.query.workspace) || DEFAULT_WORKSPACE;
   try {
+    // Ensure table exists first (idempotent)
+    await sql`
+      CREATE TABLE IF NOT EXISTS workspace_snapshot (
+        workspace_id TEXT PRIMARY KEY,
+        data JSONB NOT NULL DEFAULT '{}'::jsonb,
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_by TEXT
+      )
+    `;
     const r = await sql`DELETE FROM workspace_snapshot WHERE workspace_id = ${wsId} RETURNING workspace_id`;
     return res.json({ ok: true, deleted: r.length, workspaceId: wsId });
   } catch (err) {
