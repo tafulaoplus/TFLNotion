@@ -9209,46 +9209,20 @@ function calSetType(v){ calendarFilterType = v||''; rerender(); }
 
 function getCalendarEvents(){
   const isAdmin = currentUser && currentUser.role === 'admin';
-  const today = new Date().toISOString().slice(0,10);
   const events = [];
-  // Tasks (with due date)
-  tasks.forEach(t => {
-    if(!t.due) return;
-    if(!isAdmin && !(Array.isArray(t.assignees) && t.assignees.includes(currentUser.id))) return;
-    if(calendarFilterUser && !(Array.isArray(t.assignees) && t.assignees.includes(calendarFilterUser))) return;
-    const overdue = t.due < today && t.status !== 'done';
-    events.push({
-      id: 'task-'+t.id, refId: t.id, type:'task',
-      date: t.due, title: (t.emoji||'📌')+' '+(t.name||''),
-      status: t.status,
-      cls: 'task ' + (t.status==='done'?'done':(overdue?'overdue':'')),
-      meta: t,
-    });
-  });
-  // Sales events
   salesEvents.forEach(s => {
     if(!s.date) return;
     if(!isAdmin && s.userId !== currentUser.id) return;
     if(calendarFilterUser && s.userId !== calendarFilterUser) return;
     const u = USERS.find(x=>x.id===s.userId);
+    const catLabel = {booth:'ออกบูธ', field:'ลงพื้นที่', event:'อีเว้นท์', visit:'เยี่ยมลูกค้า'}[s.category||'field'] || 'ลงพื้นที่';
     events.push({
       id:'sales-'+s.id, refId: s.id, type:'sales',
-      date: s.date, title: '📍 '+(s.location||'พื้นที่')+(u?` · ${u.name}`:''),
+      date: s.date,
+      title: `📍 ${s.location||catLabel}${u?` · ${u.name}`:''}`,
       cls: 'sales', meta: s,
     });
   });
-  // Live sessions
-  if(typeof liveSessions !== 'undefined' && Array.isArray(liveSessions)){
-    liveSessions.forEach(L => {
-      if(!L.date) return;
-      events.push({
-        id:'live-'+L.id, refId: L.id, type:'live',
-        date: L.date, title: '📡 '+(L.title||'Live'),
-        cls: 'live', meta: L,
-      });
-    });
-  }
-  if(calendarFilterType) return events.filter(e => e.type === calendarFilterType);
   return events;
 }
 
@@ -9294,9 +9268,9 @@ function renderCalendar(el){
 
   const actions = `
     <button class="btn-ghost" onclick="calGotoToday()">วันนี้</button>
-    <button class="btn-primary" onclick="openNewTask('todo')">${I.plus} งานใหม่</button>`;
+    <button class="btn-primary" onclick="openSalesModal()">${I.plus} เพิ่มกิจกรรม</button>`;
 
-  el.innerHTML = topbarCalendar('ปฏิทินทีม', `${events.length} รายการในระบบ`, actions) + `
+  el.innerHTML = topbarCalendar('ปฏิทินออกพื้นที่ / อีเว้นท์', `${events.length} กิจกรรมทั้งหมด`, actions) + `
     <div class="page-content" style="max-width:1400px">
       <div class="cal-toolbar">
         <div class="cal-nav">
@@ -9310,26 +9284,14 @@ function renderCalendar(el){
             ${USERS.map(u=>`<option value="${u.id}" ${calendarFilterUser==u.id?'selected':''}>${escapeHtmlN(u.name)}</option>`).join('')}
           </select>
         </div>` : ''}
-        <div class="sales-filter-field" style="min-width:140px">
-          <select onchange="calSetType(this.value)" style="padding:8px 12px;border:1px solid var(--border-2);border-radius:8px;font-size:13px;background:var(--bg);color:var(--t1)">
-            <option value="">ทุกประเภท</option>
-            <option value="task" ${calendarFilterType==='task'?'selected':''}>งาน</option>
-            <option value="sales" ${calendarFilterType==='sales'?'selected':''}>ออกพื้นที่</option>
-            <option value="live" ${calendarFilterType==='live'?'selected':''}>Live สด</option>
-          </select>
-        </div>
       </div>
       <div class="cal-grid">
         ${dowLabels.map(d=>`<div class="cal-dowhdr">${d}</div>`).join('')}
         ${cells}
       </div>
       <div class="cal-legend">
-        <span><span class="cal-legend-dot" style="background:#3b82f6"></span>งาน</span>
-        <span><span class="cal-legend-dot" style="background:#10b981"></span>งานเสร็จแล้ว</span>
-        <span><span class="cal-legend-dot" style="background:#ef4444"></span>งานเลยกำหนด</span>
-        <span><span class="cal-legend-dot" style="background:#f59e0b"></span>ออกพื้นที่</span>
-        <span><span class="cal-legend-dot" style="background:#a855f7"></span>Live สด</span>
-        <span style="margin-left:auto;font-style:italic">💡 ลากงานข้ามวันเพื่อย้ายกำหนดส่ง</span>
+        <span><span class="cal-legend-dot" style="background:#f59e0b"></span>ออกพื้นที่ / อีเว้นท์</span>
+        <span style="margin-left:auto;font-style:italic">💡 คลิกกิจกรรมเพื่อแก้ไข · ลากข้ามวันเพื่อย้ายวันที่</span>
       </div>
     </div>`;
   setupCalendarDragDrop();
@@ -9341,7 +9303,7 @@ function renderCalCell(dateStr, dayNum, otherMo, eventsByDate, today){
   const maxShow = 4;
   const more = evts.length > maxShow ? evts.length - maxShow : 0;
   const evtsHtml = evts.slice(0, maxShow).map(e => `
-    <div class="cal-evt ${e.cls}" draggable="${e.type==='task'?'true':'false'}" data-id="${e.id}" data-type="${e.type}" data-refid="${e.refId}" onclick="onCalEvtClick('${e.id}')" title="${escapeHtmlN(e.title)}">
+    <div class="cal-evt ${e.cls}" draggable="true" data-id="${e.id}" data-type="${e.type}" data-refid="${e.refId}" onclick="onCalEvtClick('${e.id}')" title="${escapeHtmlN(e.title)}">
       ${escapeHtmlN(e.title)}
     </div>`).join('');
   return `<div class="cal-cell ${otherMo?'other-mo':''} ${isToday?'today':''}" data-date="${dateStr}">
@@ -9391,11 +9353,13 @@ function setupCalendarDragDrop(){
       if(!eid || !newDate) return;
       const [type, idStr] = eid.split('-');
       const id = parseInt(idStr, 10);
-      if(type === 'task'){
-        const t = tasks.find(x => x.id === id);
-        if(t && t.due !== newDate){
-          t.due = newDate;
-          try { logActivity('update', 'task', id, `เปลี่ยนวัน → ${newDate}`); } catch(_){}
+      if(type === 'sales'){
+        const s = salesEvents.find(x => x.id === id);
+        if(s && s.date !== newDate){
+          const oldDate = s.date;
+          s.date = newDate;
+          s.updatedAt = Date.now();
+          try { logActivity('update', 'sales', id, `เปลี่ยนวัน ${oldDate} → ${newDate}`); } catch(_){}
           saveAll();
           rerender();
         }
@@ -9708,7 +9672,7 @@ function openSalesModal(id){
       userWrap.style.display = 'none';
     }
   }
-  openModal('salesModal');
+  document.getElementById('salesModal').classList.add('show');
 }
 
 function saveSalesEvent(){
