@@ -1215,6 +1215,17 @@
 .leave-attach-preview a{color:var(--brand);font-size:12.5px;text-decoration:none;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .leave-attach-preview .rm{background:none;border:none;color:#dc2626;cursor:pointer;font-size:18px;font-weight:700}
 
+/* Role schedule editor */
+.role-tab{padding:7px 16px;border:1.5px solid var(--border-2);background:var(--bg);border-radius:10px;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--t2);font-family:inherit;text-transform:capitalize}
+.role-tab.active{background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;border-color:#7c3aed;box-shadow:0 4px 12px rgba(124,58,237,.25)}
+.sched-row{display:grid;grid-template-columns:80px 1fr 1fr auto;gap:10px;align-items:center;padding:10px;background:var(--bg-soft);border-radius:10px;margin-bottom:6px}
+.sched-row.off{opacity:.55}
+.sched-row .day{font-size:13px;font-weight:700;color:var(--t1)}
+.sched-row input[type=time]{padding:7px 10px;border:1.5px solid var(--border-2);border-radius:8px;font-family:inherit;font-size:13px;background:var(--bg);color:var(--t1)}
+.sched-row input[type=time]:disabled{opacity:.5}
+.sched-row .off-toggle{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;user-select:none}
+.sched-row .off-toggle input{margin:0}
+
 /* Modal for attendance settings/leave */
 .att-modal{width:min(560px,calc(100vw - 32px));border-radius:22px;background:linear-gradient(160deg,#faf7ff 0%,#fff 60%);border:1px solid #ece7f7;overflow:hidden}
 [data-theme="dark"] .att-modal{background:linear-gradient(160deg,#1e1b3a 0%,#0f0f23 60%);border-color:rgba(167,139,250,.22)}
@@ -2464,7 +2475,7 @@ svg{display:block;flex-shrink:0}
 
 <!-- ATTENDANCE SETTINGS MODAL (admin) -->
 <div class="overlay" id="attSettingsModal">
-  <div class="modal att-modal">
+  <div class="modal att-modal" style="width:min(720px,calc(100vw - 32px))">
     <div class="modal-hd" style="padding:22px 24px 4px;border-bottom:none">
       <div class="modal-title">ตั้งค่าระบบลงเวลา</div>
       <button class="modal-close" onclick="closeModal('attSettingsModal')">×</button>
@@ -2484,27 +2495,28 @@ svg{display:block;flex-shrink:0}
           <input type="number" step="0.0000001" id="fAttLng"/>
         </div>
       </div>
-      <div class="lot-fld">
-        <label class="lot-fld-lbl">รัศมีเช็คอิน (เมตร)</label>
-        <input type="number" min="50" id="fAttRadius"/>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px">
         <div class="lot-fld">
-          <label class="lot-fld-lbl">เวลาเริ่มงาน</label>
-          <input type="time" id="fAttStart"/>
+          <label class="lot-fld-lbl">รัศมีเช็คอิน (เมตร)</label>
+          <input type="number" min="50" id="fAttRadius"/>
         </div>
         <div class="lot-fld">
-          <label class="lot-fld-lbl">เวลาเลิกงาน</label>
-          <input type="time" id="fAttEnd"/>
-        </div>
-        <div class="lot-fld">
-          <label class="lot-fld-lbl">OT หลังเวลา</label>
-          <input type="time" id="fAttOtAfter"/>
+          <label class="lot-fld-lbl">ผ่อนผันมาสาย (นาที)</label>
+          <input type="number" min="0" id="fAttGrace"/>
         </div>
       </div>
-      <div class="lot-fld">
-        <label class="lot-fld-lbl">ผ่อนผันมาสาย (นาที)</label>
-        <input type="number" min="0" id="fAttGrace"/>
+
+      <div class="sm-section-hdr" style="margin:18px 0 10px">
+        <div class="sm-section-hdr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <div class="sm-section-hdr-title">เวลาทำงานต่อ Role</div>
+        <div class="sm-section-hdr-sub">ตั้งวันละแบบทั้ง 7 วัน</div>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px" id="fAttRoleTabs"></div>
+      <div id="fAttRoleSchedule"></div>
+      <div style="margin-top:8px">
+        <button class="btn-ghost" onclick="copyScheduleFromAdmin()" style="font-size:12px">↓ คัดลอกจาก admin</button>
+        <button class="btn-ghost" onclick="resetScheduleToDefault()" style="font-size:12px">↻ คืนค่าดีฟอลต์</button>
       </div>
     </div>
     <div class="modal-ft" style="padding:18px 24px 22px">
@@ -3422,15 +3434,31 @@ let attendanceRecords = [];
 let nextAttendanceId = 1;
 let leaveRequests = [];
 let nextLeaveId = 1;
+const DEFAULT_DAY_SCHEDULE = {
+  mon: { start:'10:00', end:'21:00' },
+  tue: { start:'10:00', end:'21:00' },
+  wed: { start:'10:00', end:'21:00' },
+  thu: { start:'10:00', end:'21:00' },
+  fri: { start:'10:00', end:'21:00' },
+  sat: { start:'10:00', end:'12:00' },
+  sun: null,
+};
+function _freshRoleSchedule(){ return JSON.parse(JSON.stringify(DEFAULT_DAY_SCHEDULE)); }
 let attendanceSettings = {
   companyLat: 17.993391652989974,
   companyLng: 102.59393994033391,
   companyName: 'TFL+ Headquarters',
   radiusMeters: 1000,
-  defaultWorkStart: '08:30',
-  defaultWorkEnd: '17:30',
-  defaultOtAfter: '18:00',
+  defaultWorkStart: '10:00',
+  defaultWorkEnd: '21:00',
+  defaultOtAfter: '21:00',
   lateGracePeriod: 15,
+  roleSchedules: {
+    admin: _freshRoleSchedule(),
+    member: _freshRoleSchedule(),
+    social: _freshRoleSchedule(),
+    owner: _freshRoleSchedule(),
+  },
 };
 let attendanceView = 'me'; // me | history | leave | admin
 let attendancePhotoData = null;
@@ -11180,11 +11208,35 @@ function _haversine(lat1, lon1, lat2, lon2){
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
-function _userWorkSettings(u){
+const _DAY_KEYS = ['sun','mon','tue','wed','thu','fri','sat'];
+const _DAY_LABELS_TH = { sun:'อา', mon:'จ', tue:'อ', wed:'พ', thu:'พฤ', fri:'ศ', sat:'ส' };
+const _DAY_LABELS_TH_FULL = { sun:'อาทิตย์', mon:'จันทร์', tue:'อังคาร', wed:'พุธ', thu:'พฤหัสบดี', fri:'ศุกร์', sat:'เสาร์' };
+
+function _userWorkSettings(u, dateStr){
+  const date = dateStr ? new Date(dateStr) : new Date();
+  const dayKey = _DAY_KEYS[date.getDay()];
+  const role = u?.role || 'member';
+  // Ensure role schedule exists (auto-init for new/missing roles using defaults)
+  if(!attendanceSettings.roleSchedules) attendanceSettings.roleSchedules = {};
+  if(!attendanceSettings.roleSchedules[role]) attendanceSettings.roleSchedules[role] = _freshRoleSchedule();
+  const roleSch = attendanceSettings.roleSchedules[role];
+  const todaySch = roleSch[dayKey];
+  // Per-user override wins, then role-day, then default fallback
+  if(todaySch === null){
+    return {
+      start: u?.workStart || attendanceSettings.defaultWorkStart,
+      end: u?.workEnd || attendanceSettings.defaultWorkEnd,
+      otAfter: u?.otAfter || attendanceSettings.defaultOtAfter,
+      isDayOff: true,
+      dayLabel: _DAY_LABELS_TH_FULL[dayKey],
+    };
+  }
   return {
-    start: u?.workStart || attendanceSettings.defaultWorkStart,
-    end: u?.workEnd || attendanceSettings.defaultWorkEnd,
-    otAfter: u?.otAfter || attendanceSettings.defaultOtAfter,
+    start: u?.workStart || todaySch?.start || attendanceSettings.defaultWorkStart,
+    end: u?.workEnd || todaySch?.end || attendanceSettings.defaultWorkEnd,
+    otAfter: u?.otAfter || todaySch?.end || attendanceSettings.defaultOtAfter,
+    isDayOff: false,
+    dayLabel: _DAY_LABELS_TH_FULL[dayKey],
   };
 }
 
@@ -11286,15 +11338,20 @@ async function doCheckInOut(purpose){
   const today = new Date().toISOString().slice(0,10);
   const now = new Date();
   let rec = _getTodayAttendance(currentUser.id);
-  const settings = _userWorkSettings(currentUser);
+  const settings = _userWorkSettings(currentUser, today);
 
   if(purpose === 'in'){
     if(rec && rec.checkIn){ alert('คุณเช็คอินไปแล้ววันนี้'); return; }
+    if(settings.isDayOff){
+      if(!confirm(`วัน${settings.dayLabel}เป็นวันหยุดของ Role "${currentUser.role}"\n\nต้องการเช็คอินทำงานพิเศษหรือไม่?`)){
+        return;
+      }
+    }
     const startMin = _timeToMinutes(settings.start);
     const nowMin = now.getHours()*60 + now.getMinutes();
     const isOutside = dist > attendanceSettings.radiusMeters;
-    const lateMin = Math.max(0, nowMin - startMin - attendanceSettings.lateGracePeriod);
-    const status = isOutside ? 'wfh' : (lateMin > 0 ? 'late' : 'normal');
+    const lateMin = settings.isDayOff ? 0 : Math.max(0, nowMin - startMin - attendanceSettings.lateGracePeriod);
+    const status = settings.isDayOff ? 'holiday' : (isOutside ? 'wfh' : (lateMin > 0 ? 'late' : 'normal'));
     const entry = {
       time: now.toISOString(),
       lat: loc.lat, lng: loc.lng, accuracy: loc.accuracy,
@@ -11419,26 +11476,85 @@ function approveLeave(id, status){
 
 function setAttView(v){ attendanceView = v; rerender(); }
 
+let _editRoleKey = 'admin';
+let _editRoleSchedules = null; // local clone while editing
+
 function openAttSettings(){
   document.getElementById('fAttCompanyName').value = attendanceSettings.companyName||'';
   document.getElementById('fAttLat').value = attendanceSettings.companyLat;
   document.getElementById('fAttLng').value = attendanceSettings.companyLng;
   document.getElementById('fAttRadius').value = attendanceSettings.radiusMeters;
-  document.getElementById('fAttStart').value = attendanceSettings.defaultWorkStart;
-  document.getElementById('fAttEnd').value = attendanceSettings.defaultWorkEnd;
-  document.getElementById('fAttOtAfter').value = attendanceSettings.defaultOtAfter;
   document.getElementById('fAttGrace').value = attendanceSettings.lateGracePeriod;
+  // Clone role schedules for editing
+  if(!attendanceSettings.roleSchedules) attendanceSettings.roleSchedules = {};
+  ['admin','member','social','owner'].forEach(r => {
+    if(!attendanceSettings.roleSchedules[r]) attendanceSettings.roleSchedules[r] = _freshRoleSchedule();
+  });
+  _editRoleSchedules = JSON.parse(JSON.stringify(attendanceSettings.roleSchedules));
+  _editRoleKey = 'admin';
+  _renderRoleTabs();
+  _renderRoleSchedule();
   document.getElementById('attSettingsModal').classList.add('show');
 }
+
+function _renderRoleTabs(){
+  const tabs = document.getElementById('fAttRoleTabs');
+  const roles = Object.keys(_editRoleSchedules);
+  tabs.innerHTML = roles.map(r => `<button class="role-tab ${_editRoleKey===r?'active':''}" onclick="_switchRoleTab('${r}')">${r}</button>`).join('');
+}
+function _switchRoleTab(r){
+  _editRoleKey = r;
+  _renderRoleTabs();
+  _renderRoleSchedule();
+}
+function _renderRoleSchedule(){
+  const sch = _editRoleSchedules[_editRoleKey] || _freshRoleSchedule();
+  const root = document.getElementById('fAttRoleSchedule');
+  root.innerHTML = _DAY_KEYS.map(day => {
+    const dayLbl = ['อา','จ','อ','พ','พฤ','ศ','ส'][_DAY_KEYS.indexOf(day)];
+    const s = sch[day];
+    const isOff = s === null;
+    return `<div class="sched-row ${isOff?'off':''}">
+      <div class="day">${dayLbl} <span style="color:var(--t2);font-weight:500">(${_DAY_LABELS_TH_FULL[day]})</span></div>
+      <input type="time" value="${s?.start||'10:00'}" ${isOff?'disabled':''} onchange="_updateSched('${day}','start',this.value)"/>
+      <input type="time" value="${s?.end||'21:00'}" ${isOff?'disabled':''} onchange="_updateSched('${day}','end',this.value)"/>
+      <label class="off-toggle">
+        <input type="checkbox" ${isOff?'checked':''} onchange="_toggleSchedOff('${day}',this.checked)"/>
+        หยุด
+      </label>
+    </div>`;
+  }).join('');
+}
+function _updateSched(day, key, val){
+  const sch = _editRoleSchedules[_editRoleKey];
+  if(!sch[day]) sch[day] = { start:'10:00', end:'21:00' };
+  sch[day][key] = val;
+}
+function _toggleSchedOff(day, isOff){
+  const sch = _editRoleSchedules[_editRoleKey];
+  if(isOff){ sch[day] = null; }
+  else { sch[day] = { start:'10:00', end:'21:00' }; }
+  _renderRoleSchedule();
+}
+function copyScheduleFromAdmin(){
+  if(_editRoleKey === 'admin'){ alert('ตอนนี้คุณกำลังแก้ admin อยู่แล้ว'); return; }
+  if(!confirm(`คัดลอกตารางจาก admin → ${_editRoleKey}?`)) return;
+  _editRoleSchedules[_editRoleKey] = JSON.parse(JSON.stringify(_editRoleSchedules.admin || _freshRoleSchedule()));
+  _renderRoleSchedule();
+}
+function resetScheduleToDefault(){
+  if(!confirm(`คืนค่าตาราง ${_editRoleKey} เป็นค่าดีฟอลต์ (จ-ศ 10:00-21:00, ส 10:00-12:00, อา หยุด)?`)) return;
+  _editRoleSchedules[_editRoleKey] = _freshRoleSchedule();
+  _renderRoleSchedule();
+}
+
 function saveAttSettings(){
   attendanceSettings.companyName = document.getElementById('fAttCompanyName').value.trim() || 'Company';
   attendanceSettings.companyLat = parseFloat(document.getElementById('fAttLat').value) || 0;
   attendanceSettings.companyLng = parseFloat(document.getElementById('fAttLng').value) || 0;
   attendanceSettings.radiusMeters = parseInt(document.getElementById('fAttRadius').value, 10) || 1000;
-  attendanceSettings.defaultWorkStart = document.getElementById('fAttStart').value || '08:30';
-  attendanceSettings.defaultWorkEnd = document.getElementById('fAttEnd').value || '17:30';
-  attendanceSettings.defaultOtAfter = document.getElementById('fAttOtAfter').value || '18:00';
   attendanceSettings.lateGracePeriod = parseInt(document.getElementById('fAttGrace').value,10) || 15;
+  attendanceSettings.roleSchedules = _editRoleSchedules || attendanceSettings.roleSchedules;
   saveAll();
   closeModal('attSettingsModal');
   rerender();
@@ -11510,7 +11626,7 @@ function renderAttendance(el){
   const todayRec = _getTodayAttendance(currentUser.id);
   const checkedIn = !!(todayRec && todayRec.checkIn);
   const checkedOut = !!(todayRec && todayRec.checkOut);
-  const settings = _userWorkSettings(currentUser);
+  const settings = _userWorkSettings(currentUser, today);
 
   const heroState = !checkedIn ? 'idle' : (checkedOut ? 'out' : 'in');
   const stateLabel = !checkedIn ? 'ยังไม่ได้เช็คอิน' : (checkedOut ? 'จบงานวันนี้แล้ว' : 'กำลังทำงาน');
@@ -11538,7 +11654,8 @@ function renderAttendance(el){
           <div class="att-date">${dateText}</div>
           <div class="att-state"><span class="att-state-dot"></span>${stateLabel}</div>
           <div class="att-current-info">
-            ${todayRec?.checkIn? `เช็คอินเมื่อ <b>${_fmtTime(todayRec.checkIn.time)}</b> · ${todayRec.status==='late'?`<b>มาสาย ${todayRec.lateMinutes} นาที</b>`:'<b>ตรงเวลา</b>'}<br>`:'พร้อมเริ่มงาน · เวลางาน <b>'+settings.start+' - '+settings.end+'</b><br>'}
+            ${settings.isDayOff? `วัน${settings.dayLabel} = <b>วันหยุด</b> ของคุณ — เช็คอินได้แต่จะนับเป็นวันหยุด<br>` : ''}
+            ${todayRec?.checkIn? `เช็คอินเมื่อ <b>${_fmtTime(todayRec.checkIn.time)}</b> · ${todayRec.status==='late'?`<b>มาสาย ${todayRec.lateMinutes} นาที</b>`:todayRec.status==='holiday'?'<b>วันหยุด</b>':'<b>ตรงเวลา</b>'}<br>`: (settings.isDayOff?'':'พร้อมเริ่มงาน · เวลางาน <b>'+settings.start+' - '+settings.end+'</b><br>') }
             ${todayRec?.checkOut? `เช็คเอาท์เมื่อ <b>${_fmtTime(todayRec.checkOut.time)}</b> · รวม <b>${todayRec.totalHours}h</b>${todayRec.otHours>0?` · OT <b>${todayRec.otHours}h</b>`:''}`:''}
           </div>
           <div class="att-actions">
@@ -12133,14 +12250,16 @@ function _renderImpPreview(){
     <tbody>${_impParsedRows.map(r => {
       const inDate = _excelTimeToDate(r.rawIn, dateStr);
       const outDate = _excelTimeToDate(r.rawOut, dateStr);
-      const settings = _userWorkSettings(r.matchedUser);
+      const settings = _userWorkSettings(r.matchedUser, dateStr);
       let status = 'normal';
-      if(inDate){
+      if(settings.isDayOff && inDate){
+        status = 'holiday';
+      } else if(inDate){
         const startMin = _timeToMinutes(settings.start);
         const nowMin = inDate.getHours()*60 + inDate.getMinutes();
         if(nowMin - startMin - attendanceSettings.lateGracePeriod > 0) status = 'late';
       } else {
-        status = 'absent';
+        status = settings.isDayOff ? 'holiday' : 'absent';
       }
       return `<tr>
         <td><b>${escapeHtmlN(r.name)}</b></td>
@@ -12176,19 +12295,21 @@ function confirmAttImport(){
     const u = r.matchedUser;
     const inDate = _excelTimeToDate(r.rawIn, dateStr);
     const outDate = _excelTimeToDate(r.rawOut, dateStr);
-    const settings = _userWorkSettings(u);
+    const settings = _userWorkSettings(u, dateStr);
     let status = 'normal';
     let lateMin = 0;
     let otHours = 0;
     let earlyLeaveMin = 0;
     let totalHours = 0;
-    if(inDate){
+    if(settings.isDayOff && inDate){
+      status = 'holiday';
+    } else if(inDate){
       const startMin = _timeToMinutes(settings.start);
       const nowMin = inDate.getHours()*60 + inDate.getMinutes();
       lateMin = Math.max(0, nowMin - startMin - attendanceSettings.lateGracePeriod);
       if(lateMin > 0) status = 'late';
     } else {
-      status = 'absent';
+      status = settings.isDayOff ? 'holiday' : 'absent';
     }
     if(outDate && inDate){
       const otMin = _timeToMinutes(settings.otAfter);
