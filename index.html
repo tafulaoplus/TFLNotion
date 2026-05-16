@@ -585,6 +585,68 @@
   .ac-logo{height:38px}
 }
 
+/* ===== CALENDAR VIEW ===== */
+.cal-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.cal-nav{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:4px}
+.cal-nav button{background:none;border:none;cursor:pointer;width:32px;height:32px;border-radius:6px;color:var(--t1);font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.cal-nav button:hover{background:var(--bg-hover)}
+.cal-title{font-size:18px;font-weight:800;color:var(--t1);min-width:200px;text-align:center}
+.cal-modes{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.cal-modes button{background:none;border:none;padding:8px 14px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:600}
+.cal-modes button.active{background:var(--brand);color:#fff}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);background:var(--bg);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.cal-dowhdr{padding:10px 12px;font-size:11.5px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;text-align:center;background:var(--bg-soft);border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
+.cal-dowhdr:last-child{border-right:none}
+.cal-cell{min-height:110px;padding:6px 8px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;transition:background .15s ease;cursor:default}
+.cal-cell:nth-child(7n+7){border-right:none}
+.cal-cell.other-mo{background:var(--bg-soft);opacity:.6}
+.cal-cell.today{background:rgba(59,130,246,.06)}
+.cal-cell.today .cal-daynum{color:#1d4ed8;font-weight:800}
+[data-theme="dark"] .cal-cell.today{background:rgba(96,165,250,.1)}
+.cal-cell.drag-over{background:rgba(34,197,94,.12);outline:2px dashed #22c55e;outline-offset:-2px}
+.cal-daynum{font-size:12.5px;font-weight:600;color:var(--t1);margin-bottom:4px}
+.cal-evt{display:block;padding:3px 6px;border-radius:6px;font-size:11.5px;color:#fff;margin-bottom:2px;cursor:grab;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;line-height:1.3;transition:transform .12s ease,opacity .12s ease}
+.cal-evt:hover{transform:translateY(-1px);opacity:.9}
+.cal-evt:active{cursor:grabbing}
+.cal-evt.dragging{opacity:.4}
+.cal-evt.task{background:#3b82f6}
+.cal-evt.task.done{background:#10b981}
+.cal-evt.task.overdue{background:#ef4444}
+.cal-evt.sales{background:#f59e0b}
+.cal-evt.live{background:#a855f7}
+.cal-more{font-size:10.5px;color:var(--t2);padding:1px 6px;font-weight:600}
+.cal-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;padding:12px;background:var(--bg-soft);border-radius:10px;font-size:12px;color:var(--t2)}
+.cal-legend-dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+@media (max-width:780px){
+  .cal-cell{min-height:80px;padding:4px 5px}
+  .cal-evt{font-size:10px;padding:2px 4px}
+}
+
+/* ===== CALENDAR brand logo ===== */
+:root {
+  --cl-c1:    #3b82f6;
+  --cl-c2:    #ef4444;
+  --cl-c3:    #fbbf24;
+  --cl-c4:    #10b981;
+  --cl-page:  #f1f5f9;
+  --cl-text:  #0f172a;
+  --cl-acc:   #ef4444;
+}
+[data-theme="dark"] {
+  --cl-c1:    #60a5fa;
+  --cl-c2:    #f87171;
+  --cl-c3:    #fcd34d;
+  --cl-c4:    #34d399;
+  --cl-page:  #334155;
+  --cl-text:  #f1f5f9;
+  --cl-acc:   #f87171;
+}
+.cl-logo{height:50px;width:auto;flex-shrink:0;transition:filter .25s ease}
+[data-theme="dark"] .cl-logo{filter:drop-shadow(0 0 14px rgba(248,113,113,.28))}
+@media (max-width:680px){
+  .cl-logo{height:38px}
+}
+
 /* ===== IMPORT PROGRESS MODAL ===== */
 .import-modal{background:#fff;border-radius:18px;width:560px;max-width:95vw;max-height:90vh;overflow:auto;box-shadow:0 30px 80px rgba(17,24,39,.25);border:1px solid var(--border);animation:modalIn .25s ease}
 .import-hd{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
@@ -1554,6 +1616,7 @@ svg{display:block;flex-shrink:0}
       <div id="viewFbLiveAuto" class="view"></div>
       <div id="viewSales" class="view"></div>
       <div id="viewActivity" class="view"></div>
+      <div id="viewCalendar" class="view"></div>
     </div>
   </div>
 </div>
@@ -2226,6 +2289,10 @@ let nextActivityId = 1;
 let activityFilterUser = 0;
 let activityFilterAction = '';
 let activityFilterDate = '';
+let calendarMonth = new Date().toISOString().slice(0,7);
+let calendarMode = 'month';
+let calendarFilterUser = 0;
+let calendarFilterType = '';
 let notifications = [];
 let nextNotifId = 1;
 let notifCheckTimer = null;
@@ -3224,7 +3291,7 @@ function initApp(){
   let startView = 'dashboard';
   try {
     const saved = localStorage.getItem('tfl_currentView');
-    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbLiveAuto','sales','activity'];
+    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbLiveAuto','sales','activity','calendar'];
     if(saved && validViews.includes(saved)){
       // Check role permission
       if((saved === 'allTasks' || saved === 'members' || saved === 'activity') && currentUser.role !== 'admin'){
@@ -3252,6 +3319,7 @@ function renderSidebar(){
     {id:'taskBoard', icon:I.grid, label:'ติดตามงาน'},
     {id:'myTasks', icon:I.check, label:'งานของฉัน'},
     {id:'sales', icon:I.mapPin, label:'ออกพื้นที่'},
+    {id:'calendar', icon:I.calendar, label:'ปฏิทิน'},
   ];
   let html = '<div class="nav-sec">เมนูหลัก</div>';
   items.forEach(it => {
@@ -3594,7 +3662,7 @@ function renderView(id,el){
   setTimeout(()=>el.classList.remove('fade-in'),300);
   ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,notes:renderNotes,taskBoard:renderTaskBoard,
     myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbLiveAuto:renderFbLiveAuto,
-    sales:renderSales,activity:renderActivity}[id]||(()=>{}))(el);
+    sales:renderSales,activity:renderActivity,calendar:renderCalendar}[id]||(()=>{}))(el);
 }
 
 function rerender(){ const el=document.getElementById('view'+cap(currentView)); if(el) renderView(currentView,el); }
@@ -9085,6 +9153,257 @@ function toggleChecklist(id){
 }
 
 // ========== MY TASKS ==========
+// ============ CALENDAR VIEW ============
+function topbarCalendar(label, sub, actions=''){
+  const logo = `<svg class="cl-logo" viewBox="0 0 820 460" xmlns="http://www.w3.org/2000/svg" aria-label="CALENDAR">
+    <rect x="30" y="80" width="320" height="320" rx="20" fill="var(--cl-page)" stroke="var(--cl-c1)" stroke-width="10"/>
+    <rect x="30" y="80" width="320" height="60" rx="20" fill="var(--cl-c1)"/>
+    <rect x="30" y="120" width="320" height="20" fill="var(--cl-c1)"/>
+    <rect x="100" y="40" width="22" height="80" rx="11" fill="var(--cl-text)"/>
+    <rect x="258" y="40" width="22" height="80" rx="11" fill="var(--cl-text)"/>
+    <circle cx="90"  cy="200" r="14" fill="var(--cl-c1)" opacity=".4"/>
+    <circle cx="150" cy="200" r="14" fill="var(--cl-c3)"/>
+    <circle cx="210" cy="200" r="14" fill="var(--cl-c1)" opacity=".4"/>
+    <circle cx="270" cy="200" r="14" fill="var(--cl-c4)"/>
+    <circle cx="90"  cy="260" r="14" fill="var(--cl-c2)"/>
+    <circle cx="150" cy="260" r="18" fill="var(--cl-acc)"/>
+    <circle cx="210" cy="260" r="14" fill="var(--cl-c1)" opacity=".4"/>
+    <circle cx="270" cy="260" r="14" fill="var(--cl-c1)" opacity=".4"/>
+    <circle cx="90"  cy="320" r="14" fill="var(--cl-c1)" opacity=".4"/>
+    <circle cx="150" cy="320" r="14" fill="var(--cl-c4)"/>
+    <circle cx="210" cy="320" r="14" fill="var(--cl-c3)"/>
+    <circle cx="270" cy="320" r="14" fill="var(--cl-c2)"/>
+    <text x="380" y="200" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="135" letter-spacing="-4" fill="var(--cl-text)">CALEN</text>
+    <text x="380" y="340" font-family="Inter,system-ui,Arial,sans-serif" font-weight="900" font-size="135" letter-spacing="-4" fill="var(--cl-acc)">DAR</text>
+  </svg>`;
+  return `<div class="topbar">
+    <div class="topbar-title">
+      <div class="fb-brand">
+        ${logo}
+        <div class="fb-brand-sub">
+          <div class="fb-brand-label">${label||''}</div>
+          ${sub?`<div class="fb-brand-meta">${sub}</div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      ${actions}
+      ${notifBellHTML()}
+      <button class="theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
+        <span class="theme-toggle-icons"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+        <span class="theme-toggle-thumb"><span class="sun-i">${I.sun}</span><span class="moon-i">${I.moon}</span></span>
+      </button>
+    </div>
+  </div>`;
+}
+
+function calShiftMonth(delta){
+  const [y, m] = calendarMonth.split('-').map(Number);
+  const d = new Date(y, m-1 + delta, 1);
+  calendarMonth = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  rerender();
+}
+function calGotoToday(){ calendarMonth = new Date().toISOString().slice(0,7); rerender(); }
+function calSetUser(v){ calendarFilterUser = parseInt(v,10)||0; rerender(); }
+function calSetType(v){ calendarFilterType = v||''; rerender(); }
+
+function getCalendarEvents(){
+  const isAdmin = currentUser && currentUser.role === 'admin';
+  const today = new Date().toISOString().slice(0,10);
+  const events = [];
+  // Tasks (with due date)
+  tasks.forEach(t => {
+    if(!t.due) return;
+    if(!isAdmin && !(Array.isArray(t.assignees) && t.assignees.includes(currentUser.id))) return;
+    if(calendarFilterUser && !(Array.isArray(t.assignees) && t.assignees.includes(calendarFilterUser))) return;
+    const overdue = t.due < today && t.status !== 'done';
+    events.push({
+      id: 'task-'+t.id, refId: t.id, type:'task',
+      date: t.due, title: (t.emoji||'📌')+' '+(t.name||''),
+      status: t.status,
+      cls: 'task ' + (t.status==='done'?'done':(overdue?'overdue':'')),
+      meta: t,
+    });
+  });
+  // Sales events
+  salesEvents.forEach(s => {
+    if(!s.date) return;
+    if(!isAdmin && s.userId !== currentUser.id) return;
+    if(calendarFilterUser && s.userId !== calendarFilterUser) return;
+    const u = USERS.find(x=>x.id===s.userId);
+    events.push({
+      id:'sales-'+s.id, refId: s.id, type:'sales',
+      date: s.date, title: '📍 '+(s.location||'พื้นที่')+(u?` · ${u.name}`:''),
+      cls: 'sales', meta: s,
+    });
+  });
+  // Live sessions
+  if(typeof liveSessions !== 'undefined' && Array.isArray(liveSessions)){
+    liveSessions.forEach(L => {
+      if(!L.date) return;
+      events.push({
+        id:'live-'+L.id, refId: L.id, type:'live',
+        date: L.date, title: '📡 '+(L.title||'Live'),
+        cls: 'live', meta: L,
+      });
+    });
+  }
+  if(calendarFilterType) return events.filter(e => e.type === calendarFilterType);
+  return events;
+}
+
+function renderCalendar(el){
+  const isAdmin = currentUser && currentUser.role === 'admin';
+  const [y, m] = calendarMonth.split('-').map(Number);
+  const firstDay = new Date(y, m-1, 1);
+  const startDow = firstDay.getDay();
+  const daysInMonth = new Date(y, m, 0).getDate();
+  const prevMonthDays = new Date(y, m-1, 0).getDate();
+  const today = new Date().toISOString().slice(0,10);
+  const dowLabels = ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'];
+  const monthLabel = firstDay.toLocaleDateString('th-TH', { month:'long', year:'numeric' });
+
+  const events = getCalendarEvents();
+  const eventsByDate = {};
+  events.forEach(e => {
+    if(!eventsByDate[e.date]) eventsByDate[e.date] = [];
+    eventsByDate[e.date].push(e);
+  });
+
+  let cells = '';
+  // leading prev-month days
+  for(let i=0; i<startDow; i++){
+    const d = prevMonthDays - startDow + 1 + i;
+    const dateStr = `${m===1?y-1:y}-${String(m===1?12:m-1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    cells += renderCalCell(dateStr, d, true, eventsByDate, today);
+  }
+  // current month
+  for(let d=1; d<=daysInMonth; d++){
+    const dateStr = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    cells += renderCalCell(dateStr, d, false, eventsByDate, today);
+  }
+  // trailing next-month days to fill grid (rows of 7)
+  const totalSoFar = startDow + daysInMonth;
+  const trailing = (7 - (totalSoFar % 7)) % 7;
+  for(let i=1; i<=trailing; i++){
+    const ny = m===12?y+1:y;
+    const nm = m===12?1:m+1;
+    const dateStr = `${ny}-${String(nm).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+    cells += renderCalCell(dateStr, i, true, eventsByDate, today);
+  }
+
+  const actions = `
+    <button class="btn-ghost" onclick="calGotoToday()">วันนี้</button>
+    <button class="btn-primary" onclick="openNewTask('todo')">${I.plus} งานใหม่</button>`;
+
+  el.innerHTML = topbarCalendar('ปฏิทินทีม', `${events.length} รายการในระบบ`, actions) + `
+    <div class="page-content" style="max-width:1400px">
+      <div class="cal-toolbar">
+        <div class="cal-nav">
+          <button onclick="calShiftMonth(-1)" title="เดือนก่อน">‹</button>
+          <div class="cal-title">${monthLabel}</div>
+          <button onclick="calShiftMonth(1)" title="เดือนถัดไป">›</button>
+        </div>
+        ${isAdmin? `<div class="sales-filter-field" style="min-width:140px">
+          <select onchange="calSetUser(this.value)" style="padding:8px 12px;border:1px solid var(--border-2);border-radius:8px;font-size:13px;background:var(--bg);color:var(--t1)">
+            <option value="0">สมาชิกทั้งหมด</option>
+            ${USERS.map(u=>`<option value="${u.id}" ${calendarFilterUser==u.id?'selected':''}>${escapeHtmlN(u.name)}</option>`).join('')}
+          </select>
+        </div>` : ''}
+        <div class="sales-filter-field" style="min-width:140px">
+          <select onchange="calSetType(this.value)" style="padding:8px 12px;border:1px solid var(--border-2);border-radius:8px;font-size:13px;background:var(--bg);color:var(--t1)">
+            <option value="">ทุกประเภท</option>
+            <option value="task" ${calendarFilterType==='task'?'selected':''}>งาน</option>
+            <option value="sales" ${calendarFilterType==='sales'?'selected':''}>ออกพื้นที่</option>
+            <option value="live" ${calendarFilterType==='live'?'selected':''}>Live สด</option>
+          </select>
+        </div>
+      </div>
+      <div class="cal-grid">
+        ${dowLabels.map(d=>`<div class="cal-dowhdr">${d}</div>`).join('')}
+        ${cells}
+      </div>
+      <div class="cal-legend">
+        <span><span class="cal-legend-dot" style="background:#3b82f6"></span>งาน</span>
+        <span><span class="cal-legend-dot" style="background:#10b981"></span>งานเสร็จแล้ว</span>
+        <span><span class="cal-legend-dot" style="background:#ef4444"></span>งานเลยกำหนด</span>
+        <span><span class="cal-legend-dot" style="background:#f59e0b"></span>ออกพื้นที่</span>
+        <span><span class="cal-legend-dot" style="background:#a855f7"></span>Live สด</span>
+        <span style="margin-left:auto;font-style:italic">💡 ลากงานข้ามวันเพื่อย้ายกำหนดส่ง</span>
+      </div>
+    </div>`;
+  setupCalendarDragDrop();
+}
+
+function renderCalCell(dateStr, dayNum, otherMo, eventsByDate, today){
+  const isToday = dateStr === today;
+  const evts = eventsByDate[dateStr] || [];
+  const maxShow = 4;
+  const more = evts.length > maxShow ? evts.length - maxShow : 0;
+  const evtsHtml = evts.slice(0, maxShow).map(e => `
+    <div class="cal-evt ${e.cls}" draggable="${e.type==='task'?'true':'false'}" data-id="${e.id}" data-type="${e.type}" data-refid="${e.refId}" onclick="onCalEvtClick('${e.id}')" title="${escapeHtmlN(e.title)}">
+      ${escapeHtmlN(e.title)}
+    </div>`).join('');
+  return `<div class="cal-cell ${otherMo?'other-mo':''} ${isToday?'today':''}" data-date="${dateStr}">
+    <div class="cal-daynum">${dayNum}</div>
+    ${evtsHtml}
+    ${more>0? `<div class="cal-more">+${more} อื่นๆ</div>` : ''}
+  </div>`;
+}
+
+function onCalEvtClick(eid){
+  const [type, idStr] = eid.split('-');
+  const id = parseInt(idStr, 10);
+  if(type === 'task'){
+    if(typeof openTaskDetail === 'function') openTaskDetail(id);
+  } else if(type === 'sales'){
+    openSalesModal(id);
+  } else if(type === 'live'){
+    navigateTo('fbLive');
+  }
+}
+
+function setupCalendarDragDrop(){
+  const evts = document.querySelectorAll('.cal-evt[draggable="true"]');
+  const cells = document.querySelectorAll('.cal-cell');
+  evts.forEach(e => {
+    e.addEventListener('dragstart', ev => {
+      ev.dataTransfer.effectAllowed = 'move';
+      ev.dataTransfer.setData('text/plain', e.dataset.id);
+      e.classList.add('dragging');
+    });
+    e.addEventListener('dragend', ev => {
+      e.classList.remove('dragging');
+    });
+  });
+  cells.forEach(c => {
+    c.addEventListener('dragover', ev => {
+      ev.preventDefault();
+      ev.dataTransfer.dropEffect = 'move';
+      c.classList.add('drag-over');
+    });
+    c.addEventListener('dragleave', () => c.classList.remove('drag-over'));
+    c.addEventListener('drop', ev => {
+      ev.preventDefault();
+      c.classList.remove('drag-over');
+      const eid = ev.dataTransfer.getData('text/plain');
+      const newDate = c.dataset.date;
+      if(!eid || !newDate) return;
+      const [type, idStr] = eid.split('-');
+      const id = parseInt(idStr, 10);
+      if(type === 'task'){
+        const t = tasks.find(x => x.id === id);
+        if(t && t.due !== newDate){
+          t.due = newDate;
+          try { logActivity('update', 'task', id, `เปลี่ยนวัน → ${newDate}`); } catch(_){}
+          saveAll();
+          rerender();
+        }
+      }
+    });
+  });
+}
+
 // ============ ACTIVITY LOG ============
 function logActivity(action, entityType, entityId, details){
   if(!currentUser) return;
