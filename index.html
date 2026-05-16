@@ -1076,6 +1076,94 @@
   .cl-logo{height:38px}
 }
 
+/* ===== FACEBOOK POST MANAGER ===== */
+.fbp-connect-card{max-width:560px;margin:60px auto;padding:36px 32px;background:var(--bg);border:1px solid var(--border);border-radius:18px;box-shadow:0 14px 40px rgba(17,24,39,.08);text-align:center}
+.fbp-connect-icon{width:84px;height:84px;border-radius:24px;background:linear-gradient(135deg,#1877f2,#4267b2);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 14px 30px rgba(24,119,242,.35)}
+.fbp-connect-icon svg{width:42px;height:42px}
+.fbp-connect-card h2{font-size:22px;font-weight:800;margin:0 0 6px;color:var(--t1)}
+.fbp-connect-card p{font-size:13.5px;color:var(--t2);margin:0 0 18px;line-height:1.55}
+.fbp-token-input{width:100%;padding:12px 14px;border:1.5px solid var(--border-2);border-radius:12px;font-size:13px;font-family:monospace;background:var(--bg);color:var(--t1);margin-bottom:12px;resize:vertical;min-height:90px;font-family:inherit}
+.fbp-pages-list{display:flex;flex-direction:column;gap:8px;margin-top:18px;text-align:left}
+.fbp-page-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1.5px solid var(--border-2);border-radius:12px;cursor:pointer;background:var(--bg);transition:all .15s ease}
+.fbp-page-row:hover{border-color:#1877f2;background:var(--bg-hover)}
+.fbp-page-row.selected{border-color:#1877f2;background:rgba(24,119,242,.08)}
+.fbp-page-thumb{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#1877f2,#4267b2);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;overflow:hidden}
+.fbp-page-thumb img{width:100%;height:100%;object-fit:cover}
+.fbp-page-info{flex:1;min-width:0}
+.fbp-page-name{font-size:14px;font-weight:700;color:var(--t1)}
+.fbp-page-meta{font-size:11.5px;color:var(--t2);margin-top:2px}
+
+.fbp-header{padding:18px 22px;background:linear-gradient(135deg,#1877f2 0%,#4267b2 100%);color:#fff;border-radius:16px;margin-bottom:18px;display:flex;align-items:center;gap:14px;box-shadow:0 10px 28px rgba(24,119,242,.25)}
+.fbp-header-thumb{width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;backdrop-filter:blur(8px)}
+.fbp-header-thumb img{width:100%;height:100%;object-fit:cover}
+.fbp-header-info{flex:1;min-width:0}
+.fbp-header-name{font-size:17px;font-weight:800;line-height:1.1}
+.fbp-header-sub{font-size:12px;opacity:.9;margin-top:3px}
+.fbp-header-btn{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;padding:7px 14px;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;backdrop-filter:blur(8px);transition:background .15s ease;font-family:inherit}
+.fbp-header-btn:hover{background:rgba(255,255,255,.28)}
+
+.fbp-tabs{display:inline-flex;background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:3px;gap:2px;margin-bottom:18px}
+.fbp-tab{background:none;border:none;padding:8px 16px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:700;border-radius:8px;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
+.fbp-tab:hover{color:var(--t1)}
+.fbp-tab.active{background:linear-gradient(135deg,#1877f2,#4267b2);color:#fff;box-shadow:0 4px 12px rgba(24,119,242,.25)}
+.fbp-tab svg{width:14px;height:14px}
+
+.fbp-compose-card{max-width:720px;background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+.fbp-compose-textarea{width:100%;padding:14px;border:1.5px solid var(--border-2);border-radius:12px;font-size:15px;font-family:inherit;background:var(--bg);color:var(--t1);min-height:120px;resize:vertical;line-height:1.55}
+.fbp-compose-textarea:focus{outline:none;border-color:#1877f2;box-shadow:0 0 0 4px rgba(24,119,242,.12)}
+.fbp-type-pills{display:flex;gap:8px;margin:14px 0;flex-wrap:wrap}
+.fbp-type-pill{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--bg-soft);border:1.5px solid transparent;border-radius:10px;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--t2);font-family:inherit;transition:all .15s ease}
+.fbp-type-pill:hover{color:var(--t1);background:var(--bg-hover)}
+.fbp-type-pill.active{background:rgba(24,119,242,.1);border-color:#1877f2;color:#1877f2}
+[data-theme="dark"] .fbp-type-pill.active{background:rgba(24,119,242,.2);color:#60a5fa}
+.fbp-type-pill svg{width:14px;height:14px}
+
+.fbp-upload-zone{display:flex;align-items:center;gap:12px;padding:14px;border:1.5px dashed var(--border-2);border-radius:12px;cursor:pointer;background:var(--bg-soft);transition:all .15s ease}
+.fbp-upload-zone:hover{border-color:#1877f2;background:var(--bg-hover)}
+.fbp-upload-zone input{display:none}
+.fbp-upload-icon{width:42px;height:42px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--t2);flex-shrink:0}
+.fbp-attach-preview{margin-top:10px;display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg-soft);border-radius:10px}
+.fbp-attach-preview img,.fbp-attach-preview video{max-width:140px;max-height:90px;border-radius:8px;object-fit:cover}
+.fbp-attach-preview .name{flex:1;font-size:13px;font-weight:600;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fbp-attach-preview .rm{background:none;border:none;color:#dc2626;cursor:pointer;font-size:18px;font-weight:700;padding:4px 8px}
+
+.fbp-schedule-toggle{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--bg-soft);border-radius:11px;margin-top:14px}
+.fbp-schedule-toggle .switch{width:42px;height:24px;background:var(--border-2);border-radius:12px;position:relative;cursor:pointer;transition:background .2s ease}
+.fbp-schedule-toggle .switch::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .2s ease;box-shadow:0 2px 4px rgba(0,0,0,.2)}
+.fbp-schedule-toggle input{display:none}
+.fbp-schedule-toggle input:checked + .switch{background:#1877f2}
+.fbp-schedule-toggle input:checked + .switch::after{transform:translateX(18px)}
+.fbp-schedule-fields{display:none;margin-top:10px;gap:10px}
+.fbp-schedule-fields.show{display:flex}
+.fbp-schedule-fields input{flex:1;padding:10px 12px;border:1.5px solid var(--border-2);border-radius:10px;font-family:inherit;font-size:13.5px;background:var(--bg);color:var(--t1)}
+.fbp-quick-times{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.fbp-quick-time{padding:5px 11px;background:var(--bg);border:1px solid var(--border-2);border-radius:8px;font-size:11.5px;font-weight:600;cursor:pointer;color:var(--t2);font-family:inherit}
+.fbp-quick-time:hover{background:#1877f2;color:#fff;border-color:#1877f2}
+
+.fbp-compose-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+.fbp-btn-draft{padding:11px 20px;background:var(--bg-soft);border:1.5px solid var(--border-2);border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;color:var(--t1);font-family:inherit}
+.fbp-btn-draft:hover{background:var(--bg-hover)}
+.fbp-btn-publish{padding:11px 22px;background:linear-gradient(135deg,#1877f2,#4267b2);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 8px 20px rgba(24,119,242,.3);font-family:inherit}
+.fbp-btn-publish:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(24,119,242,.4)}
+.fbp-btn-publish:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.fbp-post-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.fbp-post-card{padding:16px;background:var(--bg);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);position:relative}
+.fbp-post-status{display:inline-block;padding:3px 10px;border-radius:9px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+.fbp-post-status.draft{background:#fef3c7;color:#b45309}
+.fbp-post-status.scheduled{background:#dbeafe;color:#1d4ed8}
+.fbp-post-status.published{background:#d1fae5;color:#059669}
+[data-theme="dark"] .fbp-post-status.draft{background:rgba(251,191,36,.2);color:#fbbf24}
+[data-theme="dark"] .fbp-post-status.scheduled{background:rgba(96,165,250,.2);color:#60a5fa}
+[data-theme="dark"] .fbp-post-status.published{background:rgba(52,211,153,.2);color:#34d399}
+.fbp-post-msg{font-size:13.5px;color:var(--t1);line-height:1.5;display:-webkit-box;-webkit-line-clamp:4;line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.fbp-post-attach-thumb{margin-top:8px;width:100%;max-height:140px;border-radius:9px;object-fit:cover}
+.fbp-post-meta{font-size:11.5px;color:var(--t2);margin-top:10px;display:flex;align-items:center;justify-content:space-between}
+.fbp-post-actions{display:flex;gap:5px}
+.fbp-post-actions button{background:none;border:none;cursor:pointer;color:var(--t2);padding:5px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center}
+.fbp-post-actions button:hover{background:var(--bg-hover);color:var(--t1)}
+.fbp-post-actions button.danger:hover{color:#dc2626}
+
 /* ===== ATTENDANCE (ระบบลงเวลา) ===== */
 .att-tabs{display:inline-flex;background:var(--bg);border:1px solid var(--border);border-radius:11px;padding:3px;gap:2px;margin-bottom:20px}
 .att-tab{background:none;border:none;padding:8px 16px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:700;border-radius:8px;transition:all .15s ease;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
@@ -2576,6 +2664,7 @@ svg{display:block;flex-shrink:0}
       <div id="viewMembers" class="view"></div>
       <div id="viewFbLive" class="view"></div>
       <div id="viewFbLiveAuto" class="view"></div>
+      <div id="viewFbPosts" class="view"></div>
       <div id="viewSales" class="view"></div>
       <div id="viewActivity" class="view"></div>
       <div id="viewCalendar" class="view"></div>
@@ -3782,6 +3871,21 @@ let attHistoryFilterUser = 0;
 let _leaveAttachmentData = null;
 let attendanceHolidays = []; // [{id, date, name, type}]
 let nextHolidayId = 1;
+// ===== Facebook Post Manager =====
+let fbPostState = {
+  pageId: localStorage.getItem('tfl_fb_page_id') || '',
+  pageName: localStorage.getItem('tfl_fb_page_name') || '',
+  pageToken: localStorage.getItem('tfl_fb_page_token') || '',
+  pages: [],
+};
+let fbDrafts = [];
+let nextFbDraftId = 1;
+let fbScheduledPosts = [];
+let fbPublishedPosts = [];
+let fbPostView = 'compose'; // compose | scheduled | calendar | drafts
+let editFbDraftId = null;
+let fbComposeAttachment = null; // {type:'image'|'video', file:File|null, url:string|null, name:string}
+let fbCalMonth = new Date().toISOString().slice(0,7);
 let notifications = [];
 let nextNotifId = 1;
 let notifCheckTimer = null;
@@ -4040,6 +4144,11 @@ function applyRemoteWorkspace(data){
     const maxH = attendanceHolidays.reduce((m,h)=>Math.max(m, h.id||0), 0);
     nextHolidayId = Math.max(nextHolidayId, maxH + 1);
   }
+  if(Array.isArray(data.fbDrafts)){
+    fbDrafts = data.fbDrafts;
+    const maxDr = fbDrafts.reduce((m,d)=>Math.max(m, d.id||0), 0);
+    nextFbDraftId = Math.max(nextFbDraftId, maxDr + 1);
+  }
   saveAllLocal();
   if(currentUser){
     try { refreshDbTables(); } catch(_){}
@@ -4091,6 +4200,7 @@ function syncToNeon(){
         leaveRequests: leaveRequests,
         attendanceSettings: attendanceSettings,
         attendanceHolidays: attendanceHolidays,
+        fbDrafts: fbDrafts,
         _updatedBy: currentUser ? currentUser.name : 'unknown',
       };
       const r = await fetch(`${NEON_API}/workspace`, {
@@ -4379,6 +4489,8 @@ function saveAllLocal(){
     localStorage.setItem('tfl_attendanceSettings', JSON.stringify(attendanceSettings));
     localStorage.setItem('tfl_attendanceHolidays', JSON.stringify(attendanceHolidays));
     localStorage.setItem('tfl_nextHolidayId', String(nextHolidayId));
+    localStorage.setItem('tfl_fbDrafts', JSON.stringify(fbDrafts));
+    localStorage.setItem('tfl_nextFbDraftId', String(nextFbDraftId));
   } catch(e){ console.warn('Save failed:', e); }
 }
 
@@ -4462,6 +4574,12 @@ function loadAll(){
     if(holi) nextHolidayId = Math.max(parseInt(holi,10)||1, 1);
     const maxH = attendanceHolidays.reduce((m,h)=>Math.max(m, parseInt(h.id,10)||0), 0);
     if(maxH >= nextHolidayId) nextHolidayId = maxH + 1;
+    const fd = localStorage.getItem('tfl_fbDrafts');
+    if(fd){ const arr = JSON.parse(fd); if(Array.isArray(arr)) fbDrafts = arr; }
+    const fdi = localStorage.getItem('tfl_nextFbDraftId');
+    if(fdi) nextFbDraftId = Math.max(parseInt(fdi,10)||1, 1);
+    const maxDr = fbDrafts.reduce((m,d)=>Math.max(m, parseInt(d.id,10)||0), 0);
+    if(maxDr >= nextFbDraftId) nextFbDraftId = maxDr + 1;
   } catch(e){ console.warn('Load failed:', e); }
 }
 
@@ -5163,12 +5281,12 @@ function initApp(){
   let startView = 'dashboard';
   try {
     const saved = localStorage.getItem('tfl_currentView');
-    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbLiveAuto','sales','activity','calendar','lottery','attendance'];
+    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbLiveAuto','fbPosts','sales','activity','calendar','lottery','attendance'];
     if(saved && validViews.includes(saved)){
       // Check role permission
       if((saved === 'allTasks' || saved === 'members' || saved === 'activity' || saved === 'lottery') && currentUser.role !== 'admin'){
         startView = 'dashboard';
-      } else if((saved === 'fbLive' || saved === 'fbLiveAuto') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
+      } else if((saved === 'fbLive' || saved === 'fbLiveAuto' || saved === 'fbPosts') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
         startView = 'dashboard';
       } else {
         startView = saved;
@@ -5217,6 +5335,10 @@ function renderSidebar(){
         <div class="nav-item ${currentView==='fbLiveAuto'?'active':''}" onclick="navigateTo('fbLiveAuto')">
           <span class="nav-icon">${I.sparkle}</span>
           <span class="nav-label">Live AI</span>
+        </div>
+        <div class="nav-item ${currentView==='fbPosts'?'active':''}" onclick="navigateTo('fbPosts')">
+          <span class="nav-icon">${I.edit||I.note}</span>
+          <span class="nav-label">โพสต์ Manager</span>
         </div>
       </div>`;
   }
@@ -5502,7 +5624,7 @@ function populateModalSelects(){
 function navigateTo(id){
   if(!id) return;
   // Role-based route guards
-  if((id === 'fbLive' || id === 'fbLiveAuto') && currentUser && currentUser.role !== 'admin' && currentUser.role !== 'social'){
+  if((id === 'fbLive' || id === 'fbLiveAuto' || id === 'fbPosts') && currentUser && currentUser.role !== 'admin' && currentUser.role !== 'social'){
     id = 'dashboard';
   }
   if((id === 'allTasks' || id === 'members' || id === 'activity' || id === 'lottery') && currentUser && currentUser.role !== 'admin'){
@@ -5544,7 +5666,7 @@ function renderView(id,el){
   setTimeout(()=>el.classList.remove('fade-in'),300);
   ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,notes:renderNotes,taskBoard:renderTaskBoard,
     myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbLiveAuto:renderFbLiveAuto,
-    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance}[id]||(()=>{}))(el);
+    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,fbPosts:renderFbPosts}[id]||(()=>{}))(el);
 }
 
 function rerender(){ const el=document.getElementById('view'+cap(currentView)); if(el) renderView(currentView,el); }
@@ -11939,6 +12061,477 @@ function exportLotteryPDF(){
   } catch(err){
     console.error(err); alert('Export PDF ไม่สำเร็จ');
   }
+}
+
+// ============ FACEBOOK POST MANAGER ============
+async function fbpFetchPagesFromToken(userToken){
+  const u = `https://graph.facebook.com/${FB_API_VERSION}/me/accounts?fields=id,name,access_token,picture,fan_count,category&access_token=${encodeURIComponent(userToken)}`;
+  const r = await fetch(u);
+  const data = await r.json();
+  if(!r.ok || data.error) throw new Error((data.error && data.error.message) || `HTTP ${r.status}`);
+  return data.data || [];
+}
+
+async function fbpFetchPosts(){
+  if(!fbPostState.pageToken || !fbPostState.pageId){ fbScheduledPosts=[]; fbPublishedPosts=[]; return; }
+  try {
+    // Scheduled
+    const sUrl = `https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}/scheduled_posts?fields=id,message,scheduled_publish_time,created_time,full_picture&access_token=${encodeURIComponent(fbPostState.pageToken)}`;
+    const sr = await fetch(sUrl);
+    const sd = await sr.json();
+    if(sr.ok && Array.isArray(sd.data)) fbScheduledPosts = sd.data;
+    // Published recent
+    const pUrl = `https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}/posts?fields=id,message,created_time,full_picture,permalink_url&limit=20&access_token=${encodeURIComponent(fbPostState.pageToken)}`;
+    const pr = await fetch(pUrl);
+    const pd = await pr.json();
+    if(pr.ok && Array.isArray(pd.data)) fbPublishedPosts = pd.data;
+  } catch(_){}
+}
+
+function fbpSelectPage(pageId){
+  const p = fbPostState.pages.find(x => x.id === pageId);
+  if(!p) return;
+  fbPostState.pageId = p.id;
+  fbPostState.pageName = p.name;
+  fbPostState.pageToken = p.access_token;
+  localStorage.setItem('tfl_fb_page_id', p.id);
+  localStorage.setItem('tfl_fb_page_name', p.name);
+  localStorage.setItem('tfl_fb_page_token', p.access_token);
+  rerender();
+  fbpFetchPosts().then(()=>rerender());
+}
+
+function fbpDisconnect(){
+  if(!confirm('ตัดการเชื่อมต่อเพจ?')) return;
+  fbPostState = { pageId:'', pageName:'', pageToken:'', pages:[] };
+  localStorage.removeItem('tfl_fb_page_id');
+  localStorage.removeItem('tfl_fb_page_name');
+  localStorage.removeItem('tfl_fb_page_token');
+  fbScheduledPosts = []; fbPublishedPosts = [];
+  rerender();
+}
+
+async function fbpConnectFromToken(){
+  const tokenEl = document.getElementById('fbpTokenInput');
+  const tok = (tokenEl?.value || '').trim();
+  if(!tok){ alert('กรุณาวาง Access Token (User Token พร้อมสิทธิ์ pages_show_list + pages_manage_posts)'); return; }
+  try {
+    const pages = await fbpFetchPagesFromToken(tok);
+    if(!pages.length){ alert('ไม่พบเพจในบัญชีนี้'); return; }
+    fbPostState.pages = pages;
+    rerender();
+  } catch(err){
+    alert('โหลดเพจไม่สำเร็จ: ' + err.message);
+  }
+}
+
+function setFbpView(v){ fbPostView = v; if(v==='scheduled'||v==='compose'){ fbpFetchPosts().then(()=>rerender()); } else { rerender(); } }
+
+function fbpHandleAttach(ev, kind){
+  const file = ev.target.files && ev.target.files[0];
+  if(!file) return;
+  const url = URL.createObjectURL(file);
+  fbComposeAttachment = { type: kind, file, url, name: file.name };
+  rerender();
+  setTimeout(() => _fbpRestoreCompose(), 50);
+}
+
+function fbpClearAttach(){ fbComposeAttachment = null; rerender(); setTimeout(()=>_fbpRestoreCompose(),50); }
+
+function _fbpRestoreCompose(){
+  // Re-fill compose fields from current state if exists (handled at render)
+}
+
+function fbpSetType(t){
+  fbComposeType = t;
+  rerender();
+}
+let fbComposeType = 'text';
+
+function fbpQuickTime(when){
+  const dt = new Date();
+  if(when==='today2000'){ dt.setHours(20,0,0,0); }
+  else if(when==='tmr0900'){ dt.setDate(dt.getDate()+1); dt.setHours(9,0,0,0); }
+  else if(when==='tmr2000'){ dt.setDate(dt.getDate()+1); dt.setHours(20,0,0,0); }
+  else if(when==='nextweek'){ dt.setDate(dt.getDate()+7); dt.setHours(9,0,0,0); }
+  // Format YYYY-MM-DDTHH:MM
+  const pad = n => String(n).padStart(2,'0');
+  const v = `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`;
+  const el = document.getElementById('fbpScheduleAt');
+  if(el){ el.value = v; }
+  document.getElementById('fbpScheduleToggleInp').checked = true;
+  document.getElementById('fbpScheduleFields').classList.add('show');
+}
+
+function fbpToggleSchedule(checked){
+  document.getElementById('fbpScheduleFields').classList.toggle('show', !!checked);
+}
+
+function _fbpGetComposeData(){
+  const message = document.getElementById('fbpMessage').value.trim();
+  const link = document.getElementById('fbpLink')?.value.trim() || '';
+  const sched = document.getElementById('fbpScheduleToggleInp')?.checked;
+  const schedAt = sched ? document.getElementById('fbpScheduleAt').value : '';
+  return { message, link, sched, schedAt, type: fbComposeType, attachment: fbComposeAttachment };
+}
+
+async function fbpSaveDraft(){
+  const d = _fbpGetComposeData();
+  if(!d.message && !d.link && !d.attachment){ alert('ใส่ข้อความ ลิ้ง หรือไฟล์'); return; }
+  let attachInfo = null;
+  if(d.attachment && d.attachment.file){
+    // store base64 for draft
+    const fr = new FileReader();
+    attachInfo = await new Promise(res => {
+      fr.onload = e => res({ type: d.attachment.type, name: d.attachment.name, data: e.target.result });
+      fr.readAsDataURL(d.attachment.file);
+    });
+  }
+  const draft = {
+    id: editFbDraftId || nextFbDraftId++,
+    type: d.type,
+    message: d.message,
+    link: d.link,
+    schedAt: d.sched ? d.schedAt : '',
+    attachment: attachInfo,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  };
+  if(editFbDraftId){
+    const i = fbDrafts.findIndex(x => x.id === editFbDraftId);
+    if(i >= 0) fbDrafts[i] = draft;
+  } else {
+    fbDrafts.push(draft);
+  }
+  editFbDraftId = null;
+  fbComposeAttachment = null;
+  saveAll();
+  alert('บันทึก Draft แล้ว');
+  setFbpView('drafts');
+}
+
+async function fbpPublish(){
+  const d = _fbpGetComposeData();
+  if(!d.message && !d.attachment && !d.link){ alert('ใส่ข้อความ ลิ้ง หรือไฟล์'); return; }
+  if(!fbPostState.pageId || !fbPostState.pageToken){ alert('ยังไม่ได้เชื่อมต่อเพจ'); return; }
+  const btn = document.getElementById('fbpBtnPublish');
+  if(btn){ btn.disabled = true; btn.textContent = 'กำลังโพสต์...'; }
+  try {
+    const endpointBase = `https://graph.facebook.com/${FB_API_VERSION}`;
+    const sched = d.sched && d.schedAt;
+    const schedTs = sched ? Math.floor(new Date(d.schedAt).getTime()/1000) : null;
+    if(sched){
+      const now = Math.floor(Date.now()/1000);
+      if(schedTs < now + 600){ alert('เวลาที่กำหนดต้องอย่างน้อย 10 นาทีจากนี้'); if(btn){ btn.disabled=false; btn.textContent='โพสต์'; } return; }
+      if(schedTs > now + (75*86400)){ alert('เวลาที่กำหนดได้ไม่เกิน 75 วัน'); if(btn){ btn.disabled=false; btn.textContent='โพสต์'; } return; }
+    }
+    let result;
+    if(d.attachment && d.attachment.file && d.attachment.type==='image'){
+      const fd = new FormData();
+      fd.append('source', d.attachment.file);
+      if(d.message) fd.append('caption', d.message);
+      fd.append('access_token', fbPostState.pageToken);
+      if(sched){ fd.append('scheduled_publish_time', String(schedTs)); fd.append('published','false'); }
+      const r = await fetch(`${endpointBase}/${fbPostState.pageId}/photos`, { method:'POST', body: fd });
+      result = await r.json();
+      if(!r.ok || result.error) throw new Error((result.error&&result.error.message)||'HTTP '+r.status);
+    } else if(d.attachment && d.attachment.file && d.attachment.type==='video'){
+      const fd = new FormData();
+      fd.append('source', d.attachment.file);
+      if(d.message) fd.append('description', d.message);
+      fd.append('access_token', fbPostState.pageToken);
+      if(sched){ fd.append('scheduled_publish_time', String(schedTs)); fd.append('published','false'); }
+      const r = await fetch(`${endpointBase}/${fbPostState.pageId}/videos`, { method:'POST', body: fd });
+      result = await r.json();
+      if(!r.ok || result.error) throw new Error((result.error&&result.error.message)||'HTTP '+r.status);
+    } else {
+      // text + link
+      const body = new URLSearchParams();
+      if(d.message) body.set('message', d.message);
+      if(d.link) body.set('link', d.link);
+      body.set('access_token', fbPostState.pageToken);
+      if(sched){ body.set('scheduled_publish_time', String(schedTs)); body.set('published','false'); }
+      const r = await fetch(`${endpointBase}/${fbPostState.pageId}/feed`, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/x-www-form-urlencoded' },
+        body: body.toString(),
+      });
+      result = await r.json();
+      if(!r.ok || result.error) throw new Error((result.error&&result.error.message)||'HTTP '+r.status);
+    }
+    // Remove draft if was editing
+    if(editFbDraftId){
+      fbDrafts = fbDrafts.filter(x => x.id !== editFbDraftId);
+      editFbDraftId = null;
+    }
+    fbComposeAttachment = null;
+    saveAll();
+    alert(sched ? '✓ ตั้งเวลาโพสต์เรียบร้อย' : '✓ โพสต์เรียบร้อย');
+    await fbpFetchPosts();
+    setFbpView(sched ? 'scheduled' : 'compose');
+  } catch(err){
+    alert('โพสต์ไม่สำเร็จ: ' + err.message);
+    if(btn){ btn.disabled=false; btn.textContent='โพสต์'; }
+  }
+}
+
+function fbpEditDraft(id){
+  const d = fbDrafts.find(x => x.id === id);
+  if(!d) return;
+  editFbDraftId = id;
+  fbComposeType = d.type || 'text';
+  if(d.attachment){
+    fbComposeAttachment = { type: d.attachment.type, file: null, url: d.attachment.data, name: d.attachment.name };
+  } else {
+    fbComposeAttachment = null;
+  }
+  setFbpView('compose');
+  setTimeout(() => {
+    const ta = document.getElementById('fbpMessage');
+    if(ta) ta.value = d.message || '';
+    const lk = document.getElementById('fbpLink');
+    if(lk) lk.value = d.link || '';
+    if(d.schedAt){
+      document.getElementById('fbpScheduleToggleInp').checked = true;
+      document.getElementById('fbpScheduleFields').classList.add('show');
+      document.getElementById('fbpScheduleAt').value = d.schedAt;
+    }
+  }, 50);
+}
+
+function fbpDeleteDraft(id){
+  if(!confirm('ลบ draft นี้?')) return;
+  fbDrafts = fbDrafts.filter(x => x.id !== id);
+  saveAll();
+  rerender();
+}
+
+async function fbpCancelScheduled(postId){
+  if(!confirm('ยกเลิกโพสต์ที่ตั้งเวลานี้?')) return;
+  try {
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${postId}?access_token=${encodeURIComponent(fbPostState.pageToken)}`, { method:'DELETE' });
+    const d = await r.json();
+    if(!r.ok || d.error) throw new Error((d.error&&d.error.message)||'HTTP '+r.status);
+    await fbpFetchPosts();
+    rerender();
+  } catch(err){
+    alert('ยกเลิกไม่สำเร็จ: ' + err.message);
+  }
+}
+
+function renderFbPosts(el){
+  const isConnected = !!(fbPostState.pageId && fbPostState.pageToken);
+  if(!isConnected && fbPostState.pages.length === 0){
+    // Step 1: connect with token
+    el.innerHTML = topbarFB('Post Manager', 'จัดการโพสต์ Facebook Page · สร้าง • ตั้งเวลา • Draft', '') + `
+      <div class="page-content">
+        <div class="fbp-connect-card">
+          <div class="fbp-connect-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
+          <h2>เชื่อมต่อเพจ Facebook</h2>
+          <p>วาง <b>User Access Token</b> ที่มีสิทธิ์ <code>pages_show_list</code> + <code>pages_manage_posts</code> เพื่อเริ่มใช้งาน</p>
+          <textarea class="fbp-token-input" id="fbpTokenInput" placeholder="EAAxxxxxxx..."></textarea>
+          <button class="fbp-btn-publish" onclick="fbpConnectFromToken()" style="width:100%">โหลดรายการเพจ →</button>
+          <div style="margin-top:14px;font-size:11.5px;color:var(--t2);line-height:1.5">
+            หา Token ได้จาก <a href="https://developers.facebook.com/tools/explorer" target="_blank" style="color:#1877f2">Graph API Explorer</a> หรือ App ของคุณ
+          </div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  if(!isConnected && fbPostState.pages.length > 0){
+    // Step 2: select page
+    el.innerHTML = topbarFB('Post Manager', 'เลือกเพจที่ต้องการเชื่อมต่อ', '') + `
+      <div class="page-content">
+        <div class="fbp-connect-card">
+          <div class="fbp-connect-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <h2>เลือกเพจ</h2>
+          <p>พบ ${fbPostState.pages.length} เพจในบัญชีคุณ — เลือก 1 เพจเพื่อเริ่มจัดการ</p>
+          <div class="fbp-pages-list">
+            ${fbPostState.pages.map(p => `<div class="fbp-page-row" onclick="fbpSelectPage('${p.id}')">
+              <div class="fbp-page-thumb">${p.picture?.data?.url ? `<img src="${p.picture.data.url}"/>` : (p.name||'?')[0]}</div>
+              <div class="fbp-page-info">
+                <div class="fbp-page-name">${escapeHtmlN(p.name)}</div>
+                <div class="fbp-page-meta">${escapeHtmlN(p.category||'')} ${p.fan_count?'· '+p.fan_count.toLocaleString()+' Likes':''}</div>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--t2)"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>`).join('')}
+          </div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  // Connected view
+  const headerHtml = `<div class="fbp-header">
+    <div class="fbp-header-thumb">${(fbPostState.pageName||'?')[0]}</div>
+    <div class="fbp-header-info">
+      <div class="fbp-header-name">${escapeHtmlN(fbPostState.pageName)}</div>
+      <div class="fbp-header-sub">เพจที่เชื่อม · Page ID ${fbPostState.pageId}</div>
+    </div>
+    <button class="fbp-header-btn" onclick="fbpDisconnect()">ตัดการเชื่อมต่อ</button>
+  </div>`;
+
+  const tabsHtml = `<div class="fbp-tabs">
+    <button class="fbp-tab ${fbPostView==='compose'?'active':''}" onclick="setFbpView('compose')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg> สร้างโพสต์</button>
+    <button class="fbp-tab ${fbPostView==='drafts'?'active':''}" onclick="setFbpView('drafts')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg> Drafts (${fbDrafts.length})</button>
+    <button class="fbp-tab ${fbPostView==='scheduled'?'active':''}" onclick="setFbpView('scheduled')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Scheduled (${fbScheduledPosts.length})</button>
+    <button class="fbp-tab ${fbPostView==='calendar'?'active':''}" onclick="setFbpView('calendar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ปฏิทิน</button>
+  </div>`;
+
+  let body = '';
+  if(fbPostView === 'compose'){
+    body = `<div class="fbp-compose-card">
+      <div class="fbp-type-pills">
+        <button class="fbp-type-pill ${fbComposeType==='text'?'active':''}" onclick="fbpSetType('text')">📝 ข้อความ</button>
+        <button class="fbp-type-pill ${fbComposeType==='image'?'active':''}" onclick="fbpSetType('image')">🖼️ รูป</button>
+        <button class="fbp-type-pill ${fbComposeType==='video'?'active':''}" onclick="fbpSetType('video')">🎬 วิดีโอ</button>
+        <button class="fbp-type-pill ${fbComposeType==='reel'?'active':''}" onclick="fbpSetType('reel')">🎞️ Reel</button>
+        <button class="fbp-type-pill ${fbComposeType==='link'?'active':''}" onclick="fbpSetType('link')">🔗 ลิ้ง</button>
+      </div>
+      <textarea class="fbp-compose-textarea" id="fbpMessage" placeholder="คุณกำลังคิดอะไรอยู่..."></textarea>
+      ${fbComposeType==='link' ? `<input type="url" id="fbpLink" placeholder="https://example.com" style="width:100%;padding:12px 14px;border:1.5px solid var(--border-2);border-radius:11px;font-family:inherit;font-size:14px;background:var(--bg);color:var(--t1);margin-top:10px"/>` : ''}
+      ${(fbComposeType==='image' || fbComposeType==='video' || fbComposeType==='reel') ? `
+        <label class="fbp-upload-zone" style="margin-top:12px">
+          <input type="file" accept="${fbComposeType==='image'?'image/*':'video/*'}" onchange="fbpHandleAttach(event, '${fbComposeType==='image'?'image':'video'}')"/>
+          <div class="fbp-upload-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+          <div><div style="font-size:13px;font-weight:700;color:var(--t1)">${fbComposeAttachment ? 'เปลี่ยน'+(fbComposeType==='image'?'รูป':'วิดีโอ') : 'อัพโหลด'+(fbComposeType==='image'?'รูปภาพ':'วิดีโอ')}</div><div style="font-size:11.5px;color:var(--t2);margin-top:2px">${fbComposeType==='image'?'JPG, PNG':'MP4 (สูงสุด 1GB)'}</div></div>
+        </label>
+        ${fbComposeAttachment ? `<div class="fbp-attach-preview">
+          ${fbComposeAttachment.type==='image' ? `<img src="${fbComposeAttachment.url}"/>` : `<video src="${fbComposeAttachment.url}" muted></video>`}
+          <span class="name">${escapeHtmlN(fbComposeAttachment.name)}</span>
+          <button class="rm" onclick="fbpClearAttach()">×</button>
+        </div>` : ''}
+      ` : ''}
+
+      <div class="fbp-schedule-toggle">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;flex:1">
+          <input type="checkbox" id="fbpScheduleToggleInp" onchange="fbpToggleSchedule(this.checked)"/>
+          <span class="switch"></span>
+          <span style="font-size:13.5px;font-weight:700;color:var(--t1)">ตั้งเวลาโพสต์</span>
+        </label>
+      </div>
+      <div class="fbp-schedule-fields" id="fbpScheduleFields">
+        <input type="datetime-local" id="fbpScheduleAt"/>
+      </div>
+      <div class="fbp-quick-times">
+        <button class="fbp-quick-time" onclick="fbpQuickTime('today2000')">วันนี้ 20:00</button>
+        <button class="fbp-quick-time" onclick="fbpQuickTime('tmr0900')">พรุ่งนี้ 09:00</button>
+        <button class="fbp-quick-time" onclick="fbpQuickTime('tmr2000')">พรุ่งนี้ 20:00</button>
+        <button class="fbp-quick-time" onclick="fbpQuickTime('nextweek')">สัปดาห์หน้า</button>
+      </div>
+
+      <div class="fbp-compose-actions">
+        <button class="fbp-btn-draft" onclick="fbpSaveDraft()">บันทึก Draft</button>
+        <button class="fbp-btn-publish" id="fbpBtnPublish" onclick="fbpPublish()">โพสต์</button>
+      </div>
+    </div>`;
+  } else if(fbPostView === 'drafts'){
+    body = fbDrafts.length === 0
+      ? `<div class="empty-state">ยังไม่มี Draft</div>`
+      : `<div class="fbp-post-list">${fbDrafts.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0)).map(d => `<div class="fbp-post-card">
+          <span class="fbp-post-status draft">${d.schedAt?'Draft (มีเวลา)':'Draft'}</span>
+          <div class="fbp-post-msg">${escapeHtmlN(d.message||d.link||'(ไม่มีข้อความ)')}</div>
+          ${d.attachment?.data?.startsWith('data:image') ? `<img class="fbp-post-attach-thumb" src="${d.attachment.data}"/>` : ''}
+          <div class="fbp-post-meta">
+            <span>${d.schedAt? '⏰ '+new Date(d.schedAt).toLocaleString('th-TH') : timeAgoN(d.updatedAt||d.createdAt)}</span>
+            <span class="fbp-post-actions">
+              <button onclick="fbpEditDraft(${d.id})" title="แก้ไข">${I.edit}</button>
+              <button class="danger" onclick="fbpDeleteDraft(${d.id})" title="ลบ">${I.trash}</button>
+            </span>
+          </div>
+        </div>`).join('')}</div>`;
+  } else if(fbPostView === 'scheduled'){
+    body = fbScheduledPosts.length === 0
+      ? `<div class="empty-state">ยังไม่มีโพสต์ที่ตั้งเวลา</div>`
+      : `<div class="fbp-post-list">${fbScheduledPosts.map(p => `<div class="fbp-post-card">
+          <span class="fbp-post-status scheduled">ตั้งเวลา</span>
+          <div class="fbp-post-msg">${escapeHtmlN(p.message||'(ไม่มีข้อความ)')}</div>
+          ${p.full_picture?`<img class="fbp-post-attach-thumb" src="${p.full_picture}"/>`:''}
+          <div class="fbp-post-meta">
+            <span>⏰ ${new Date((p.scheduled_publish_time||0)*1000).toLocaleString('th-TH')}</span>
+            <span class="fbp-post-actions"><button class="danger" onclick="fbpCancelScheduled('${p.id}')" title="ยกเลิก">${I.trash}</button></span>
+          </div>
+        </div>`).join('')}</div>`;
+  } else if(fbPostView === 'calendar'){
+    body = _renderFbCalendar();
+  }
+
+  el.innerHTML = topbarFB('Post Manager', 'จัดการโพสต์ Facebook Page', '') + `
+    <div class="page-content" style="max-width:1280px">
+      ${headerHtml}
+      ${tabsHtml}
+      ${body}
+    </div>`;
+}
+
+function _renderFbCalendar(){
+  const [y, m] = fbCalMonth.split('-').map(Number);
+  const firstDay = new Date(y, m-1, 1);
+  const startDow = firstDay.getDay();
+  const daysInMonth = new Date(y, m, 0).getDate();
+  const dowLabels = ['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'];
+  const today = new Date().toISOString().slice(0,10);
+  const monthLabel = firstDay.toLocaleDateString('th-TH', { month:'long', year:'numeric' });
+
+  // Collect posts per date
+  const byDate = {};
+  fbScheduledPosts.forEach(p => {
+    if(!p.scheduled_publish_time) return;
+    const d = new Date(p.scheduled_publish_time*1000).toISOString().slice(0,10);
+    (byDate[d] = byDate[d]||[]).push({type:'scheduled', msg:p.message||'', time:new Date(p.scheduled_publish_time*1000)});
+  });
+  fbDrafts.forEach(d => {
+    if(!d.schedAt) return;
+    const ds = d.schedAt.slice(0,10);
+    (byDate[ds] = byDate[ds]||[]).push({type:'draft', msg:d.message||'', time:new Date(d.schedAt)});
+  });
+  fbPublishedPosts.forEach(p => {
+    if(!p.created_time) return;
+    const ds = p.created_time.slice(0,10);
+    if(!ds.startsWith(fbCalMonth)) return;
+    (byDate[ds] = byDate[ds]||[]).push({type:'published', msg:p.message||'', time:new Date(p.created_time)});
+  });
+
+  let cells = '';
+  for(let i=0;i<startDow;i++) cells += `<div class="cal-cell other-mo"></div>`;
+  for(let d=1; d<=daysInMonth; d++){
+    const ds = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const items = byDate[ds] || [];
+    const isToday = ds === today;
+    cells += `<div class="cal-cell ${isToday?'today':''}" data-date="${ds}">
+      <div class="cal-daynum">${d}</div>
+      ${items.slice(0,3).map(it => `<div class="cal-evt" style="background:${it.type==='scheduled'?'#1877f2':it.type==='draft'?'#f59e0b':'#10b981'}">${it.time.getHours().toString().padStart(2,'0')}:${it.time.getMinutes().toString().padStart(2,'0')} ${escapeHtmlN(it.msg).slice(0,18)}</div>`).join('')}
+      ${items.length>3?`<div class="cal-more">+${items.length-3} อื่นๆ</div>`:''}
+    </div>`;
+  }
+  const totalSoFar = startDow + daysInMonth;
+  const trailing = (7 - (totalSoFar % 7)) % 7;
+  for(let i=0; i<trailing; i++){ cells += `<div class="cal-cell other-mo"></div>`; }
+
+  return `<div class="cal-toolbar" style="margin-bottom:14px">
+    <div class="cal-nav">
+      <button onclick="_fbCalShift(-1)">‹</button>
+      <div class="cal-title">${monthLabel}</div>
+      <button onclick="_fbCalShift(1)">›</button>
+    </div>
+  </div>
+  <div class="cal-grid">
+    ${dowLabels.map(d=>`<div class="cal-dowhdr">${d}</div>`).join('')}
+    ${cells}
+  </div>
+  <div class="cal-legend">
+    <span><span class="cal-legend-dot" style="background:#1877f2"></span>ตั้งเวลา</span>
+    <span><span class="cal-legend-dot" style="background:#f59e0b"></span>Draft (มีเวลา)</span>
+    <span><span class="cal-legend-dot" style="background:#10b981"></span>โพสต์แล้ว</span>
+  </div>`;
+}
+
+function _fbCalShift(delta){
+  const [y, m] = fbCalMonth.split('-').map(Number);
+  const d = new Date(y, m-1+delta, 1);
+  fbCalMonth = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  rerender();
 }
 
 // ============ ATTENDANCE SYSTEM ============
