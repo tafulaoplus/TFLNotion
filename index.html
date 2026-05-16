@@ -1481,44 +1481,78 @@ svg{display:block;flex-shrink:0}
 /* LOGIN */
 #loginScreen{position:fixed;inset:0;background:linear-gradient(135deg,#fff 0%,#faf7ff 50%,#fef7fb 100%);display:flex;align-items:center;justify-content:center;z-index:999;padding:24px;overflow-y:auto}
 .login-wrap{display:flex;gap:40px;max-width:980px;width:100%;align-items:center}
-/* ===== LOGIN V2 (purple gradient hero) ===== */
-#loginScreen{position:fixed;inset:0;background:linear-gradient(135deg,#f5edff 0%,#fdf2f8 45%,#f0f9ff 100%);display:flex;align-items:center;justify-content:center;z-index:999;padding:32px;overflow:auto}
-[data-theme="dark"] #loginScreen{background:linear-gradient(135deg,#1a1244 0%,#2d1b4e 50%,#0f1729 100%)}
-.login-blob{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0}
-.login-blob.blob-1{top:-100px;left:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(167,139,250,.45),transparent 70%)}
-.login-blob.blob-2{bottom:-120px;right:-120px;width:500px;height:500px;background:radial-gradient(circle,rgba(244,114,182,.35),transparent 70%)}
-.login-blob.blob-3{top:30%;right:20%;width:300px;height:300px;background:radial-gradient(circle,rgba(34,211,238,.25),transparent 70%)}
-[data-theme="dark"] .login-blob{opacity:.5}
-.login-wrap{position:relative;z-index:1;display:flex;align-items:center;gap:60px;max-width:1280px;width:100%}
-.login-hero{flex:1;padding:20px;text-align:center}
-.login-hero-logo{display:flex;justify-content:center;margin-bottom:22px}
-.login-hero-logo-box{width:140px;height:140px;border-radius:32px;overflow:hidden;position:relative;box-shadow:0 24px 60px rgba(124,58,237,.35);background:transparent}
-.login-hero-logo-box > img,.login-hero-logo-box > svg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
-.login-hero-logo-box .brand-img-dark{display:none}
-[data-theme="dark"] .login-hero-logo-box .brand-img-light{display:none}
-[data-theme="dark"] .login-hero-logo-box .brand-img-dark{display:block}
-[data-theme="dark"] .login-hero-logo-box{box-shadow:0 24px 60px rgba(124,58,237,.6)}
-.login-hero-title{font-size:46px;font-weight:900;color:var(--t1);letter-spacing:-.02em;margin:0 0 14px;line-height:1.1}
-.login-hero-tag{font-size:15px;color:var(--t2);margin:0 0 24px;line-height:1.5}
-.login-feature-pills{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
-.login-feat-pill{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,.7);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.6);border-radius:14px;text-align:left;box-shadow:0 4px 16px rgba(124,58,237,.08)}
-[data-theme="dark"] .login-feat-pill{background:rgba(45,27,78,.6);border-color:rgba(167,139,250,.2)}
-.login-feat-pill-icon{width:32px;height:32px;border-radius:9px;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.lf-t{font-size:13px;font-weight:800;color:var(--t1);line-height:1.1}
-.lf-s{font-size:11px;color:var(--t2);margin-top:2px}
+/* ===== LOGIN V3 — split-screen polished ===== */
+#loginScreen{position:fixed;inset:0;background:linear-gradient(135deg,#faf5ff 0%,#fdf2f8 40%,#eff6ff 100%);display:flex;align-items:center;justify-content:center;z-index:999;padding:32px;overflow:auto}
+[data-theme="dark"] #loginScreen{background:radial-gradient(ellipse at top left,#2d1b4e 0%,#1a1244 35%,#0f0c2a 100%)}
+.login-blob{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;animation:blobFloat 16s ease-in-out infinite}
+.login-blob.blob-1{top:-160px;left:-160px;width:520px;height:520px;background:radial-gradient(circle,rgba(167,139,250,.55),transparent 70%);animation-delay:0s}
+.login-blob.blob-2{bottom:-180px;right:-180px;width:620px;height:620px;background:radial-gradient(circle,rgba(244,114,182,.4),transparent 70%);animation-delay:-5s}
+.login-blob.blob-3{top:30%;left:55%;width:380px;height:380px;background:radial-gradient(circle,rgba(34,211,238,.32),transparent 70%);animation-delay:-10s}
+[data-theme="dark"] .login-blob.blob-1{background:radial-gradient(circle,rgba(139,92,246,.45),transparent 70%)}
+[data-theme="dark"] .login-blob.blob-2{background:radial-gradient(circle,rgba(219,39,119,.3),transparent 70%)}
+[data-theme="dark"] .login-blob.blob-3{background:radial-gradient(circle,rgba(6,182,212,.25),transparent 70%)}
+@keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-20px) scale(1.05)}66%{transform:translate(-20px,30px) scale(.95)}}
 
-.login-box{position:relative;width:480px;max-width:100%;padding:36px 36px 28px;background:rgba(255,255,255,.85);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.8);border-radius:24px;box-shadow:0 30px 80px rgba(124,58,237,.18)}
-[data-theme="dark"] .login-box{background:rgba(45,27,78,.7);border-color:rgba(167,139,250,.2)}
-.login-box-tools{position:absolute;top:18px;right:18px;display:flex;gap:8px;z-index:2}
-.login-theme-toggle-inline{width:62px;height:32px;border:1px solid var(--border-2);background:rgba(255,255,255,.9);border-radius:100px;cursor:pointer;display:flex;align-items:center;padding:0 4px;position:relative;color:var(--t1);transition:all .2s ease}
-[data-theme="dark"] .login-theme-toggle-inline{background:rgba(45,27,78,.6);border-color:rgba(167,139,250,.25)}
-.login-theme-toggle-inline .sun-i,.login-theme-toggle-inline .moon-i{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:all .2s ease}
-.login-theme-toggle-inline .sun-i{background:#fff;color:#f59e0b;box-shadow:0 2px 6px rgba(0,0,0,.08);transform:translateX(0)}
-.login-theme-toggle-inline .moon-i{color:var(--t2)}
-[data-theme="dark"] .login-theme-toggle-inline .sun-i{background:transparent;box-shadow:none;color:var(--t2)}
-[data-theme="dark"] .login-theme-toggle-inline .moon-i{background:#1f1147;color:#fbbf24;box-shadow:0 2px 6px rgba(0,0,0,.4);margin-left:auto}
-.login-title{font-size:26px;font-weight:800;color:var(--t1);margin:6px 0 4px;letter-spacing:-.01em}
+.login-wrap{position:relative;z-index:1;display:flex;align-items:center;gap:60px;max-width:1180px;width:100%}
+.login-hero{flex:1;padding:20px;min-width:0}
+.login-hero-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;background:rgba(255,255,255,.7);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.8);border-radius:100px;font-size:12.5px;font-weight:700;color:#7c3aed;box-shadow:0 6px 20px rgba(124,58,237,.12);margin-bottom:22px}
+[data-theme="dark"] .login-hero-badge{background:rgba(45,27,78,.5);border-color:rgba(167,139,250,.25);color:#c4b5fd;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.login-hero-badge .dot{width:7px;height:7px;background:linear-gradient(135deg,#a78bfa,#7c3aed);border-radius:50%;animation:pulse 2s infinite;box-shadow:0 0 12px rgba(167,139,250,.6)}
+.login-hero h1{font-size:48px;font-weight:900;line-height:1.1;letter-spacing:-.02em;color:var(--t1);margin:0 0 18px}
+.gradient-text{background:linear-gradient(135deg,#a78bfa 0%,#7c3aed 50%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.login-hero p{font-size:16px;color:var(--t2);line-height:1.65;margin:0 0 28px;max-width:480px}
+.feature-list{display:flex;flex-direction:column;gap:12px}
+.feat{display:flex;align-items:center;gap:12px;padding:11px 16px;background:rgba(255,255,255,.65);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.7);border-radius:14px;font-size:13.5px;font-weight:600;color:var(--t1);box-shadow:0 4px 14px rgba(124,58,237,.08);transition:all .2s ease}
+.feat:hover{transform:translateX(4px);box-shadow:0 6px 20px rgba(124,58,237,.14)}
+[data-theme="dark"] .feat{background:rgba(45,27,78,.4);border-color:rgba(167,139,250,.2);color:var(--t1)}
+[data-theme="dark"] .feat:hover{background:rgba(45,27,78,.6)}
+.feat-icon{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(124,58,237,.3)}
+.feat-icon svg{width:14px;height:14px}
+
+.login-box{position:relative;width:460px;max-width:100%;padding:36px 34px 26px;background:rgba(255,255,255,.88);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.9);border-radius:24px;box-shadow:0 30px 80px rgba(124,58,237,.2),0 0 0 1px rgba(255,255,255,.5) inset}
+[data-theme="dark"] .login-box{background:rgba(31,17,71,.7);border-color:rgba(167,139,250,.25);box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 0 1px rgba(167,139,250,.15) inset}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.login-logo-icon{width:48px;height:48px;border-radius:13px;overflow:hidden;position:relative;flex-shrink:0;background:transparent;box-shadow:0 8px 20px rgba(15,15,35,.2)}
+.login-logo-icon > img,.login-logo-icon > svg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
+.login-logo-icon .brand-img-dark{display:none}
+[data-theme="dark"] .login-logo-icon .brand-img-light{display:none}
+[data-theme="dark"] .login-logo-icon .brand-img-dark{display:block}
+[data-theme="dark"] .login-logo-icon{box-shadow:0 8px 20px rgba(124,58,237,.45)}
+.login-logo-text{font-size:21px;font-weight:800;color:var(--t1);letter-spacing:-.01em}
+.login-title{font-size:24px;font-weight:800;color:var(--t1);margin:6px 0 4px;letter-spacing:-.01em}
 .login-sub{font-size:13.5px;color:var(--t2);margin:0 0 22px}
+.label-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.user-select-label{font-size:11.5px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px}
+.btn-add-member{padding:6px 12px;background:rgba(255,255,255,.8);border:1.5px solid rgba(167,139,250,.3);border-radius:100px;font-size:11.5px;font-weight:700;cursor:pointer;color:#7c3aed;display:inline-flex;align-items:center;gap:5px;transition:all .15s ease}
+.btn-add-member:hover{background:#7c3aed;color:#fff;border-color:#7c3aed;transform:translateY(-1px)}
+[data-theme="dark"] .btn-add-member{background:rgba(167,139,250,.12);color:#c4b5fd;border-color:rgba(167,139,250,.35)}
+.user-cards{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;padding-right:4px;margin-bottom:18px}
+.user-cards::-webkit-scrollbar{width:4px}
+.user-cards::-webkit-scrollbar-thumb{background:rgba(167,139,250,.3);border-radius:2px}
+.user-card{display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,.6);border:1.5px solid transparent;border-radius:13px;cursor:pointer;transition:all .15s ease}
+.user-card:hover{background:rgba(255,255,255,.9);border-color:rgba(167,139,250,.3)}
+.user-card.selected{background:rgba(255,255,255,.95);border-color:#a78bfa;box-shadow:0 6px 18px rgba(124,58,237,.18)}
+[data-theme="dark"] .user-card{background:rgba(45,27,78,.4);border-color:transparent}
+[data-theme="dark"] .user-card:hover{background:rgba(45,27,78,.6);border-color:rgba(167,139,250,.3)}
+[data-theme="dark"] .user-card.selected{background:rgba(45,27,78,.8);border-color:#a78bfa}
+.uav{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;flex-shrink:0}
+.uav-img{display:inline-block;border-radius:50%;background-size:cover;background-position:center;color:transparent;flex-shrink:0}
+.uinfo{flex:1;min-width:0}
+.uname{font-size:14px;font-weight:700;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.uemail{font-size:11.5px;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px}
+.rbadge{padding:3px 10px;border-radius:8px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;flex-shrink:0}
+.rbadge.r-admin{background:#fef3c7;color:#b45309}
+.rbadge.r-member{background:#dbeafe;color:#1d4ed8}
+.rbadge.role-social{background:#fce7f3;color:#be185d}
+[data-theme="dark"] .rbadge.r-admin{background:rgba(251,191,36,.2);color:#fbbf24}
+[data-theme="dark"] .rbadge.r-member{background:rgba(96,165,250,.2);color:#60a5fa}
+[data-theme="dark"] .rbadge.role-social{background:rgba(244,114,182,.2);color:#f472b6}
+.user-card .check{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;display:none;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 10px rgba(124,58,237,.4)}
+.user-card .check svg{width:13px;height:13px}
+.user-card.selected .check{display:flex}
+.btn-login{width:100%;padding:14px;background:linear-gradient(135deg,#a78bfa 0%,#7c3aed 50%,#ec4899 100%);background-size:200% 200%;color:#fff;border:none;border-radius:13px;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 14px 36px rgba(124,58,237,.4);transition:all .25s ease;animation:loginBtnShift 4s ease infinite}
+.btn-login:hover{transform:translateY(-2px);box-shadow:0 18px 44px rgba(124,58,237,.5);background-position:100% 100%}
+@keyframes loginBtnShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 .login-signup-row{margin-top:16px;text-align:center;font-size:13px;color:var(--t2)}
 .login-signup-row a{color:#7c3aed;font-weight:700;text-decoration:none;cursor:pointer;margin-left:6px}
 .login-signup-row a:hover{text-decoration:underline}
@@ -1526,25 +1560,22 @@ svg{display:block;flex-shrink:0}
 .login-footer{position:absolute;bottom:18px;left:0;right:0;text-align:center;font-size:11.5px;color:var(--t2);z-index:1}
 
 @media (max-width:980px){
-  .login-wrap{flex-direction:column;gap:24px}
+  .login-wrap{flex-direction:column;gap:30px;padding:20px 0}
   .login-hero{padding:0;text-align:center}
-  .login-hero-title{font-size:32px}
-  .login-feature-pills{justify-content:center}
+  .login-hero h1{font-size:32px}
+  .login-hero p{margin-left:auto;margin-right:auto}
+  .feature-list{align-items:center}
+  .feat{width:fit-content;max-width:100%}
+  .login-box{width:100%;max-width:460px}
 }
 @media (max-width:560px){
   #loginScreen{padding:18px}
-  .login-hero-logo-box{width:96px;height:96px;border-radius:22px}
-  .login-hero-title{font-size:26px}
-  .login-hero-tag{font-size:13px}
-  .login-box{padding:24px}
-  .login-title{font-size:21px}
-  .login-feat-pill{padding:8px 10px}
-  .login-feat-pill-icon{width:28px;height:28px}
-  .lf-t{font-size:12px}.lf-s{font-size:10px}
+  .login-hero h1{font-size:26px}
+  .login-hero p{font-size:13.5px}
+  .login-box{padding:24px 22px 18px}
+  .login-title{font-size:20px}
+  .login-hero-badge{font-size:11px;padding:5px 12px}
 }
-
-/* Suppress old hero styles when V2 active */
-.login-hero{flex:1;padding:20px}
 .login-hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:#fff;border:1px solid var(--p200);border-radius:100px;font-size:12px;font-weight:600;color:var(--p600);box-shadow:var(--shadow-sm);margin-bottom:20px}
 .login-hero-badge .dot{width:6px;height:6px;background:var(--p500);border-radius:50%;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
@@ -2452,34 +2483,25 @@ svg{display:block;flex-shrink:0}
   <div class="login-blob blob-1"></div>
   <div class="login-blob blob-2"></div>
   <div class="login-blob blob-3"></div>
+  <button class="login-theme-toggle" onclick="toggleTheme()" title="สลับธีม Light / Dark">
+    <span class="sun-i" style="display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+    <span class="moon-i" style="display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+  </button>
   <div class="login-wrap">
     <div class="login-hero">
-      <div class="login-hero-logo">
-        <div class="login-hero-logo-box" id="loginLogoIco"></div>
-      </div>
-      <h1 class="login-hero-title"><span class="gradient-text">TFL+</span> Workspace</h1>
-      <p class="login-hero-tag">แพลตฟอร์มจัดการทีมของคุณ ครบจบในที่เดียว</p>
-      <div class="login-feature-pills">
-        <div class="login-feat-pill">
-          <div class="login-feat-pill-icon" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-          <div><div class="lf-t">จัดการง่าย</div><div class="lf-s">ครบทุกฟีเจอร์</div></div>
-        </div>
-        <div class="login-feat-pill">
-          <div class="login-feat-pill-icon" style="background:linear-gradient(135deg,#22d3ee,#0e7490)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-          <div><div class="lf-t">ปลอดภัย</div><div class="lf-s">มั่นใจทุกข้อมูล</div></div>
-        </div>
-        <div class="login-feat-pill">
-          <div class="login-feat-pill-icon" style="background:linear-gradient(135deg,#f472b6,#be185d)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-          <div><div class="lf-t">ทีมเวิร์ค</div><div class="lf-s">ทำงานร่วมกันได้ดี</div></div>
-        </div>
+      <div class="login-hero-badge"><span class="dot"></span> Workspace Management Platform</div>
+      <h1>จัดการทีมของคุณ<br><span class="gradient-text">อย่างเป็นระบบ</span></h1>
+      <p>แพลตฟอร์มจัดการงาน เอกสาร และทีมงานในที่เดียว ออกแบบมาเพื่อทีม TFL+ โดยเฉพาะ</p>
+      <div class="feature-list">
+        <div class="feat"><div class="feat-icon" id="featIco1"></div> จัดการงานแบบ Database View</div>
+        <div class="feat"><div class="feat-icon" id="featIco2"></div> แยกสิทธิ์ Admin / Member</div>
+        <div class="feat"><div class="feat-icon" id="featIco3"></div> ติดตามความคืบหน้าเรียลไทม์</div>
       </div>
     </div>
     <div class="login-box">
-      <div class="login-box-tools">
-        <button class="login-theme-toggle-inline" onclick="toggleTheme()" title="สลับธีม">
-          <span class="sun-i"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg></span>
-          <span class="moon-i"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
-        </button>
+      <div class="login-logo">
+        <div class="login-logo-icon" id="loginLogoIco"></div>
+        <div class="login-logo-text"><span class="gradient-text">TFL+</span> Workspace</div>
       </div>
       <h1 class="login-title">ยินดีต้อนรับกลับ 👋</h1>
       <p class="login-sub">เข้าสู่ระบบเพื่อใช้งาน TFL+ Workspace</p>
