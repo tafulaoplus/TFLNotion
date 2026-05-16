@@ -3282,7 +3282,7 @@ function startNeonPolling(){
         applyRemoteWorkspace(data);
       }
     } catch(_){}
-  }, 30000);
+  }, 10000);
 }
 
 // Force push all current state to Neon (manual migration trigger)
@@ -4476,11 +4476,30 @@ function topbarFB(label, sub, actions=''){
 
 // ============ NOTIFICATION SYSTEM ============
 function notifBellHTML(){
-  return `<span class="sync-badge off" id="syncBadge" title="กำลังเชื่อมต่อ..." onclick="if(neonStatus==='error'||neonStatus==='offline'){initNeonSync();}">Offline</span>
+  return `<span class="sync-badge off" id="syncBadge" title="คลิกเพื่อ sync ทันที" onclick="forceSyncNow()">Offline</span>
   <button class="notif-btn" onclick="toggleNotifPanel(event)" title="แจ้งเตือน" type="button">
     ${I.bell}
     <span class="notif-badge" id="notifBadge" style="display:none">0</span>
   </button>`;
+}
+async function forceSyncNow(){
+  if(neonStatus === 'offline' || neonStatus === 'error'){
+    await initNeonSync();
+    return;
+  }
+  setNeonStatus('connecting');
+  try {
+    const r = await fetch(`${NEON_API}/workspace`, { cache: 'no-store' });
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const data = await r.json();
+    if(data.exists){
+      neonLastUpdatedAt = data.updatedAt;
+      applyRemoteWorkspace(data);
+    }
+    setNeonStatus('online');
+  } catch(e){
+    setNeonStatus('error', e.message);
+  }
 }
 function escapeHtmlN(s){
   return String(s==null?'':s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
