@@ -14045,171 +14045,180 @@ let fbLiveStats = { viewers:0, reactions:0, comments:0 };
 function renderFbGoLive(el){
   const fbConnected = !!(fbPostState.pageId && fbPostState.pageToken);
   const isAdmin = currentUser && currentUser.role === 'admin';
-  const isLive = fbLiveBroadcast && (fbLiveBroadcast.status === 'LIVE' || fbLiveBroadcast.status === 'STARTED');
-  const isPrep = fbLiveBroadcast && (fbLiveBroadcast.status === 'UNPUBLISHED' || fbLiveBroadcast.status === 'PREPARING');
 
-  el.innerHTML = topbarSimple('live', 'ไลฟ์สด Facebook', 'สร้างและออกอากาศ Facebook Live จากเว็บ', '') + `
+  el.innerHTML = topbarSimple('live', 'ไลฟ์สด Facebook', 'Monitor การไลฟ์ผ่าน OBS — ผู้ชม คอมเมนต์ reactions แบบ real-time', '') + `
   <div class="page-content" style="max-width:1200px">
     ${!fbConnected ? `
       <div class="golive-warn">
         <div class="golive-warn-ic">${I.alert}</div>
         <div style="flex:1">
           <div style="font-weight:800;color:#92400e;margin-bottom:4px">ยังไม่ได้เชื่อม Facebook Page</div>
-          <div style="font-size:13px;color:#92400e">${isAdmin?'ไปที่ "เชื่อมต่อแพลตฟอร์ม" เพื่อเชื่อม Facebook Page ก่อน — ไลฟ์สดทำไม่ได้หากไม่มี Page Token':'รอ Admin เชื่อม Facebook Page ก่อน'}</div>
+          <div style="font-size:13px;color:#92400e">${isAdmin?'ไปที่ "เชื่อมต่อแพลตฟอร์ม" เพื่อเชื่อม Facebook Page ก่อน — Monitor การไลฟ์ทำไม่ได้หากไม่มี Page Token':'รอ Admin เชื่อม Facebook Page ก่อน'}</div>
         </div>
         ${isAdmin?`<button class="btn-primary" onclick="navigateTo('socialIntegrations')">ไปเชื่อม →</button>`:''}
       </div>
     ` : !fbLiveBroadcast ? renderFbGoLiveSetup() : renderFbGoLiveBroadcast()}
   </div>`;
-
-  // Init camera preview in setup mode
-  if(fbConnected && !fbLiveBroadcast) initFbLiveCameraPreview();
 }
 
 function renderFbGoLiveSetup(){
   return `
-    <div class="golive-grid">
-      <div class="golive-preview-col">
-        <div class="golive-preview-card">
-          <video id="fbLivePreview" class="golive-video" autoplay muted playsinline></video>
-          <div class="golive-preview-overlay">
-            <span class="golive-rec-dot"></span>
-            <span style="font-weight:700">PREVIEW</span>
-          </div>
-          <button class="golive-cam-btn" onclick="initFbLiveCameraPreview()" title="เริ่มกล้อง">${I.eye} ${fbLiveCameraStream?'เริ่มใหม่':'เปิดกล้อง'}</button>
+    <div style="max-width:880px;margin:0 auto">
+      <div class="golive-card" style="text-align:center;padding:28px 28px 24px">
+        <div style="width:72px;height:72px;margin:0 auto 14px;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;border-radius:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(239,68,68,.35)">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" fill="currentColor"/><path d="M16.5 7.5a6.5 6.5 0 0 1 0 9"/><path d="M7.5 16.5a6.5 6.5 0 0 1 0-9"/><path d="M19.5 4.5a10.5 10.5 0 0 1 0 15"/><path d="M4.5 19.5a10.5 10.5 0 0 1 0-15"/></svg>
         </div>
-        <div class="golive-tip">
-          <b>💡 หมายเหตุ:</b> ภาพตัวอย่างนี้เพื่อเช็คกล้องเฉยๆ — การออกอากาศจริงจะใช้ OBS/Streamlabs ส่ง stream ผ่าน RTMP (Facebook Live ต้องการ RTMPS server-side)
+        <h2 style="margin:0 0 6px;font-size:22px;color:var(--t1)">เชื่อมต่อ Facebook Live ของคุณ</h2>
+        <p style="margin:0 0 24px;color:var(--t2);font-size:13.5px;line-height:1.7">ตั้งสตรีมผ่าน OBS + Facebook Live Producer ตามปกติ → วาง URL หรือ Video ID ที่นี่ → เว็บจะ monitor คอมเมนต์ ผู้ชม reactions แบบเรียลไทม์ให้</p>
+
+        <div style="text-align:left;background:var(--p50);border:1px solid var(--p200);border-radius:11px;padding:14px 16px;margin-bottom:18px;font-size:12.5px;line-height:1.8">
+          <b style="color:var(--p700);display:block;margin-bottom:6px">📋 ขั้นตอน:</b>
+          <ol style="margin:0;padding-left:20px;color:var(--t2)">
+            <li>เปิด <a href="https://www.facebook.com/live/producer/" target="_blank" style="color:var(--p600);font-weight:700">Facebook Live Producer</a> → เลือก Page <b>${escapeHtml(fbPostState.pageName)}</b></li>
+            <li>กด <b>Select Streaming Software</b> → ก็อป <b>Stream Key</b> + <b>Server URL</b></li>
+            <li>เปิด OBS → Settings → Stream → Service: <b>Facebook Live</b> → วาง Stream Key</li>
+            <li>กด <b>Start Streaming</b> ใน OBS — Facebook Live Producer จะเห็น preview</li>
+            <li>กด <b>Go Live</b> ใน Facebook Live Producer (หรือใช้ Schedule)</li>
+            <li>ก็อป URL ของไลฟ์ (จาก preview link ใน Producer หรือบนหน้า Page) มาวางด้านล่าง</li>
+          </ol>
         </div>
-      </div>
 
-      <div class="golive-form-col">
-        <div class="golive-card">
-          <div class="golive-card-title">${I.live} ตั้งค่าไลฟ์สด</div>
+        <div class="fgrp" style="text-align:left">
+          <label class="flabel">Facebook Live URL หรือ Video ID *</label>
+          <input class="finp" id="fbMonitorUrl" placeholder="https://www.facebook.com/.../videos/1234567890 หรือ 1234567890" autofocus>
+          <div style="font-size:11.5px;color:var(--t3);margin-top:6px">รองรับ: <code>facebook.com/watch?v=...</code> · <code>/videos/...</code> · <code>fb.watch/...</code> · หรือ Video ID ตัวเลข</div>
+        </div>
 
-          <div class="fgrp">
-            <label class="flabel">ชื่อ Live *</label>
-            <input class="finp" id="fbLiveTitle" placeholder="ตัวอย่าง: ไลฟ์ขายหวย งวด 16 พ.ค.">
-          </div>
-
-          <div class="fgrp">
-            <label class="flabel">คำอธิบาย</label>
-            <textarea class="finp" id="fbLiveDesc" rows="3" placeholder="รายละเอียดไลฟ์ ของแจก กติกา ฯลฯ"></textarea>
-          </div>
-
-          <div class="fgrp">
-            <label class="flabel">ความเป็นส่วนตัว</label>
-            <select class="finp" id="fbLivePrivacy">
-              <option value="EVERYONE">🌎 สาธารณะ (ทุกคน)</option>
-              <option value="ALL_FRIENDS">👥 เพื่อนเท่านั้น</option>
-              <option value="SELF">🔒 ตัวเอง (ทดสอบ)</option>
-            </select>
-          </div>
-
-          <div style="display:flex;gap:10px;margin-top:18px">
-            <button class="golive-go-btn" onclick="fbLiveCreate()">${I.live} เริ่มไลฟ์สด →</button>
-          </div>
-          <div style="font-size:11.5px;color:var(--t3);margin-top:10px">ระบบจะสร้าง Live Video บน Page <b>${escapeHtml(fbPostState.pageName)}</b> และให้ Stream URL + Key สำหรับ OBS</div>
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:18px">
+          <button class="golive-go-btn" onclick="fbLiveStartMonitor()" style="min-width:240px">${I.live} เริ่ม Monitor ไลฟ์</button>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <button class="btn-ghost" onclick="fbLiveFindLatest()">${I.search} หาไลฟ์ล่าสุดของ Page อัตโนมัติ</button>
+          <a href="https://www.facebook.com/live/producer/" target="_blank" class="btn-ghost" style="text-decoration:none">${I.externalLink} เปิด Live Producer</a>
         </div>
       </div>
     </div>`;
 }
 
+// Extract Facebook video ID from URL or pass-through if it's already a numeric ID
+function extractFbVideoId(input){
+  const s = (input||'').trim();
+  if(!s) return '';
+  if(/^\d{6,}$/.test(s)) return s;
+  // Common URL patterns
+  const patterns = [
+    /[?&]v=(\d+)/,                              // watch/?v=123
+    /\/videos\/(?:\w+\/)?(\d+)/,                // /videos/123 or /videos/vh.xxx/123
+    /\/live_videos\/(\d+)/,                     // /live_videos/123
+    /\/video\.php\?v=(\d+)/,                    // legacy
+    /fb\.watch\/([A-Za-z0-9_-]+)/,              // short URL — needs follow but at least pass through
+    /story_fbid=(\d+)/,                         // story link
+  ];
+  for(const p of patterns){
+    const m = s.match(p);
+    if(m && m[1]) return m[1];
+  }
+  return '';
+}
+
+async function fbLiveStartMonitor(){
+  const raw = document.getElementById('fbMonitorUrl').value.trim();
+  if(!raw){ alert('กรุณาวาง Facebook Live URL หรือ Video ID'); return; }
+  const id = extractFbVideoId(raw);
+  if(!id){ alert('ไม่สามารถดึง Video ID จาก URL ได้\n\nลองวาง Video ID ตัวเลขโดยตรง'); return; }
+  try {
+    const tok = encodeURIComponent(fbPostState.pageToken);
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${id}?fields=id,title,description,status,permalink_url,embed_html,creation_time,broadcast_start_time,live_views&access_token=${tok}`);
+    const j = await r.json();
+    if(j.error){ alert('ไม่พบ Live: ' + j.error.message); return; }
+    fbLiveBroadcast = j;
+    fbLiveBroadcast.monitorMode = true;
+    fbLiveStats = { viewers:0, reactions:0, comments:0 };
+    fbLiveComments = [];
+    startFbLivePolling();
+    await fbLivePoll();
+    rerender();
+  } catch(e){ alert('ผิดพลาด: ' + e.message); }
+}
+
+async function fbLiveFindLatest(){
+  try {
+    const tok = encodeURIComponent(fbPostState.pageToken);
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}/live_videos?fields=id,title,status,broadcast_start_time&limit=5&broadcast_status=["LIVE","UNPUBLISHED","SCHEDULED_UNPUBLISHED","LIVE_STOPPED"]&access_token=${tok}`);
+    const j = await r.json();
+    if(j.error){ alert('ดึงรายการ Live ไม่สำเร็จ: ' + j.error.message); return; }
+    const list = j.data || [];
+    if(!list.length){ alert('ไม่พบไลฟ์ของ Page นี้ (ทั้ง active และ scheduled)'); return; }
+    // Prefer LIVE, then UNPUBLISHED, else first
+    const pick = list.find(l => l.status==='LIVE') || list.find(l => l.status==='UNPUBLISHED') || list[0];
+    document.getElementById('fbMonitorUrl').value = pick.id;
+    await fbLiveStartMonitor();
+  } catch(e){ alert('ผิดพลาด: ' + e.message); }
+}
+
 function renderFbGoLiveBroadcast(){
   const b = fbLiveBroadcast;
   const isLive = b.status === 'LIVE' || b.status === 'STARTED';
-  const rtmpUrl = b.secure_stream_url || b.stream_url || '';
-  // Stream URL format: rtmps://live-api-s.facebook.com:443/rtmp/<KEY>
-  const m = rtmpUrl.match(/^(rtmps?:\/\/[^/]+\/rtmp\/)(.+)$/);
-  const serverUrl = m ? m[1] : rtmpUrl;
-  const streamKey = m ? m[2] : '';
+  const isUnpublished = b.status === 'UNPUBLISHED' || b.status === 'SCHEDULED_UNPUBLISHED' || b.status === 'PREPARING';
+  const isEnded = b.status === 'LIVE_STOPPED' || b.status === 'VOD' || b.status === 'PROCESSING';
 
   return `
     <div class="golive-status-bar ${isLive?'live':''}">
       <div class="golive-status-ic">
         <span class="golive-rec-dot ${isLive?'live':''}"></span>
       </div>
-      <div style="flex:1">
-        <div style="font-weight:800;font-size:16px">${isLive?'🔴 กำลังออกอากาศ':'⏳ รอ OBS ส่ง stream เข้ามา'}</div>
-        <div style="font-size:12.5px;color:var(--t2);margin-top:2px">${isLive?'ดูได้ที่ Facebook · ผู้ชม '+fmtNum(fbLiveStats.viewers||0)+' · คอมเมนต์ '+fmtNum(fbLiveStats.comments||0):'เมื่อ OBS push เข้ามา ระบบจะเปลี่ยนเป็น LIVE อัตโนมัติภายใน 30 วิ'}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:800;font-size:16px">${isLive?'🔴 กำลังออกอากาศ':isUnpublished?'⏳ พร้อมออกอากาศ (รอกด Go Live ใน Producer)':isEnded?'✅ ไลฟ์จบแล้ว':'• Status: '+b.status}</div>
+        <div style="font-size:12.5px;color:var(--t2);margin-top:2px">${isLive?'ผู้ชม '+fmtNum(fbLiveStats.viewers||0)+' · คอมเมนต์ '+fmtNum(fbLiveStats.comments||0)+' · '+fmtNum(fbLiveStats.reactions||0)+' reactions':'Video ID: '+b.id+(b.broadcast_start_time?' · เริ่ม '+new Date(b.broadcast_start_time).toLocaleString('th-TH'):'')}</div>
       </div>
-      <div style="display:flex;gap:8px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn-ghost" onclick="fbLiveRefreshStatus()">↻ รีเฟรช</button>
-        ${isLive ? `<button class="golive-end-btn" onclick="fbLiveEnd()">⏹ จบไลฟ์</button>` : `<button class="btn-ghost danger" onclick="fbLiveCancel()">ยกเลิก</button>`}
+        ${b.permalink_url?`<a href="https://www.facebook.com${b.permalink_url}" target="_blank" class="btn-ghost" style="text-decoration:none">${I.externalLink} ดูบน FB</a>`:''}
+        <button class="btn-ghost danger" onclick="fbLiveCancel()">ปิด Monitor</button>
       </div>
     </div>
 
     <div class="golive-grid">
       <div class="golive-preview-col">
-        ${isLive && b.embed_html ? `
+        ${b.embed_html ? `
           <div class="golive-embed">${b.embed_html}</div>
         ` : `
-          <div class="golive-preview-card">
-            <video id="fbLivePreview" class="golive-video" autoplay muted playsinline></video>
-            <div class="golive-preview-overlay">
-              <span class="golive-rec-dot"></span>
-              <span style="font-weight:700">PREVIEW (กล้อง)</span>
-            </div>
+          <div class="golive-preview-card" style="display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;text-align:center">
+            <div style="opacity:.6;margin-bottom:8px">${I.live}</div>
+            <div style="font-weight:700">${isLive?'กำลังโหลด embed player...':isUnpublished?'รอ Go Live':'ไม่มี embed player'}</div>
+            <div style="font-size:12px;opacity:.6;margin-top:6px">เปิด <a href="https://www.facebook.com${b.permalink_url||''}" target="_blank" style="color:#a78bfa">ดูบน Facebook</a> หรือ Producer แทน</div>
           </div>
         `}
 
-        <div class="golive-rtmp-card">
-          <div class="golive-card-title">${I.key} ตั้งค่า OBS / Streamlabs</div>
-          <div class="golive-field-row">
-            <label class="flabel">Server URL (RTMPS)</label>
-            <div class="golive-copy-row">
-              <input class="finp" readonly value="${escapeHtml(serverUrl)}" id="fbLiveServerUrl">
-              <button class="btn-ghost" onclick="copyText('${escapeHtml(serverUrl)}','คัดลอก Server URL แล้ว')">📋 คัดลอก</button>
-            </div>
-          </div>
-          <div class="golive-field-row">
-            <label class="flabel">Stream Key</label>
-            <div class="golive-copy-row">
-              <input class="finp" type="password" readonly value="${escapeHtml(streamKey)}" id="fbLiveKey">
-              <button class="btn-ghost" onclick="document.getElementById('fbLiveKey').type=document.getElementById('fbLiveKey').type==='password'?'text':'password'">👁 แสดง</button>
-              <button class="btn-ghost" onclick="copyText('${escapeHtml(streamKey)}','คัดลอก Stream Key แล้ว')">📋 คัดลอก</button>
-            </div>
-          </div>
-          <ol class="golive-steps">
-            <li>เปิด OBS → Settings → Stream → Service: <b>Custom</b></li>
-            <li>วาง <b>Server URL</b> ในช่อง Server</li>
-            <li>วาง <b>Stream Key</b> ในช่อง Stream Key</li>
-            <li>OK → กดปุ่ม <b>Start Streaming</b> ใน OBS</li>
-            <li>รอประมาณ 5-30 วินาที → สถานะที่นี่จะเปลี่ยนเป็น <b>🔴 LIVE</b></li>
-          </ol>
+        <div class="golive-info-card">
+          <div class="golive-info-title">${escapeHtml(b.title||'Live (ไม่มีชื่อ)')}</div>
+          ${b.description?`<div style="font-size:13px;color:var(--t2);margin:6px 0;line-height:1.5;white-space:pre-wrap">${escapeHtml(b.description)}</div>`:''}
+          <div class="golive-info-meta">Video ID: ${b.id} · Status: <b>${b.status}</b></div>
         </div>
       </div>
 
       <div class="golive-form-col">
-        <div class="golive-info-card">
-          <div class="golive-info-title">${I.live} ${escapeHtml(b.title||'Untitled Live')}</div>
-          <div class="golive-info-meta">Broadcast ID: ${b.id} · Status: <b>${b.status}</b></div>
-          ${b.permalink_url?`<a href="https://www.facebook.com${b.permalink_url}" target="_blank" class="btn-primary" style="margin-top:10px;width:100%;justify-content:center">เปิดดูบน Facebook →</a>`:''}
+        <div class="golive-stat-grid">
+          <div class="golive-stat-card"><div class="golive-stat-lbl">👥 ผู้ชม${isLive?' (live)':''}</div><div class="golive-stat-val">${fmtNum(fbLiveStats.viewers||0)}</div></div>
+          <div class="golive-stat-card"><div class="golive-stat-lbl">💬 คอมเมนต์</div><div class="golive-stat-val">${fmtNum(fbLiveStats.comments||0)}</div></div>
+          <div class="golive-stat-card"><div class="golive-stat-lbl">❤️ Reactions</div><div class="golive-stat-val">${fmtNum(fbLiveStats.reactions||0)}</div></div>
         </div>
 
-        ${isLive ? `
-          <div class="golive-stat-grid">
-            <div class="golive-stat-card"><div class="golive-stat-lbl">👥 ผู้ชมตอนนี้</div><div class="golive-stat-val">${fmtNum(fbLiveStats.viewers||0)}</div></div>
-            <div class="golive-stat-card"><div class="golive-stat-lbl">💬 คอมเมนต์</div><div class="golive-stat-val">${fmtNum(fbLiveStats.comments||0)}</div></div>
-            <div class="golive-stat-card"><div class="golive-stat-lbl">❤️ Reactions</div><div class="golive-stat-val">${fmtNum(fbLiveStats.reactions||0)}</div></div>
-          </div>
-
-          <div class="golive-card">
-            <div class="golive-card-title">${I.message} คอมเมนต์สด</div>
-            <div class="golive-comments" id="fbLiveCommentsBox">
-              ${fbLiveComments.length ? fbLiveComments.slice(-50).reverse().map(c=>`
-                <div class="golive-comment">
-                  <div class="golive-comment-avatar">${(c.from?.name||'?')[0]}</div>
-                  <div style="flex:1;min-width:0">
-                    <div style="font-weight:700;font-size:12.5px">${escapeHtml(c.from?.name||'Anonymous')}</div>
-                    <div style="font-size:13px;color:var(--t1);word-wrap:break-word">${escapeHtml(c.message||'')}</div>
-                    <div style="font-size:11px;color:var(--t3);margin-top:2px">${c.created_time?new Date(c.created_time).toLocaleTimeString('th-TH'):''}</div>
-                  </div>
+        <div class="golive-card">
+          <div class="golive-card-title">${I.message} คอมเมนต์สด ${isLive?'<span style="font-size:11px;color:#dc2626;background:#fee2e2;padding:2px 8px;border-radius:100px;margin-left:6px">LIVE</span>':''}</div>
+          <div class="golive-comments" id="fbLiveCommentsBox">
+            ${fbLiveComments.length ? fbLiveComments.slice(-50).reverse().map(c=>`
+              <div class="golive-comment">
+                <div class="golive-comment-avatar">${(c.from?.name||'?')[0]}</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-weight:700;font-size:12.5px">${escapeHtml(c.from?.name||'Anonymous')}</div>
+                  <div style="font-size:13px;color:var(--t1);word-wrap:break-word">${escapeHtml(c.message||'')}</div>
+                  <div style="font-size:11px;color:var(--t3);margin-top:2px">${c.created_time?new Date(c.created_time).toLocaleTimeString('th-TH'):''}</div>
                 </div>
-              `).join('') : '<div style="text-align:center;padding:30px;color:var(--t3);font-size:13px">ยังไม่มีคอมเมนต์</div>'}
-            </div>
+              </div>
+            `).join('') : `<div style="text-align:center;padding:30px;color:var(--t3);font-size:13px">${isLive?'ยังไม่มีคอมเมนต์':isUnpublished?'จะเริ่มดึงคอมเมนต์เมื่อไลฟ์เริ่ม':'ไม่มีคอมเมนต์'}</div>`}
           </div>
-        ` : ''}
+        </div>
       </div>
     </div>`;
 }
