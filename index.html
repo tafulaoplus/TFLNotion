@@ -1076,6 +1076,71 @@
   .cl-logo{height:38px}
 }
 
+/* ===== SOCIAL INTEGRATIONS HUB ===== */
+.intg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-bottom:20px}
+@media (max-width:780px){.intg-grid{grid-template-columns:1fr}}
+.intg-card{padding:22px;background:var(--bg);border:1.5px solid var(--border);border-radius:18px;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .15s ease,box-shadow .15s ease}
+.intg-card:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(17,24,39,.1)}
+.intg-card.connected{border-color:#10b981}
+.intg-card.soon{opacity:.78}
+.intg-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--ac,linear-gradient(90deg,#a78bfa,#7c3aed))}
+.intg-card.fb::before{background:#1877f2}
+.intg-card.ig::before{background:linear-gradient(90deg,#f58529,#dd2a7b,#8134af,#515bd4)}
+.intg-card.tt::before{background:linear-gradient(90deg,#25f4ee,#fe2c55)}
+.intg-card.yt::before{background:#ff0000}
+.intg-hdr{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px}
+.intg-logo{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:24px;flex-shrink:0;box-shadow:0 8px 20px rgba(0,0,0,.15)}
+.intg-logo.fb{background:#1877f2}
+.intg-logo.ig{background:linear-gradient(135deg,#f58529,#dd2a7b 45%,#8134af 75%,#515bd4)}
+.intg-logo.tt{background:linear-gradient(135deg,#25f4ee 0%,#000 50%,#fe2c55 100%)}
+.intg-logo.yt{background:#ff0000}
+.intg-name{font-size:18px;font-weight:800;color:var(--t1);margin:0 0 3px;display:flex;align-items:center;gap:8px}
+.intg-status{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:8px;font-size:10.5px;font-weight:800;letter-spacing:.3px;text-transform:uppercase}
+.intg-status.on{background:rgba(16,185,129,.15);color:#059669}
+.intg-status.on::before{content:'';width:6px;height:6px;border-radius:50%;background:#10b981;animation:syncPulse 1.5s ease-in-out infinite}
+.intg-status.off{background:var(--bg-soft);color:var(--t2)}
+.intg-status.off::before{content:'';width:6px;height:6px;border-radius:50%;background:#9ca3af}
+.intg-status.soon{background:#fef3c7;color:#b45309}
+[data-theme="dark"] .intg-status.on{background:rgba(52,211,153,.2);color:#34d399}
+[data-theme="dark"] .intg-status.soon{background:rgba(251,191,36,.2);color:#fbbf24}
+.intg-desc{font-size:13px;color:var(--t2);line-height:1.55;margin:0}
+
+.intg-account{display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg-soft);border-radius:12px;margin:14px 0}
+.intg-account-thumb{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;overflow:hidden}
+.intg-account-thumb img{width:100%;height:100%;object-fit:cover}
+.intg-account-info{flex:1;min-width:0}
+.intg-account-name{font-size:14px;font-weight:700;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.intg-account-meta{font-size:11.5px;color:var(--t2);margin-top:2px}
+
+.intg-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.intg-stat{padding:10px;background:var(--bg-soft);border-radius:10px;text-align:center}
+.intg-stat-val{font-size:18px;font-weight:800;color:var(--t1);font-feature-settings:'tnum';line-height:1}
+.intg-stat-lbl{font-size:10.5px;color:var(--t2);font-weight:600;margin-top:4px;text-transform:uppercase;letter-spacing:.4px}
+
+.intg-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.intg-btn-primary{flex:1;padding:11px 16px;background:linear-gradient(135deg,#1877f2,#4267b2);color:#fff;border:none;border-radius:11px;font-size:13.5px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .15s ease}
+.intg-btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(24,119,242,.3)}
+.intg-btn-primary.ig{background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af,#515bd4)}
+.intg-btn-primary.tt{background:linear-gradient(135deg,#25f4ee,#fe2c55)}
+.intg-btn-primary.yt{background:linear-gradient(135deg,#ff0000,#cc0000)}
+.intg-btn-primary:disabled{opacity:.55;cursor:not-allowed;background:var(--bg-hover);color:var(--t2);box-shadow:none;transform:none}
+.intg-btn-ghost{padding:11px 16px;background:var(--bg-soft);border:1px solid var(--border-2);color:var(--t1);border-radius:11px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit}
+.intg-btn-ghost:hover{background:var(--bg-hover)}
+.intg-btn-ghost.danger{color:#dc2626}
+
+.intg-token-row{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.intg-token-input{width:100%;padding:11px 14px;border:1.5px solid var(--border-2);border-radius:11px;background:var(--bg);color:var(--t1);font-family:inherit;font-size:13px;resize:vertical;min-height:72px}
+.intg-token-help{font-size:11px;color:var(--t2);line-height:1.5}
+.intg-token-help a{color:#1877f2;text-decoration:none}
+
+.intg-summary{padding:18px;background:linear-gradient(135deg,rgba(167,139,250,.08),rgba(124,58,237,.04));border:1px solid rgba(167,139,250,.25);border-radius:14px;margin-bottom:22px;display:flex;align-items:center;gap:14px}
+[data-theme="dark"] .intg-summary{background:linear-gradient(135deg,rgba(167,139,250,.12),rgba(124,58,237,.08))}
+.intg-summary-icon{width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.intg-summary-info{flex:1}
+.intg-summary-title{font-size:15px;font-weight:800;color:var(--t1);margin:0}
+.intg-summary-sub{font-size:12.5px;color:var(--t2);margin-top:3px}
+.intg-counter{font-size:32px;font-weight:900;background:linear-gradient(135deg,#a78bfa,#7c3aed);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+
 /* ===== SOCIAL ANALYTICS DASHBOARD ===== */
 .sa-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
 .sa-welcome h1{font-size:24px;font-weight:800;color:var(--t1);margin:0;display:flex;align-items:center;gap:8px}
@@ -2780,6 +2845,7 @@ svg{display:block;flex-shrink:0}
       <div id="viewFbLiveAuto" class="view"></div>
       <div id="viewFbPosts" class="view"></div>
       <div id="viewSocialAnalytics" class="view"></div>
+      <div id="viewSocialIntegrations" class="view"></div>
       <div id="viewSales" class="view"></div>
       <div id="viewActivity" class="view"></div>
       <div id="viewCalendar" class="view"></div>
@@ -4007,6 +4073,9 @@ let socialDateStart = (() => { const d = new Date(); d.setDate(d.getDate()-29); 
 let socialDateEnd = new Date().toISOString().slice(0,10);
 let socialData = { fb:null, tt:null, yt:null };
 let socialLoading = false;
+let igAccountInfo = null; // { id, username, name, profile_picture_url, followers_count } via FB page
+let ttConnected = false; // future
+let ytConnected = false; // future
 let notifications = [];
 let nextNotifId = 1;
 let notifCheckTimer = null;
@@ -5402,12 +5471,12 @@ function initApp(){
   let startView = 'dashboard';
   try {
     const saved = localStorage.getItem('tfl_currentView');
-    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbLiveAuto','fbPosts','socialAnalytics','sales','activity','calendar','lottery','attendance'];
+    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','sales','activity','calendar','lottery','attendance'];
     if(saved && validViews.includes(saved)){
       // Check role permission
       if((saved === 'allTasks' || saved === 'members' || saved === 'activity' || saved === 'lottery') && currentUser.role !== 'admin'){
         startView = 'dashboard';
-      } else if((saved === 'fbLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
+      } else if((saved === 'fbLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics' || saved === 'socialIntegrations') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
         startView = 'dashboard';
       } else {
         startView = saved;
@@ -5464,6 +5533,10 @@ function renderSidebar(){
         <div class="nav-item ${currentView==='socialAnalytics'?'active':''}" onclick="navigateTo('socialAnalytics')">
           <span class="nav-icon">${I.barChart||I.trending}</span>
           <span class="nav-label">Social Analytics</span>
+        </div>
+        <div class="nav-item ${currentView==='socialIntegrations'?'active':''}" onclick="navigateTo('socialIntegrations')">
+          <span class="nav-icon">${I.settings||I.cloud}</span>
+          <span class="nav-label">เชื่อมต่อแพลตฟอร์ม</span>
         </div>
       </div>`;
   }
@@ -5749,7 +5822,7 @@ function populateModalSelects(){
 function navigateTo(id){
   if(!id) return;
   // Role-based route guards
-  if((id === 'fbLive' || id === 'fbLiveAuto' || id === 'fbPosts' || id === 'socialAnalytics') && currentUser && currentUser.role !== 'admin' && currentUser.role !== 'social'){
+  if((id === 'fbLive' || id === 'fbLiveAuto' || id === 'fbPosts' || id === 'socialAnalytics' || id === 'socialIntegrations') && currentUser && currentUser.role !== 'admin' && currentUser.role !== 'social'){
     id = 'dashboard';
   }
   if((id === 'allTasks' || id === 'members' || id === 'activity' || id === 'lottery') && currentUser && currentUser.role !== 'admin'){
@@ -5791,7 +5864,7 @@ function renderView(id,el){
   setTimeout(()=>el.classList.remove('fade-in'),300);
   ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,notes:renderNotes,taskBoard:renderTaskBoard,
     myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbLiveAuto:renderFbLiveAuto,
-    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics}[id]||(()=>{}))(el);
+    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations}[id]||(()=>{}))(el);
 }
 
 function rerender(){ const el=document.getElementById('view'+cap(currentView)); if(el) renderView(currentView,el); }
@@ -12551,6 +12624,196 @@ function exportLotteryPDF(){
   } catch(err){
     console.error(err); alert('Export PDF ไม่สำเร็จ');
   }
+}
+
+// ============ SOCIAL INTEGRATIONS HUB ============
+async function fetchIgFromFb(){
+  if(!fbPostState.pageToken || !fbPostState.pageId) return null;
+  try {
+    const tok = encodeURIComponent(fbPostState.pageToken);
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}?fields=instagram_business_account{id,username,name,profile_picture_url,followers_count,media_count}&access_token=${tok}`);
+    const d = await r.json();
+    if(d.error) return null;
+    return d.instagram_business_account || null;
+  } catch(_) { return null; }
+}
+
+async function refreshIgInfo(){
+  igAccountInfo = await fetchIgFromFb();
+  rerender();
+}
+
+async function _intgConnectFb(){
+  const v = document.getElementById('intgFbToken')?.value.trim();
+  if(!v){ alert('วาง User Access Token ก่อน'); return; }
+  try {
+    const pages = await fbpFetchPagesFromToken(v);
+    if(!pages.length){ alert('ไม่พบเพจในบัญชีนี้'); return; }
+    fbPostState.pages = pages;
+    // Auto-select first if only 1
+    if(pages.length === 1){
+      fbpSelectPage(pages[0].id);
+    } else {
+      // Show dropdown to choose
+      const names = pages.map((p,i)=>`${i+1}. ${p.name}`).join('\n');
+      const choice = prompt(`เลือกเพจ (พิมพ์เลข 1-${pages.length}):\n\n${names}`);
+      const idx = parseInt(choice,10)-1;
+      if(idx >= 0 && idx < pages.length){ fbpSelectPage(pages[idx].id); }
+    }
+    setTimeout(()=>refreshIgInfo(), 500);
+  } catch(err){
+    alert('เชื่อมต่อไม่สำเร็จ: ' + err.message);
+  }
+}
+
+function _intgDisconnectFb(){
+  if(!confirm('ตัดการเชื่อมต่อ Facebook + Instagram?')) return;
+  fbPostState = { pageId:'', pageName:'', pageToken:'', pages:[] };
+  localStorage.removeItem('tfl_fb_page_id');
+  localStorage.removeItem('tfl_fb_page_name');
+  localStorage.removeItem('tfl_fb_page_token');
+  igAccountInfo = null;
+  rerender();
+}
+
+function renderSocialIntegrations(el){
+  const fbConnected = !!(fbPostState.pageId && fbPostState.pageToken);
+  // Auto-fetch IG if FB connected and IG info not loaded
+  if(fbConnected && igAccountInfo === null){
+    setTimeout(()=>refreshIgInfo(), 100);
+  }
+  const igConnected = !!(igAccountInfo && igAccountInfo.id);
+  const connectedCount = (fbConnected?1:0) + (igConnected?1:0) + (ttConnected?1:0) + (ytConnected?1:0);
+
+  el.innerHTML = topbarSimple('users', 'เชื่อมต่อแพลตฟอร์ม', 'จัดการการเชื่อมต่อ Social Media ทั้งหมดในที่เดียว') + `
+    <div class="page-content" style="max-width:1100px">
+
+      <div class="intg-summary">
+        <div class="intg-summary-icon">${I.cloud || I.trending}</div>
+        <div class="intg-summary-info">
+          <h3 class="intg-summary-title">บัญชีที่เชื่อมต่อแล้ว</h3>
+          <p class="intg-summary-sub">${connectedCount} จาก 4 แพลตฟอร์ม · เชื่อมเพิ่มเพื่อ Insight ที่ครบถ้วน</p>
+        </div>
+        <div class="intg-counter">${connectedCount}/4</div>
+      </div>
+
+      <div class="intg-grid">
+
+        <!-- FACEBOOK -->
+        <div class="intg-card fb ${fbConnected?'connected':''}">
+          <div class="intg-hdr">
+            <div class="intg-logo fb">f</div>
+            <div style="flex:1;min-width:0">
+              <div class="intg-name">Facebook Page <span class="intg-status ${fbConnected?'on':'off'}">${fbConnected?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
+              <p class="intg-desc">เชื่อม Page เพื่อจัดการโพสต์ ดู Analytics และ Live Streaming</p>
+            </div>
+          </div>
+          ${fbConnected ? `
+            <div class="intg-account">
+              <div class="intg-account-thumb">${(fbPostState.pageName||'?')[0]}</div>
+              <div class="intg-account-info">
+                <div class="intg-account-name">${escapeHtmlN(fbPostState.pageName)}</div>
+                <div class="intg-account-meta">Page ID: ${fbPostState.pageId}</div>
+              </div>
+            </div>
+            <div class="intg-actions">
+              <button class="intg-btn-primary" onclick="navigateTo('fbPosts')">โพสต์ Manager →</button>
+              <button class="intg-btn-ghost danger" onclick="_intgDisconnectFb()">ตัดการเชื่อมต่อ</button>
+            </div>
+          ` : `
+            <div class="intg-token-row">
+              <textarea class="intg-token-input" id="intgFbToken" placeholder="วาง User Access Token (มี pages_show_list + pages_manage_posts)"></textarea>
+              <div class="intg-token-help">หา Token: <a href="https://developers.facebook.com/tools/explorer" target="_blank">Graph API Explorer</a></div>
+            </div>
+            <div class="intg-actions">
+              <button class="intg-btn-primary" onclick="_intgConnectFb()">เชื่อมต่อ Facebook</button>
+            </div>
+          `}
+        </div>
+
+        <!-- INSTAGRAM -->
+        <div class="intg-card ig ${igConnected?'connected':''}">
+          <div class="intg-hdr">
+            <div class="intg-logo ig">IG</div>
+            <div style="flex:1;min-width:0">
+              <div class="intg-name">Instagram Business <span class="intg-status ${igConnected?'on':'off'}">${igConnected?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
+              <p class="intg-desc">เชื่อมผ่าน Facebook Page (ต้องเชื่อม IG กับ Page ใน FB ก่อน)</p>
+            </div>
+          </div>
+          ${igConnected ? `
+            <div class="intg-account">
+              <div class="intg-account-thumb">${igAccountInfo.profile_picture_url?`<img src="${igAccountInfo.profile_picture_url}"/>`:'@'}</div>
+              <div class="intg-account-info">
+                <div class="intg-account-name">@${escapeHtmlN(igAccountInfo.username)}</div>
+                <div class="intg-account-meta">${escapeHtmlN(igAccountInfo.name||'')}</div>
+              </div>
+            </div>
+            <div class="intg-stat-row">
+              <div class="intg-stat"><div class="intg-stat-val">${(igAccountInfo.followers_count||0).toLocaleString()}</div><div class="intg-stat-lbl">Followers</div></div>
+              <div class="intg-stat"><div class="intg-stat-val">${(igAccountInfo.media_count||0).toLocaleString()}</div><div class="intg-stat-lbl">Posts</div></div>
+              <div class="intg-stat"><div class="intg-stat-val">✓</div><div class="intg-stat-lbl">Business</div></div>
+            </div>
+            <div class="intg-actions">
+              <button class="intg-btn-primary ig" onclick="refreshIgInfo()">รีเฟรชข้อมูล</button>
+              <button class="intg-btn-ghost" onclick="navigateTo('socialAnalytics')">ดู Analytics</button>
+            </div>
+          ` : `
+            <p style="font-size:12px;color:var(--t2);line-height:1.6;background:var(--bg-soft);padding:11px;border-radius:9px;margin:14px 0">
+              <b style="color:var(--t1)">วิธีเชื่อม:</b><br>
+              1. เชื่อม Facebook Page ก่อน<br>
+              2. ใน Facebook Page Settings → Linked Accounts → connect IG Business Account<br>
+              3. กลับมาที่นี่ → กด "ตรวจสอบการเชื่อม"
+            </p>
+            <div class="intg-actions">
+              <button class="intg-btn-primary ig" onclick="refreshIgInfo()" ${!fbConnected?'disabled':''}>ตรวจสอบการเชื่อม</button>
+              ${!fbConnected ? '<span style="font-size:11.5px;color:var(--t2);align-self:center">⚠ เชื่อม Facebook ก่อน</span>' : ''}
+            </div>
+          `}
+        </div>
+
+        <!-- TIKTOK -->
+        <div class="intg-card tt soon">
+          <div class="intg-hdr">
+            <div class="intg-logo tt">T</div>
+            <div style="flex:1;min-width:0">
+              <div class="intg-name">TikTok Business <span class="intg-status soon">SOON</span></div>
+              <p class="intg-desc">ดูยอด Follow / Views / Engagement และจัดการคอนเทนต์ TikTok</p>
+            </div>
+          </div>
+          <p style="font-size:12px;color:var(--t2);line-height:1.6;background:var(--bg-soft);padding:11px;border-radius:9px;margin:14px 0">
+            🚧 กำลังพัฒนา · TikTok Business API ต้องผ่าน App Review<br>
+            หากคุณมี TikTok For Developers app อยู่แล้ว แจ้งทีมเพื่อ enable ฟีเจอร์นี้
+          </p>
+          <div class="intg-actions">
+            <button class="intg-btn-primary tt" disabled>เร็วๆนี้</button>
+          </div>
+        </div>
+
+        <!-- YOUTUBE -->
+        <div class="intg-card yt soon">
+          <div class="intg-hdr">
+            <div class="intg-logo yt">▶</div>
+            <div style="flex:1;min-width:0">
+              <div class="intg-name">YouTube Channel <span class="intg-status soon">SOON</span></div>
+              <p class="intg-desc">ดู subscribers, views, watch time และ analytics วิดีโอแต่ละตัว</p>
+            </div>
+          </div>
+          <p style="font-size:12px;color:var(--t2);line-height:1.6;background:var(--bg-soft);padding:11px;border-radius:9px;margin:14px 0">
+            🚧 กำลังพัฒนา · YouTube Data API v3 ต้องใช้ Google OAuth<br>
+            ต้องสร้าง Google Cloud Project + เปิด YouTube Data API + OAuth consent screen
+          </p>
+          <div class="intg-actions">
+            <button class="intg-btn-primary yt" disabled>เร็วๆนี้</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="padding:18px;background:var(--bg-soft);border-radius:12px;font-size:12.5px;color:var(--t2);line-height:1.6">
+        <b style="color:var(--t1)">💡 เคล็ดลับ:</b> หลังเชื่อมแล้ว ไปดูที่หน้า <a onclick="navigateTo('socialAnalytics')" style="color:#7c3aed;font-weight:700;cursor:pointer">Social Analytics</a> เพื่อดูภาพรวมข้อมูลทุก platform · หรือใช้ <a onclick="navigateTo('fbPosts')" style="color:#7c3aed;font-weight:700;cursor:pointer">โพสต์ Manager</a> เพื่อสร้าง / ตั้งเวลาโพสต์
+      </div>
+
+    </div>`;
 }
 
 // ============ SOCIAL ANALYTICS DASHBOARD ============
