@@ -1209,6 +1209,22 @@
 
 .sa-content-list{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px}
 .sa-content-card{flex:0 0 180px;background:var(--bg-soft);border-radius:11px;overflow:hidden;cursor:pointer;transition:transform .15s ease}
+.sa-vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));gap:14px}
+.sa-vid-card{background:var(--bg-soft);border-radius:12px;overflow:hidden;transition:transform .15s ease}
+.sa-vid-card:hover{transform:translateY(-2px)}
+.sa-vid-thumb{position:relative;width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#0f0f23,#1e1b3a);display:flex;align-items:center;justify-content:center;color:#fff;overflow:hidden}
+.sa-vid-thumb img{width:100%;height:100%;object-fit:cover}
+.sa-vid-badge{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.75);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;font-feature-settings:'tnum'}
+.sa-vid-badge.live{background:#dc2626;animation:pulseDot 1.5s ease-in-out infinite}
+.sa-vid-body{padding:12px}
+.sa-vid-title{font-size:13px;font-weight:700;color:var(--t1);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:6px;min-height:34px}
+.sa-vid-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--t2);margin-bottom:10px}
+.sa-vid-actions{display:flex;gap:6px}
+.sa-vid-btn{flex:1;padding:7px 10px;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit;border:none;text-align:center;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:4px}
+.sa-vid-btn.primary{background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff}
+.sa-vid-btn.primary:hover{filter:brightness(1.08)}
+.sa-vid-btn.ghost{background:var(--bg);border:1px solid var(--border-2);color:var(--t1);flex:0 0 auto;padding:7px 14px}
+.sa-vid-btn.ghost:hover{background:var(--bg-hover)}
 .sa-content-card:hover{transform:translateY(-2px)}
 .sa-content-thumb{width:100%;height:120px;background:linear-gradient(135deg,#a78bfa,#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-size:32px;overflow:hidden;position:relative}
 .sa-content-thumb img{width:100%;height:100%;object-fit:cover}
@@ -10226,8 +10242,13 @@ function clearManualAudience(scope, videoId){
 }
 
 function renderFbLiveAuto(el){
+  // Always pick up latest token from shared state (Integrations sync)
+  if(fbPostState.pageToken && fbPostState.pageToken !== liveAiState.fbToken){
+    liveAiState.fbToken = fbPostState.pageToken;
+  }
   const hasFb = !!liveAiState.fbToken;
   const ready = hasFb;
+  const isAdmin = currentUser && currentUser.role === 'admin';
 
   el.innerHTML = topbarSimple('sparkle', 'Live AI · Auto Fetch', 'ดึงข้อมูลจาก Facebook + Audience Analytics แบบมืออาชีพ', '') + `
   <div class="page-content" style="max-width:1200px">
@@ -10241,29 +10262,19 @@ function renderFbLiveAuto(el){
       </div>
     </div>
 
-    <details class="live-ai-card" ${ready?'':'open'} style="padding:0">
-      <summary style="padding:14px 18px;cursor:pointer;font-weight:800;display:flex;align-items:center;justify-content:space-between;gap:8px;list-style:none">
-        <span style="display:flex;align-items:center;gap:8px">${I.settings} ตั้งค่า Facebook Access Token</span>
-        ${ready?`<span style="font-size:12px;color:#059669;font-weight:700;display:inline-flex;align-items:center;gap:4px">${I.check} พร้อมใช้งาน</span>`:`<span style="font-size:12px;color:#dc2626;font-weight:700;display:inline-flex;align-items:center;gap:4px">${I.alert} ต้องตั้งค่าก่อน</span>`}
-      </summary>
-      <div style="padding:0 18px 18px;border-top:1px solid var(--border-l)">
-        <div class="fgrp" style="margin-top:14px">
-          <label class="flabel">Facebook Page Access Token *</label>
-          <div class="live-ai-key-input">
-            <input class="finp" id="liveAiFbToken" type="${liveAiState.showFbToken?'text':'password'}" value="${escapeHtml(liveAiState.fbToken)}" placeholder="EAAxxxxxxxxxxxx...">
-            <button class="live-ai-toggle-view" type="button" onclick="toggleAiKeyVisible('fb')">${liveAiState.showFbToken?'ซ่อน':'แสดง'}</button>
-          </div>
-          <div style="font-size:11.5px;color:var(--t3);margin-top:6px">
-            รับ Token จาก <a href="https://developers.facebook.com/tools/explorer/" target="_blank" style="color:var(--p600);font-weight:600">Facebook Graph API Explorer</a> · Permissions ที่ต้องมี: <code>pages_read_engagement</code>, <code>read_insights</code>
-          </div>
-        </div>
-        <button class="btn-primary" onclick="saveLiveAiSettings()">${I.check} บันทึก Token</button>
-        <div style="margin-top:10px;font-size:11.5px;color:#92400e;background:#fef9c3;border:1px solid #fde68a;border-radius:8px;padding:9px 12px;display:flex;align-items:flex-start;gap:8px">
-          <span style="flex-shrink:0;margin-top:1px">${I.lock}</span>
-          <span>Keys ถูกเก็บใน localStorage ของเบราว์เซอร์ และส่งตรงไป Facebook/Anthropic API จาก browser — ไม่ผ่าน server กลาง</span>
-        </div>
+    ${ready ? `
+      <div style="padding:11px 16px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);border-radius:11px;display:flex;align-items:center;gap:10px;margin-bottom:16px;font-size:13px">
+        <span style="color:#059669;font-weight:800">✓</span>
+        <span style="flex:1;color:var(--t1)">เชื่อมต่อ Facebook แล้ว (${escapeHtmlN(fbPostState.pageName||'Page')}) — พร้อมวิเคราะห์ทันที</span>
+        ${isAdmin?`<button class="btn-ghost" onclick="navigateTo('socialIntegrations')" style="font-size:11.5px;padding:5px 10px">จัดการ</button>`:''}
       </div>
-    </details>
+    ` : `
+      <div style="padding:11px 16px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:11px;display:flex;align-items:center;gap:10px;margin-bottom:16px;font-size:13px">
+        <span style="color:#dc2626;font-weight:800">⚠</span>
+        <span style="flex:1;color:var(--t1)">ยังไม่ได้เชื่อม Facebook Page — ${isAdmin?'ไปที่หน้า "เชื่อมต่อแพลตฟอร์ม"':'รอ Admin เชื่อมต่อ'}</span>
+        ${isAdmin?`<button class="btn-primary" onclick="navigateTo('socialIntegrations')" style="font-size:12px;padding:6px 12px">ไปเชื่อม →</button>`:''}
+      </div>
+    `}
 
     <div class="live-ai-card">
       <div class="live-ai-section-title">${I.live} วิเคราะห์ Live</div>
@@ -13009,6 +13020,18 @@ function renderSocialIntegrations(el){
 function setSocialTab(t){ socialTab = t; rerender(); }
 function setSocialDate(which, v){ if(which==='start') socialDateStart = v; else socialDateEnd = v; renderSocialReload(); }
 
+function sendToLiveAI(videoIdOrUrl){
+  navigateTo('fbLiveAuto');
+  setTimeout(() => {
+    const inp = document.getElementById('liveAiUrl');
+    if(inp){
+      inp.value = videoIdOrUrl;
+      inp.focus();
+      inp.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+  }, 200);
+}
+
 async function fetchSocialFacebookData(){
   if(!fbPostState.pageId || !fbPostState.pageToken){ return null; }
   try {
@@ -13037,6 +13060,20 @@ async function fetchSocialFacebookData(){
     const postsR = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}/posts?fields=id,message,full_picture,permalink_url,created_time,reactions.summary(true),comments.summary(true),shares&limit=10&access_token=${tok}`);
     const posts = await postsR.json();
     const recentPosts = Array.isArray(posts.data) ? posts.data : [];
+    // Live videos (ended VOD + currently live)
+    let liveVideos = [];
+    try {
+      const lvR = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}/live_videos?fields=id,title,description,permalink_url,broadcast_start_time,broadcast_end_time,status,creation_time,embed_html,thumbnails{uri}&limit=20&access_token=${tok}`);
+      const lv = await lvR.json();
+      if(Array.isArray(lv.data)) liveVideos = lv.data;
+    } catch(_){}
+    // Regular videos
+    let videos = [];
+    try {
+      const vR = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}/videos?fields=id,title,description,permalink_url,created_time,length,thumbnails{uri},views&limit=20&access_token=${tok}`);
+      const v = await vR.json();
+      if(Array.isArray(v.data)) videos = v.data;
+    } catch(_){}
     return {
       name: info.name,
       picture: info.picture?.data?.url || '',
@@ -13045,7 +13082,7 @@ async function fetchSocialFacebookData(){
       engaged: series.engaged.reduce((a,d)=>a+d.value, 0),
       adds: series.adds.reduce((a,d)=>a+d.value, 0),
       views: series.views.reduce((a,d)=>a+d.value, 0),
-      series, recentPosts,
+      series, recentPosts, liveVideos, videos,
     };
   } catch(e){
     console.warn('FB analytics fetch failed', e);
@@ -13204,6 +13241,8 @@ function _saRenderOverview(){
       </div>
     </div>
 
+    ${_saRenderVideos(fb)}
+
     <div class="sa-row" style="grid-template-columns:1fr 1fr">
       <div class="sa-panel">
         <div class="sa-panel-hdr">
@@ -13259,6 +13298,67 @@ function _saRenderFacebook(){
     <div class="sa-panel" style="margin-bottom:18px"><div class="sa-panel-hdr"><div class="sa-panel-title">การเข้าถึงรายวัน</div></div>${_saBigChart(fb.series.impressions||[], '#1877f2', 'Facebook')}</div>
     <div class="sa-panel" style="margin-bottom:18px"><div class="sa-panel-hdr"><div class="sa-panel-title">การมีส่วนร่วมรายวัน</div></div>${_saBigChart(fb.series.engaged||[], '#10b981', 'Engaged')}</div>
     <div class="sa-panel"><div class="sa-panel-hdr"><div class="sa-panel-title">โพสต์ล่าสุด 10 รายการ</div></div>${_saTopContent(fb.recentPosts||[])}</div>`;
+}
+
+function _saRenderVideos(fb){
+  const lives = (fb && Array.isArray(fb.liveVideos)) ? fb.liveVideos : [];
+  const vids = (fb && Array.isArray(fb.videos)) ? fb.videos : [];
+  // Separate by status
+  const liveNow = lives.filter(L => L.status === 'LIVE' || L.status === 'LIVE_NOW');
+  const liveEnded = lives.filter(L => L.status === 'VOD' || L.status === 'PROCESSED' || L.broadcast_end_time);
+  // Combine ended lives + regular videos
+  const allVideos = [
+    ...liveEnded.map(L => ({ ...L, _isLive: true, created_time: L.broadcast_end_time || L.broadcast_start_time || L.creation_time })),
+    ...vids.map(v => ({ ...v, _isLive: false }))
+  ].sort((a,b) => new Date(b.created_time||0) - new Date(a.created_time||0));
+  if(allVideos.length === 0 && liveNow.length === 0) return '';
+
+  const card = (item) => {
+    const isLive = item._isLive;
+    const thumb = item.thumbnails?.data?.[0]?.uri || '';
+    const title = item.title || item.description || '(ไม่มีชื่อ)';
+    const created = item.created_time ? new Date(item.created_time) : null;
+    const dateStr = created ? created.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'}) : '';
+    const lenSec = +item.length || 0;
+    const lenStr = lenSec ? `${Math.floor(lenSec/60)}:${String(Math.floor(lenSec%60)).padStart(2,'0')}` : '';
+    const views = item.views || 0;
+    return `<div class="sa-vid-card">
+      <div class="sa-vid-thumb">
+        ${thumb ? `<img src="${thumb}"/>` : '<div style="font-size:38px;opacity:.4">📹</div>'}
+        ${isLive ? `<span class="sa-vid-badge live">LIVE จบแล้ว</span>` : (lenStr?`<span class="sa-vid-badge">${lenStr}</span>`:'')}
+      </div>
+      <div class="sa-vid-body">
+        <div class="sa-vid-title" title="${escapeHtmlN(title)}">${escapeHtmlN(title).slice(0,80)}</div>
+        <div class="sa-vid-meta">
+          <span>${dateStr}</span>
+          ${views?`<span>${views.toLocaleString()} views</span>`:''}
+        </div>
+        <div class="sa-vid-actions">
+          <button class="sa-vid-btn primary" onclick="sendToLiveAI('${escapeHtmlN(item.permalink_url||item.id)}')">✨ วิเคราะห์ใน Live AI</button>
+          ${item.permalink_url ? `<a class="sa-vid-btn ghost" href="${escapeHtmlN(item.permalink_url)}" target="_blank">เปิด</a>` : ''}
+        </div>
+      </div>
+    </div>`;
+  };
+
+  return `
+    ${liveNow.length>0 ? `<div class="sa-panel" style="margin-bottom:18px">
+      <div class="sa-panel-hdr">
+        <div class="sa-panel-title" style="display:flex;align-items:center;gap:8px">
+          <span class="dash-live-badge on">● LIVE NOW</span>
+          กำลังถ่ายทอดสด
+        </div>
+      </div>
+      <div class="sa-vid-grid">${liveNow.map(card).join('')}</div>
+    </div>` : ''}
+    <div class="sa-panel" style="margin-bottom:18px">
+      <div class="sa-panel-hdr">
+        <div class="sa-panel-title">วิดีโอ + Live ที่จบแล้ว</div>
+        <small style="font-size:11px;color:var(--t2)">${allVideos.length} รายการล่าสุด · กด "วิเคราะห์ใน Live AI" เพื่อดู Insights แบบละเอียด</small>
+      </div>
+      ${allVideos.length===0 ? '<div style="padding:32px;text-align:center;color:var(--t2);font-size:13px">ไม่มีวิดีโอ</div>' :
+        `<div class="sa-vid-grid">${allVideos.slice(0,12).map(card).join('')}</div>`}
+    </div>`;
 }
 
 function _saMiniChart(data, color){
