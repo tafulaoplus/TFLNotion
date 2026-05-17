@@ -1,376 +1,242 @@
 # TFL+ Workspace
 
-> Workspace management platform — Task tracking · Notes · Documents · Facebook Live Analytics — ในไฟล์เดียว
+> 🐴 แพลตฟอร์มจัดการทีมและธุรกิจครบวงจร — ออกแบบเฉพาะสำหรับทีม **TFL+ / หวยพัฒนาลาว**
 
-[![Live](https://img.shields.io/badge/Live-tfl--notion.vercel.app-7c3aed?style=flat-square)](https://tfl-notion.vercel.app)
-[![Stack](https://img.shields.io/badge/Stack-HTML%20%2B%20Vercel%20%2B%20Neon-blue?style=flat-square)](#tech-stack)
-[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](#license)
+[![Deploy](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)](https://tfl-notion.vercel.app)
+[![Database](https://img.shields.io/badge/DB-Neon%20Postgres-blue?logo=postgresql)](https://neon.tech)
+[![License](https://img.shields.io/badge/License-Private-red)]()
+[![Made by](https://img.shields.io/badge/Made%20by-SunTFL%2B-7c3aed)]()
 
----
-
-## ⚡ Quick Demo
-
-```bash
-git clone https://github.com/tafulaoplus/TFLNotion.git
-cd TFLNotion
-npm install
-npm run init-db   # สร้างตารางใน Neon
-npm run dev       # เปิด http://localhost:3000
-```
-
-หรือใช้ online ได้เลย → **[tfl-notion.vercel.app](https://tfl-notion.vercel.app)**
+**🌐 Production:** https://tfl-notion.vercel.app
 
 ---
 
-## 📑 สารบัญ
+## 🎯 ภาพรวม
 
-- [ฟีเจอร์หลัก](#-ฟีเจอร์หลัก)
-- [Tech Stack](#-tech-stack)
-- [Architecture](#-architecture)
-- [การติดตั้ง](#-การติดตั้ง)
-- [การใช้งาน](#-การใช้งาน)
-- [Roles & Permissions](#-roles--permissions)
-- [API Reference](#-api-reference)
-- [ฐานข้อมูล](#-ฐานข้อมูล)
-- [Deployment](#-deployment)
-- [Troubleshooting](#-troubleshooting)
+Single-page HTML application ที่รวมทุกความสามารถสำหรับทีม TFL+ ไว้ในที่เดียว — จัดการงาน, ระบบลงเวลา, สรุปยอดขายหวย, Social Media Management, ออกพื้นที่ + อีเว้นท์ — sync ข้ามทุกอุปกรณ์ผ่าน Neon Postgres
 
----
+## ✨ ฟีเจอร์หลัก
 
-## 🚀 ฟีเจอร์หลัก
+### 📋 จัดการงาน
+- Task Board แบบ Kanban + Database View + Calendar
+- รายการตรวจสอบ (Checklist)
+- Drag & Drop จัดลำดับ
+- มอบหมายหลายคน · กำหนดความสำคัญ · กำหนดเวลา
+- ติดตามความคืบหน้าเรียลไทม์
+- งานของฉัน / งานทั้งหมด (admin)
 
-### 📋 Task Management
-- **Database View** — ตารางแบบ Notion พร้อมแก้ inline · drag-reorder · resize columns
-- **Kanban Board** — ลากการ์ดสลับสถานะ
-- **Checklist** — มุมมอง todo list checkbox
-- **Date Grouping** — จัดกลุ่มตามวันครบกำหนด + ย่อ/ขยายได้
-- **Cell Editing** — แก้ status/priority/type/assignees ผ่าน dropdown · พิมพ์ tag ใหม่ + Enter เพิ่มได้
-- **Quick Actions** — คัดลอกงาน (เป็นวันนี้) · ลบงาน
-- **Emoji Picker** — เลือก emoji ให้แต่ละงาน
+### 🕐 ระบบลงเวลา
+- เช็คอิน/เช็คเอาท์ ด้วย GPS + แผนที่ Leaflet
+- จำกัดระยะการเช็คอิน (รัศมีจากบริษัท)
+- ถ่ายภาพยืนยันตอนเช็คอิน/ออก
+- คำนวณ **มาสาย / ออกก่อนเวลา / OT** อัตโนมัติ
+- ระบบขอลา + อนุมัติ + แนบเอกสาร
+- ตารางเวลาทำงานต่อ Role ต่อวัน (7 วัน)
+- วันหยุดพิเศษ / เทศกาล
+- Calendar Heatmap ภาพรวมเดือน
+- Ranking: มาสายที่สุด · ดีเด่น
+- **Import จาก Excel** (ไฟล์สแกนนิ้ว)
+- Admin จัดการ/แก้ไข/ยกเลิก check-in ของคนอื่น
 
-### 👥 Team & Auth
-- **3 Roles** — Admin · Social · Member
-- **PIN Login** — 6 หลัก พร้อม on-screen keypad
-- **Profile** — แก้ชื่อ + อัปโหลดรูป (auto-crop) + เปลี่ยนสี + reset PIN
+### 📍 ออกพื้นที่ / อีเว้นท์
+- บันทึกกิจกรรม (booth / field / event / visit)
+- พิกัด GPS + Google Maps link
+- ผู้รับผิดชอบหลายคน
+- บันทึกผลงาน: สมาชิกใหม่ · ของแจก · ค่าใช้จ่าย (น้ำมัน/อาหาร/เดินทาง/เช่า) · แนบใบเสร็จ
+- Dashboard สวยงาม: KPI · ranking · กราฟเปรียบเทียบ
+- Export PDF รายงาน
 
-### 📝 Notes (Google Keep Style)
-- 12 สีให้เลือก + pin to top + search
-- Masonry layout (4→3→2→1 columns responsive)
-- **Per-user** (แต่ละคนเห็นโน้ตของตัวเอง)
+### 📅 ปฏิทินทีม
+- มุมมองรายเดือน · drag-drop ย้ายวัน
+- รวมกิจกรรมออกพื้นที่ทุกคน
+- Filter ตามสมาชิก (admin)
 
-### 📂 Documents Library
-- จัดการเอกสาร (icon + name + creator + workspace)
-- เชื่อมกับ Google Drive (OAuth)
+### 🎰 หวยพัฒนาลาว (Admin)
+- บันทึกยอดขาย/รางวัล/งวด/เลขที่ออก
+- แยกตามจำนวนหลัก (1-6 ตัว) · ขายได้ + ถูกรางวัล
+- **เป้ายอดขาย 3 ระดับ** (งวด / เดือน / ปี)
+- **ระบบเปรียบเทียบ** (เดือน vs เดือนก่อน, YoY, งวดล่าสุด vs ก่อนหน้า)
+- **กราฟวิเคราะห์เชิงลึก** — รายวัน/สัปดาห์/เดือน · margin % · prize payouts
+- **Insight อัจฉริยะ** (rule-based) — best period, growth, streak
+- Import Excel + Export PDF/Excel
+- งวดที่ขายดีที่สุด + medal ranking
 
-### 🎥 Facebook Live Analytics
-**Manual Entry** (`/fbLive`)
-- บันทึก Live แต่ละครั้งครบทุก field (views, reactions, comments, retention, ages, distribution)
-- **Executive Weekly Report** — KPI cards, 7-day trend line chart, demographics, engagement, active time
-- Export PDF / CSV
-- Period filter: ทั้งหมด · 3 · 7 · 28 วัน · custom date range picker
+### 📘 Facebook
+- **Live Analytics** — ดึงข้อมูล Live จาก Graph API พร้อม manual entry
+- **Live AI · Auto Fetch** — วิเคราะห์ Live แบบมืออาชีพ (Demographics, Engagement, Time)
+- **Post Manager** — สร้างโพสต์ (text/image/video/reel/link) + ตั้งเวลา + Draft + Calendar
+- ทุก action ใช้ Page Access Token ที่ admin ตั้งไว้ครั้งเดียว
 
-**Auto Analyzer** (`/fbLiveAuto`)
-- ดึง Live data จาก Facebook Graph API
-- Rule-based analyzer (sentiment + keywords + insights)
-- Save to Live สด list
+### 📊 Social Analytics
+- Dashboard รวมข้อมูล Facebook / Instagram / TikTok / YouTube (TT/YT รอ API)
+- ผู้ติดตาม · การเข้าถึง · การมีส่วนร่วม
+- กราฟ trend รายวัน · Donut chart สัดส่วน
+- คอนเทนต์ยอดนิยม · ข้อมูลผู้ชม (เพศ + อายุ)
 
-### 🌓 UI/UX
-- **Light / Dark mode toggle** (Netlify-style navy theme)
-- Responsive (มือถือ / iPad / PC)
-- Hamburger menu สำหรับ mobile
-- Smooth animations (collapse, drag, transitions)
-- Sidebar persistence (จดจำหน้าที่อยู่)
+### 🔌 Integrations Hub (Admin only)
+- จุดเดียวจัดการการเชื่อมต่อ Facebook / Instagram / TikTok (soon) / YouTube (soon) / Google Drive
+- เชื่อมต่อครั้งเดียว — sync ผ่าน Neon ทุก user เห็นและใช้ได้
 
-### 💾 Data Sync
-- **Neon Postgres** — primary online DB (real cross-device sync)
-- **localStorage** — offline cache
-- **Firebase** (optional fallback)
-- **Export/Import JSON** — หลายไฟล์ + dedupe by ID
-- **Auto-poll** ทุก 30 วินาที สำหรับ updates จาก client อื่น
+### 📝 Note + เอกสาร
+- Note แบบ Google Keep (per-user, สี, pin)
+- Google Drive integration (admin set credentials)
 
----
+### 👥 จัดการสมาชิก (Admin)
+- 3 Role: Admin / Social / Member
+- รหัส PIN per-user (Admin ดูได้/รีเซ็ตได้)
+- Avatar ปรับแต่งได้ + สีประจำตัว
+- Activity Log — ทุก action ทุกคน
 
-## 🛠 Tech Stack
+### 🔔 แจ้งเตือนอัจฉริยะ
+- In-app + Browser Notification API
+- เตือนงานครบกำหนด · เลยกำหนด · มอบหมายงานใหม่ · คำขอลา
+- กระดิ่งบน topbar ทุกหน้า
 
-| Layer | Tech |
-|---|---|
-| **Frontend** | Single HTML file — vanilla JS + CSS variables (no build step) |
-| **Charts** | Inline SVG (custom rendered) |
-| **PDF** | jsPDF + html2canvas (lazy-loaded CDN) |
-| **Backend** | Vercel Serverless Functions (Node 18 ESM) |
-| **Database** | Neon Postgres + `@neondatabase/serverless` |
-| **Hosting** | Vercel (auto-deploy from GitHub) |
-| **Fonts** | Anuphan + IBM Plex Sans Thai + Inter (Google Fonts) |
+### ☁️ Cross-device Sync
+- ทุกข้อมูลเก็บใน **Neon Postgres** (workspace_snapshot JSONB)
+- Poll ทุก 10 วินาที + sync ทันทีเมื่อมีการเปลี่ยน
+- Offline mode รองรับ (localStorage cache)
+- Manual upload/download ผ่าน UI
 
----
-
-## 🏗 Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  Browser (any device)                                        │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │  index.html (vanilla JS + CSS)                        │  │
-│  │  · UI rendering                                        │  │
-│  │  · localStorage cache (offline)                       │  │
-│  │  · 30s polling for remote updates                     │  │
-│  └────────────┬──────────────────────────────────────────┘  │
-└───────────────┼─────────────────────────────────────────────┘
-                │ HTTPS
-                ▼
-┌─────────────────────────────────────────────────────────────┐
-│  Vercel Edge / Serverless                                    │
-│  ┌──────────────────┐  ┌──────────────────┐                 │
-│  │ /api/health      │  │ /api/workspace   │  GET / POST     │
-│  │ /api/init-db     │  │ /api/seed        │                 │
-│  └────────┬─────────┘  └────────┬─────────┘                 │
-└───────────┼─────────────────────┼───────────────────────────┘
-            │                     │ @neondatabase/serverless
-            ▼                     ▼
-┌─────────────────────────────────────────────────────────────┐
-│  Neon Postgres (ap-southeast-1)                             │
-│  · workspace_snapshot (JSONB full-state sync)               │
-│  · users · tasks · documents · notes · live_sessions        │
-│  · opts · workspace_meta                                     │
-└─────────────────────────────────────────────────────────────┘
-```
-
-**Sync model:** Frontend `saveAll()` → debounced POST `/api/workspace` → Neon. Other clients poll `/api/workspace` every 30s; if `updated_at` ใหม่ → apply changes locally.
+### 🎨 UI/UX
+- Dark Mode (default) / Light Mode toggle
+- Responsive — ทำงานบน Desktop / Tablet / Mobile
+- Mobile overflow menu (⋯)
+- Sidebar drag-reorder (admin)
+- PWA-ready (Add to Home Screen)
+- Custom favicon + Apple touch icon
 
 ---
 
-## 📦 การติดตั้ง
+## 🛠️ Tech Stack
 
-### ความต้องการ
-- **Node.js 18+** ([download](https://nodejs.org/))
-- **Neon Postgres** account ([free signup](https://neon.tech/))
-- **Vercel** account ([free signup](https://vercel.com/)) — สำหรับ deploy
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | Vanilla JS · HTML · CSS (single-file ~800KB) |
+| **Hosting** | Vercel (auto-deploy from `main`) |
+| **Database** | Neon Postgres (Serverless) via `@neondatabase/serverless` |
+| **API** | Vercel Serverless Functions (Node 18+) |
+| **Maps** | Leaflet + OpenStreetMap (free) |
+| **Excel** | SheetJS (xlsx) — Import/Export |
+| **PDF** | Browser print (no library needed) |
+| **Sync** | JSONB snapshot + 10s polling |
 
-### Setup ทีละขั้น
-
-#### 1. Clone & Install
-```bash
-git clone https://github.com/tafulaoplus/TFLNotion.git
-cd TFLNotion
-npm install
-```
-
-#### 2. ตั้งค่า Environment
-สร้างไฟล์ `.env.local` ที่ root:
-```env
-DATABASE_URL=postgresql://user:pass@host.neon.tech/db?sslmode=require
-INIT_DB_SECRET=optional-secret-for-init-endpoint
-```
-
-> 🔒 `.env.local` ถูก gitignore แล้ว — ปลอดภัย
-
-#### 3. สร้างตาราง
-```bash
-npm run init-db
-```
-
-ผลลัพธ์:
-```
-✅ Connected to "neondb"
-✅ Schema applied successfully
-📊 Tables:
-   workspaces           1 row
-   users                0 rows
-   tasks                0 rows
-   opts                 10 rows  ← seeded
-   ...
-```
-
-#### 4. รัน Local
-```bash
-npm run dev
-```
-เปิด http://localhost:3000
-
-#### 5. Deploy
-```bash
-npm run deploy
-```
-หรือ push ไป GitHub → Vercel auto-deploy
-
----
-
-## 🎯 การใช้งาน
-
-### ครั้งแรก
-1. เปิดเว็บ → เลือก user → ตั้ง PIN 6 หลัก → ยืนยัน
-2. Admin (Tafu Lao Plus) สามารถ:
-   - เพิ่ม/ลบ members + เปลี่ยน roles
-   - ดูงานทั้งหมด
-   - reset PIN ของคนอื่น
-
-### Roles & Permissions
-
-| Menu | Member | Social | Admin |
-|---|:---:|:---:|:---:|
-| ภาพรวม | ✓ | ✓ | ✓ |
-| ไลบรารี | ✓ | ✓ | ✓ |
-| เอกสาร (Drive) | ✓ | ✓ | ✓ |
-| Note | ✓ | ✓ | ✓ |
-| ติดตามงาน | ✓ | ✓ | ✓ |
-| งานของฉัน | ✓ | ✓ | ✓ |
-| **Facebook → Live** | — | ✓ | ✓ |
-| **Facebook → Live AI** | — | ✓ | ✓ |
-| งานทั้งหมด | — | — | ✓ |
-| จัดการสมาชิก | — | — | ✓ |
-
----
-
-## 🔌 API Reference
-
-### `GET /api/health`
-ทดสอบการเชื่อมต่อ Neon
-```json
-{ "ok": true, "db": "neondb", "now": "2026-05-15T...", "version": "PostgreSQL 16.x" }
-```
-
-### `GET /api/workspace`
-ดึง workspace state ทั้งหมด
-```json
-{
-  "ok": true, "exists": true,
-  "updatedAt": "2026-05-15T...",
-  "users": [...], "tasks": [...], "documents": [...],
-  "notes": [...], "liveSessions": [...], "opts": {...}
-}
-```
-
-### `POST /api/workspace`
-บันทึก workspace state
-```bash
-curl -X POST https://tfl-notion.vercel.app/api/workspace \
-  -H "Content-Type: application/json" \
-  -d '{"users":[...],"tasks":[...],"_updatedBy":"alice"}'
-```
-
-### `POST /api/init-db`
-สร้างตาราง (ใช้ครั้งเดียว) — ตั้ง `INIT_DB_SECRET` ใน env เพื่อกัน
-```bash
-curl -X POST https://tfl-notion.vercel.app/api/init-db?secret=YOUR_SECRET
-```
-
-### `POST /api/seed`
-ฉีด baseline data ถ้า workspace ว่าง (4 users + 10 opts)
-
----
-
-## 🗄 ฐานข้อมูล
-
-9 ตารางใน Neon Postgres — ดูเต็มที่ [`db/schema.sql`](db/schema.sql)
-
-| Table | Purpose |
-|---|---|
-| `workspaces` | Multi-tenant root |
-| `users` | สมาชิก + role + avatar + PIN |
-| `tasks` | งาน + assignees (JSONB) |
-| `documents` | Library docs |
-| `notes` | Google Keep notes (per user) |
-| `live_sessions` | Facebook Live + audience JSONB |
-| `opts` | Tag definitions (status/priority/type) |
-| `workspace_meta` | nextIds, columnWidths |
-| `workspace_snapshot` | Full JSONB sync state (primary) |
-
-**Auto-update triggers** — `updated_at` อัปเดตเองทุก UPDATE
-**Indexes** — tasks(due/status/assignees GIN), notes(user_id), live_sessions(date/presenter)
-
----
-
-## 🚀 Deployment
-
-### Vercel (แนะนำ)
-1. Push code ไป GitHub
-2. ไปที่ [vercel.com/new](https://vercel.com/new) → Import repo
-3. Framework Preset: **Other**
-4. Environment Variables:
-   - `DATABASE_URL` — Neon connection string
-   - `INIT_DB_SECRET` — (optional) protect /api/init-db
-5. Deploy
-
-หลัง deploy:
-- `GET /api/health` ทดสอบ
-- `POST /api/init-db` สร้างตาราง 1 ครั้ง
-- เริ่มใช้งานได้เลย
-
-### Custom Domain
-Vercel → Project Settings → Domains → Add domain
-
----
-
-## 🔧 Troubleshooting
-
-### `[Neon] Not available`
-- ไม่ได้รันบน Vercel (อาจเปิดด้วย `file://`) — ใช้ `npm run dev` หรือ deploy
-- ตรวจ `/api/health` ว่าตอบ 200
-
-### `DATABASE_URL not set`
-- ตรวจ `.env.local` หรือ Vercel env vars
-- ใช้ pooled connection string (มี `-pooler.` ใน hostname)
-
-### `relation "workspaces" does not exist`
-- ยังไม่ได้รัน `npm run init-db` หรือ POST `/api/init-db`
-
-### ข้อมูลซ้ำหลัง import
-- ระบบ dedupe by ID อยู่แล้ว → แต่ถ้า ID ต่างกัน รายการเดียวกัน จะซ้ำ
-- แก้: ใช้ Export ก่อน Import แบบ replace
-
-### Vercel rate limit
-- Free tier: 100GB-Hours/month
-- แอปนี้ใช้น้อยมาก (~100KB/request)
-
----
-
-## 📁 โครงสร้างไฟล์
+## 📁 Project Structure
 
 ```
-TFLNotion/
-├── index.html              ← เว็บแอปทั้งหมด (single file)
+tfl-workspace/
+├── index.html              ← Main app (single-file SPA)
 ├── api/
-│   ├── _db.js              ← Neon connection
-│   ├── health.js           ← GET ทดสอบ
-│   ├── workspace.js        ← GET/POST sync
-│   ├── init-db.js          ← POST สร้างตาราง
+│   ├── _db.js              ← Neon connection helper
+│   ├── health.js           ← GET /api/health
+│   ├── workspace.js        ← GET/POST snapshot (with slim-mode for oversized)
+│   ├── wipe-snapshot.js    ← POST to reset
+│   ├── init-db.js          ← POST to create schema
 │   └── seed.js             ← POST baseline data
 ├── db/
-│   └── schema.sql          ← Full SQL schema
+│   └── schema.sql          ← Postgres schema (workspace_snapshot)
 ├── scripts/
-│   └── init-db.mjs         ← CLI init script
+│   └── init-db.mjs         ← CLI: npm run init-db
+├── backups/                ← Local zip backups (gitignored)
+├── backup.ps1              ← One-click backup script
+├── ws-light.png            ← Logo (light mode)
+├── ws-dark.png             ← Logo (dark mode) + favicon
+├── lao-lottery.png         ← Lottery brand logo
 ├── package.json
 ├── vercel.json
-├── .gitignore
-└── .env.local              ← (gitignored) DATABASE_URL
+└── .env.local              ← DATABASE_URL (gitignored)
 ```
 
----
+## 🚀 Setup & Deploy
 
-## 🎨 Screenshots
+### Local Development
 
-> หน้า Dashboard, Task Board, Live Analytics, Notes, Dark mode
+```bash
+# 1. Clone
+git clone https://github.com/tafulaoplus/TFLNotion
+cd tfl-workspace
 
-(ใส่ภาพ screenshot ภายหลัง)
+# 2. Install
+npm install
 
----
+# 3. Set DATABASE_URL in .env.local
+echo 'DATABASE_URL=postgresql://...' > .env.local
 
-## 🤝 Contributing
+# 4. Init schema (first time)
+npm run init-db
 
-โปรเจกต์ภายในทีม TFL+ — ติดต่อ tafu@tfl.com สำหรับ access
+# 5. Run
+npm run dev          # Vercel dev on localhost:3000
+```
 
----
+### Deploy
 
-## 📝 License
+ทุก commit ที่ push ไปยัง `main` branch จะ auto-deploy ผ่าน Vercel
 
-MIT © 2026 TFL+ Workspace
+```bash
+git add -A
+git commit -m "feat: ..."
+git push origin main
+```
 
----
+หรือ manual:
+```bash
+npm run deploy       # vercel --prod
+```
 
-## 🔗 Links
+### Backup
 
-- 🌐 **Live demo:** https://tfl-notion.vercel.app
-- 📚 **Database docs:** [README-DATABASE.md](README-DATABASE.md)
-- 🚀 **Deploy guide:** [DEPLOY.md](DEPLOY.md)
-- 🗄 **Neon dashboard:** https://console.neon.tech/
-- ▲ **Vercel dashboard:** https://vercel.com/dashboard
+```powershell
+.\backup.ps1         # สร้าง zip ใน backups/
+```
+
+## 📊 Roles & Permissions
+
+| Role | สิทธิ์ |
+|------|------|
+| **Admin** | ทุกเมนู · จัดการสมาชิก · เชื่อมต่อแพลตฟอร์ม · งานทั้งหมด · Activity Log · ยอดขาย · ลบประวัติเช็คอินคนอื่น · อนุมัติลา · Reset workspace |
+| **Social** | ทุกเมนูปกติ + เมนู Social (Live / Post Manager / Social Analytics) |
+| **Member** | เมนูพื้นฐาน (ภาพรวม · ระบบลงเวลา · งานของฉัน · Note · เอกสาร · ออกพื้นที่ของตัวเอง · ปฏิทิน) |
+
+## 🗄️ Database Schema
+
+ใช้ pattern **single JSONB snapshot** เพื่อให้ sync ง่าย:
+
+```sql
+CREATE TABLE workspace_snapshot (
+  workspace_id TEXT PRIMARY KEY,
+  data JSONB NOT NULL,           -- ทุกข้อมูลของ workspace
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_by TEXT
+);
+```
+
+ข้อมูลที่เก็บใน `data` JSONB:
+- users · tasks · documents · notes · opts · liveSessions
+- salesEvents · activityLog · notifications · attendanceRecords
+- leaveRequests · attendanceSettings · attendanceHolidays
+- lotterySales · lotterySettings
+- fbDrafts · fbConnection · googleDriveSettings
+- columnWidths · nextTaskId · nextDocId
+
+มี slim-mode auto-strip ฟิลด์หนัก (base64 receipts) ถ้า > 2MB
+
+## 🔐 Environment Variables
+
+| Variable | Where | Required |
+|----------|-------|----------|
+| `DATABASE_URL` | Vercel + `.env.local` | ✅ Yes |
+| `INIT_DB_SECRET` | Vercel | ⚪ Optional (ปกป้อง /api/init-db) |
+
+## 🐛 Known Issues / Roadmap
+
+- ⏳ TikTok Business API integration (รอ App Review)
+- ⏳ YouTube Data API v3 + OAuth flow
+- ⏳ Real-time WebSocket (ปัจจุบันใช้ polling 10s)
+- ⏳ Calendar shared across users (sidebar order ปัจจุบัน per-browser)
+
+## 💜 Credits
+
+Made with love by **SunTFL+** — สำหรับทีม TFL+ และหวยพัฒนาลาว
+
+© 2026 TFL+ Workspace · All rights reserved

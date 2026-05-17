@@ -19,6 +19,7 @@ pnpm-debug.log*
 # Local backup files
 *.bak
 *.backup
+backups/
 
 # Exported data backups (optional - uncomment if you don't want to commit)
 # tfl-workspace-*.json

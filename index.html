@@ -437,6 +437,12 @@
   .tm-logo{height:38px}
 }
 
+/* Global app footer credit */
+.app-credit{padding:18px 24px;text-align:center;font-size:11.5px;color:var(--t2);border-top:1px solid var(--border);margin-top:24px}
+.app-credit b{color:var(--t1);font-weight:800}
+.app-credit a{color:#7c3aed;font-weight:700;text-decoration:none;cursor:default}
+[data-theme="dark"] .app-credit a{color:#a78bfa}
+
 /* ===== SYNC STATUS BADGE ===== */
 .sync-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:10px;font-size:11.5px;font-weight:700;cursor:default;user-select:none;font-feature-settings:'tnum';transition:all .15s ease}
 .sync-badge::before{content:'';width:7px;height:7px;border-radius:50%;flex-shrink:0}
@@ -1776,6 +1782,15 @@ svg{display:block;flex-shrink:0}
 [data-theme="dark"] .feat:hover{background:rgba(45,27,78,.6)}
 .feat-icon{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(124,58,237,.3)}
 .feat-icon svg{width:14px;height:14px}
+.feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;max-width:560px}
+@media (max-width:680px){.feature-grid{grid-template-columns:1fr;max-width:340px;margin:0 auto}}
+.feat-mini{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.65);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.7);border-radius:12px;text-align:left;transition:all .2s ease}
+.feat-mini:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(124,58,237,.12)}
+[data-theme="dark"] .feat-mini{background:rgba(45,27,78,.4);border-color:rgba(167,139,250,.18)}
+.feat-mini-ic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;flex-shrink:0;box-shadow:0 4px 10px rgba(0,0,0,.12)}
+.feat-mini > div{min-width:0;flex:1}
+.feat-mini b{font-size:12.5px;font-weight:800;color:var(--t1);line-height:1.1;display:block;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.feat-mini span{font-size:10.5px;color:var(--t2);line-height:1.3;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 .login-box{position:relative;width:460px;max-width:100%;padding:36px 34px 26px;background:rgba(255,255,255,.88);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.9);border-radius:24px;box-shadow:0 30px 80px rgba(124,58,237,.2),0 0 0 1px rgba(255,255,255,.5) inset}
 [data-theme="dark"] .login-box{background:rgba(31,17,71,.7);border-color:rgba(167,139,250,.25);box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 0 1px rgba(167,139,250,.15) inset}
@@ -2780,10 +2795,19 @@ svg{display:block;flex-shrink:0}
       <div class="login-hero-badge"><span class="dot"></span> Workspace Management Platform</div>
       <h1>จัดการทีมของคุณ<br><span class="gradient-text">อย่างเป็นระบบ</span></h1>
       <p>แพลตฟอร์มจัดการงาน เอกสาร และทีมงานในที่เดียว ออกแบบมาเพื่อทีม TFL+ โดยเฉพาะ</p>
-      <div class="feature-list">
-        <div class="feat"><div class="feat-icon" id="featIco1"></div> จัดการงานแบบ Database View</div>
-        <div class="feat"><div class="feat-icon" id="featIco2"></div> แยกสิทธิ์ Admin / Member</div>
-        <div class="feat"><div class="feat-icon" id="featIco3"></div> ติดตามความคืบหน้าเรียลไทม์</div>
+      <div class="feature-grid">
+        <div class="feat-mini"><span class="feat-mini-ic" style="background:#7c3aed">📋</span><div><b>ติดตามงาน</b><span>Database View + Kanban + Calendar</span></div></div>
+        <div class="feat-mini"><span class="feat-mini-ic" style="background:#10b981">🕐</span><div><b>ระบบลงเวลา</b><span>GPS + แผนที่ + ถ่ายภาพ + คำนวณ OT/สาย</span></div></div>
+        <div class="feat-mini"><span class="feat-mini-ic" style="background:#f59e0b">📍</span><div><b>ออกพื้นที่ / อีเว้นท์</b><span>บันทึก + Dashboard + Export PDF</span></div></div>
+        <div class="feat-mini"><span class="feat-mini-ic" style="background:#ec4899">📅</span><div><b>ปฏิทินทีม</b><span>Drag-drop · Sync ทุกคนเห็นเหมือนกัน</span></div></div>
+        <div class="feat-mini"><span class="feat-mini-ic" style="background:#1877f2">📘</span><div><b>Facebook Manager</b><span>Live · Post · ตั้งเวลา · Analytics</span></div></div>
+        <div class="feat-mini"><span class="feat-mini-ic" style="background:linear-gradient(135deg,#f58529,#dd2a7b)">📷</span><div><b>Social Analytics</b><span>FB · IG · TikTok · YouTube</span></div></div>
+        <div class="feat-mini"><span class="feat-mini-ic" style="background:#06b6d4">🎰</span><div><b>หวยพัฒนาลาว</b><span>สรุปงวด · เป้า · กำไร · Insights</span></div></div>
+        <div class="feat-mini"><span class="feat-mini-ic" style="background:#a78bfa">📝</span><div><b>Note + เอกสาร</b><span>Google Keep style + Google Drive</span></div></div>
+        <div class="feat-mini"><span class="feat-mini-ic" style="background:#3b82f6">👥</span><div><b>จัดการทีม + PIN</b><span>Admin / Member / Social · Activity Log</span></div></div>
+        <div class="feat-mini"><span class="feat-mini-ic" style="background:#0ea5e9">☁️</span><div><b>Cross-device Sync</b><span>Neon Postgres · ทุกเครื่องเห็นเหมือนกัน</span></div></div>
+        <div class="feat-mini"><span class="feat-mini-ic" style="background:#dc2626">🔔</span><div><b>แจ้งเตือนอัจฉริยะ</b><span>Browser + In-app · ครบกำหนด/มอบหมาย</span></div></div>
+        <div class="feat-mini"><span class="feat-mini-ic" style="background:#0f0f23">🌓</span><div><b>Dark/Light Mode</b><span>UI สวย Responsive ทุกหน้าจอ</span></div></div>
       </div>
     </div>
     <div class="login-box">
@@ -2856,6 +2880,7 @@ svg{display:block;flex-shrink:0}
       <div id="viewCalendar" class="view"></div>
       <div id="viewLottery" class="view"></div>
       <div id="viewAttendance" class="view"></div>
+      <div class="app-credit">© 2026 <b>TFL+ Workspace</b> · All rights reserved · Made with 💜 by <a href="#" onclick="event.preventDefault()">SunTFL+</a></div>
     </div>
   </div>
 </div>
