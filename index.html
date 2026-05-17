@@ -4068,7 +4068,7 @@ let fbDrafts = [];
 let nextFbDraftId = 1;
 let fbScheduledPosts = [];
 let fbPublishedPosts = [];
-let fbPostView = 'compose'; // compose | scheduled | calendar | drafts
+let fbPostView = 'calendar'; // calendar (default) | compose | scheduled | drafts
 let editFbDraftId = null;
 let fbComposeAttachment = null; // {type:'image'|'video', file:File|null, url:string|null, name:string}
 let fbCalMonth = new Date().toISOString().slice(0,7);
@@ -13643,7 +13643,19 @@ function renderFbPosts(el){
       <div class="fbp-header-name">${escapeHtmlN(fbPostState.pageName)}</div>
       <div class="fbp-header-sub">เพจที่เชื่อม · Page ID ${fbPostState.pageId}</div>
     </div>
-    <button class="fbp-header-btn" onclick="fbpDisconnect()">ตัดการเชื่อมต่อ</button>
+    ${isAdmin?`<button class="fbp-header-btn" onclick="navigateTo('socialIntegrations')">จัดการการเชื่อม</button>`:''}
+  </div>`;
+
+  // KPI summary
+  const totalDrafts = fbDrafts.length;
+  const totalScheduled = fbScheduledPosts.length;
+  const totalPublished = fbPublishedPosts.length;
+  const totalReach = fbPublishedPosts.reduce((a,p)=>a + ((p.reactions?.summary?.total_count||0) + (p.comments?.summary?.total_count||0) + (p.shares?.count||0)), 0);
+  const kpiHtml = `<div class="dash-kpi-grid" style="margin-bottom:18px">
+    <div class="dash-kpi"><div class="dash-kpi-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div><div class="dash-kpi-body"><div class="dash-kpi-lbl">โพสต์ทั้งหมด</div><div class="dash-kpi-val">${totalDrafts + totalScheduled + totalPublished}</div><div class="dash-kpi-trend neutral">รวมทุกสถานะ</div></div></div>
+    <div class="dash-kpi"><div class="dash-kpi-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="dash-kpi-body"><div class="dash-kpi-lbl">กำหนดการโพสต์</div><div class="dash-kpi-val">${totalScheduled}</div><div class="dash-kpi-trend neutral">ตั้งเวลารอเผยแพร่</div></div></div>
+    <div class="dash-kpi"><div class="dash-kpi-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div><div class="dash-kpi-body"><div class="dash-kpi-lbl">โพสต์ที่เผยแพร่</div><div class="dash-kpi-val">${totalPublished}</div><div class="dash-kpi-trend up">ออนไลน์</div></div></div>
+    <div class="dash-kpi"><div class="dash-kpi-icon pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div class="dash-kpi-body"><div class="dash-kpi-lbl">การมีส่วนร่วม</div><div class="dash-kpi-val">${totalReach.toLocaleString()}</div><div class="dash-kpi-trend up">reactions + comments</div></div></div>
   </div>`;
 
   const tabsHtml = `<div class="fbp-tabs">
@@ -13734,6 +13746,7 @@ function renderFbPosts(el){
   el.innerHTML = topbarSimple('megaphone', 'Post Manager', 'จัดการโพสต์ Facebook Page', '') + `
     <div class="page-content" style="max-width:1280px">
       ${headerHtml}
+      ${kpiHtml}
       ${tabsHtml}
       ${body}
     </div>`;
