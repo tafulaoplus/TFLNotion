@@ -15315,12 +15315,11 @@ function calSetUser(v){ calendarFilterUser = parseInt(v,10)||0; rerender(); }
 function calSetType(v){ calendarFilterType = v||''; rerender(); }
 
 function getCalendarEvents(){
-  const isAdmin = currentUser && currentUser.role === 'admin';
   const events = [];
   salesEvents.forEach(s => {
     const sd = s.startDate || s.date;
     if(!sd) return;
-    if(!isAdmin && !_eventBelongsToUser(s, currentUser.id)) return;
+    // Team calendar — show all events to everyone
     if(calendarFilterUser && !_eventBelongsToUser(s, calendarFilterUser)) return;
     const ed = s.endDate || sd;
     // Expand to all days in range
@@ -15393,12 +15392,12 @@ function renderCalendar(el){
           <div class="cal-title">${monthLabel}</div>
           <button onclick="calShiftMonth(1)" title="เดือนถัดไป">›</button>
         </div>
-        ${isAdmin? `<div class="sales-filter-field" style="min-width:140px">
+        <div class="sales-filter-field" style="min-width:140px">
           <select onchange="calSetUser(this.value)" style="padding:8px 12px;border:1px solid var(--border-2);border-radius:8px;font-size:13px;background:var(--bg);color:var(--t1)">
             <option value="0">สมาชิกทั้งหมด</option>
             ${USERS.map(u=>`<option value="${u.id}" ${calendarFilterUser==u.id?'selected':''}>${escapeHtmlN(u.name)}</option>`).join('')}
           </select>
-        </div>` : ''}
+        </div>
       </div>
       <div class="cal-grid">
         ${dowLabels.map(d=>`<div class="cal-dowhdr">${d}</div>`).join('')}
@@ -15792,8 +15791,9 @@ function _eventDateRange(e){
 function renderSales(el){
   const isAdmin = currentUser.role === 'admin';
   const month = salesFilterMonth || new Date().toISOString().slice(0,7);
-  let events = isAdmin ? salesEvents.slice() : salesEvents.filter(s => _eventBelongsToUser(s, currentUser.id));
-  if(isAdmin && salesFilterUser) events = events.filter(s => _eventBelongsToUser(s, salesFilterUser));
+  // Shared team view — ทุกคนเห็นกิจกรรมทั้งหมด
+  let events = salesEvents.slice();
+  if(salesFilterUser) events = events.filter(s => _eventBelongsToUser(s, salesFilterUser));
   if(month) events = events.filter(s => (s.startDate||s.date||'').startsWith(month));
 
   const totalEvents = events.length;
@@ -15944,13 +15944,13 @@ function renderSales(el){
           <label>เดือน</label>
           <input type="month" value="${month}" onchange="setSalesMonth(this.value)"/>
         </div>
-        ${isAdmin? `<div class="sales-filter-field">
+        <div class="sales-filter-field">
           <label>สมาชิก</label>
           <select onchange="setSalesUser(this.value)">
             <option value="0">ทั้งหมด</option>
             ${USERS.map(u=>`<option value="${u.id}" ${salesFilterUser==u.id?'selected':''}>${escapeHtmlN(u.name)}</option>`).join('')}
           </select>
-        </div>` : ''}
+        </div>
       </div>
 
       <div class="sd-grid">
