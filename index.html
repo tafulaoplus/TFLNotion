@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<!-- (GSI client removed — Google Drive now uses server-side OAuth via /api/drive/proxy) -->
 <!-- Leaflet for attendance map -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin/>
 <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin></script>
@@ -1095,6 +1095,9 @@
 .intg-card.tt::before{background:linear-gradient(90deg,#25f4ee,#fe2c55)}
 .intg-card.yt::before{background:#ff0000}
 .intg-hdr{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px}
+.intg-guide-btn{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:var(--p50);color:var(--p700);border:1px solid var(--p200);border-radius:100px;font-size:11.5px;font-weight:700;cursor:pointer;flex-shrink:0;transition:background .15s ease}
+.intg-guide-btn:hover{background:var(--p100)}
+[data-theme="dark"] .intg-guide-btn{background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.3);color:#c4b5fd}
 .intg-logo{width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:24px;flex-shrink:0;box-shadow:0 8px 20px rgba(0,0,0,.15)}
 .intg-logo.fb{background:#1877f2}
 .intg-logo.ig{background:linear-gradient(135deg,#f58529,#dd2a7b 45%,#8134af 75%,#515bd4)}
@@ -1798,19 +1801,25 @@ svg{display:block;flex-shrink:0}
 [data-theme="dark"] .feat:hover{background:rgba(45,27,78,.6)}
 .feat-icon{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 10px rgba(124,58,237,.3)}
 .feat-icon svg{width:14px;height:14px}
-.feature-marquee{position:relative;width:100%;max-width:640px;overflow:hidden;padding:6px 0;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%)}
-.feature-marquee-track{display:flex;gap:12px;width:max-content;animation:featMarquee 45s linear infinite}
+.feature-marquee-wrap{display:flex;flex-direction:column;gap:10px;width:100%;max-width:640px;margin-top:6px}
+.feature-marquee{position:relative;width:100%;overflow:hidden;padding:4px 0;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%)}
+.feature-marquee-track{display:flex;gap:12px;width:max-content;animation:featMarqueeLeft 50s linear infinite}
+.feature-marquee.reverse .feature-marquee-track{animation-name:featMarqueeRight;animation-duration:55s}
 .feature-marquee:hover .feature-marquee-track{animation-play-state:paused}
-@keyframes featMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.feat-mini{display:flex;align-items:center;gap:12px;padding:12px 16px;background:linear-gradient(135deg,rgba(255,255,255,.85),rgba(255,255,255,.6));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.8);border-radius:14px;text-align:left;transition:all .25s ease;min-width:230px;flex-shrink:0;box-shadow:0 4px 14px rgba(124,58,237,.06)}
-.feat-mini:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 10px 24px rgba(124,58,237,.18);border-color:rgba(167,139,250,.6)}
-[data-theme="dark"] .feat-mini{background:linear-gradient(135deg,rgba(45,27,78,.55),rgba(45,27,78,.35));border-color:rgba(167,139,250,.22);box-shadow:0 4px 14px rgba(0,0,0,.25)}
-[data-theme="dark"] .feat-mini:hover{box-shadow:0 10px 24px rgba(167,139,250,.25);border-color:rgba(167,139,250,.5)}
-.feat-mini-ic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+@keyframes featMarqueeLeft{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes featMarqueeRight{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+.feat-mini{display:flex;align-items:center;gap:12px;padding:12px 16px;background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(255,255,255,.62));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.85);border-radius:14px;text-align:left;transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;min-width:240px;flex-shrink:0;box-shadow:0 4px 14px rgba(124,58,237,.08)}
+.feat-mini:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 12px 28px rgba(124,58,237,.2);border-color:rgba(167,139,250,.65)}
+[data-theme="dark"] .feat-mini{background:linear-gradient(135deg,rgba(45,27,78,.6),rgba(45,27,78,.38));border-color:rgba(167,139,250,.24);box-shadow:0 4px 14px rgba(0,0,0,.3)}
+[data-theme="dark"] .feat-mini:hover{box-shadow:0 12px 28px rgba(167,139,250,.3);border-color:rgba(167,139,250,.55)}
+.feat-mini-ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+.feat-mini-ic svg{width:20px;height:20px}
 .feat-mini > div{min-width:0;flex:1}
 .feat-mini b{font-size:13px;font-weight:800;color:var(--t1);line-height:1.15;display:block;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .feat-mini span{font-size:11px;color:var(--t2);line-height:1.3;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-@media (max-width:680px){.feature-marquee{max-width:340px}.feat-mini{min-width:200px;padding:10px 14px}}
+.feat-mini.brand .feat-mini-ic{width:42px;height:42px;border-radius:12px}
+.feat-mini.brand .feat-mini-ic svg{width:24px;height:24px}
+@media (max-width:680px){.feature-marquee-wrap{max-width:340px}.feat-mini{min-width:210px;padding:10px 14px}}
 
 .login-box{position:relative;width:460px;max-width:100%;padding:36px 34px 26px;background:rgba(255,255,255,.88);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.9);border-radius:24px;box-shadow:0 30px 80px rgba(124,58,237,.2),0 0 0 1px rgba(255,255,255,.5) inset}
 [data-theme="dark"] .login-box{background:rgba(31,17,71,.7);border-color:rgba(167,139,250,.25);box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 0 1px rgba(167,139,250,.15) inset}
@@ -2087,6 +2096,10 @@ svg{display:block;flex-shrink:0}
 .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(139,92,246,.32)}
 .btn-ghost{padding:9px 14px;background:#fff;border:1px solid var(--border-2);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;color:var(--t2);transition:all .12s;display:inline-flex;align-items:center;gap:6px}
 .btn-ghost:hover{background:var(--bg-soft);color:var(--t1)}
+.btn-google-login{display:inline-flex;align-items:center;gap:10px;padding:10px 18px;background:#fff;color:#3c4043;border:1px solid #dadce0;border-radius:9px;font-size:13.5px;font-weight:600;cursor:pointer;transition:box-shadow .15s,background .15s;box-shadow:0 1px 2px rgba(0,0,0,.05);font-family:'Google Sans','Roboto',-apple-system,sans-serif}
+.btn-google-login:hover{background:#f8f9fa;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.btn-google-login:active{background:#eef0f3}
+[data-theme="dark"] .btn-google-login{background:#fff;color:#3c4043}
 
 /* PAGE */
 .page-content{padding:24px 28px;width:100%}
@@ -2470,6 +2483,46 @@ svg{display:block;flex-shrink:0}
 .aa-empty-text{font-size:13px;font-weight:600;margin-bottom:3px}
 .aa-empty-sub{font-size:11.5px;color:var(--t3)}
 
+/* Go Live (FB Broadcast) page */
+.golive-warn{display:flex;align-items:center;gap:14px;padding:16px 18px;background:#fef9c3;border:1px solid #fde68a;border-radius:12px;margin-bottom:18px}
+.golive-warn-ic{color:#b45309;flex-shrink:0}
+.golive-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;align-items:flex-start}
+@media (max-width:980px){.golive-grid{grid-template-columns:1fr}}
+.golive-preview-col,.golive-form-col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.golive-preview-card{position:relative;background:#0f172a;border-radius:14px;overflow:hidden;aspect-ratio:16/9;box-shadow:0 10px 28px rgba(0,0,0,.2)}
+.golive-video{width:100%;height:100%;object-fit:cover;background:#000}
+.golive-preview-overlay{position:absolute;top:12px;left:12px;display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.6);color:#fff;padding:5px 12px;border-radius:100px;font-size:11.5px;backdrop-filter:blur(6px)}
+.golive-cam-btn{position:absolute;bottom:12px;right:12px;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.95);color:#111;border:none;padding:7px 14px;border-radius:100px;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.golive-rec-dot{width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block;box-shadow:0 0 0 0 rgba(239,68,68,.6)}
+.golive-rec-dot.live{animation:goliveBlink 1.4s infinite}
+@keyframes goliveBlink{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.6)}50%{box-shadow:0 0 0 8px rgba(239,68,68,0)}}
+.golive-tip{padding:12px 14px;background:var(--bg-soft);border-left:3px solid var(--p400);border-radius:8px;font-size:12.5px;color:var(--t2);line-height:1.6}
+.golive-card,.golive-info-card,.golive-rtmp-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow)}
+.golive-card-title{font-weight:800;font-size:15px;color:var(--t1);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.golive-go-btn{flex:1;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;border:none;padding:13px 22px;border-radius:11px;font-size:14.5px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 18px rgba(239,68,68,.35);transition:transform .15s,box-shadow .15s}
+.golive-go-btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(239,68,68,.5)}
+.golive-end-btn{background:#0f172a;color:#fff;border:none;padding:9px 18px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.golive-status-bar{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--bg-soft);border:1.5px solid var(--border);border-radius:12px;margin-bottom:18px}
+.golive-status-bar.live{background:linear-gradient(135deg,#fee2e2,#fecaca);border-color:#fca5a5}
+[data-theme="dark"] .golive-status-bar.live{background:linear-gradient(135deg,rgba(220,38,38,.18),rgba(239,68,68,.1));border-color:rgba(239,68,68,.3)}
+.golive-status-ic{width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.golive-info-title{font-weight:800;font-size:15px;color:var(--t1);display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.golive-info-meta{font-size:12px;color:var(--t3);font-family:monospace}
+.golive-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.golive-stat-card{padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:11px;text-align:center}
+.golive-stat-lbl{font-size:11.5px;color:var(--t3);margin-bottom:4px}
+.golive-stat-val{font-size:20px;font-weight:800;color:var(--t1)}
+.golive-field-row{margin-bottom:14px}
+.golive-copy-row{display:flex;gap:6px}
+.golive-copy-row .finp{flex:1;font-family:'Consolas','Monaco',monospace;font-size:12px}
+.golive-steps{padding-left:20px;font-size:12.5px;color:var(--t2);line-height:1.8;margin:14px 0 0;background:var(--p50);border-radius:9px;padding:14px 14px 14px 36px}
+[data-theme="dark"] .golive-steps{background:rgba(167,139,250,.08)}
+.golive-comments{max-height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.golive-comment{display:flex;gap:10px;padding:8px 10px;background:var(--bg-soft);border-radius:9px}
+.golive-comment-avatar{width:30px;height:30px;border-radius:50%;background:var(--gradient);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.golive-embed{position:relative;background:#000;border-radius:14px;overflow:hidden;aspect-ratio:16/9}
+.golive-embed iframe{width:100%;height:100%;border:0}
+
 /* Live AI Auto page */
 .live-ai-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:14px}
 .live-ai-section-title{font-size:13px;font-weight:800;color:var(--t1);margin-bottom:10px;display:flex;align-items:center;gap:8px;letter-spacing:-.01em}
@@ -2815,8 +2868,9 @@ svg{display:block;flex-shrink:0}
       <div class="login-hero-badge"><span class="dot"></span> Workspace Management Platform</div>
       <h1>จัดการทีมของคุณ<br><span class="gradient-text">อย่างเป็นระบบ</span></h1>
       <p>แพลตฟอร์มจัดการงาน เอกสาร และทีมงานในที่เดียว ออกแบบมาเพื่อทีม TFL+ โดยเฉพาะ</p>
-      <div class="feature-marquee">
-        <div class="feature-marquee-track" id="featMarqueeTrack"></div>
+      <div class="feature-marquee-wrap">
+        <div class="feature-marquee"><div class="feature-marquee-track" id="featMarqueeTrack1"></div></div>
+        <div class="feature-marquee reverse"><div class="feature-marquee-track" id="featMarqueeTrack2"></div></div>
       </div>
     </div>
     <div class="login-box">
@@ -2880,6 +2934,7 @@ svg{display:block;flex-shrink:0}
       <div id="viewAllTasks" class="view"></div>
       <div id="viewMembers" class="view"></div>
       <div id="viewFbLive" class="view"></div>
+      <div id="viewFbGoLive" class="view"></div>
       <div id="viewFbLiveAuto" class="view"></div>
       <div id="viewFbPosts" class="view"></div>
       <div id="viewSocialAnalytics" class="view"></div>
@@ -3833,38 +3888,18 @@ svg{display:block;flex-shrink:0}
   </div>
 </div>
 
-<!-- DRIVE SETUP MODAL -->
-<div class="overlay" id="driveSetupModal">
-  <div class="modal" style="width:580px">
+<!-- (Drive setup modal removed — Google Drive now configured at เชื่อมต่อแพลตฟอร์ม via server-side OAuth refresh-token flow) -->
+
+<!-- CONNECT GUIDE MODAL -->
+<div class="overlay" id="connectGuideModal">
+  <div class="modal" style="width:640px;max-width:96vw">
     <div class="modal-hd">
-      <div class="modal-title">ตั้งค่า Google Drive</div>
-      <button class="modal-close" onclick="closeModal('driveSetupModal')">×</button>
+      <div class="modal-title" id="connectGuideTitle">วิธีเชื่อมต่อ</div>
+      <button class="modal-close" onclick="closeModal('connectGuideModal')">×</button>
     </div>
-    <div class="modal-body">
-      <div style="background:var(--p50);border:1px solid var(--p200);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:12.5px;line-height:1.7">
-        <div style="font-weight:800;color:var(--p700);margin-bottom:6px">วิธีรับ OAuth Client ID (ฟรี)</div>
-        <ol style="padding-left:18px;color:var(--t2)">
-          <li>ไปที่ <a href="https://console.cloud.google.com/" target="_blank" style="color:var(--p600);font-weight:600">Google Cloud Console</a></li>
-          <li>สร้าง Project ใหม่ (หรือเลือกที่มีอยู่)</li>
-          <li>เปิดใช้ <b>Google Drive API</b> ที่ APIs & Services → Library</li>
-          <li>ไปที่ Credentials → Create Credentials → <b>OAuth Client ID</b></li>
-          <li>เลือก Type: <b>Web application</b></li>
-          <li>เพิ่ม Authorized JavaScript origins เช่น <code style="background:#fff;padding:1px 5px;border-radius:3px">http://localhost:8000</code></li>
-          <li>คัดลอก Client ID มาวางด้านล่าง</li>
-        </ol>
-      </div>
-      <div class="fgrp">
-        <label class="flabel">OAuth Client ID *</label>
-        <input class="finp" id="driveClientId" placeholder="xxxxxxxxxx.apps.googleusercontent.com">
-      </div>
-      <div style="background:#fef9c3;border:1px solid #fde68a;border-radius:9px;padding:11px 13px;font-size:12px;color:#92400e;line-height:1.5">
-        <b>⚠ หมายเหตุ:</b> Google OAuth ไม่ทำงานบน <code>file://</code> URL — ต้องเปิดผ่าน <code>http://localhost</code> หรือเว็บจริง<br>
-        เปิด PowerShell ในโฟลเดอร์นี้แล้วรัน: <code style="background:#fff;padding:1px 5px;border-radius:3px">python -m http.server 8000</code> แล้วเปิด <code>http://localhost:8000</code>
-      </div>
-    </div>
+    <div class="modal-body" id="connectGuideBody" style="font-size:13.5px;line-height:1.75;color:var(--t2)"></div>
     <div class="modal-ft">
-      <button class="btn-cancel" onclick="closeModal('driveSetupModal')">ยกเลิก</button>
-      <button class="btn-save" onclick="saveDriveSetup()">บันทึก & เข้าสู่ระบบ</button>
+      <button class="btn-cancel" onclick="closeModal('connectGuideModal')">ปิด</button>
     </div>
   </div>
 </div>
@@ -4114,11 +4149,17 @@ let socialData = { fb:null, tt:null, yt:null };
 let socialLoading = false;
 let igAccountInfo = null; // { id, username, name, profile_picture_url, followers_count } via FB page
 let _igFetchAttempted = false;
-let ttConnected = false; // future
-let ytConnected = false; // future
+// TikTok / YouTube — manual token paste (admin enters access_token from their developer portal)
+let tiktokSettings = { accessToken:'', openId:'', displayName:'', followerCount:0, connectedAt:0 };
+let youtubeSettings = { accessToken:'', channelId:'', channelTitle:'', subscriberCount:0, viewCount:0, connectedAt:0 };
+let ttConnected = false;
+let ytConnected = false;
 let googleDriveSettings = {
-  clientId: localStorage.getItem('tfl_drive_clientid') || '',
-  apiKey: localStorage.getItem('tfl_drive_apikey') || '',
+  clientId: '',
+  clientSecret: '',
+  redirectUri: '',
+  refreshToken: '',
+  adminEmail: '',
   configuredBy: '',
   configuredAt: 0,
 };
@@ -4402,10 +4443,14 @@ function applyRemoteWorkspace(data){
   }
   if(data.googleDriveSettings && typeof data.googleDriveSettings === 'object'){
     Object.assign(googleDriveSettings, data.googleDriveSettings);
-    try {
-      if(googleDriveSettings.clientId) localStorage.setItem('tfl_drive_clientid', googleDriveSettings.clientId);
-      if(googleDriveSettings.apiKey) localStorage.setItem('tfl_drive_apikey', googleDriveSettings.apiKey);
-    } catch(_){}
+  }
+  if(data.tiktokSettings && typeof data.tiktokSettings === 'object'){
+    Object.assign(tiktokSettings, data.tiktokSettings);
+    ttConnected = !!tiktokSettings.accessToken;
+  }
+  if(data.youtubeSettings && typeof data.youtubeSettings === 'object'){
+    Object.assign(youtubeSettings, data.youtubeSettings);
+    ytConnected = !!youtubeSettings.accessToken;
   }
   saveAllLocal();
   if(currentUser){
@@ -4465,6 +4510,8 @@ function syncToNeon(){
           pageToken: fbPostState.pageToken || '',
         },
         googleDriveSettings: googleDriveSettings,
+        tiktokSettings: tiktokSettings,
+        youtubeSettings: youtubeSettings,
         _updatedBy: currentUser ? currentUser.name : 'unknown',
       };
       const r = await fetch(`${NEON_API}/workspace`, {
@@ -5315,24 +5362,53 @@ function setupIcons(){
 }
 
 function renderFeatureMarquee(){
-  const track = document.getElementById('featMarqueeTrack');
-  if(!track) return;
-  const feats = [
-    {ic:'📋',c:'#7c3aed,#a78bfa',t:'จัดการงาน',d:'Kanban · Calendar · Checklist'},
-    {ic:'🕐',c:'#0ea5e9,#38bdf8',t:'ระบบลงเวลา',d:'GPS · OT · ลา · Heatmap'},
-    {ic:'📍',c:'#ef4444,#f87171',t:'ออกพื้นที่ / อีเว้นท์',d:'Booth · Field · KPI Dashboard'},
-    {ic:'📅',c:'#f59e0b,#fbbf24',t:'ปฏิทินทีม',d:'Drag-drop · มุมมองรายเดือน'},
-    {ic:'📘',c:'#1877f2,#4267b2',t:'Facebook Manager',d:'Live AI · Post Manager'},
-    {ic:'📊',c:'#ec4899,#f472b6',t:'Social Analytics',d:'FB · IG · TikTok · YouTube'},
-    {ic:'🎰',c:'#10b981,#34d399',t:'หวยพัฒนาลาว',d:'ยอดขาย · เป้า · กราฟ · Insight'},
-    {ic:'📝',c:'#8b5cf6,#a78bfa',t:'Note + เอกสาร',d:'Google Keep style · Drive sync'},
-    {ic:'👥',c:'#06b6d4,#22d3ee',t:'จัดการทีม',d:'3 Roles · PIN · Activity Log'},
-    {ic:'☁️',c:'#6366f1,#818cf8',t:'Cross-device Sync',d:'Neon Postgres · Real-time'},
-    {ic:'🔔',c:'#f97316,#fb923c',t:'แจ้งเตือนอัจฉริยะ',d:'In-app + Browser Push'},
-    {ic:'🎨',c:'#d946ef,#e879f9',t:'Dark / Light Mode',d:'Responsive · PWA-ready'},
+  const t1 = document.getElementById('featMarqueeTrack1');
+  const t2 = document.getElementById('featMarqueeTrack2');
+  if(!t1 || !t2) return;
+  // Brand logos as inline SVG (so they keep their colors regardless of theme)
+  const SVG = {
+    fb:    `<svg viewBox="0 0 24 24" fill="#fff"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01z"/></svg>`,
+    ig:    `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#fff"/></svg>`,
+    yt:    `<svg viewBox="0 0 24 24" fill="#fff"><path d="M21.582 7.187a2.506 2.506 0 0 0-1.768-1.768C18.254 5 12 5 12 5s-6.254 0-7.814.419A2.506 2.506 0 0 0 2.418 7.187C2 8.747 2 12 2 12s0 3.253.418 4.813a2.506 2.506 0 0 0 1.768 1.768C5.746 19 12 19 12 19s6.254 0 7.814-.419a2.506 2.506 0 0 0 1.768-1.768C22 15.253 22 12 22 12s0-3.253-.418-4.813zM10 15V9l5.196 3L10 15z"/></svg>`,
+    tt:    `<svg viewBox="0 0 24 24" fill="#fff"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.81a8.16 8.16 0 0 0 4.77 1.52V6.88a4.85 4.85 0 0 1-1.84-.19z"/></svg>`,
+    task:  `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/><path d="M8 14l2 2 4-4"/></svg>`,
+    clock: `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    pin:   `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+    cal:   `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
+    chart: `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>`,
+    diamond:`<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l3 6-9 12-9-12 3-6z"/><path d="M6 3l3 6h6l3-6"/><path d="M3 9h18"/></svg>`,
+    note:  `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/></svg>`,
+    team:  `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>`,
+    cloud: `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 1 0-1.4-8.78A6 6 0 0 0 4 13.5a4.5 4.5 0 0 0 4.5 4.5h9z"/></svg>`,
+    bell:  `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>`,
+    sparkle:`<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>`,
+    moon:  `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
+  };
+  // Row 1 — features (scrolls left)
+  const row1 = [
+    {ic:SVG.task,    c:'#7c3aed,#a78bfa', t:'จัดการงาน',           d:'Kanban · Calendar · Checklist'},
+    {ic:SVG.clock,   c:'#0ea5e9,#38bdf8', t:'ระบบลงเวลา',          d:'GPS · OT · ลา · Heatmap'},
+    {ic:SVG.pin,     c:'#ef4444,#f87171', t:'ออกพื้นที่ / อีเว้นท์', d:'Booth · Field · KPI Dashboard'},
+    {ic:SVG.cal,     c:'#f59e0b,#fbbf24', t:'ปฏิทินทีม',            d:'Drag-drop · มุมมองรายเดือน'},
+    {ic:SVG.diamond, c:'#10b981,#34d399', t:'หวยพัฒนาลาว',         d:'ยอดขาย · เป้า · กราฟ · Insight'},
+    {ic:SVG.note,    c:'#8b5cf6,#a78bfa', t:'Note + เอกสาร',       d:'Google Keep style · Drive sync'},
+    {ic:SVG.team,    c:'#06b6d4,#22d3ee', t:'จัดการทีม',           d:'3 Roles · PIN · Activity Log'},
+    {ic:SVG.cloud,   c:'#6366f1,#818cf8', t:'Cross-device Sync',  d:'Neon Postgres · Real-time'},
   ];
-  const card = f => `<div class="feat-mini"><div class="feat-mini-ic" style="background:linear-gradient(135deg,${f.c})">${f.ic}</div><div><b>${f.t}</b><span>${f.d}</span></div></div>`;
-  track.innerHTML = feats.map(card).join('') + feats.map(card).join('');
+  // Row 2 — platforms + extra (scrolls right)
+  const row2 = [
+    {ic:SVG.fb,      c:'#1877f2,#0d65d9', t:'Facebook',           d:'Live · Post · Insights', brand:true},
+    {ic:SVG.ig,      c:'#f58529,#dd2a7b,#8134af', t:'Instagram', d:'Reels · Stories · Posts', brand:true},
+    {ic:SVG.yt,      c:'#ff0000,#cc0000', t:'YouTube',           d:'Shorts · Live · Videos', brand:true},
+    {ic:SVG.tt,      c:'#000000,#25f4ee,#fe2c55', t:'TikTok',    d:'Videos · Live · Analytics', brand:true},
+    {ic:SVG.chart,   c:'#ec4899,#f472b6', t:'Social Analytics',  d:'FB · IG · TikTok · YouTube'},
+    {ic:SVG.sparkle, c:'#a855f7,#d946ef', t:'Live AI · Auto Fetch', d:'Demographics · Engagement · Time'},
+    {ic:SVG.bell,    c:'#f97316,#fb923c', t:'แจ้งเตือนอัจฉริยะ',  d:'In-app + Browser Push'},
+    {ic:SVG.moon,    c:'#d946ef,#e879f9', t:'Dark / Light Mode',  d:'Responsive · PWA-ready'},
+  ];
+  const card = f => `<div class="feat-mini${f.brand?' brand':''}"><div class="feat-mini-ic" style="background:linear-gradient(135deg,${f.c})">${f.ic}</div><div><b>${f.t}</b><span>${f.d}</span></div></div>`;
+  t1.innerHTML = row1.map(card).join('') + row1.map(card).join('');
+  t2.innerHTML = row2.map(card).join('') + row2.map(card).join('');
 }
 
 function selectMemberColor(c,el){
@@ -5564,14 +5640,14 @@ function initApp(){
   let startView = 'dashboard';
   try {
     const saved = localStorage.getItem('tfl_currentView');
-    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','sales','activity','calendar','lottery','attendance'];
+    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','sales','activity','calendar','lottery','attendance'];
     if(saved && validViews.includes(saved)){
       // Check role permission
       if((saved === 'allTasks' || saved === 'members' || saved === 'activity' || saved === 'lottery') && currentUser.role !== 'admin'){
         startView = 'dashboard';
       } else if(saved === 'socialIntegrations' && currentUser.role !== 'admin'){
         startView = 'dashboard';
-      } else if((saved === 'fbLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
+      } else if((saved === 'fbLive' || saved === 'fbGoLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
         startView = 'dashboard';
       } else {
         startView = saved;
@@ -5655,7 +5731,7 @@ function renderSidebar(){
 
   // Social section (Admin + Social can see)
   if(isSocial){
-    const fbExpanded = expandedNavSections.has('facebook') || currentView==='fbLive';
+    const fbExpanded = expandedNavSections.has('facebook') || currentView==='fbLive' || currentView==='fbGoLive';
     html += `<div class="nav-sec">Social</div>
       <div class="nav-item parent ${fbExpanded?'expanded':''}" onclick="toggleNavSection('facebook')">
         <span class="nav-icon">${I.facebook}</span>
@@ -5663,9 +5739,13 @@ function renderSidebar(){
         <span class="nav-arrow">▼</span>
       </div>
       <div class="nav-sub ${fbExpanded?'open':''}">
+        <div class="nav-item ${currentView==='fbGoLive'?'active':''}" onclick="navigateTo('fbGoLive')">
+          <span class="nav-icon" style="color:#ef4444">${I.live}</span>
+          <span class="nav-label">ไลฟ์สด (ออกอากาศ)</span>
+        </div>
         <div class="nav-item ${currentView==='fbLive'?'active':''}" onclick="navigateTo('fbLive')">
-          <span class="nav-icon">${I.live}</span>
-          <span class="nav-label">Live สด</span>
+          <span class="nav-icon">${I.barChart||I.live}</span>
+          <span class="nav-label">Live สถิติ</span>
         </div>
         <div class="nav-item ${currentView==='fbLiveAuto'?'active':''}" onclick="navigateTo('fbLiveAuto')">
           <span class="nav-icon">${I.sparkle}</span>
@@ -5969,7 +6049,7 @@ function navigateTo(id){
   // Role-based route guards
   if(id === 'socialIntegrations' && currentUser && currentUser.role !== 'admin'){
     id = 'dashboard';
-  } else if((id === 'fbLive' || id === 'fbLiveAuto' || id === 'fbPosts' || id === 'socialAnalytics') && currentUser && currentUser.role !== 'admin' && currentUser.role !== 'social'){
+  } else if((id === 'fbLive' || id === 'fbGoLive' || id === 'fbLiveAuto' || id === 'fbPosts' || id === 'socialAnalytics') && currentUser && currentUser.role !== 'admin' && currentUser.role !== 'social'){
     id = 'dashboard';
   }
   if((id === 'allTasks' || id === 'members' || id === 'activity' || id === 'lottery') && currentUser && currentUser.role !== 'admin'){
@@ -6010,7 +6090,7 @@ function renderView(id,el){
   el.classList.add('fade-in');
   setTimeout(()=>el.classList.remove('fade-in'),300);
   ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,notes:renderNotes,taskBoard:renderTaskBoard,
-    myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbLiveAuto:renderFbLiveAuto,
+    myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbGoLive:renderFbGoLive,fbLiveAuto:renderFbLiveAuto,
     sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations}[id]||(()=>{}))(el);
 }
 
@@ -8652,6 +8732,9 @@ function extractLiveVideoId(input){
 }
 
 const FB_API_VERSION = 'v19.0';
+// Pre-provisioned credentials (used as fallback when a workspace has no custom values configured)
+const DEFAULT_FB_TOKEN = 'EAAhcZAXAOxWkBRSCMyFJwAHC2sagL86sKa1MAKf2YhXW3fZAemYrRwghhX8f9KuNo8aIrcmb0fFJ4njWrqCbVZB8W9LPPkCvZAkDOzkPo0ZCZAllAPIafxiunZAsGGe862cDNF0IYYWf9FzphZAm3dJsZBZCOr6xL6XwDNSEp1Xpy9ClTCZCW9LNUKawqnhRijHZCQurc2CGyI519EzEcIGmwNjkUIfKW0ajpIyh9zijjEnhJ0I6UlVl';
+const DEFAULT_DRIVE_CLIENT_ID = '730393568688-r0s202r7739tpks8vmf6su9guumd09hq.apps.googleusercontent.com';
 async function fbApiGet(endpoint, params){
   const u = new URL(`https://graph.facebook.com/${FB_API_VERSION}/${endpoint}`);
   u.searchParams.set('access_token', liveAiState.fbToken);
@@ -10343,8 +10426,8 @@ function renderFbLiveAuto(el){
       <div class="live-ai-card" style="background:linear-gradient(135deg,#faf5ff,#fce7f3);border-color:var(--p200)">
         <div style="font-weight:800;color:var(--p700);margin-bottom:6px;display:flex;align-items:center;gap:6px">${I.zap} เริ่มต้นใช้งานใน 3 ขั้น</div>
         <div style="font-size:13px;color:var(--t2);line-height:1.8">
-          <b>1.</b> ขยายการ์ด "ตั้งค่า API Keys" ด้านบน → กรอก Facebook Page Access Token + Claude API Key → บันทึก<br>
-          <b>2.</b> ก็อปลิงก์ Facebook Live ที่จบแล้ว มาวางในช่อง "วิเคราะห์ Live"<br>
+          <b>1.</b> ${isAdmin?'ไปที่หน้า "เชื่อมต่อแพลตฟอร์ม" → เชื่อม Facebook Page (admin ทำครั้งเดียว ทุกคนใช้ได้)':'รอ Admin เชื่อม Facebook Page ที่หน้า "เชื่อมต่อแพลตฟอร์ม"'}<br>
+          <b>2.</b> ก็อปลิงก์ Facebook Live ที่จบแล้ว มาวางในช่อง "วิเคราะห์ Live" (หรือกด "วิเคราะห์ใน Live AI" จากหน้า Social Analytics)<br>
           <b>3.</b> กดปุ่ม "วิเคราะห์" → รอประมาณ 30-90 วินาที (ขึ้นกับจำนวนคอมเมนต์) → ได้รายงาน + Export PDF
         </div>
       </div>
@@ -10569,120 +10652,28 @@ function exportLiveSessions(){
   setTimeout(()=>URL.revokeObjectURL(url), 500);
 }
 
-// ========== FILES (Real Google Drive integration) ==========
+// ========== FILES (server-side proxy — admin connects once via Integrations, team uses without re-login) ==========
 const DRIVE_FOLDER_ID = '1nuccKnbDdUjkO-TtpI9Ga0-XiH63dSc_';
 const DRIVE_LINK = 'https://drive.google.com/drive/folders/' + DRIVE_FOLDER_ID;
-const DRIVE_SCOPES = 'https://www.googleapis.com/auth/drive';
 
-let driveClientId = localStorage.getItem('tfl_drive_clientid') || '';
-let driveToken = sessionStorage.getItem('tfl_drive_token') || null;
-let driveTokenClient = null;
 let driveFiles = [];
 let driveLoading = false;
 let driveUploadStatus = '';
 
-function isFileProtocol(){ return window.location.protocol === 'file:'; }
-
-function initDriveClient(){
-  if(!driveClientId) return false;
-  if(!window.google || !google.accounts || !google.accounts.oauth2) return false;
-  try {
-    driveTokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: driveClientId,
-      scope: DRIVE_SCOPES,
-      callback: (resp)=>{
-        if(resp.error){
-          alert('เข้าสู่ระบบไม่สำเร็จ: ' + (resp.error_description||resp.error));
-          return;
-        }
-        driveToken = resp.access_token;
-        sessionStorage.setItem('tfl_drive_token', driveToken);
-        loadDriveFiles();
-      },
-      error_callback: (err)=>{
-        alert('ข้อผิดพลาด OAuth: ' + (err.message||err.type||'unknown'));
-      }
-    });
-    return true;
-  } catch(e){
-    console.error(e);
-    return false;
-  }
-}
-
-function startDriveSignIn(){
-  if(isFileProtocol()){
-    alert('Google OAuth ไม่รองรับ file:// URL\n\nกรุณาเปิดผ่าน http://localhost\nวิธี: เปิด PowerShell ในโฟลเดอร์นี้แล้วรัน:\n  python -m http.server 8000\n\nจากนั้นเปิด http://localhost:8000');
-    return;
-  }
-  if(!driveClientId){ openDriveSetup(); return; }
-  if(!driveTokenClient && !initDriveClient()){
-    alert('Google API ยังโหลดไม่เสร็จ ลองรีเฟรชหน้านี้แล้วลองใหม่');
-    return;
-  }
-  driveTokenClient.requestAccessToken({prompt: driveToken ? '' : 'consent'});
-}
-
-function signOutDrive(){
-  if(driveToken && window.google && google.accounts && google.accounts.oauth2){
-    try { google.accounts.oauth2.revoke(driveToken, ()=>{}); } catch(e){}
-  }
-  driveToken = null;
-  driveFiles = [];
-  sessionStorage.removeItem('tfl_drive_token');
-  if(currentView==='files') renderFiles(document.getElementById('viewFiles'));
-}
-
-function disconnectDrive(){
-  if(!confirm('ยกเลิกการเชื่อมต่อและล้างการตั้งค่า?')) return;
-  signOutDrive();
-  driveClientId = '';
-  localStorage.removeItem('tfl_drive_clientid');
-  driveTokenClient = null;
-  if(currentView==='files') renderFiles(document.getElementById('viewFiles'));
-}
-
-function openDriveSetup(){
-  document.getElementById('driveClientId').value = driveClientId || '';
-  document.getElementById('driveSetupModal').classList.add('show');
-}
-
-function saveDriveSetup(){
-  const cid = document.getElementById('driveClientId').value.trim();
-  if(!cid){ alert('กรุณาใส่ Client ID'); return; }
-  driveClientId = cid;
-  localStorage.setItem('tfl_drive_clientid', cid);
-  driveTokenClient = null;
-  closeModal('driveSetupModal');
-  startDriveSignIn();
-}
-
 async function loadDriveFiles(){
-  if(!driveToken) return;
+  await refreshDriveServerStatus();
+  if(!driveServerStatus.connected) return;
   driveLoading = true;
   if(currentView==='files') renderFiles(document.getElementById('viewFiles'));
   try {
-    const q = encodeURIComponent(`'${DRIVE_FOLDER_ID}' in parents and trashed=false`);
-    const fields = encodeURIComponent('files(id,name,size,mimeType,createdTime,modifiedTime,thumbnailLink,webViewLink,webContentLink,iconLink)');
-    const r = await fetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=${fields}&orderBy=createdTime%20desc&pageSize=200`, {
-      headers: { Authorization: 'Bearer ' + driveToken }
-    });
-    if(!r.ok){
-      if(r.status===401){
-        driveToken = null;
-        sessionStorage.removeItem('tfl_drive_token');
-        alert('Session หมดอายุ กรุณาเข้าสู่ระบบใหม่');
-      } else if(r.status===404){
-        alert('ไม่พบโฟลเดอร์ใน Drive — โปรดตรวจสอบสิทธิ์การเข้าถึง folder');
-      } else {
-        const txt = await r.text();
-        console.error('Drive list error:', txt);
-        alert('โหลดไฟล์จาก Drive ไม่สำเร็จ: ' + r.status);
-      }
+    const r = await fetch('/api/drive/proxy?op=list');
+    const j = await r.json();
+    if(!j.ok){
+      if(r.status===412){ _driveStatusFetched = false; await refreshDriveServerStatus(true); }
+      else alert('โหลดไฟล์ไม่สำเร็จ: ' + (j.error || r.status));
       return;
     }
-    const data = await r.json();
-    driveFiles = data.files || [];
+    driveFiles = j.files || [];
   } catch(e){
     alert('โหลดไฟล์ไม่สำเร็จ: ' + e.message);
   } finally {
@@ -10692,10 +10683,9 @@ async function loadDriveFiles(){
 }
 
 async function uploadFiles(fileList){
-  if(!driveToken){
-    if(!driveClientId){ openDriveSetup(); return; }
-    alert('กรุณาเข้าสู่ระบบ Google Drive ก่อน');
-    startDriveSignIn();
+  await refreshDriveServerStatus();
+  if(!driveServerStatus.connected){
+    alert('Admin ยังไม่ได้เชื่อม Google Drive — ไปที่หน้า "เชื่อมต่อแพลตฟอร์ม"');
     return;
   }
   const fls = Array.from(fileList);
@@ -10706,20 +10696,11 @@ async function uploadFiles(fileList){
     const st = document.getElementById('uploadStatus');
     if(st) st.textContent = driveUploadStatus;
     try {
-      const metadata = { name: file.name, parents: [DRIVE_FOLDER_ID] };
       const form = new FormData();
-      form.append('metadata', new Blob([JSON.stringify(metadata)], {type:'application/json'}));
-      form.append('file', file);
-      const r = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,size,mimeType,createdTime,thumbnailLink,webViewLink,webContentLink', {
-        method:'POST',
-        headers: { Authorization: 'Bearer ' + driveToken },
-        body: form
-      });
-      if(!r.ok){
-        const err = await r.text();
-        console.error('Upload failed:', err);
-        alert(`อัปโหลด "${file.name}" ไม่สำเร็จ (${r.status})`);
-      }
+      form.append('file', file, file.name);
+      const r = await fetch('/api/drive/proxy?op=upload', { method:'POST', body: form });
+      const j = await r.json();
+      if(!j.ok) alert(`อัปโหลด "${file.name}" ไม่สำเร็จ (${r.status}: ${j.error||''})`);
     } catch(e){
       alert('อัปโหลดข้อผิดพลาด: ' + e.message);
     }
@@ -10731,15 +10712,13 @@ async function uploadFiles(fileList){
 async function deleteFile(id){
   if(!confirm('ลบไฟล์นี้จาก Google Drive?')) return;
   try {
-    const r = await fetch(`https://www.googleapis.com/drive/v3/files/${id}`, {
-      method:'DELETE',
-      headers: { Authorization: 'Bearer ' + driveToken }
-    });
-    if(r.ok || r.status===204){
+    const r = await fetch('/api/drive/proxy?op=delete&id=' + encodeURIComponent(id), { method:'DELETE' });
+    const j = await r.json();
+    if(j.ok){
       driveFiles = driveFiles.filter(f=>f.id!==id);
       if(currentView==='files') renderFiles(document.getElementById('viewFiles'));
     } else {
-      alert('ลบไม่สำเร็จ: ' + r.status);
+      alert('ลบไม่สำเร็จ: ' + (j.error||r.status));
     }
   } catch(e){
     alert('ลบข้อผิดพลาด: ' + e.message);
@@ -10785,82 +10764,46 @@ function getFileType(name, mime){
 }
 
 function renderFiles(el){
-  const signedIn = !!driveToken;
-  const configured = !!driveClientId;
-  const isFile = isFileProtocol();
+  // Trigger one-shot status fetch; will rerender when done
+  if(!_driveStatusFetched){
+    refreshDriveServerStatus(true).then(()=>{ if(currentView==='files') renderFiles(document.getElementById('viewFiles')); });
+  }
+  const connected = !!driveServerStatus.connected;
+  const isAdmin = currentUser && currentUser.role === 'admin';
 
-  let connectionPanel = '';
-  if(isFile){
-    connectionPanel = `
-      <div class="files-drive-banner" style="background:#fef9c3;border-color:#fde68a">
-        <div class="fdb-left">
-          <div class="fdb-icon" style="color:#b45309">${I.alert}</div>
-          <div>
-            <div class="fdb-title" style="color:#92400e">ต้องเปิดผ่าน http://localhost</div>
-            <div class="fdb-sub" style="color:#92400e">Google OAuth ไม่รองรับ file:// — เปิด PowerShell แล้วรัน <code style="background:#fff;padding:1px 5px;border-radius:3px">python -m http.server 8000</code> จากนั้นเปิด <code>http://localhost:8000</code></div>
-          </div>
-        </div>
-        <a href="${DRIVE_LINK}" target="_blank" class="btn-primary">เปิด Drive →</a>
-      </div>`;
-  } else if(!configured){
-    connectionPanel = `
-      <div class="files-drive-banner">
-        <div class="fdb-left">
-          <div class="fdb-icon">${I.cloud}</div>
-          <div>
-            <div class="fdb-title">เชื่อมต่อ Google Drive</div>
-            <div class="fdb-sub">ตั้งค่า OAuth Client ID เพื่อให้อัปโหลดเข้า Drive folder ได้จริง</div>
-          </div>
-        </div>
-        <button class="btn-primary" onclick="openDriveSetup()">${I.cloud} ตั้งค่า Drive</button>
-      </div>`;
-  } else if(!signedIn){
-    connectionPanel = `
-      <div class="files-drive-banner">
-        <div class="fdb-left">
-          <div class="fdb-icon">${I.cloud}</div>
-          <div>
-            <div class="fdb-title">ยังไม่ได้เข้าสู่ระบบ Google</div>
-            <div class="fdb-sub">เข้าสู่ระบบเพื่อโหลดไฟล์จาก Drive และเริ่มอัปโหลด</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:6px">
-          <button class="btn-ghost" onclick="openDriveSetup()">เปลี่ยน Client ID</button>
-          <button class="btn-primary" onclick="startDriveSignIn()">${I.cloud} เข้าสู่ระบบ Google</button>
-        </div>
-      </div>`;
-  } else {
-    connectionPanel = `
+  const openDriveBtn = `<a href="${DRIVE_LINK}?usp=drive_link" target="_blank" rel="noopener" class="btn-ghost" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none">${I.externalLink} เปิด Google Drive</a>`;
+  const googleLoginBtn = `<button class="btn-google-login" onclick="_driveStartOAuthFromDocs()" title="${driveServerStatus.clientIdSet?'เริ่ม OAuth ด้วย Client ID ของทีม':'Admin ต้องตั้ง Client ID ที่หน้า เชื่อมต่อแพลตฟอร์ม ก่อน'}">
+    <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M21.35 11.1H12v3.2h5.35c-.23 1.5-1.7 4.4-5.35 4.4a6.05 6.05 0 0 1 0-12.1c1.9 0 3.18.8 3.91 1.5L18.34 5.7C16.85 4.3 14.7 3.4 12 3.4a8.6 8.6 0 1 0 0 17.2c4.97 0 8.27-3.5 8.27-8.43 0-.57-.07-1-.16-1.4z"/><path fill="#34A853" d="M3.95 7.36l2.66 1.95C7.4 7.5 9.55 6.2 12 6.2c1.9 0 3.18.8 3.91 1.5L18.34 5.7C16.85 4.3 14.7 3.4 12 3.4 8.45 3.4 5.4 5.4 3.95 7.36z"/><path fill="#FBBC05" d="M12 20.6c2.65 0 4.85-.87 6.47-2.36l-3-2.46c-.83.58-1.95.99-3.47.99-2.68 0-4.95-1.78-5.76-4.24l-2.7 2.08A8.59 8.59 0 0 0 12 20.6z"/><path fill="#EA4335" d="M21.35 11.1H12v3.2h5.35c-.21 1.25-1.06 2.34-2.35 3.04l3 2.46c1.75-1.62 2.85-4.02 2.85-7.3 0-.57-.07-1-.16-1.4z"/></svg>
+    เข้าสู่ระบบด้วย Google
+  </button>`;
+
+  const actions = connected ? `
+    <span id="uploadStatus" style="font-size:12px;color:var(--p600);font-weight:600">${driveUploadStatus||''}</span>
+    ${openDriveBtn}
+    <button class="btn-primary" onclick="document.getElementById('fileInput').click()">${I.upload} อัปโหลด</button>
+    <input type="file" id="fileInput" multiple style="display:none" onchange="uploadFiles(this.files);this.value=''">` :
+    `${openDriveBtn}${isAdmin?googleLoginBtn:''}`;
+
+  const sorted = [...driveFiles];
+  const totalSize = sorted.reduce((s,f)=>s+parseInt(f.size||0,10), 0);
+
+  el.innerHTML = topbarDoc('เอกสาร', connected?`${driveFiles.length} ไฟล์ใน Drive · ${formatBytes(totalSize)}${driveServerStatus.adminEmail?' · เชื่อมโดย '+escapeHtml(driveServerStatus.adminEmail):''}`:'รอ Admin เชื่อม Google Drive', actions) + `
+  <div class="page-content" id="filesPage">
+    ${connected ? `
       <div class="files-drive-banner" style="background:linear-gradient(135deg,#d1fae5 0%,#a7f3d0 100%);border-color:#6ee7b7">
         <div class="fdb-left">
           <div class="fdb-icon" style="color:#059669">${I.check}</div>
           <div>
             <div class="fdb-title" style="color:#065f46">เชื่อมต่อ Google Drive แล้ว ✓</div>
-            <div class="fdb-sub" style="color:#065f46">ไฟล์ที่อัปโหลดจะถูกบันทึกลง folder จริงทันที</div>
+            <div class="fdb-sub" style="color:#065f46">ทีมทุกคนใช้งานได้เลย — ไม่ต้อง sign-in Google รายคน</div>
           </div>
         </div>
         <div style="display:flex;gap:6px">
           <button class="btn-ghost" onclick="loadDriveFiles()">↻ รีเฟรช</button>
-          <button class="btn-ghost" onclick="signOutDrive()">ออกจากระบบ</button>
           <a href="${DRIVE_LINK}" target="_blank" class="btn-primary">เปิด Drive →</a>
         </div>
-      </div>`;
-  }
+      </div>
 
-  const totalSize = driveFiles.reduce((s,f)=>s+parseInt(f.size||0,10), 0);
-  const sorted = [...driveFiles];
-
-  const actions = signedIn ? `
-    <span id="uploadStatus" style="font-size:12px;color:var(--p600);font-weight:600">${driveUploadStatus||''}</span>
-    <button class="btn-primary" onclick="document.getElementById('fileInput').click()">${I.upload} อัปโหลด</button>
-    <input type="file" id="fileInput" multiple style="display:none" onchange="uploadFiles(this.files);this.value=''">` :
-    `<button class="btn-primary" onclick="${configured?'startDriveSignIn()':'openDriveSetup()'}">${I.cloud} ${configured?'เข้าสู่ระบบ':'ตั้งค่า Drive'}</button>`;
-
-  el.innerHTML = topbarDoc('เอกสาร', signedIn?`${driveFiles.length} ไฟล์ใน Drive · ${formatBytes(totalSize)}`:'เชื่อม Google Drive เพื่อจัดการไฟล์', actions) + `
-  <div class="page-content" id="filesPage">
-    ${connectionPanel}
-
-    ${signedIn ? `
       <div class="dropzone" id="filesDropzone" onclick="document.getElementById('fileInput').click()">
         <div class="dz-icon">${I.uploadCloud}</div>
         <div class="dz-title">ลากไฟล์มาวางที่นี่</div>
@@ -10884,10 +10827,16 @@ function renderFiles(el){
         </div>
       `}
     ` : `
-      <div class="empty" style="padding:50px 0">
+      <div class="empty" style="padding:60px 0">
         <div class="empty-ico">${I.cloud}</div>
-        <div class="empty-txt" style="font-weight:700;font-size:15px;margin-bottom:4px">${isFile?'ต้องเปิดผ่าน localhost':configured?'เข้าสู่ระบบเพื่อเริ่มใช้':'ตั้งค่า OAuth Client ID เพื่อเริ่มใช้'}</div>
-        <div style="font-size:12.5px;color:var(--t3);max-width:480px;margin:0 auto">ระบบนี้ใช้ Google Drive API จริง — ต้องตั้งค่า OAuth Client ID จาก Google Cloud Console (ฟรี) และเข้าสู่ระบบด้วยบัญชี Google ที่มีสิทธิ์เข้าถึง folder</div>
+        <div class="empty-txt" style="font-weight:700;font-size:15px;margin-bottom:6px">${isAdmin ? 'ยังไม่ได้เชื่อม Google Drive' : 'รอ Admin เชื่อม Google Drive'}</div>
+        <div style="font-size:13px;color:var(--t3);max-width:520px;margin:0 auto 18px;line-height:1.6">${isAdmin
+          ? 'กดปุ่ม "เข้าสู่ระบบด้วย Google" ด้านบนเพื่อเริ่มเชื่อมต่อ — ถ้าเป็นครั้งแรก กรุณาตั้ง Client ID ที่หน้า "เชื่อมต่อแพลตฟอร์ม" ก่อน'
+          : 'พนักงานไม่ต้อง sign-in Google รายคน — รอ Admin เชื่อม Google Drive ที่หน้า "เชื่อมต่อแพลตฟอร์ม" ครั้งเดียว ทุกคนจะใช้งานได้พร้อมกัน · กดปุ่ม "เปิด Google Drive" ด้านบนเพื่อเข้าถึง folder โดยตรงผ่านบัญชีของคุณก็ได้'}</div>
+        <div style="display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap">
+          <a href="${DRIVE_LINK}?usp=drive_link" target="_blank" rel="noopener" class="btn-ghost" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none">${I.externalLink} เปิด Google Drive Folder</a>
+          ${isAdmin ? googleLoginBtn : ''}
+        </div>
       </div>
     `}
   </div>
@@ -10900,10 +10849,10 @@ function renderFiles(el){
     </div>
   </div>`;
 
-  if(signedIn) setupFileDragDrop();
+  if(connected) setupFileDragDrop();
 
   // Auto-load files first time
-  if(signedIn && !driveLoading && driveFiles.length===0 && !window._driveLoadedOnce){
+  if(connected && !driveLoading && driveFiles.length===0 && !window._driveLoadedOnce){
     window._driveLoadedOnce = true;
     loadDriveFiles();
   }
@@ -12827,31 +12776,338 @@ function _intgDisconnectFb(){
   rerender();
 }
 
-function _intgSaveDrive(){
-  const cid = document.getElementById('intgDriveCid')?.value.trim();
-  const ak = document.getElementById('intgDriveAk')?.value.trim();
-  if(!cid){ alert('กรุณาวาง Google OAuth Client ID'); return; }
-  googleDriveSettings.clientId = cid;
-  googleDriveSettings.apiKey = ak;
-  googleDriveSettings.configuredBy = currentUser ? currentUser.name : '';
-  googleDriveSettings.configuredAt = Date.now();
+// ============ DRIVE SERVER-SIDE OAUTH (refresh-token flow) ============
+let driveServerStatus = { connected:false, adminEmail:'', connectedAt:0, clientIdSet:false, clientSecretSet:false, redirectUri:'' };
+let _driveStatusFetched = false;
+
+async function refreshDriveServerStatus(force){
+  if(_driveStatusFetched && !force) return driveServerStatus;
   try {
-    localStorage.setItem('tfl_drive_clientid', cid);
-    if(ak) localStorage.setItem('tfl_drive_apikey', ak);
-  } catch(_){}
-  saveAll();
-  alert('✓ บันทึก Google Drive credentials แล้ว — sync ไปทุก browser ใน 10 วินาที');
+    const r = await fetch('/api/drive/proxy?op=status');
+    const j = await r.json();
+    if(j && j.ok){
+      driveServerStatus = {
+        connected: !!j.connected,
+        adminEmail: j.adminEmail || '',
+        connectedAt: j.connectedAt || 0,
+        clientIdSet: !!j.clientIdSet,
+        clientSecretSet: !!j.clientSecretSet,
+        redirectUri: j.redirectUri || '',
+        folderId: j.folderId || '',
+      };
+      _driveStatusFetched = true;
+    }
+  } catch(e){ console.warn('drive status fetch failed', e); }
+  return driveServerStatus;
+}
+
+// Listen for postMessage from oauth-callback popup
+window.addEventListener('message', (e) => {
+  if(e.data && e.data.type === 'drive-oauth'){
+    _driveStatusFetched = false;
+    refreshDriveServerStatus(true).then(()=>{ rerender(); if(e.data.ok) alert('✓ เชื่อมต่อ Google Drive สำเร็จ — ทุกคนในทีมใช้งานได้แล้ว'); });
+  }
+});
+
+// ============ CONNECT GUIDE MODAL (per-platform setup instructions) ============
+const CONNECT_GUIDES = {
+  facebook: {
+    title: '📘 วิธีเชื่อมต่อ Facebook',
+    body: `
+      <ol style="padding-left:22px">
+        <li><b>ระบบมี Default Token พร้อมใช้</b> — กดปุ่ม "เชื่อมต่อ Facebook" ที่ช่องด้านล่างได้เลย</li>
+        <li>ถ้าต้องการเปลี่ยน Token เอง:
+          <ul style="margin-top:6px">
+            <li>ไปที่ <a href="https://developers.facebook.com/tools/explorer" target="_blank" style="color:var(--p600);font-weight:700">Graph API Explorer</a></li>
+            <li>เลือก App ของคุณ → Generate Access Token</li>
+            <li>เลือก permissions: <code>pages_show_list, pages_manage_posts, pages_read_engagement, pages_read_user_content, publish_video</code></li>
+            <li>กดปุ่ม "Get Access Token" แล้วยอมรับ</li>
+            <li>คัดลอก User Access Token มาวางในช่องในการ์ด Facebook</li>
+          </ul>
+        </li>
+        <li>กดปุ่ม "เชื่อมต่อ Facebook" — ระบบจะดึง Page ของคุณมาให้เลือกอัตโนมัติ</li>
+      </ol>
+      <p style="background:var(--p50);border:1px solid var(--p200);border-radius:9px;padding:11px 14px;font-size:12.5px;color:var(--t2);margin-top:14px">
+        <b style="color:var(--p700)">💡 Tips:</b> Token ที่ generate จาก Graph Explorer มีอายุประมาณ 1-2 ชม. — สำหรับใช้งานระยะยาว แนะนำให้แลกเป็น <b>Page Access Token แบบไม่หมดอายุ</b> โดยใช้สูตร: <code>/me/accounts?access_token=...</code>
+      </p>`
+  },
+  instagram: {
+    title: '📸 วิธีเชื่อมต่อ Instagram',
+    body: `
+      <p>Instagram เชื่อมต่อผ่าน Facebook Page ที่ลิงก์ไว้ — ไม่ต้องเชื่อม IG แยกต่างหาก</p>
+      <ol style="padding-left:22px">
+        <li>เชื่อม <b>Facebook Page</b> ที่การ์ด Facebook ก่อน</li>
+        <li>เปิด <a href="https://www.facebook.com/business/help/898752960195806" target="_blank" style="color:var(--p600);font-weight:700">Facebook Business Suite</a> → Settings → Linked Accounts</li>
+        <li>กด "Connect Instagram Account" → login Instagram → ยืนยัน</li>
+        <li>ต้องเป็น Instagram <b>Business / Creator account</b> เท่านั้น (Personal ใช้ไม่ได้)</li>
+        <li>กลับมาที่หน้านี้ → กดปุ่ม "ตรวจสอบการเชื่อม" ที่การ์ด IG</li>
+      </ol>`
+  },
+  tiktok: {
+    title: '🎵 วิธีเชื่อมต่อ TikTok',
+    body: `
+      <ol style="padding-left:22px">
+        <li>ไปที่ <a href="https://developers.tiktok.com/" target="_blank" style="color:var(--p600);font-weight:700">TikTok for Developers</a> → Login</li>
+        <li>สร้าง App ใหม่ — Type: <b>Login Kit / Display API</b> (สำหรับ Personal) หรือ <b>Marketing API</b> (Business)</li>
+        <li>เพิ่ม Redirect URL: <code style="background:var(--bg-soft);padding:2px 5px;border-radius:3px;user-select:all">${escapeHtmlN(location.origin)}/</code></li>
+        <li>เปิด Scopes: <code>user.info.basic, video.list, video.publish</code></li>
+        <li>รอการ App Review ผ่าน (1-3 วัน)</li>
+        <li>ใน OAuth Playground: ดึง <b>Access Token</b> → คัดลอกมาวางในการ์ด TikTok</li>
+      </ol>
+      <p style="background:#fef9c3;border:1px solid #fde68a;border-radius:9px;padding:11px 14px;font-size:12.5px;color:#92400e;margin-top:14px">
+        <b>⚠ หมายเหตุ:</b> TikTok Access Token มีอายุประมาณ 24 ชม. — ต้อง refresh เรื่อยๆ
+      </p>`
+  },
+  youtube: {
+    title: '▶ วิธีเชื่อมต่อ YouTube',
+    body: `
+      <ol style="padding-left:22px">
+        <li>ไปที่ <a href="https://console.cloud.google.com/" target="_blank" style="color:var(--p600);font-weight:700">Google Cloud Console</a> → สร้าง Project</li>
+        <li>เปิดใช้ <b>YouTube Data API v3</b> ที่ APIs & Services → Library</li>
+        <li>สร้าง <b>OAuth Client ID</b> (Web application) — เพิ่ม Authorized Redirect URI ตามต้องการ</li>
+        <li>ไปที่ <a href="https://developers.google.com/oauthplayground/" target="_blank" style="color:var(--p600);font-weight:700">OAuth 2.0 Playground</a>
+          <ul style="margin-top:6px">
+            <li>คลิก ⚙ Settings → ติ๊ก "Use your own OAuth credentials" → ใส่ Client ID + Secret</li>
+            <li>เลือก Scope: <code>https://www.googleapis.com/auth/youtube.readonly</code></li>
+            <li>กด "Authorize APIs" → login Google → กด "Exchange authorization code for tokens"</li>
+            <li>คัดลอก <b>Access Token</b> มาวางในการ์ด YouTube</li>
+          </ul>
+        </li>
+      </ol>
+      <p style="background:var(--p50);border:1px solid var(--p200);border-radius:9px;padding:11px 14px;font-size:12.5px;color:var(--t2);margin-top:14px">
+        <b style="color:var(--p700)">💡 Tips:</b> Access Token หมดอายุใน 1 ชม. — ระบบยังไม่รองรับ auto-refresh ต้อง paste ใหม่เมื่อหมดอายุ
+      </p>`
+  },
+  drive: {
+    title: '☁️ วิธีเชื่อมต่อ Google Drive',
+    body: `
+      <p><b>ระบบใช้ OAuth refresh-token flow</b> — Admin เชื่อมต่อครั้งเดียว ทีมทุกคนใช้งานได้โดยไม่ต้อง sign-in Google รายคน</p>
+      <ol style="padding-left:22px">
+        <li>ไปที่ <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:var(--p600);font-weight:700">Google Cloud Console → Credentials</a></li>
+        <li>เปิดใช้ <b>Google Drive API</b> ที่ APIs & Services → Library</li>
+        <li>กด Create Credentials → <b>OAuth Client ID</b> → Application type: <b>Web application</b></li>
+        <li>เพิ่ม Authorized redirect URI: <code style="background:var(--bg-soft);padding:2px 5px;border-radius:3px;user-select:all">${escapeHtmlN(location.origin)}/api/drive/oauth-callback</code></li>
+        <li>คัดลอก <b>Client ID</b> + <b>Client Secret</b> มาวางในการ์ด Google Drive</li>
+        <li>กด "เชื่อมต่อกับ Google →" → login ด้วยบัญชี Admin → ยอมรับสิทธิ์</li>
+        <li>เสร็จ! ทีมทุกคนใช้งานได้ทันที</li>
+      </ol>
+      <p style="background:var(--p50);border:1px solid var(--p200);border-radius:9px;padding:11px 14px;font-size:12.5px;color:var(--t2);margin-top:14px">
+        <b style="color:var(--p700)">💡 Default Client ID:</b> ระบบมี Client ID พร้อมใช้แล้ว — แค่ paste Client Secret ของคุณ (สร้างคู่กัน) แล้วเชื่อมต่อได้เลย
+      </p>`
+  },
+};
+
+function openConnectGuide(platform){
+  const g = CONNECT_GUIDES[platform];
+  if(!g) return;
+  document.getElementById('connectGuideTitle').textContent = g.title;
+  document.getElementById('connectGuideBody').innerHTML = g.body;
+  document.getElementById('connectGuideModal').classList.add('show');
+}
+
+// ============ TIKTOK ============
+async function _intgSaveTikTok(){
+  const tok = document.getElementById('intgTtToken')?.value.trim();
+  if(!tok){ alert('กรุณาใส่ TikTok Access Token'); return; }
+  tiktokSettings.accessToken = tok;
+  tiktokSettings.connectedAt = Date.now();
+  // Fetch basic user info
+  try {
+    const r = await fetch('https://open.tiktokapis.com/v2/user/info/?fields=open_id,display_name,follower_count,avatar_url', {
+      headers: { Authorization: 'Bearer ' + tok }
+    });
+    const j = await r.json();
+    if(j.data && j.data.user){
+      tiktokSettings.openId = j.data.user.open_id || '';
+      tiktokSettings.displayName = j.data.user.display_name || '';
+      tiktokSettings.followerCount = j.data.user.follower_count || 0;
+    } else if(j.error){
+      alert('TikTok API error: ' + (j.error.message||JSON.stringify(j.error)));
+    }
+  } catch(e){ console.warn('tiktok user info failed', e); }
+  ttConnected = true;
+  await saveAll();
   rerender();
 }
-function _intgDisconnectDrive(){
-  if(!confirm('ตัดการเชื่อม Google Drive?')) return;
-  googleDriveSettings = { clientId:'', apiKey:'', configuredBy:'', configuredAt:0 };
+async function _intgRefreshTikTok(){
+  if(!tiktokSettings.accessToken) return;
   try {
-    localStorage.removeItem('tfl_drive_clientid');
-    localStorage.removeItem('tfl_drive_apikey');
-  } catch(_){}
+    const r = await fetch('https://open.tiktokapis.com/v2/user/info/?fields=open_id,display_name,follower_count', {
+      headers: { Authorization: 'Bearer ' + tiktokSettings.accessToken }
+    });
+    const j = await r.json();
+    if(j.data && j.data.user){
+      tiktokSettings.displayName = j.data.user.display_name || tiktokSettings.displayName;
+      tiktokSettings.followerCount = j.data.user.follower_count || tiktokSettings.followerCount;
+      await saveAll();
+      rerender();
+    } else if(j.error){
+      alert('TikTok error: ' + (j.error.message||'unknown'));
+    }
+  } catch(e){ alert('ดึงข้อมูล TikTok ไม่สำเร็จ: ' + e.message); }
+}
+function _intgDisconnectTikTok(){
+  if(!confirm('ตัดการเชื่อมต่อ TikTok?')) return;
+  tiktokSettings = { accessToken:'', openId:'', displayName:'', followerCount:0, connectedAt:0 };
+  ttConnected = false;
   saveAll();
   rerender();
+}
+
+// ============ YOUTUBE ============
+async function _intgSaveYouTube(){
+  const tok = document.getElementById('intgYtToken')?.value.trim();
+  if(!tok){ alert('กรุณาใส่ YouTube Access Token'); return; }
+  youtubeSettings.accessToken = tok;
+  youtubeSettings.connectedAt = Date.now();
+  try {
+    const r = await fetch('https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&mine=true', {
+      headers: { Authorization: 'Bearer ' + tok }
+    });
+    const j = await r.json();
+    if(j.items && j.items[0]){
+      const ch = j.items[0];
+      youtubeSettings.channelId = ch.id;
+      youtubeSettings.channelTitle = ch.snippet?.title || '';
+      youtubeSettings.subscriberCount = parseInt(ch.statistics?.subscriberCount||0, 10);
+      youtubeSettings.viewCount = parseInt(ch.statistics?.viewCount||0, 10);
+    } else if(j.error){
+      alert('YouTube API error: ' + j.error.message);
+    } else {
+      alert('ไม่พบ Channel — token นี้อาจไม่มีสิทธิ์ youtube.readonly');
+    }
+  } catch(e){ console.warn('yt channel info failed', e); }
+  ytConnected = true;
+  await saveAll();
+  rerender();
+}
+async function _intgRefreshYouTube(){
+  if(!youtubeSettings.accessToken) return;
+  try {
+    const r = await fetch('https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&mine=true', {
+      headers: { Authorization: 'Bearer ' + youtubeSettings.accessToken }
+    });
+    const j = await r.json();
+    if(j.items && j.items[0]){
+      const ch = j.items[0];
+      youtubeSettings.channelTitle = ch.snippet?.title || youtubeSettings.channelTitle;
+      youtubeSettings.subscriberCount = parseInt(ch.statistics?.subscriberCount||0, 10);
+      youtubeSettings.viewCount = parseInt(ch.statistics?.viewCount||0, 10);
+      await saveAll();
+      rerender();
+    } else if(j.error){
+      alert('YouTube error: ' + j.error.message);
+    }
+  } catch(e){ alert('ดึงข้อมูล YouTube ไม่สำเร็จ: ' + e.message); }
+}
+function _intgDisconnectYouTube(){
+  if(!confirm('ตัดการเชื่อมต่อ YouTube?')) return;
+  youtubeSettings = { accessToken:'', channelId:'', channelTitle:'', subscriberCount:0, viewCount:0, connectedAt:0 };
+  ytConnected = false;
+  saveAll();
+  rerender();
+}
+
+// Apply pre-provisioned default credentials on first load (only when no custom values stored).
+function applyConnectionDefaults(){
+  if(!fbPostState.pageToken){
+    fbPostState.pageToken = DEFAULT_FB_TOKEN;
+    try { localStorage.setItem('tfl_fb_page_token', DEFAULT_FB_TOKEN); localStorage.setItem('tfl_fb_token', DEFAULT_FB_TOKEN); } catch(_){}
+    if(typeof liveAiState !== 'undefined') liveAiState.fbToken = DEFAULT_FB_TOKEN;
+    // Auto-pick first page once user is logged in
+    if(!fbPostState.pageId){
+      setTimeout(async ()=>{
+        try {
+          const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/me/accounts?fields=id,name,access_token,picture,fan_count&access_token=${encodeURIComponent(DEFAULT_FB_TOKEN)}`);
+          const j = await r.json();
+          if(j.data && j.data[0]){
+            const p = j.data[0];
+            fbPostState.pageId = p.id;
+            fbPostState.pageName = p.name;
+            fbPostState.pageToken = p.access_token || DEFAULT_FB_TOKEN;
+            fbPostState.pages = j.data;
+            try {
+              localStorage.setItem('tfl_fb_page_id', p.id);
+              localStorage.setItem('tfl_fb_page_name', p.name);
+              localStorage.setItem('tfl_fb_page_token', fbPostState.pageToken);
+            } catch(_){}
+            if(typeof liveAiState !== 'undefined') liveAiState.fbToken = fbPostState.pageToken;
+          }
+        } catch(e){ console.warn('FB auto-pick page failed', e); }
+      }, 1500);
+    }
+  }
+  if(!googleDriveSettings.clientId){
+    googleDriveSettings.clientId = DEFAULT_DRIVE_CLIENT_ID;
+  }
+}
+
+// Trigger OAuth flow from Documents page (uses existing stored Client ID + Secret).
+async function _driveStartOAuthFromDocs(){
+  await refreshDriveServerStatus(true);
+  if(!driveServerStatus.clientIdSet || !driveServerStatus.clientSecretSet){
+    if(confirm('ยังไม่ได้ตั้ง OAuth Client ID + Secret\n\nไปที่หน้า "เชื่อมต่อแพลตฟอร์ม" เพื่อตั้งค่าตอนนี้?')){
+      navigateTo('socialIntegrations');
+    }
+    return;
+  }
+  const cid = googleDriveSettings.clientId;
+  const redirectUri = googleDriveSettings.redirectUri || (location.origin + '/api/drive/oauth-callback');
+  const params = new URLSearchParams({
+    client_id: cid,
+    redirect_uri: redirectUri,
+    response_type: 'code',
+    scope: 'https://www.googleapis.com/auth/drive openid email profile',
+    access_type: 'offline',
+    prompt: 'consent',
+    include_granted_scopes: 'true',
+  });
+  const url = 'https://accounts.google.com/o/oauth2/v2/auth?' + params.toString();
+  const w = window.open(url, 'driveOAuth', 'width=520,height=640');
+  if(!w) location.href = url;
+}
+
+async function _intgStartDriveOAuth(){
+  const cid = document.getElementById('intgDriveCid')?.value.trim();
+  const sec = document.getElementById('intgDriveSecret')?.value.trim();
+  if(!cid){ alert('กรุณาวาง OAuth Client ID'); return; }
+  if(!sec){ alert('กรุณาวาง OAuth Client Secret'); return; }
+  const redirectUri = location.origin + '/api/drive/oauth-callback';
+  // 1. Save creds to snapshot (so callback can read them)
+  googleDriveSettings.clientId = cid;
+  googleDriveSettings.clientSecret = sec;
+  googleDriveSettings.redirectUri = redirectUri;
+  googleDriveSettings.configuredBy = currentUser ? currentUser.name : '';
+  googleDriveSettings.configuredAt = Date.now();
+  await saveAll();
+  // Give Neon a moment to commit before redirect
+  await new Promise(r => setTimeout(r, 400));
+  // 2. Open Google OAuth consent
+  const params = new URLSearchParams({
+    client_id: cid,
+    redirect_uri: redirectUri,
+    response_type: 'code',
+    scope: 'https://www.googleapis.com/auth/drive openid email profile',
+    access_type: 'offline',
+    prompt: 'consent',
+    include_granted_scopes: 'true',
+  });
+  const url = 'https://accounts.google.com/o/oauth2/v2/auth?' + params.toString();
+  const w = window.open(url, 'driveOAuth', 'width=520,height=640');
+  if(!w) location.href = url;
+}
+
+async function _intgDisconnectDrive(){
+  if(!confirm('ตัดการเชื่อม Google Drive? (ทุกคนในทีมจะใช้งานไม่ได้จนกว่า Admin เชื่อมใหม่)')) return;
+  try {
+    const r = await fetch('/api/drive/proxy?op=disconnect', { method:'POST' });
+    const j = await r.json();
+    if(!j.ok){ alert('ตัดการเชื่อมต่อล้มเหลว'); return; }
+    googleDriveSettings = { clientId:'', clientSecret:'', redirectUri:'', refreshToken:'', adminEmail:'', configuredBy:'', configuredAt:0 };
+    _driveStatusFetched = false;
+    await refreshDriveServerStatus(true);
+    rerender();
+  } catch(e){ alert('ผิดพลาด: ' + e.message); }
 }
 
 function renderSocialIntegrations(el){
@@ -12860,6 +13116,10 @@ function renderSocialIntegrations(el){
   if(fbConnected && !_igFetchAttempted){
     _igFetchAttempted = true;
     setTimeout(()=>refreshIgInfo(), 100);
+  }
+  // Lazy-fetch Drive server status once per page visit
+  if(!_driveStatusFetched){
+    refreshDriveServerStatus(true).then(()=>{ if(currentView==='socialIntegrations') rerender(); });
   }
   const igConnected = !!(igAccountInfo && igAccountInfo.id);
   const connectedCount = (fbConnected?1:0) + (igConnected?1:0) + (ttConnected?1:0) + (ytConnected?1:0);
@@ -12886,6 +13146,7 @@ function renderSocialIntegrations(el){
               <div class="intg-name">Facebook Page <span class="intg-status ${fbConnected?'on':'off'}">${fbConnected?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
               <p class="intg-desc">เชื่อม Page เพื่อจัดการโพสต์ ดู Analytics และ Live Streaming</p>
             </div>
+            <button class="intg-guide-btn" onclick="openConnectGuide('facebook')" title="วิธีเชื่อมต่อ">${I.lightbulb} วิธีเชื่อม</button>
           </div>
           ${fbConnected ? `
             <div class="intg-account">
@@ -12901,8 +13162,8 @@ function renderSocialIntegrations(el){
             </div>
           ` : `
             <div class="intg-token-row">
-              <textarea class="intg-token-input" id="intgFbToken" placeholder="วาง User Access Token (มี pages_show_list + pages_manage_posts)"></textarea>
-              <div class="intg-token-help">หา Token: <a href="https://developers.facebook.com/tools/explorer" target="_blank">Graph API Explorer</a></div>
+              <textarea class="intg-token-input" id="intgFbToken" placeholder="วาง User Access Token (มี pages_show_list + pages_manage_posts)">${escapeHtmlN(DEFAULT_FB_TOKEN)}</textarea>
+              <div class="intg-token-help">มี default token พร้อมใช้แล้ว · กด "เชื่อมต่อ" เพื่อใช้งานทันที · หรือเปลี่ยน Token ใหม่จาก <a href="https://developers.facebook.com/tools/explorer" target="_blank">Graph API Explorer</a></div>
             </div>
             <div class="intg-actions">
               <button class="intg-btn-primary" onclick="_intgConnectFb()">เชื่อมต่อ Facebook</button>
@@ -12918,6 +13179,7 @@ function renderSocialIntegrations(el){
               <div class="intg-name">Instagram Business <span class="intg-status ${igConnected?'on':'off'}">${igConnected?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
               <p class="intg-desc">เชื่อมผ่าน Facebook Page (ต้องเชื่อม IG กับ Page ใน FB ก่อน)</p>
             </div>
+            <button class="intg-guide-btn" onclick="openConnectGuide('instagram')" title="วิธีเชื่อมต่อ">${I.lightbulb} วิธีเชื่อม</button>
           </div>
           ${igConnected ? `
             <div class="intg-account">
@@ -12951,56 +13213,87 @@ function renderSocialIntegrations(el){
         </div>
 
         <!-- TIKTOK -->
-        <div class="intg-card tt soon">
+        <div class="intg-card ${ttConnected?'connected':''} tt">
           <div class="intg-hdr">
             <div class="intg-logo tt">T</div>
             <div style="flex:1;min-width:0">
-              <div class="intg-name">TikTok Business <span class="intg-status soon">SOON</span></div>
-              <p class="intg-desc">ดูยอด Follow / Views / Engagement และจัดการคอนเทนต์ TikTok</p>
+              <div class="intg-name">TikTok <span class="intg-status ${ttConnected?'on':'off'}">${ttConnected?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
+              <p class="intg-desc">ดูยอด Follow / Views / Engagement (ใส่ Access Token จาก TikTok Developer Portal)</p>
             </div>
+            <button class="intg-guide-btn" onclick="openConnectGuide('tiktok')" title="วิธีเชื่อมต่อ">${I.lightbulb} วิธีเชื่อม</button>
           </div>
-          <p style="font-size:12px;color:var(--t2);line-height:1.6;background:var(--bg-soft);padding:11px;border-radius:9px;margin:14px 0">
-            🚧 กำลังพัฒนา · TikTok Business API ต้องผ่าน App Review<br>
-            หากคุณมี TikTok For Developers app อยู่แล้ว แจ้งทีมเพื่อ enable ฟีเจอร์นี้
-          </p>
-          <div class="intg-actions">
-            <button class="intg-btn-primary tt" disabled>เร็วๆนี้</button>
-          </div>
+          ${ttConnected ? `
+            <div class="intg-account">
+              <div class="intg-account-thumb tt">T</div>
+              <div class="intg-account-info">
+                <div class="intg-account-name">${escapeHtmlN(tiktokSettings.displayName||'TikTok Account')}</div>
+                <div class="intg-account-meta">${tiktokSettings.followerCount?fmtNum(tiktokSettings.followerCount)+' followers · ':''}เชื่อมเมื่อ ${new Date(tiktokSettings.connectedAt).toLocaleDateString('th-TH')}</div>
+              </div>
+            </div>
+            <div class="intg-actions">
+              <button class="intg-btn-primary tt" onclick="_intgRefreshTikTok()">↻ ดึงข้อมูลล่าสุด</button>
+              <button class="intg-btn-ghost danger" onclick="_intgDisconnectTikTok()">ตัดการเชื่อมต่อ</button>
+            </div>
+          ` : `
+            <div class="intg-token-row">
+              <input type="password" class="intg-token-input" id="intgTtToken" placeholder="TikTok Access Token" style="min-height:auto;padding:11px 14px;font-family:inherit"/>
+              <div class="intg-token-help">ต้องมี Business / Display API access · Token มีอายุ 24 ชม. — กดปุ่ม "วิธีเชื่อม" เพื่อดูขั้นตอน</div>
+            </div>
+            <div class="intg-actions">
+              <button class="intg-btn-primary tt" onclick="_intgSaveTikTok()">บันทึก & เชื่อมต่อ</button>
+            </div>
+          `}
         </div>
 
         <!-- YOUTUBE -->
-        <div class="intg-card yt soon">
+        <div class="intg-card ${ytConnected?'connected':''} yt">
           <div class="intg-hdr">
             <div class="intg-logo yt">▶</div>
             <div style="flex:1;min-width:0">
-              <div class="intg-name">YouTube Channel <span class="intg-status soon">SOON</span></div>
-              <p class="intg-desc">ดู subscribers, views, watch time และ analytics วิดีโอแต่ละตัว</p>
+              <div class="intg-name">YouTube <span class="intg-status ${ytConnected?'on':'off'}">${ytConnected?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
+              <p class="intg-desc">Subscribers · views · watch time (ใส่ OAuth Access Token จาก Google Cloud)</p>
             </div>
+            <button class="intg-guide-btn" onclick="openConnectGuide('youtube')" title="วิธีเชื่อมต่อ">${I.lightbulb} วิธีเชื่อม</button>
           </div>
-          <p style="font-size:12px;color:var(--t2);line-height:1.6;background:var(--bg-soft);padding:11px;border-radius:9px;margin:14px 0">
-            🚧 กำลังพัฒนา · YouTube Data API v3 ต้องใช้ Google OAuth<br>
-            ต้องสร้าง Google Cloud Project + เปิด YouTube Data API + OAuth consent screen
-          </p>
-          <div class="intg-actions">
-            <button class="intg-btn-primary yt" disabled>เร็วๆนี้</button>
-          </div>
+          ${ytConnected ? `
+            <div class="intg-account">
+              <div class="intg-account-thumb yt">▶</div>
+              <div class="intg-account-info">
+                <div class="intg-account-name">${escapeHtmlN(youtubeSettings.channelTitle||'YouTube Channel')}</div>
+                <div class="intg-account-meta">${youtubeSettings.subscriberCount?fmtNum(youtubeSettings.subscriberCount)+' subs · ':''}${youtubeSettings.viewCount?fmtNum(youtubeSettings.viewCount)+' views · ':''}เชื่อมเมื่อ ${new Date(youtubeSettings.connectedAt).toLocaleDateString('th-TH')}</div>
+              </div>
+            </div>
+            <div class="intg-actions">
+              <button class="intg-btn-primary yt" onclick="_intgRefreshYouTube()">↻ ดึงข้อมูลล่าสุด</button>
+              <button class="intg-btn-ghost danger" onclick="_intgDisconnectYouTube()">ตัดการเชื่อมต่อ</button>
+            </div>
+          ` : `
+            <div class="intg-token-row">
+              <input type="password" class="intg-token-input" id="intgYtToken" placeholder="YouTube Data API OAuth Access Token" style="min-height:auto;padding:11px 14px;font-family:inherit"/>
+              <div class="intg-token-help">Token จาก OAuth Playground หรือ Google Cloud Console · Scope: <code>youtube.readonly</code> + <code>youtube.force-ssl</code> — กด "วิธีเชื่อม" เพื่อดูขั้นตอน</div>
+            </div>
+            <div class="intg-actions">
+              <button class="intg-btn-primary yt" onclick="_intgSaveYouTube()">บันทึก & เชื่อมต่อ</button>
+            </div>
+          `}
         </div>
 
-        <!-- GOOGLE DRIVE -->
-        <div class="intg-card ${googleDriveSettings.clientId?'connected':''}" style="grid-column:span 2">
+        <!-- GOOGLE DRIVE (server-side OAuth refresh-token flow — admin connects once, team uses without re-login) -->
+        <div class="intg-card ${driveServerStatus.connected?'connected':''}" style="grid-column:span 2">
           <div class="intg-hdr">
             <div class="intg-logo" style="background:linear-gradient(135deg,#4285f4,#34a853,#fbbc05,#ea4335)">D</div>
             <div style="flex:1;min-width:0">
-              <div class="intg-name">Google Drive <span class="intg-status ${googleDriveSettings.clientId?'on':'off'}">${googleDriveSettings.clientId?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
-              <p class="intg-desc">เก็บและจัดการเอกสารผ่าน Google Drive — Admin ตั้งครั้งเดียว ทุกคนเห็นเหมือนกัน</p>
+              <div class="intg-name">Google Drive <span class="intg-status ${driveServerStatus.connected?'on':'off'}">${driveServerStatus.connected?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
+              <p class="intg-desc">Admin เชื่อมต่อครั้งเดียว — ทีมทั้งหมด login แล้วใช้ได้เลย ไม่ต้อง sign-in Google รายคน</p>
             </div>
+            <button class="intg-guide-btn" onclick="openConnectGuide('drive')" title="วิธีเชื่อมต่อ">${I.lightbulb} วิธีเชื่อม</button>
           </div>
-          ${googleDriveSettings.clientId ? `
+          ${driveServerStatus.connected ? `
             <div class="intg-account">
               <div class="intg-account-thumb" style="background:linear-gradient(135deg,#4285f4,#ea4335)">G</div>
               <div class="intg-account-info">
-                <div class="intg-account-name">Configured</div>
-                <div class="intg-account-meta">Client ID: ${escapeHtmlN(googleDriveSettings.clientId.slice(0,30))}...${googleDriveSettings.configuredBy?' · โดย '+escapeHtmlN(googleDriveSettings.configuredBy):''}</div>
+                <div class="intg-account-name">${escapeHtmlN(driveServerStatus.adminEmail||'Admin Account')}</div>
+                <div class="intg-account-meta">เชื่อมเมื่อ ${driveServerStatus.connectedAt?new Date(driveServerStatus.connectedAt).toLocaleString('th-TH'):'-'} · ทีมทุกคนใช้งานได้แล้ว</div>
               </div>
             </div>
             <div class="intg-actions">
@@ -13009,12 +13302,18 @@ function renderSocialIntegrations(el){
             </div>
           ` : `
             <div class="intg-token-row">
-              <input type="text" class="intg-token-input" id="intgDriveCid" placeholder="Google OAuth Client ID (xxx.apps.googleusercontent.com)" style="min-height:auto;padding:11px 14px;font-family:inherit"/>
-              <input type="text" class="intg-token-input" id="intgDriveAk" placeholder="API Key (optional)" style="min-height:auto;padding:11px 14px;font-family:inherit"/>
-              <div class="intg-token-help">สร้างที่ <a href="https://console.cloud.google.com/apis/credentials" target="_blank">Google Cloud Console</a> → OAuth 2.0 Client IDs (Web)</div>
+              <input type="text" class="intg-token-input" id="intgDriveCid" placeholder="OAuth Client ID (xxx.apps.googleusercontent.com)" value="${escapeHtmlN(googleDriveSettings.clientId||'')}" style="min-height:auto;padding:11px 14px;font-family:inherit"/>
+              <input type="text" class="intg-token-input" id="intgDriveSecret" placeholder="OAuth Client Secret (GOCSPX-...)" value="${escapeHtmlN(googleDriveSettings.clientSecret||'')}" style="min-height:auto;padding:11px 14px;font-family:inherit"/>
+              <div class="intg-token-help" style="line-height:1.7">
+                <b>วิธีตั้งค่า (Admin ทำครั้งเดียว):</b><br>
+                1. ไปที่ <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:#7c3aed;font-weight:700">Google Cloud Console → Credentials</a><br>
+                2. สร้าง <b>OAuth 2.0 Client ID</b> (Application type: Web application)<br>
+                3. ใน "Authorized redirect URIs" ใส่: <code style="background:var(--bg-soft);padding:2px 6px;border-radius:4px;font-size:11.5px;user-select:all">${escapeHtmlN(location.origin)}/api/drive/oauth-callback</code><br>
+                4. ก็อป Client ID + Client Secret มาวางในช่องด้านบน → กด "เริ่มเชื่อมต่อ"
+              </div>
             </div>
             <div class="intg-actions">
-              <button class="intg-btn-primary" style="background:linear-gradient(135deg,#4285f4,#34a853)" onclick="_intgSaveDrive()">บันทึก & เชื่อมต่อ</button>
+              <button class="intg-btn-primary" style="background:linear-gradient(135deg,#4285f4,#34a853)" onclick="_intgStartDriveOAuth()">${driveServerStatus.clientIdSet?'เชื่อมต่อกับ Google →':'บันทึก & เชื่อมต่อ Google →'}</button>
             </div>
           `}
         </div>
@@ -13731,6 +14030,318 @@ async function fbpCancelScheduled(postId){
   } catch(err){
     alert('ยกเลิกไม่สำเร็จ: ' + err.message);
   }
+}
+
+// ============ FB GO-LIVE (Broadcast manager) ============
+// Browser cannot push RTMP — so we use Facebook Live API to create the broadcast (returns
+// stream_url + stream_key) and instruct user to push via OBS/Streamlabs. While live, we embed
+// the FB player + poll comments. This is the standard pattern used by Restream/StreamYard etc.
+let fbLiveBroadcast = null; // {id, stream_url, secure_stream_url, status, embed_html, ...}
+let fbLiveCameraStream = null;
+let fbLiveCommentPollTimer = null;
+let fbLiveComments = [];
+let fbLiveStats = { viewers:0, reactions:0, comments:0 };
+
+function renderFbGoLive(el){
+  const fbConnected = !!(fbPostState.pageId && fbPostState.pageToken);
+  const isAdmin = currentUser && currentUser.role === 'admin';
+  const isLive = fbLiveBroadcast && (fbLiveBroadcast.status === 'LIVE' || fbLiveBroadcast.status === 'STARTED');
+  const isPrep = fbLiveBroadcast && (fbLiveBroadcast.status === 'UNPUBLISHED' || fbLiveBroadcast.status === 'PREPARING');
+
+  el.innerHTML = topbarSimple('live', 'ไลฟ์สด Facebook', 'สร้างและออกอากาศ Facebook Live จากเว็บ', '') + `
+  <div class="page-content" style="max-width:1200px">
+    ${!fbConnected ? `
+      <div class="golive-warn">
+        <div class="golive-warn-ic">${I.alert}</div>
+        <div style="flex:1">
+          <div style="font-weight:800;color:#92400e;margin-bottom:4px">ยังไม่ได้เชื่อม Facebook Page</div>
+          <div style="font-size:13px;color:#92400e">${isAdmin?'ไปที่ "เชื่อมต่อแพลตฟอร์ม" เพื่อเชื่อม Facebook Page ก่อน — ไลฟ์สดทำไม่ได้หากไม่มี Page Token':'รอ Admin เชื่อม Facebook Page ก่อน'}</div>
+        </div>
+        ${isAdmin?`<button class="btn-primary" onclick="navigateTo('socialIntegrations')">ไปเชื่อม →</button>`:''}
+      </div>
+    ` : !fbLiveBroadcast ? renderFbGoLiveSetup() : renderFbGoLiveBroadcast()}
+  </div>`;
+
+  // Init camera preview in setup mode
+  if(fbConnected && !fbLiveBroadcast) initFbLiveCameraPreview();
+}
+
+function renderFbGoLiveSetup(){
+  return `
+    <div class="golive-grid">
+      <div class="golive-preview-col">
+        <div class="golive-preview-card">
+          <video id="fbLivePreview" class="golive-video" autoplay muted playsinline></video>
+          <div class="golive-preview-overlay">
+            <span class="golive-rec-dot"></span>
+            <span style="font-weight:700">PREVIEW</span>
+          </div>
+          <button class="golive-cam-btn" onclick="initFbLiveCameraPreview()" title="เริ่มกล้อง">${I.eye} ${fbLiveCameraStream?'เริ่มใหม่':'เปิดกล้อง'}</button>
+        </div>
+        <div class="golive-tip">
+          <b>💡 หมายเหตุ:</b> ภาพตัวอย่างนี้เพื่อเช็คกล้องเฉยๆ — การออกอากาศจริงจะใช้ OBS/Streamlabs ส่ง stream ผ่าน RTMP (Facebook Live ต้องการ RTMPS server-side)
+        </div>
+      </div>
+
+      <div class="golive-form-col">
+        <div class="golive-card">
+          <div class="golive-card-title">${I.live} ตั้งค่าไลฟ์สด</div>
+
+          <div class="fgrp">
+            <label class="flabel">ชื่อ Live *</label>
+            <input class="finp" id="fbLiveTitle" placeholder="ตัวอย่าง: ไลฟ์ขายหวย งวด 16 พ.ค.">
+          </div>
+
+          <div class="fgrp">
+            <label class="flabel">คำอธิบาย</label>
+            <textarea class="finp" id="fbLiveDesc" rows="3" placeholder="รายละเอียดไลฟ์ ของแจก กติกา ฯลฯ"></textarea>
+          </div>
+
+          <div class="fgrp">
+            <label class="flabel">ความเป็นส่วนตัว</label>
+            <select class="finp" id="fbLivePrivacy">
+              <option value="EVERYONE">🌎 สาธารณะ (ทุกคน)</option>
+              <option value="ALL_FRIENDS">👥 เพื่อนเท่านั้น</option>
+              <option value="SELF">🔒 ตัวเอง (ทดสอบ)</option>
+            </select>
+          </div>
+
+          <div style="display:flex;gap:10px;margin-top:18px">
+            <button class="golive-go-btn" onclick="fbLiveCreate()">${I.live} เริ่มไลฟ์สด →</button>
+          </div>
+          <div style="font-size:11.5px;color:var(--t3);margin-top:10px">ระบบจะสร้าง Live Video บน Page <b>${escapeHtml(fbPostState.pageName)}</b> และให้ Stream URL + Key สำหรับ OBS</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderFbGoLiveBroadcast(){
+  const b = fbLiveBroadcast;
+  const isLive = b.status === 'LIVE' || b.status === 'STARTED';
+  const rtmpUrl = b.secure_stream_url || b.stream_url || '';
+  // Stream URL format: rtmps://live-api-s.facebook.com:443/rtmp/<KEY>
+  const m = rtmpUrl.match(/^(rtmps?:\/\/[^/]+\/rtmp\/)(.+)$/);
+  const serverUrl = m ? m[1] : rtmpUrl;
+  const streamKey = m ? m[2] : '';
+
+  return `
+    <div class="golive-status-bar ${isLive?'live':''}">
+      <div class="golive-status-ic">
+        <span class="golive-rec-dot ${isLive?'live':''}"></span>
+      </div>
+      <div style="flex:1">
+        <div style="font-weight:800;font-size:16px">${isLive?'🔴 กำลังออกอากาศ':'⏳ รอ OBS ส่ง stream เข้ามา'}</div>
+        <div style="font-size:12.5px;color:var(--t2);margin-top:2px">${isLive?'ดูได้ที่ Facebook · ผู้ชม '+fmtNum(fbLiveStats.viewers||0)+' · คอมเมนต์ '+fmtNum(fbLiveStats.comments||0):'เมื่อ OBS push เข้ามา ระบบจะเปลี่ยนเป็น LIVE อัตโนมัติภายใน 30 วิ'}</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-ghost" onclick="fbLiveRefreshStatus()">↻ รีเฟรช</button>
+        ${isLive ? `<button class="golive-end-btn" onclick="fbLiveEnd()">⏹ จบไลฟ์</button>` : `<button class="btn-ghost danger" onclick="fbLiveCancel()">ยกเลิก</button>`}
+      </div>
+    </div>
+
+    <div class="golive-grid">
+      <div class="golive-preview-col">
+        ${isLive && b.embed_html ? `
+          <div class="golive-embed">${b.embed_html}</div>
+        ` : `
+          <div class="golive-preview-card">
+            <video id="fbLivePreview" class="golive-video" autoplay muted playsinline></video>
+            <div class="golive-preview-overlay">
+              <span class="golive-rec-dot"></span>
+              <span style="font-weight:700">PREVIEW (กล้อง)</span>
+            </div>
+          </div>
+        `}
+
+        <div class="golive-rtmp-card">
+          <div class="golive-card-title">${I.key} ตั้งค่า OBS / Streamlabs</div>
+          <div class="golive-field-row">
+            <label class="flabel">Server URL (RTMPS)</label>
+            <div class="golive-copy-row">
+              <input class="finp" readonly value="${escapeHtml(serverUrl)}" id="fbLiveServerUrl">
+              <button class="btn-ghost" onclick="copyText('${escapeHtml(serverUrl)}','คัดลอก Server URL แล้ว')">📋 คัดลอก</button>
+            </div>
+          </div>
+          <div class="golive-field-row">
+            <label class="flabel">Stream Key</label>
+            <div class="golive-copy-row">
+              <input class="finp" type="password" readonly value="${escapeHtml(streamKey)}" id="fbLiveKey">
+              <button class="btn-ghost" onclick="document.getElementById('fbLiveKey').type=document.getElementById('fbLiveKey').type==='password'?'text':'password'">👁 แสดง</button>
+              <button class="btn-ghost" onclick="copyText('${escapeHtml(streamKey)}','คัดลอก Stream Key แล้ว')">📋 คัดลอก</button>
+            </div>
+          </div>
+          <ol class="golive-steps">
+            <li>เปิด OBS → Settings → Stream → Service: <b>Custom</b></li>
+            <li>วาง <b>Server URL</b> ในช่อง Server</li>
+            <li>วาง <b>Stream Key</b> ในช่อง Stream Key</li>
+            <li>OK → กดปุ่ม <b>Start Streaming</b> ใน OBS</li>
+            <li>รอประมาณ 5-30 วินาที → สถานะที่นี่จะเปลี่ยนเป็น <b>🔴 LIVE</b></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="golive-form-col">
+        <div class="golive-info-card">
+          <div class="golive-info-title">${I.live} ${escapeHtml(b.title||'Untitled Live')}</div>
+          <div class="golive-info-meta">Broadcast ID: ${b.id} · Status: <b>${b.status}</b></div>
+          ${b.permalink_url?`<a href="https://www.facebook.com${b.permalink_url}" target="_blank" class="btn-primary" style="margin-top:10px;width:100%;justify-content:center">เปิดดูบน Facebook →</a>`:''}
+        </div>
+
+        ${isLive ? `
+          <div class="golive-stat-grid">
+            <div class="golive-stat-card"><div class="golive-stat-lbl">👥 ผู้ชมตอนนี้</div><div class="golive-stat-val">${fmtNum(fbLiveStats.viewers||0)}</div></div>
+            <div class="golive-stat-card"><div class="golive-stat-lbl">💬 คอมเมนต์</div><div class="golive-stat-val">${fmtNum(fbLiveStats.comments||0)}</div></div>
+            <div class="golive-stat-card"><div class="golive-stat-lbl">❤️ Reactions</div><div class="golive-stat-val">${fmtNum(fbLiveStats.reactions||0)}</div></div>
+          </div>
+
+          <div class="golive-card">
+            <div class="golive-card-title">${I.message} คอมเมนต์สด</div>
+            <div class="golive-comments" id="fbLiveCommentsBox">
+              ${fbLiveComments.length ? fbLiveComments.slice(-50).reverse().map(c=>`
+                <div class="golive-comment">
+                  <div class="golive-comment-avatar">${(c.from?.name||'?')[0]}</div>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-weight:700;font-size:12.5px">${escapeHtml(c.from?.name||'Anonymous')}</div>
+                    <div style="font-size:13px;color:var(--t1);word-wrap:break-word">${escapeHtml(c.message||'')}</div>
+                    <div style="font-size:11px;color:var(--t3);margin-top:2px">${c.created_time?new Date(c.created_time).toLocaleTimeString('th-TH'):''}</div>
+                  </div>
+                </div>
+              `).join('') : '<div style="text-align:center;padding:30px;color:var(--t3);font-size:13px">ยังไม่มีคอมเมนต์</div>'}
+            </div>
+          </div>
+        ` : ''}
+      </div>
+    </div>`;
+}
+
+async function initFbLiveCameraPreview(){
+  try {
+    if(fbLiveCameraStream){
+      fbLiveCameraStream.getTracks().forEach(t=>t.stop());
+      fbLiveCameraStream = null;
+    }
+    fbLiveCameraStream = await navigator.mediaDevices.getUserMedia({ video:true, audio:true });
+    const v = document.getElementById('fbLivePreview');
+    if(v) v.srcObject = fbLiveCameraStream;
+  } catch(e){
+    console.warn('camera preview failed', e);
+  }
+}
+
+function showToast(msg){
+  let t = document.getElementById('appToast');
+  if(!t){
+    t = document.createElement('div');
+    t.id = 'appToast';
+    t.style.cssText = 'position:fixed;left:50%;bottom:32px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:10px 18px;border-radius:9px;font-size:13.5px;font-weight:600;box-shadow:0 10px 24px rgba(0,0,0,.25);z-index:9999;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>{ t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(8px)'; }, 2400);
+}
+
+function copyText(t, msg){
+  navigator.clipboard.writeText(t).then(()=> showToast(msg||'คัดลอกแล้ว')).catch(()=>{
+    const ta = document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); showToast(msg||'คัดลอกแล้ว'); } catch{} document.body.removeChild(ta);
+  });
+}
+
+async function fbLiveCreate(){
+  const title = document.getElementById('fbLiveTitle').value.trim();
+  const desc  = document.getElementById('fbLiveDesc').value.trim();
+  const privacy = document.getElementById('fbLivePrivacy').value;
+  if(!title){ alert('กรุณาใส่ชื่อไลฟ์'); return; }
+  if(!fbPostState.pageId || !fbPostState.pageToken){ alert('ยังไม่ได้เชื่อม Facebook Page'); return; }
+  try {
+    const u = new URL(`https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}/live_videos`);
+    const fd = new FormData();
+    fd.append('status', 'UNPUBLISHED');
+    fd.append('title', title);
+    if(desc) fd.append('description', desc);
+    fd.append('privacy', JSON.stringify({ value: privacy }));
+    fd.append('access_token', fbPostState.pageToken);
+    const r = await fetch(u.toString(), { method:'POST', body: fd });
+    const j = await r.json();
+    if(!r.ok || j.error){
+      alert('สร้างไลฟ์ไม่สำเร็จ: ' + (j.error?.message||r.status));
+      return;
+    }
+    // Fetch full broadcast details
+    const dr = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${j.id}?fields=id,title,description,status,stream_url,secure_stream_url,permalink_url,embed_html&access_token=${encodeURIComponent(fbPostState.pageToken)}`);
+    const det = await dr.json();
+    fbLiveBroadcast = det;
+    fbLiveStats = { viewers:0, reactions:0, comments:0 };
+    fbLiveComments = [];
+    startFbLivePolling();
+    rerender();
+  } catch(e){ alert('ผิดพลาด: ' + e.message); }
+}
+
+function startFbLivePolling(){
+  stopFbLivePolling();
+  fbLiveCommentPollTimer = setInterval(()=> fbLivePoll(), 7000);
+}
+function stopFbLivePolling(){
+  if(fbLiveCommentPollTimer){ clearInterval(fbLiveCommentPollTimer); fbLiveCommentPollTimer = null; }
+}
+
+async function fbLivePoll(){
+  if(!fbLiveBroadcast) return;
+  try {
+    const id = fbLiveBroadcast.id;
+    const tok = encodeURIComponent(fbPostState.pageToken);
+    // Status + live_views + reactions count
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${id}?fields=id,status,live_views,permalink_url,embed_html,reactions.summary(true).limit(0)&access_token=${tok}`);
+    const j = await r.json();
+    if(j.error){ console.warn('FB live poll err', j.error.message); return; }
+    fbLiveBroadcast.status = j.status || fbLiveBroadcast.status;
+    fbLiveBroadcast.embed_html = j.embed_html || fbLiveBroadcast.embed_html;
+    fbLiveBroadcast.permalink_url = j.permalink_url || fbLiveBroadcast.permalink_url;
+    fbLiveStats.viewers = j.live_views || 0;
+    fbLiveStats.reactions = j.reactions?.summary?.total_count || 0;
+    // Comments (only when live)
+    if(j.status === 'LIVE' || j.status === 'STARTED'){
+      const cr = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${id}/comments?fields=id,from{id,name},message,created_time&order=reverse_chronological&limit=50&access_token=${tok}`);
+      const cj = await cr.json();
+      if(Array.isArray(cj.data)){
+        fbLiveComments = cj.data.reverse();
+        fbLiveStats.comments = cj.data.length;
+      }
+    }
+    if(currentView==='fbGoLive') rerender();
+  } catch(e){ console.warn('poll failed', e); }
+}
+
+async function fbLiveRefreshStatus(){ await fbLivePoll(); }
+
+async function fbLiveEnd(){
+  if(!fbLiveBroadcast) return;
+  if(!confirm('จบการไลฟ์สดและสิ้นสุดการออกอากาศ?')) return;
+  try {
+    const fd = new FormData();
+    fd.append('end_live_video', 'true');
+    fd.append('access_token', fbPostState.pageToken);
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${fbLiveBroadcast.id}`, { method:'POST', body: fd });
+    const j = await r.json();
+    if(j.error){ alert('จบไลฟ์ไม่สำเร็จ: ' + j.error.message); return; }
+    stopFbLivePolling();
+    showToast('✓ จบไลฟ์เรียบร้อย — VOD พร้อมดูบน Facebook');
+    fbLiveBroadcast = null;
+    rerender();
+  } catch(e){ alert('ผิดพลาด: ' + e.message); }
+}
+
+function fbLiveCancel(){
+  if(!confirm('ยกเลิกไลฟ์ที่กำลังตั้งค่าอยู่?')) return;
+  stopFbLivePolling();
+  if(fbLiveCameraStream){ fbLiveCameraStream.getTracks().forEach(t=>t.stop()); fbLiveCameraStream = null; }
+  fbLiveBroadcast = null;
+  fbLiveComments = [];
+  rerender();
 }
 
 function renderFbPosts(el){
@@ -16740,6 +17351,7 @@ loadSavedTheme();
 loadAll();
 ensureAllAvatars();
 setupIcons();
+applyConnectionDefaults();
 document.addEventListener('mousedown', popupClose);
 
 // Show login with loading placeholder immediately
