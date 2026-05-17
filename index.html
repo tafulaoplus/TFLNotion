@@ -1920,6 +1920,10 @@ svg{display:block;flex-shrink:0}
 .nav-item:hover{background:#fff;color:var(--t1)}
 .nav-item.active{background:#fff;color:var(--p700);font-weight:700;box-shadow:var(--shadow-sm);border:1px solid var(--border)}
 .nav-item.active .nav-icon{color:var(--p600)}
+.nav-item[draggable="true"]{cursor:grab}
+.nav-item[draggable="true"]:active{cursor:grabbing}
+.nav-item.nav-dragging{opacity:.4}
+.nav-item.nav-drop-over{outline:2px dashed #7c3aed;outline-offset:-2px;background:rgba(124,58,237,.08)}
 .nav-icon{width:18px;flex-shrink:0;color:var(--t3);display:flex;align-items:center;justify-content:center}
 .nav-label{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .nav-badge{background:var(--p500);color:#fff;border-radius:100px;padding:1px 7px;font-size:10px;font-weight:800;min-width:18px;text-align:center}
@@ -5526,10 +5530,45 @@ function initApp(){
   try { startNotifChecker(); } catch(_){}
 }
 
+let _navDragId = null;
+function _navDragStart(e){
+  _navDragId = e.currentTarget.getAttribute('data-navid');
+  e.currentTarget.classList.add('nav-dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function _navDragOver(e){
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  document.querySelectorAll('.nav-drop-over').forEach(x=>x.classList.remove('nav-drop-over'));
+  e.currentTarget.classList.add('nav-drop-over');
+}
+function _navDrop(e){
+  e.preventDefault();
+  const targetId = e.currentTarget.getAttribute('data-navid');
+  if(!_navDragId || !targetId || _navDragId === targetId){ document.querySelectorAll('.nav-drop-over').forEach(x=>x.classList.remove('nav-drop-over')); return; }
+  let order = [];
+  try { order = JSON.parse(localStorage.getItem('tfl_sidebar_order')||'[]'); } catch(_){}
+  // If no saved order yet, compute from current sidebar
+  if(!order.length){
+    order = Array.from(document.querySelectorAll('.sb-nav .nav-item[data-navid]')).map(x => x.getAttribute('data-navid'));
+  }
+  order = order.filter(id => id !== _navDragId);
+  const targetIdx = order.indexOf(targetId);
+  order.splice(targetIdx >= 0 ? targetIdx : order.length, 0, _navDragId);
+  try { localStorage.setItem('tfl_sidebar_order', JSON.stringify(order)); } catch(_){}
+  document.querySelectorAll('.nav-drop-over').forEach(x=>x.classList.remove('nav-drop-over'));
+  renderSidebar();
+}
+function _navDragEnd(e){
+  e.currentTarget.classList.remove('nav-dragging');
+  document.querySelectorAll('.nav-drop-over').forEach(x=>x.classList.remove('nav-drop-over'));
+  _navDragId = null;
+}
+
 function renderSidebar(){
   const isAdmin = currentUser.role==='admin';
   const isSocial = currentUser.role==='social' || isAdmin;
-  const items = [
+  const defaultItems = [
     {id:'attendance', icon:I.clock, label:'ระบบลงเวลา'},
     {id:'dashboard', icon:I.home, label:'ภาพรวม'},
     {id:'files', icon:I.folder, label:'เอกสาร'},
@@ -5539,9 +5578,25 @@ function renderSidebar(){
     {id:'sales', icon:I.mapPin, label:'ออกพื้นที่'},
     {id:'calendar', icon:I.calendar, label:'ปฏิทิน'},
   ];
-  let html = '<div class="nav-sec">เมนูหลัก</div>';
+  // Apply saved order if any
+  let items = defaultItems;
+  try {
+    const savedOrder = localStorage.getItem('tfl_sidebar_order');
+    if(savedOrder){
+      const orderIds = JSON.parse(savedOrder);
+      if(Array.isArray(orderIds) && orderIds.length){
+        const byId = Object.fromEntries(defaultItems.map(x=>[x.id,x]));
+        const reordered = [];
+        orderIds.forEach(id => { if(byId[id]){ reordered.push(byId[id]); delete byId[id]; } });
+        // Append any new items not in saved order
+        Object.values(byId).forEach(x => reordered.push(x));
+        items = reordered;
+      }
+    }
+  } catch(_){}
+  let html = `<div class="nav-sec">เมนูหลัก ${isAdmin?'<span style="font-size:10px;color:var(--t3);font-weight:500;float:right;text-transform:none">↕ ลากเพื่อจัดเรียง</span>':''}</div>`;
   items.forEach(it => {
-    html += `<div class="nav-item ${currentView===it.id?'active':''}" onclick="navigateTo('${it.id}')">
+    html += `<div class="nav-item ${currentView===it.id?'active':''}" onclick="navigateTo('${it.id}')" ${isAdmin?`draggable="true" data-navid="${it.id}" ondragstart="_navDragStart(event)" ondragover="_navDragOver(event)" ondrop="_navDrop(event)" ondragend="_navDragEnd(event)"`:''}>
       <span class="nav-icon">${it.icon}</span><span class="nav-label">${it.label}</span></div>`;
   });
 
