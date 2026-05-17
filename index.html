@@ -12,16 +12,17 @@
 <meta name="apple-mobile-web-app-title" content="TFL+ Workspace">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://graph.facebook.com" crossorigin>
+<link rel="dns-prefetch" href="https://www.googleapis.com">
+<link rel="dns-prefetch" href="https://unpkg.com">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<!-- (GSI client removed — Google Drive now uses server-side OAuth via /api/drive/proxy) -->
-<!-- Leaflet for attendance map -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin/>
+<!-- Leaflet — preload CSS but load JS lazily (only when attendance map opens) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin media="print" onload="this.media='all'"/>
 <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin></script>
-<!-- SheetJS for Excel import -->
-<script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<!-- Firebase for cross-device sync (optional - configure FIREBASE_CONFIG below) -->
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<!-- SheetJS — async (only used for Import; doesn't block first paint) -->
+<script async src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<!-- (Firebase scripts removed — app uses Neon Postgres for sync; saves ~280KB) -->
 <style>
 :root{
   --bg:#ffffff; --bg-soft:#f9fafb; --bg-sidebar:#fbfafc; --bg-hover:#f4f3f7;
@@ -4537,25 +4538,38 @@ function syncToNeon(){
   }, 500);
 }
 
-function startNeonPolling(){
-  // Poll every 30s for updates from other clients (skip when tab hidden)
-  clearInterval(neonPollTimer);
-  neonPollTimer = setInterval(async ()=>{
-    if(document.hidden) return;
-    if(neonSyncInProgress) return;
-    try {
-      const r = await fetch(`${NEON_API}/workspace`, { cache: 'no-store' });
-      if(!r.ok) return;
-      const data = await r.json();
-      if(!data.exists) return;
+// Adaptive polling: 15s when tab is active+focused, 60s when hidden/backgrounded.
+// Reduces Neon load + battery drain on inactive tabs; faster recovery when user returns
+// (visibilitychange triggers immediate poll + restart interval).
+let _neonPollIntervalMs = 15000;
+function _neonPollOnce(){
+  if(neonSyncInProgress) return;
+  fetch(`${NEON_API}/workspace`, { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if(!data || !data.exists) return;
       if(data.updatedAt && data.updatedAt !== neonLastUpdatedAt){
-        console.log('[Neon] Remote update detected');
         neonLastUpdatedAt = data.updatedAt;
         applyRemoteWorkspace(data);
       }
-    } catch(_){}
-  }, 10000);
+    })
+    .catch(()=>{});
 }
+function startNeonPolling(){
+  clearInterval(neonPollTimer);
+  const desired = document.hidden ? 60000 : 15000;
+  _neonPollIntervalMs = desired;
+  neonPollTimer = setInterval(()=>{ if(!document.hidden) _neonPollOnce(); }, desired);
+}
+document.addEventListener('visibilitychange', ()=>{
+  if(!document.hidden){
+    // Returning to tab — poll immediately + switch back to fast cadence
+    _neonPollOnce();
+    if(_neonPollIntervalMs !== 15000) startNeonPolling();
+  } else if(_neonPollIntervalMs !== 60000){
+    startNeonPolling(); // switch to slow cadence
+  }
+});
 
 // Force push all current state to Neon (manual migration trigger)
 // ===== UPLOAD CLOUD MODAL =====
