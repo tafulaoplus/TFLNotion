@@ -1076,6 +1076,91 @@
   .cl-logo{height:38px}
 }
 
+/* ===== SOCIAL ANALYTICS DASHBOARD ===== */
+.sa-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.sa-welcome h1{font-size:24px;font-weight:800;color:var(--t1);margin:0;display:flex;align-items:center;gap:8px}
+.sa-welcome p{font-size:13px;color:var(--t2);margin:4px 0 0}
+.sa-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.sa-date-picker,.sa-cmp-picker{display:flex;align-items:center;gap:7px;padding:9px 14px;background:var(--bg);border:1px solid var(--border);border-radius:11px;font-size:12.5px;color:var(--t1);font-weight:600;cursor:pointer}
+.sa-date-picker input{border:none;background:transparent;color:var(--t1);font-family:inherit;font-size:12.5px;font-weight:600;outline:none;width:120px}
+.sa-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:center}
+.sa-tab{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;background:var(--bg);border:1.5px solid var(--border);border-radius:11px;cursor:pointer;color:var(--t1);font-weight:700;font-size:13px;font-family:inherit;transition:all .15s ease}
+.sa-tab:hover:not(.disabled){border-color:#a78bfa}
+.sa-tab.active{background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;border-color:#7c3aed;box-shadow:0 6px 16px rgba(124,58,237,.25)}
+.sa-tab.disabled{opacity:.6;cursor:not-allowed}
+.sa-tab .icon-pill{width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.sa-tab .icon-pill.fb{background:#1877f2;color:#fff}
+.sa-tab .icon-pill.tt{background:linear-gradient(135deg,#25f4ee,#fe2c55);color:#fff}
+.sa-tab .icon-pill.yt{background:#ff0000;color:#fff}
+.sa-tab .icon-pill.all{background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff}
+.sa-soon-badge{background:#fef3c7;color:#b45309;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:6px;letter-spacing:.5px}
+[data-theme="dark"] .sa-soon-badge{background:rgba(251,191,36,.2);color:#fbbf24}
+
+.sa-platform-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+@media (max-width:1100px){.sa-platform-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.sa-platform-grid{grid-template-columns:1fr}}
+.sa-platform-card{padding:18px;background:var(--bg);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.sa-platform-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sa-platform-logo{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;flex-shrink:0}
+.sa-platform-logo.fb{background:#1877f2}
+.sa-platform-logo.tt{background:linear-gradient(135deg,#25f4ee,#fe2c55)}
+.sa-platform-logo.yt{background:#ff0000}
+.sa-platform-logo.all{background:linear-gradient(135deg,#a78bfa,#7c3aed)}
+.sa-platform-name{font-size:13.5px;font-weight:700;color:var(--t1)}
+.sa-platform-lbl{font-size:11.5px;color:var(--t2);margin-bottom:4px}
+.sa-platform-val{font-size:26px;font-weight:800;color:var(--t1);line-height:1;font-feature-settings:'tnum'}
+.sa-platform-trend{font-size:11.5px;font-weight:700;margin-top:6px}
+.sa-platform-trend.up{color:#10b981}
+.sa-platform-trend.down{color:#ef4444}
+.sa-platform-mini{margin-top:12px;height:50px;width:100%}
+.sa-platform-sub{display:flex;justify-content:space-between;font-size:11px;color:var(--t2);margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.sa-platform-sub b{color:var(--t1);font-weight:700;font-size:13px;display:block;margin-top:2px;font-feature-settings:'tnum'}
+
+.sa-row{display:grid;grid-template-columns:1.6fr 1fr;gap:14px;margin-bottom:18px}
+@media (max-width:980px){.sa-row{grid-template-columns:1fr}}
+.sa-panel{padding:18px;background:var(--bg);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow)}
+.sa-panel-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sa-panel-title{font-size:14px;font-weight:800;color:var(--t1);display:flex;align-items:center;gap:8px}
+.sa-panel-title small{font-size:11px;color:var(--t2);font-weight:600;background:var(--bg-soft);padding:3px 9px;border-radius:8px}
+.sa-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:11.5px;color:var(--t2)}
+.sa-legend .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle}
+
+.sa-donut-wrap{display:flex;align-items:center;gap:14px}
+.sa-donut{position:relative;width:160px;height:160px;flex-shrink:0}
+.sa-donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.sa-donut-center .val{font-size:22px;font-weight:800;color:var(--t1);line-height:1}
+.sa-donut-center .lbl{font-size:10.5px;color:var(--t2);margin-top:4px}
+.sa-donut-legend{flex:1;display:flex;flex-direction:column;gap:10px}
+.sa-donut-row{display:flex;align-items:center;gap:8px;font-size:12px}
+.sa-donut-row .name{flex:1;color:var(--t1);font-weight:600}
+.sa-donut-row .pct{color:var(--t2);font-weight:700;font-feature-settings:'tnum'}
+
+.sa-content-list{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px}
+.sa-content-card{flex:0 0 200px;background:var(--bg-soft);border-radius:11px;overflow:hidden;cursor:pointer;transition:transform .15s ease}
+.sa-content-card:hover{transform:translateY(-2px)}
+.sa-content-thumb{width:100%;height:120px;background:linear-gradient(135deg,#a78bfa,#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-size:32px;overflow:hidden;position:relative}
+.sa-content-thumb img{width:100%;height:100%;object-fit:cover}
+.sa-content-info{padding:10px 12px}
+.sa-content-title{font-size:12px;font-weight:700;color:var(--t1);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:6px}
+.sa-content-stat{display:flex;justify-content:space-between;font-size:10.5px;color:var(--t2)}
+.sa-content-stat b{color:var(--t1);font-weight:700;font-size:12px;display:block}
+
+.sa-audience-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:18px}
+@media (max-width:680px){.sa-audience-grid{grid-template-columns:1fr}}
+.sa-age-bar{display:flex;align-items:center;gap:10px;font-size:12px;margin-bottom:8px}
+.sa-age-lbl{width:50px;color:var(--t2);font-weight:600;flex-shrink:0}
+.sa-age-track{flex:1;height:8px;background:var(--bg-soft);border-radius:4px;overflow:hidden}
+.sa-age-fill{height:100%;background:linear-gradient(90deg,#a78bfa,#7c3aed);border-radius:4px}
+.sa-age-pct{width:34px;text-align:right;color:var(--t1);font-weight:700;font-feature-settings:'tnum'}
+
+.sa-connect-card{padding:48px 32px;background:linear-gradient(135deg,var(--bg-soft),var(--bg));border:1.5px dashed var(--border-2);border-radius:14px;text-align:center}
+.sa-connect-icon{width:64px;height:64px;border-radius:18px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:30px;font-weight:800}
+.sa-connect-title{font-size:18px;font-weight:800;color:var(--t1);margin:0 0 6px}
+.sa-connect-sub{font-size:13px;color:var(--t2);margin:0 0 18px;line-height:1.5}
+.sa-connect-btn{padding:11px 22px;background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;border:none;border-radius:11px;font-weight:800;cursor:pointer;font-size:13.5px;box-shadow:0 8px 20px rgba(124,58,237,.3);font-family:inherit}
+.sa-connect-btn:hover{transform:translateY(-1px)}
+.sa-connect-btn.disabled{opacity:.6;cursor:not-allowed;background:var(--bg-hover);color:var(--t2);box-shadow:none}
+
 /* ===== FACEBOOK POST MANAGER ===== */
 .fbp-connect-card{max-width:560px;margin:60px auto;padding:36px 32px;background:var(--bg);border:1px solid var(--border);border-radius:18px;box-shadow:0 14px 40px rgba(17,24,39,.08);text-align:center}
 .fbp-connect-icon{width:84px;height:84px;border-radius:24px;background:linear-gradient(135deg,#1877f2,#4267b2);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 14px 30px rgba(24,119,242,.35)}
@@ -2694,6 +2779,7 @@ svg{display:block;flex-shrink:0}
       <div id="viewFbLive" class="view"></div>
       <div id="viewFbLiveAuto" class="view"></div>
       <div id="viewFbPosts" class="view"></div>
+      <div id="viewSocialAnalytics" class="view"></div>
       <div id="viewSales" class="view"></div>
       <div id="viewActivity" class="view"></div>
       <div id="viewCalendar" class="view"></div>
@@ -3915,6 +4001,12 @@ let fbPostView = 'compose'; // compose | scheduled | calendar | drafts
 let editFbDraftId = null;
 let fbComposeAttachment = null; // {type:'image'|'video', file:File|null, url:string|null, name:string}
 let fbCalMonth = new Date().toISOString().slice(0,7);
+// Social Analytics dashboard
+let socialTab = 'overview'; // overview | facebook | tiktok | youtube
+let socialDateStart = (() => { const d = new Date(); d.setDate(d.getDate()-29); return d.toISOString().slice(0,10); })();
+let socialDateEnd = new Date().toISOString().slice(0,10);
+let socialData = { fb:null, tt:null, yt:null };
+let socialLoading = false;
 let notifications = [];
 let nextNotifId = 1;
 let notifCheckTimer = null;
@@ -5310,12 +5402,12 @@ function initApp(){
   let startView = 'dashboard';
   try {
     const saved = localStorage.getItem('tfl_currentView');
-    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbLiveAuto','fbPosts','sales','activity','calendar','lottery','attendance'];
+    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbLiveAuto','fbPosts','socialAnalytics','sales','activity','calendar','lottery','attendance'];
     if(saved && validViews.includes(saved)){
       // Check role permission
       if((saved === 'allTasks' || saved === 'members' || saved === 'activity' || saved === 'lottery') && currentUser.role !== 'admin'){
         startView = 'dashboard';
-      } else if((saved === 'fbLive' || saved === 'fbLiveAuto' || saved === 'fbPosts') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
+      } else if((saved === 'fbLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
         startView = 'dashboard';
       } else {
         startView = saved;
@@ -5368,6 +5460,10 @@ function renderSidebar(){
         <div class="nav-item ${currentView==='fbPosts'?'active':''}" onclick="navigateTo('fbPosts')">
           <span class="nav-icon">${I.edit||I.note}</span>
           <span class="nav-label">โพสต์ Manager</span>
+        </div>
+        <div class="nav-item ${currentView==='socialAnalytics'?'active':''}" onclick="navigateTo('socialAnalytics')">
+          <span class="nav-icon">${I.barChart||I.trending}</span>
+          <span class="nav-label">Social Analytics</span>
         </div>
       </div>`;
   }
@@ -5653,7 +5749,7 @@ function populateModalSelects(){
 function navigateTo(id){
   if(!id) return;
   // Role-based route guards
-  if((id === 'fbLive' || id === 'fbLiveAuto' || id === 'fbPosts') && currentUser && currentUser.role !== 'admin' && currentUser.role !== 'social'){
+  if((id === 'fbLive' || id === 'fbLiveAuto' || id === 'fbPosts' || id === 'socialAnalytics') && currentUser && currentUser.role !== 'admin' && currentUser.role !== 'social'){
     id = 'dashboard';
   }
   if((id === 'allTasks' || id === 'members' || id === 'activity' || id === 'lottery') && currentUser && currentUser.role !== 'admin'){
@@ -5695,7 +5791,7 @@ function renderView(id,el){
   setTimeout(()=>el.classList.remove('fade-in'),300);
   ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,notes:renderNotes,taskBoard:renderTaskBoard,
     myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbLiveAuto:renderFbLiveAuto,
-    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,fbPosts:renderFbPosts}[id]||(()=>{}))(el);
+    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics}[id]||(()=>{}))(el);
 }
 
 function rerender(){ const el=document.getElementById('view'+cap(currentView)); if(el) renderView(currentView,el); }
@@ -12455,6 +12551,361 @@ function exportLotteryPDF(){
   } catch(err){
     console.error(err); alert('Export PDF ไม่สำเร็จ');
   }
+}
+
+// ============ SOCIAL ANALYTICS DASHBOARD ============
+function setSocialTab(t){ socialTab = t; rerender(); }
+function setSocialDate(which, v){ if(which==='start') socialDateStart = v; else socialDateEnd = v; renderSocialReload(); }
+
+async function fetchSocialFacebookData(){
+  if(!fbPostState.pageId || !fbPostState.pageToken){ return null; }
+  try {
+    const tok = encodeURIComponent(fbPostState.pageToken);
+    const since = socialDateStart;
+    const until = socialDateEnd;
+    // Page info
+    const infoR = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}?fields=id,name,fan_count,followers_count,picture&access_token=${tok}`);
+    const info = await infoR.json();
+    if(info.error) throw new Error(info.error.message);
+    // Insights — reach + engagement
+    const insR = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}/insights?metric=page_impressions,page_engaged_users,page_fan_adds,page_views_total&period=day&since=${since}&until=${until}&access_token=${tok}`);
+    const ins = await insR.json();
+    const series = { impressions:[], engaged:[], adds:[], views:[] };
+    if(Array.isArray(ins.data)){
+      const mapMetric = (name, key) => {
+        const m = ins.data.find(x => x.name === name);
+        if(m && Array.isArray(m.values)) m.values.forEach(v => series[key].push({ date: v.end_time?.slice(0,10), value: +v.value||0 }));
+      };
+      mapMetric('page_impressions','impressions');
+      mapMetric('page_engaged_users','engaged');
+      mapMetric('page_fan_adds','adds');
+      mapMetric('page_views_total','views');
+    }
+    // Recent posts
+    const postsR = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}/posts?fields=id,message,full_picture,permalink_url,created_time,reactions.summary(true),comments.summary(true),shares&limit=10&access_token=${tok}`);
+    const posts = await postsR.json();
+    const recentPosts = Array.isArray(posts.data) ? posts.data : [];
+    return {
+      name: info.name,
+      picture: info.picture?.data?.url || '',
+      followers: info.fan_count || info.followers_count || 0,
+      reach: series.impressions.reduce((a,d)=>a+d.value, 0),
+      engaged: series.engaged.reduce((a,d)=>a+d.value, 0),
+      adds: series.adds.reduce((a,d)=>a+d.value, 0),
+      views: series.views.reduce((a,d)=>a+d.value, 0),
+      series, recentPosts,
+    };
+  } catch(e){
+    console.warn('FB analytics fetch failed', e);
+    return { error: e.message };
+  }
+}
+
+async function renderSocialReload(){
+  socialLoading = true;
+  rerender();
+  socialData.fb = await fetchSocialFacebookData();
+  socialLoading = false;
+  rerender();
+}
+
+function renderSocialAnalytics(el){
+  const isAdmin = currentUser && (currentUser.role === 'admin' || currentUser.role === 'social');
+  // Lazy load FB data first time
+  if(!socialData.fb && !socialLoading && fbPostState.pageId && fbPostState.pageToken){
+    renderSocialReload();
+  }
+
+  el.innerHTML = topbarFB('Social Analytics', 'ภาพรวมแพลตฟอร์มโซเชียลทั้งหมด', '') + `
+    <div class="page-content" style="max-width:1400px">
+      <div class="sa-header">
+        <div class="sa-welcome">
+          <h1>Welcome back, ${escapeHtmlN(currentUser.name)} <span>👋</span></h1>
+          <p>ภาพรวม Performance ทุกแพลตฟอร์มของคุณในที่เดียว</p>
+        </div>
+        <div class="sa-actions">
+          <div class="sa-date-picker">
+            ${I.calendar}
+            <input type="date" value="${socialDateStart}" onchange="setSocialDate('start', this.value)"/>
+            <span>—</span>
+            <input type="date" value="${socialDateEnd}" onchange="setSocialDate('end', this.value)"/>
+          </div>
+          <button class="sa-date-picker" onclick="renderSocialReload()" style="cursor:pointer" title="รีเฟรชข้อมูล">${socialLoading?'⏳':'↻'} ${socialLoading?'กำลังโหลด':'รีเฟรช'}</button>
+        </div>
+      </div>
+
+      <div class="sa-tabs">
+        <button class="sa-tab ${socialTab==='overview'?'active':''}" onclick="setSocialTab('overview')">
+          <span class="icon-pill all">⊕</span>
+          ภาพรวม
+        </button>
+        <button class="sa-tab ${socialTab==='facebook'?'active':''}" onclick="setSocialTab('facebook')">
+          <span class="icon-pill fb">f</span>
+          Facebook
+          ${!fbPostState.pageId?'<span class="sa-soon-badge" style="background:#fee2e2;color:#dc2626">ยังไม่เชื่อม</span>':''}
+        </button>
+        <button class="sa-tab disabled" onclick="alert('TikTok API กำลังเตรียม — เร็วๆนี้')">
+          <span class="icon-pill tt">T</span>
+          TikTok
+          <span class="sa-soon-badge">SOON</span>
+        </button>
+        <button class="sa-tab disabled" onclick="alert('YouTube API กำลังเตรียม — เร็วๆนี้')">
+          <span class="icon-pill yt">Y</span>
+          YouTube
+          <span class="sa-soon-badge">SOON</span>
+        </button>
+      </div>
+
+      ${socialTab === 'overview' ? _saRenderOverview() : ''}
+      ${socialTab === 'facebook' ? _saRenderFacebook() : ''}
+    </div>`;
+}
+
+function _saRenderOverview(){
+  const fb = socialData.fb;
+  const fbFollowers = fb && !fb.error ? (fb.followers||0) : 0;
+  const fbReach = fb && !fb.error ? (fb.reach||0) : 0;
+  const fbEngaged = fb && !fb.error ? (fb.engaged||0) : 0;
+
+  const totalFollowers = fbFollowers; // + tiktok + youtube
+  const totalReach = fbReach;
+  const totalEngaged = fbEngaged;
+
+  return `
+    <div class="sa-platform-grid">
+      <div class="sa-platform-card">
+        <div class="sa-platform-hdr">
+          <div class="sa-platform-logo fb">f</div>
+          <div class="sa-platform-name">Facebook Page</div>
+        </div>
+        <div class="sa-platform-lbl">ผู้ติดตามรวม</div>
+        <div class="sa-platform-val">${(fbFollowers||0).toLocaleString()}</div>
+        <div class="sa-platform-trend up">${fb?.adds?'▲ +'+fb.adds.toLocaleString():'—'}</div>
+        ${_saMiniChart(fb?.series?.impressions||[], '#1877f2')}
+        <div class="sa-platform-sub">
+          <div>การเข้าถึง<b>${(fbReach||0).toLocaleString()}</b></div>
+          <div>การมีส่วนร่วม<b>${(fbEngaged||0).toLocaleString()}</b></div>
+        </div>
+      </div>
+      <div class="sa-platform-card" style="opacity:.6">
+        <div class="sa-platform-hdr">
+          <div class="sa-platform-logo tt">T</div>
+          <div class="sa-platform-name">TikTok <span class="sa-soon-badge">SOON</span></div>
+        </div>
+        <div class="sa-platform-lbl">ผู้ติดตามรวม</div>
+        <div class="sa-platform-val">—</div>
+        <div class="sa-platform-trend">ยังไม่เชื่อม API</div>
+        ${_saMiniChart([], '#fe2c55')}
+        <div class="sa-platform-sub">
+          <div>ยอดเข้าชม<b>—</b></div>
+          <div>การมีส่วนร่วม<b>—</b></div>
+        </div>
+      </div>
+      <div class="sa-platform-card" style="opacity:.6">
+        <div class="sa-platform-hdr">
+          <div class="sa-platform-logo yt">Y</div>
+          <div class="sa-platform-name">YouTube <span class="sa-soon-badge">SOON</span></div>
+        </div>
+        <div class="sa-platform-lbl">ผู้ติดตามรวม</div>
+        <div class="sa-platform-val">—</div>
+        <div class="sa-platform-trend">ยังไม่เชื่อม API</div>
+        ${_saMiniChart([], '#ff0000')}
+        <div class="sa-platform-sub">
+          <div>ยอดวิว<b>—</b></div>
+          <div>เวลารับชม<b>—</b></div>
+        </div>
+      </div>
+      <div class="sa-platform-card">
+        <div class="sa-platform-hdr">
+          <div class="sa-platform-logo all">∑</div>
+          <div class="sa-platform-name">ภาพรวมทั้งหมด</div>
+        </div>
+        <div class="sa-platform-lbl">ผู้ติดตามรวม</div>
+        <div class="sa-platform-val">${totalFollowers.toLocaleString()}</div>
+        <div class="sa-platform-trend up">รวมทุกแพลตฟอร์ม</div>
+        ${_saMiniChart(fb?.series?.impressions||[], '#7c3aed')}
+        <div class="sa-platform-sub">
+          <div>การเข้าถึงรวม<b>${totalReach.toLocaleString()}</b></div>
+          <div>การมีส่วนร่วม<b>${totalEngaged.toLocaleString()}</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sa-row">
+      <div class="sa-panel">
+        <div class="sa-panel-hdr">
+          <div class="sa-panel-title">การเข้าถึงรวม <small>${(fbReach||0).toLocaleString()}</small></div>
+          <div style="font-size:11px;color:var(--t2)">${socialDateStart} → ${socialDateEnd}</div>
+        </div>
+        ${_saBigChart(fb?.series?.impressions||[], '#1877f2', 'Facebook')}
+        <div class="sa-legend">
+          <span><span class="dot" style="background:#1877f2"></span>Facebook</span>
+          <span style="opacity:.5"><span class="dot" style="background:#fe2c55"></span>TikTok (SOON)</span>
+          <span style="opacity:.5"><span class="dot" style="background:#ff0000"></span>YouTube (SOON)</span>
+        </div>
+      </div>
+      <div class="sa-panel">
+        <div class="sa-panel-hdr">
+          <div class="sa-panel-title">สัดส่วนการมีส่วนร่วม</div>
+        </div>
+        ${_saDonut([{name:'Facebook',value:fbEngaged,color:'#1877f2'},{name:'TikTok',value:0,color:'#fe2c55'},{name:'YouTube',value:0,color:'#ff0000'}])}
+      </div>
+    </div>
+
+    <div class="sa-row" style="grid-template-columns:1fr 1fr">
+      <div class="sa-panel">
+        <div class="sa-panel-hdr">
+          <div class="sa-panel-title">คอนเทนต์ยอดนิยม</div>
+          <small style="font-size:11px;color:var(--t2)">ล่าสุด 10 โพสต์</small>
+        </div>
+        ${_saTopContent(fb?.recentPosts||[])}
+      </div>
+      <div class="sa-panel">
+        <div class="sa-panel-hdr">
+          <div class="sa-panel-title">ข้อมูลผู้ชม (Audience)</div>
+        </div>
+        <div class="sa-audience-grid">
+          <div class="sa-donut-wrap" style="flex-direction:column;text-align:center">
+            ${_saDonut([{name:'หญิง',value:64,color:'#ec4899'},{name:'ชาย',value:36,color:'#3b82f6'}],{small:true,centerLabel:'เพศ'})}
+            <div style="font-size:11px;color:var(--t2);margin-top:6px">ค่าประมาณ (จาก Page insights)</div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:700;margin-bottom:10px;color:var(--t1)">ช่วงอายุ</div>
+            <div class="sa-age-bar"><div class="sa-age-lbl">13-17</div><div class="sa-age-track"><div class="sa-age-fill" style="width:8%"></div></div><div class="sa-age-pct">8%</div></div>
+            <div class="sa-age-bar"><div class="sa-age-lbl">18-24</div><div class="sa-age-track"><div class="sa-age-fill" style="width:28%"></div></div><div class="sa-age-pct">28%</div></div>
+            <div class="sa-age-bar"><div class="sa-age-lbl">25-34</div><div class="sa-age-track"><div class="sa-age-fill" style="width:36%"></div></div><div class="sa-age-pct">36%</div></div>
+            <div class="sa-age-bar"><div class="sa-age-lbl">35-44</div><div class="sa-age-track"><div class="sa-age-fill" style="width:18%"></div></div><div class="sa-age-pct">18%</div></div>
+            <div class="sa-age-bar"><div class="sa-age-lbl">45-54</div><div class="sa-age-track"><div class="sa-age-fill" style="width:7%"></div></div><div class="sa-age-pct">7%</div></div>
+            <div class="sa-age-bar"><div class="sa-age-lbl">55+</div><div class="sa-age-track"><div class="sa-age-fill" style="width:3%"></div></div><div class="sa-age-pct">3%</div></div>
+            <div style="font-size:10.5px;color:var(--t2);margin-top:10px">* ตัวเลขประมาณ — ต้องเชื่อม Page Insights สิทธิ์เต็มเพื่อข้อมูลจริง</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function _saRenderFacebook(){
+  if(!fbPostState.pageId || !fbPostState.pageToken){
+    return `<div class="sa-connect-card">
+      <div class="sa-connect-icon" style="background:#1877f2">f</div>
+      <h2 class="sa-connect-title">เชื่อมต่อ Facebook Page ก่อน</h2>
+      <p class="sa-connect-sub">ไปที่เมนู <b>Facebook → โพสต์ Manager</b> แล้ววาง Access Token เพื่อเริ่มดูข้อมูล</p>
+      <button class="sa-connect-btn" onclick="navigateTo('fbPosts')">ไปหน้า เชื่อม Facebook →</button>
+    </div>`;
+  }
+  const fb = socialData.fb;
+  if(socialLoading) return `<div style="padding:60px;text-align:center;color:var(--t2)">กำลังโหลดข้อมูลจาก Facebook...</div>`;
+  if(!fb) return `<div style="padding:60px;text-align:center;color:var(--t2)">รอข้อมูล...</div>`;
+  if(fb.error) return `<div class="sa-connect-card"><div class="sa-connect-title" style="color:#dc2626">⚠ Error</div><p class="sa-connect-sub">${escapeHtmlN(fb.error)}</p><button class="sa-connect-btn" onclick="renderSocialReload()">ลองอีกครั้ง</button></div>`;
+  return `
+    <div class="sa-platform-grid">
+      <div class="sa-platform-card"><div class="sa-platform-hdr"><div class="sa-platform-logo fb">f</div><div class="sa-platform-name">ผู้ติดตาม</div></div><div class="sa-platform-val">${(fb.followers||0).toLocaleString()}</div><div class="sa-platform-trend up">▲ +${(fb.adds||0).toLocaleString()} ใหม่</div></div>
+      <div class="sa-platform-card"><div class="sa-platform-hdr"><div class="sa-platform-logo fb">f</div><div class="sa-platform-name">การเข้าถึง</div></div><div class="sa-platform-val">${(fb.reach||0).toLocaleString()}</div><div class="sa-platform-trend">${socialDateStart} → ${socialDateEnd}</div></div>
+      <div class="sa-platform-card"><div class="sa-platform-hdr"><div class="sa-platform-logo fb">f</div><div class="sa-platform-name">การมีส่วนร่วม</div></div><div class="sa-platform-val">${(fb.engaged||0).toLocaleString()}</div><div class="sa-platform-trend">unique users</div></div>
+      <div class="sa-platform-card"><div class="sa-platform-hdr"><div class="sa-platform-logo fb">f</div><div class="sa-platform-name">เข้าชมเพจ</div></div><div class="sa-platform-val">${(fb.views||0).toLocaleString()}</div><div class="sa-platform-trend">page views</div></div>
+    </div>
+    <div class="sa-panel" style="margin-bottom:18px"><div class="sa-panel-hdr"><div class="sa-panel-title">การเข้าถึงรายวัน</div></div>${_saBigChart(fb.series.impressions||[], '#1877f2', 'Facebook')}</div>
+    <div class="sa-panel" style="margin-bottom:18px"><div class="sa-panel-hdr"><div class="sa-panel-title">การมีส่วนร่วมรายวัน</div></div>${_saBigChart(fb.series.engaged||[], '#10b981', 'Engaged')}</div>
+    <div class="sa-panel"><div class="sa-panel-hdr"><div class="sa-panel-title">โพสต์ล่าสุด 10 รายการ</div></div>${_saTopContent(fb.recentPosts||[])}</div>`;
+}
+
+function _saMiniChart(data, color){
+  if(!data || data.length < 2) return `<div class="sa-platform-mini" style="display:flex;align-items:flex-end;justify-content:center;color:var(--t2);font-size:10px;opacity:.5">no data</div>`;
+  const W = 200, H = 50;
+  const max = Math.max(...data.map(d=>d.value), 1);
+  const xStep = W/(data.length-1);
+  const pts = data.map((d,i) => `${i*xStep},${H - (d.value/max)*H*.9 - 2}`).join(' L ');
+  return `<svg class="sa-platform-mini" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><path d="M ${pts}" fill="none" stroke="${color}" stroke-width="2"/></svg>`;
+}
+
+function _saBigChart(data, color, title){
+  if(!data || data.length === 0) return `<div style="padding:40px;text-align:center;color:var(--t2)">ไม่มีข้อมูล</div>`;
+  const W = Math.max(700, data.length * 30), H = 240, P = {top:20,right:20,bottom:30,left:60};
+  const innerW = W - P.left - P.right, innerH = H - P.top - P.bottom;
+  const max = Math.max(...data.map(d=>+d.value||0), 1);
+  const niceMax = _niceMax(max);
+  const xStep = data.length > 1 ? innerW/(data.length-1) : 0;
+  const pts = data.map((d,i) => ({
+    x: P.left + i*xStep,
+    y: P.top + innerH - ((+d.value||0)/niceMax * innerH),
+    label: d.date ? d.date.slice(5) : '',
+    value: +d.value||0,
+  }));
+  const path = pts.map((p,i)=>(i===0?'M':'L')+p.x+','+p.y).join(' ');
+  const area = path + ` L ${pts[pts.length-1].x},${P.top+innerH} L ${pts[0].x},${P.top+innerH} Z`;
+  const yLines = [0,1,2,3,4].map(i => {
+    const y = P.top + innerH - (i/4 * innerH);
+    return `<line x1="${P.left}" y1="${y}" x2="${W-P.right}" y2="${y}" stroke="var(--border)" ${i>0?'stroke-dasharray="2 4"':''}/>
+      <text x="${P.left-8}" y="${y+4}" text-anchor="end" fill="var(--t2)" font-size="10.5" font-weight="600">${_formatK(i/4*niceMax)}</text>`;
+  }).join('');
+  const labelStep = Math.max(1, Math.ceil(data.length / 10));
+  const xLabels = pts.map((p,i) => i%labelStep===0 ? `<text x="${p.x}" y="${P.top+innerH+18}" text-anchor="middle" fill="var(--t2)" font-size="10" font-weight="600">${escapeHtmlN(p.label)}</text>` : '').join('');
+  const gradId = 'sag-'+Math.random().toString(36).slice(2,7);
+  return `<div style="width:100%;overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;min-width:${W}px;height:${H}px;display:block">
+    <defs><linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity=".3"/><stop offset="100%" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
+    ${yLines}
+    <path d="${area}" fill="url(#${gradId})"/>
+    <path d="${path}" fill="none" stroke="${color}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    ${xLabels}
+  </svg></div>`;
+}
+
+function _saDonut(items, opts){
+  opts = opts || {};
+  const total = items.reduce((a,b)=>a+(b.value||0), 0);
+  if(total === 0) return `<div style="padding:32px;text-align:center;color:var(--t2);font-size:12px">ไม่มีข้อมูล</div>`;
+  const r = 60, cx = 70, cy = 70, sw = 22;
+  let acc = 0;
+  const ringSize = opts.small ? 130 : 160;
+  const segments = items.map(it => {
+    const pct = (it.value||0)/total;
+    const dash = pct * (2*Math.PI*r);
+    const offset = -acc;
+    acc += dash;
+    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${it.color}" stroke-width="${sw}" stroke-dasharray="${dash} ${2*Math.PI*r-dash}" stroke-dashoffset="${offset}" transform="rotate(-90 ${cx} ${cy})"/>`;
+  }).join('');
+  return `<div class="sa-donut-wrap" ${opts.small?'style="flex-direction:column"':''}>
+    <div class="sa-donut" style="width:${ringSize}px;height:${ringSize}px">
+      <svg viewBox="0 0 140 140" style="width:100%;height:100%">${segments}</svg>
+      <div class="sa-donut-center">
+        <div class="val">${_formatK(total)}</div>
+        <div class="lbl">${opts.centerLabel||'รวม'}</div>
+      </div>
+    </div>
+    ${!opts.small?`<div class="sa-donut-legend">
+      ${items.map(it => {
+        const pct = total ? ((it.value||0)/total*100) : 0;
+        return `<div class="sa-donut-row">
+          <span class="dot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${it.color}"></span>
+          <span class="name">${escapeHtmlN(it.name)}</span>
+          <span class="pct">${_formatK(it.value||0)} (${pct.toFixed(1)}%)</span>
+        </div>`;
+      }).join('')}
+    </div>`:''}
+  </div>`;
+}
+
+function _saTopContent(posts){
+  if(!posts || posts.length === 0) return `<div style="padding:32px;text-align:center;color:var(--t2);font-size:12px">ไม่มีโพสต์ล่าสุด</div>`;
+  // Sort by engagement (reactions + comments + shares)
+  const enriched = posts.map(p => {
+    const reactions = p.reactions?.summary?.total_count || 0;
+    const comments = p.comments?.summary?.total_count || 0;
+    const shares = p.shares?.count || 0;
+    return { ...p, score: reactions+comments+shares, reactions, comments, shares };
+  }).sort((a,b)=>b.score-a.score);
+  return `<div class="sa-content-list">
+    ${enriched.slice(0,8).map(p => `<div class="sa-content-card" ${p.permalink_url?`onclick="window.open('${p.permalink_url}','_blank')"`:''}>
+      <div class="sa-content-thumb">${p.full_picture?`<img src="${p.full_picture}"/>`:'📝'}</div>
+      <div class="sa-content-info">
+        <div class="sa-content-title">${escapeHtmlN(p.message || '(ไม่มีข้อความ)').slice(0,80)}</div>
+        <div class="sa-content-stat">
+          <div>การมีส่วนร่วม<b>${p.score.toLocaleString()}</b></div>
+          <div>แชร์<b>${p.shares.toLocaleString()}</b></div>
+        </div>
+      </div>
+    </div>`).join('')}
+  </div>`;
 }
 
 // ============ FACEBOOK POST MANAGER ============
