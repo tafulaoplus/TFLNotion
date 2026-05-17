@@ -1181,9 +1181,10 @@
 .sa-platform-sub{display:flex;justify-content:space-between;font-size:11px;color:var(--t2);margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
 .sa-platform-sub b{color:var(--t1);font-weight:700;font-size:13px;display:block;margin-top:2px;font-feature-settings:'tnum'}
 
-.sa-row{display:grid;grid-template-columns:1.6fr 1fr;gap:14px;margin-bottom:18px}
-@media (max-width:980px){.sa-row{grid-template-columns:1fr}}
-.sa-panel{padding:18px;background:var(--bg);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow)}
+.sa-row{display:grid;grid-template-columns:1.6fr 1fr;gap:14px;margin-bottom:18px;min-width:0}
+.sa-row > *{min-width:0}
+@media (max-width:1100px){.sa-row{grid-template-columns:1fr !important}}
+.sa-panel{padding:18px;background:var(--bg);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);min-width:0;overflow:hidden}
 .sa-panel-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .sa-panel-title{font-size:14px;font-weight:800;color:var(--t1);display:flex;align-items:center;gap:8px}
 .sa-panel-title small{font-size:11px;color:var(--t2);font-weight:600;background:var(--bg-soft);padding:3px 9px;border-radius:8px}
@@ -1201,7 +1202,7 @@
 .sa-donut-row .pct{color:var(--t2);font-weight:700;font-feature-settings:'tnum'}
 
 .sa-content-list{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px}
-.sa-content-card{flex:0 0 200px;background:var(--bg-soft);border-radius:11px;overflow:hidden;cursor:pointer;transition:transform .15s ease}
+.sa-content-card{flex:0 0 180px;background:var(--bg-soft);border-radius:11px;overflow:hidden;cursor:pointer;transition:transform .15s ease}
 .sa-content-card:hover{transform:translateY(-2px)}
 .sa-content-thumb{width:100%;height:120px;background:linear-gradient(135deg,#a78bfa,#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-size:32px;overflow:hidden;position:relative}
 .sa-content-thumb img{width:100%;height:100%;object-fit:cover}
@@ -1297,7 +1298,7 @@
 .fbp-btn-publish:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(24,119,242,.4)}
 .fbp-btn-publish:disabled{opacity:.5;cursor:not-allowed;transform:none}
 
-.fbp-post-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.fbp-post-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:16px}
 .fbp-post-card{padding:16px;background:var(--bg);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);position:relative}
 .fbp-post-status{display:inline-block;padding:3px 10px;border-radius:9px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
 .fbp-post-status.draft{background:#fef3c7;color:#b45309}
@@ -4074,8 +4075,15 @@ let socialDateEnd = new Date().toISOString().slice(0,10);
 let socialData = { fb:null, tt:null, yt:null };
 let socialLoading = false;
 let igAccountInfo = null; // { id, username, name, profile_picture_url, followers_count } via FB page
+let _igFetchAttempted = false;
 let ttConnected = false; // future
 let ytConnected = false; // future
+let googleDriveSettings = {
+  clientId: localStorage.getItem('tfl_drive_clientid') || '',
+  apiKey: localStorage.getItem('tfl_drive_apikey') || '',
+  configuredBy: '',
+  configuredAt: 0,
+};
 let notifications = [];
 let nextNotifId = 1;
 let notifCheckTimer = null;
@@ -4339,6 +4347,28 @@ function applyRemoteWorkspace(data){
     const maxDr = fbDrafts.reduce((m,d)=>Math.max(m, d.id||0), 0);
     nextFbDraftId = Math.max(nextFbDraftId, maxDr + 1);
   }
+  if(data.fbConnection && typeof data.fbConnection === 'object'){
+    if(data.fbConnection.pageToken){
+      fbPostState.pageId = data.fbConnection.pageId || '';
+      fbPostState.pageName = data.fbConnection.pageName || '';
+      fbPostState.pageToken = data.fbConnection.pageToken || '';
+      try {
+        localStorage.setItem('tfl_fb_page_id', fbPostState.pageId);
+        localStorage.setItem('tfl_fb_page_name', fbPostState.pageName);
+        localStorage.setItem('tfl_fb_page_token', fbPostState.pageToken);
+        // Also share with Live AI (uses different key)
+        if(typeof liveAiState !== 'undefined') liveAiState.fbToken = fbPostState.pageToken;
+        localStorage.setItem('tfl_fb_token', fbPostState.pageToken);
+      } catch(_){}
+    }
+  }
+  if(data.googleDriveSettings && typeof data.googleDriveSettings === 'object'){
+    Object.assign(googleDriveSettings, data.googleDriveSettings);
+    try {
+      if(googleDriveSettings.clientId) localStorage.setItem('tfl_drive_clientid', googleDriveSettings.clientId);
+      if(googleDriveSettings.apiKey) localStorage.setItem('tfl_drive_apikey', googleDriveSettings.apiKey);
+    } catch(_){}
+  }
   saveAllLocal();
   if(currentUser){
     try { refreshDbTables(); } catch(_){}
@@ -4391,6 +4421,12 @@ function syncToNeon(){
         attendanceSettings: attendanceSettings,
         attendanceHolidays: attendanceHolidays,
         fbDrafts: fbDrafts,
+        fbConnection: {
+          pageId: fbPostState.pageId || '',
+          pageName: fbPostState.pageName || '',
+          pageToken: fbPostState.pageToken || '',
+        },
+        googleDriveSettings: googleDriveSettings,
         _updatedBy: currentUser ? currentUser.name : 'unknown',
       };
       const r = await fetch(`${NEON_API}/workspace`, {
@@ -5476,7 +5512,9 @@ function initApp(){
       // Check role permission
       if((saved === 'allTasks' || saved === 'members' || saved === 'activity' || saved === 'lottery') && currentUser.role !== 'admin'){
         startView = 'dashboard';
-      } else if((saved === 'fbLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics' || saved === 'socialIntegrations') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
+      } else if(saved === 'socialIntegrations' && currentUser.role !== 'admin'){
+        startView = 'dashboard';
+      } else if((saved === 'fbLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
         startView = 'dashboard';
       } else {
         startView = saved;
@@ -5494,7 +5532,6 @@ function renderSidebar(){
   const items = [
     {id:'attendance', icon:I.clock, label:'ระบบลงเวลา'},
     {id:'dashboard', icon:I.home, label:'ภาพรวม'},
-    {id:'library', icon:I.book, label:'ไลบรารี'},
     {id:'files', icon:I.folder, label:'เอกสาร'},
     {id:'notes', icon:I.note, label:'Note'},
     {id:'taskBoard', icon:I.grid, label:'ติดตามงาน'},
@@ -5534,10 +5571,10 @@ function renderSidebar(){
           <span class="nav-icon">${I.barChart||I.trending}</span>
           <span class="nav-label">Social Analytics</span>
         </div>
-        <div class="nav-item ${currentView==='socialIntegrations'?'active':''}" onclick="navigateTo('socialIntegrations')">
+        ${isAdmin? `<div class="nav-item ${currentView==='socialIntegrations'?'active':''}" onclick="navigateTo('socialIntegrations')">
           <span class="nav-icon">${I.settings||I.cloud}</span>
           <span class="nav-label">เชื่อมต่อแพลตฟอร์ม</span>
-        </div>
+        </div>` : ''}
       </div>`;
   }
 
@@ -5822,7 +5859,9 @@ function populateModalSelects(){
 function navigateTo(id){
   if(!id) return;
   // Role-based route guards
-  if((id === 'fbLive' || id === 'fbLiveAuto' || id === 'fbPosts' || id === 'socialAnalytics' || id === 'socialIntegrations') && currentUser && currentUser.role !== 'admin' && currentUser.role !== 'social'){
+  if(id === 'socialIntegrations' && currentUser && currentUser.role !== 'admin'){
+    id = 'dashboard';
+  } else if((id === 'fbLive' || id === 'fbLiveAuto' || id === 'fbPosts' || id === 'socialAnalytics') && currentUser && currentUser.role !== 'admin' && currentUser.role !== 'social'){
     id = 'dashboard';
   }
   if((id === 'allTasks' || id === 'members' || id === 'activity' || id === 'lottery') && currentUser && currentUser.role !== 'admin'){
@@ -5921,6 +5960,11 @@ function topbarSimple(iconKey, label, sub, actions=''){
     list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>',
     users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
     history: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><polyline points="3 3 3 8 8 8"/><polyline points="12 7 12 12 16 14"/></svg>',
+    broadcast: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>',
+    megaphone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>',
+    sparkle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9 12 2"/></svg>',
+    chart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
+    edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
   };
   const icon = ICONS[iconKey] || ICONS.dashboard;
   return `<div class="topbar">
@@ -10105,7 +10149,7 @@ function renderFbLiveAuto(el){
   const hasFb = !!liveAiState.fbToken;
   const ready = hasFb;
 
-  el.innerHTML = topbarFB('Live AI · Auto Fetch', 'ดึงข้อมูลจาก Facebook + Audience Analytics แบบมืออาชีพ', '') + `
+  el.innerHTML = topbarSimple('sparkle', 'Live AI · Auto Fetch', 'ดึงข้อมูลจาก Facebook + Audience Analytics แบบมืออาชีพ', '') + `
   <div class="page-content" style="max-width:1200px">
     <div class="live-hero">
       <div class="live-hero-icon" style="color:var(--p600)">${I.activity}</div>
@@ -12639,8 +12683,12 @@ async function fetchIgFromFb(){
 }
 
 async function refreshIgInfo(){
-  igAccountInfo = await fetchIgFromFb();
-  rerender();
+  _igFetchAttempted = true;
+  const next = await fetchIgFromFb();
+  // Only rerender if data actually changed
+  const changed = JSON.stringify(next) !== JSON.stringify(igAccountInfo);
+  igAccountInfo = next;
+  if(changed) rerender();
 }
 
 async function _intgConnectFb(){
@@ -12676,10 +12724,38 @@ function _intgDisconnectFb(){
   rerender();
 }
 
+function _intgSaveDrive(){
+  const cid = document.getElementById('intgDriveCid')?.value.trim();
+  const ak = document.getElementById('intgDriveAk')?.value.trim();
+  if(!cid){ alert('กรุณาวาง Google OAuth Client ID'); return; }
+  googleDriveSettings.clientId = cid;
+  googleDriveSettings.apiKey = ak;
+  googleDriveSettings.configuredBy = currentUser ? currentUser.name : '';
+  googleDriveSettings.configuredAt = Date.now();
+  try {
+    localStorage.setItem('tfl_drive_clientid', cid);
+    if(ak) localStorage.setItem('tfl_drive_apikey', ak);
+  } catch(_){}
+  saveAll();
+  alert('✓ บันทึก Google Drive credentials แล้ว — sync ไปทุก browser ใน 10 วินาที');
+  rerender();
+}
+function _intgDisconnectDrive(){
+  if(!confirm('ตัดการเชื่อม Google Drive?')) return;
+  googleDriveSettings = { clientId:'', apiKey:'', configuredBy:'', configuredAt:0 };
+  try {
+    localStorage.removeItem('tfl_drive_clientid');
+    localStorage.removeItem('tfl_drive_apikey');
+  } catch(_){}
+  saveAll();
+  rerender();
+}
+
 function renderSocialIntegrations(el){
   const fbConnected = !!(fbPostState.pageId && fbPostState.pageToken);
-  // Auto-fetch IG if FB connected and IG info not loaded
-  if(fbConnected && igAccountInfo === null){
+  // Auto-fetch IG only ONCE per session when FB is connected
+  if(fbConnected && !_igFetchAttempted){
+    _igFetchAttempted = true;
     setTimeout(()=>refreshIgInfo(), 100);
   }
   const igConnected = !!(igAccountInfo && igAccountInfo.id);
@@ -12807,6 +12883,39 @@ function renderSocialIntegrations(el){
           </div>
         </div>
 
+        <!-- GOOGLE DRIVE -->
+        <div class="intg-card ${googleDriveSettings.clientId?'connected':''}" style="grid-column:span 2">
+          <div class="intg-hdr">
+            <div class="intg-logo" style="background:linear-gradient(135deg,#4285f4,#34a853,#fbbc05,#ea4335)">D</div>
+            <div style="flex:1;min-width:0">
+              <div class="intg-name">Google Drive <span class="intg-status ${googleDriveSettings.clientId?'on':'off'}">${googleDriveSettings.clientId?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
+              <p class="intg-desc">เก็บและจัดการเอกสารผ่าน Google Drive — Admin ตั้งครั้งเดียว ทุกคนเห็นเหมือนกัน</p>
+            </div>
+          </div>
+          ${googleDriveSettings.clientId ? `
+            <div class="intg-account">
+              <div class="intg-account-thumb" style="background:linear-gradient(135deg,#4285f4,#ea4335)">G</div>
+              <div class="intg-account-info">
+                <div class="intg-account-name">Configured</div>
+                <div class="intg-account-meta">Client ID: ${escapeHtmlN(googleDriveSettings.clientId.slice(0,30))}...${googleDriveSettings.configuredBy?' · โดย '+escapeHtmlN(googleDriveSettings.configuredBy):''}</div>
+              </div>
+            </div>
+            <div class="intg-actions">
+              <button class="intg-btn-primary" style="background:linear-gradient(135deg,#4285f4,#34a853)" onclick="navigateTo('files')">ไปหน้าเอกสาร →</button>
+              <button class="intg-btn-ghost danger" onclick="_intgDisconnectDrive()">ตัดการเชื่อมต่อ</button>
+            </div>
+          ` : `
+            <div class="intg-token-row">
+              <input type="text" class="intg-token-input" id="intgDriveCid" placeholder="Google OAuth Client ID (xxx.apps.googleusercontent.com)" style="min-height:auto;padding:11px 14px;font-family:inherit"/>
+              <input type="text" class="intg-token-input" id="intgDriveAk" placeholder="API Key (optional)" style="min-height:auto;padding:11px 14px;font-family:inherit"/>
+              <div class="intg-token-help">สร้างที่ <a href="https://console.cloud.google.com/apis/credentials" target="_blank">Google Cloud Console</a> → OAuth 2.0 Client IDs (Web)</div>
+            </div>
+            <div class="intg-actions">
+              <button class="intg-btn-primary" style="background:linear-gradient(135deg,#4285f4,#34a853)" onclick="_intgSaveDrive()">บันทึก & เชื่อมต่อ</button>
+            </div>
+          `}
+        </div>
+
       </div>
 
       <div style="padding:18px;background:var(--bg-soft);border-radius:12px;font-size:12.5px;color:var(--t2);line-height:1.6">
@@ -12879,7 +12988,7 @@ function renderSocialAnalytics(el){
     renderSocialReload();
   }
 
-  el.innerHTML = topbarFB('Social Analytics', 'ภาพรวมแพลตฟอร์มโซเชียลทั้งหมด', '') + `
+  el.innerHTML = topbarSimple('chart', 'Social Analytics', 'ภาพรวมแพลตฟอร์มโซเชียลทั้งหมด', '') + `
     <div class="page-content" style="max-width:1400px">
       <div class="sa-header">
         <div class="sa-welcome">
@@ -13205,6 +13314,11 @@ function fbpSelectPage(pageId){
   localStorage.setItem('tfl_fb_page_id', p.id);
   localStorage.setItem('tfl_fb_page_name', p.name);
   localStorage.setItem('tfl_fb_page_token', p.access_token);
+  // Share with Live AI
+  if(typeof liveAiState !== 'undefined') liveAiState.fbToken = p.access_token;
+  try { localStorage.setItem('tfl_fb_token', p.access_token); } catch(_){}
+  // Sync to Neon so other browsers see it
+  try { saveAll(); } catch(_){}
   rerender();
   fbpFetchPosts().then(()=>rerender());
 }
@@ -13429,19 +13543,16 @@ async function fbpCancelScheduled(postId){
 
 function renderFbPosts(el){
   const isConnected = !!(fbPostState.pageId && fbPostState.pageToken);
+  const isAdmin = currentUser && currentUser.role === 'admin';
   if(!isConnected && fbPostState.pages.length === 0){
-    // Step 1: connect with token
-    el.innerHTML = topbarFB('Post Manager', 'จัดการโพสต์ Facebook Page · สร้าง • ตั้งเวลา • Draft', '') + `
+    // Not connected — send to integrations page (admin) or show wait message
+    el.innerHTML = topbarSimple('megaphone', 'Post Manager', 'จัดการโพสต์ Facebook Page · สร้าง • ตั้งเวลา • Draft', '') + `
       <div class="page-content">
         <div class="fbp-connect-card">
           <div class="fbp-connect-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>
-          <h2>เชื่อมต่อเพจ Facebook</h2>
-          <p>วาง <b>User Access Token</b> ที่มีสิทธิ์ <code>pages_show_list</code> + <code>pages_manage_posts</code> เพื่อเริ่มใช้งาน</p>
-          <textarea class="fbp-token-input" id="fbpTokenInput" placeholder="EAAxxxxxxx..."></textarea>
-          <button class="fbp-btn-publish" onclick="fbpConnectFromToken()" style="width:100%">โหลดรายการเพจ →</button>
-          <div style="margin-top:14px;font-size:11.5px;color:var(--t2);line-height:1.5">
-            หา Token ได้จาก <a href="https://developers.facebook.com/tools/explorer" target="_blank" style="color:#1877f2">Graph API Explorer</a> หรือ App ของคุณ
-          </div>
+          <h2>ยังไม่ได้เชื่อม Facebook Page</h2>
+          <p>${isAdmin ? 'ไปที่หน้า "เชื่อมต่อแพลตฟอร์ม" เพื่อเชื่อมต่อ Facebook Page ก่อนใช้งาน' : 'รอ Admin เชื่อมต่อ Facebook Page ก่อน ทุกคนถึงจะใช้งานได้'}</p>
+          ${isAdmin ? `<button class="fbp-btn-publish" onclick="navigateTo('socialIntegrations')" style="width:100%">ไปหน้าเชื่อมต่อแพลตฟอร์ม →</button>` : ''}
         </div>
       </div>`;
     return;
@@ -13449,7 +13560,7 @@ function renderFbPosts(el){
 
   if(!isConnected && fbPostState.pages.length > 0){
     // Step 2: select page
-    el.innerHTML = topbarFB('Post Manager', 'เลือกเพจที่ต้องการเชื่อมต่อ', '') + `
+    el.innerHTML = topbarSimple('megaphone', 'Post Manager', 'เลือกเพจที่ต้องการเชื่อมต่อ', '') + `
       <div class="page-content">
         <div class="fbp-connect-card">
           <div class="fbp-connect-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
@@ -13565,7 +13676,7 @@ function renderFbPosts(el){
     body = _renderFbCalendar();
   }
 
-  el.innerHTML = topbarFB('Post Manager', 'จัดการโพสต์ Facebook Page', '') + `
+  el.innerHTML = topbarSimple('megaphone', 'Post Manager', 'จัดการโพสต์ Facebook Page', '') + `
     <div class="page-content" style="max-width:1280px">
       ${headerHtml}
       ${tabsHtml}
