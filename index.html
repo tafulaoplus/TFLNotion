@@ -690,6 +690,11 @@
 .sm-gps-btn svg{width:13px;height:13px}
 
 .sm-section-hdr{display:flex;align-items:center;gap:12px;margin:24px 0 14px}
+.sm-asg-bulk-btn{padding:5px 12px;background:var(--p100);color:var(--p700);border:1px solid var(--p200);border-radius:100px;font-size:11.5px;font-weight:700;cursor:pointer;transition:background .15s}
+.sm-asg-bulk-btn:hover{background:var(--p200)}
+.sm-asg-bulk-btn.ghost{background:transparent;color:var(--t2);border-color:var(--border-2)}
+.sm-asg-bulk-btn.ghost:hover{background:var(--bg-soft)}
+[data-theme="dark"] .sm-asg-bulk-btn{background:rgba(167,139,250,.15);border-color:rgba(167,139,250,.3);color:#c4b5fd}
 .sm-section-hdr-icon{
   width:36px;height:36px;border-radius:11px;
   background:linear-gradient(135deg,#ddd6fe,#c4b5fd);
@@ -808,11 +813,28 @@
 /* Result modal — giveaway list */
 .giveaway-list{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
 .giveaway-row{display:flex;gap:8px;align-items:center}
-.res-mbu-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg-soft);border:1px solid var(--border);border-radius:10px}
-.res-mbu-avatar{width:30px;height:30px;border-radius:50%;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-.res-mbu-name{flex:1;font-size:13.5px;font-weight:600;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.res-mbu-input{width:90px;padding:7px 10px;border:1px solid var(--border-2);border-radius:7px;font-size:13px;text-align:right;font-weight:700}
+.res-mbu-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg-soft);border:1px solid var(--border);border-radius:10px}
+.res-mbu-avatar{width:32px;height:32px;border-radius:50%;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13.5px;flex-shrink:0}
+.res-mbu-name{flex:1;min-width:0;font-size:14px;font-weight:700;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.res-mbu-role{font-size:11px;color:var(--t3);font-weight:500;margin-left:6px}
+.res-mbu-input{width:96px;padding:8px 12px;border:1.5px solid var(--border-2);border-radius:8px;font-size:14px;text-align:right;font-weight:800;color:var(--t1);background:var(--bg)}
 .res-mbu-input:focus{outline:none;border-color:var(--p400);box-shadow:0 0 0 3px rgba(167,139,250,.18)}
+[data-theme="dark"] .res-mbu-name{color:#e5e7eb}
+.giveaway-inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.giv-item-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;transition:transform .15s,box-shadow .15s}
+.giv-item-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.giv-item-photo{width:100%;aspect-ratio:1/1;border-radius:9px;overflow:hidden;background:var(--bg-soft);display:flex;align-items:center;justify-content:center}
+.giv-item-photo img{width:100%;height:100%;object-fit:cover}
+.giv-item-noph{color:var(--t3);opacity:.6}
+.giv-item-info{flex:1;min-width:0}
+.giv-item-name{font-weight:800;font-size:14px;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:3px}
+.giv-item-meta{font-size:12px;color:var(--t2)}
+.giv-item-actions{display:flex;gap:6px;justify-content:flex-end;padding-top:6px;border-top:1px solid var(--border)}
+/* Giveaway picker row (in result modal) */
+.giveaway-row select{flex:1;padding:9px 11px;border:1px solid var(--border-2);border-radius:8px;font-size:13px;background:var(--bg);color:var(--t1);font-family:inherit}
+.giveaway-row select:focus{outline:none;border-color:var(--p400);box-shadow:0 0 0 3px rgba(167,139,250,.18)}
+.giveaway-row .giv-thumb{width:32px;height:32px;border-radius:7px;object-fit:cover;flex-shrink:0;background:var(--bg-soft)}
+.giveaway-row .giv-thumb-empty{width:32px;height:32px;border-radius:7px;background:var(--bg-soft);display:flex;align-items:center;justify-content:center;color:var(--t3);flex-shrink:0;font-size:14px}
 .giveaway-row input[type="text"]{flex:1}
 .giveaway-row input[type="number"]{width:120px}
 .giveaway-row .rm-btn{background:var(--bg-hover);border:1px solid var(--border-2);border-radius:8px;width:36px;height:36px;cursor:pointer;color:#dc2626;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;line-height:1}
@@ -3416,6 +3438,10 @@ svg{display:block;flex-shrink:0}
         <div class="sm-section-hdr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
         <div class="sm-section-hdr-title">ผู้รับผิดชอบ</div>
         <div class="sm-section-hdr-sub">เลือกได้มากกว่า 1 คน</div>
+        <div style="margin-left:auto;display:flex;gap:6px">
+          <button type="button" class="sm-asg-bulk-btn" onclick="_assigneeSelectAll()">เลือกทั้งหมด</button>
+          <button type="button" class="sm-asg-bulk-btn ghost" onclick="_assigneeClearAll()">ล้าง</button>
+        </div>
       </div>
       <div class="sm-assignee-grid" id="fSalesAssigneeGrid"></div>
     </div>
@@ -3441,6 +3467,68 @@ svg{display:block;flex-shrink:0}
     </div>
     <div class="modal-bd" id="salesDetailBody"></div>
     <div class="modal-ft" id="salesDetailFooter"></div>
+  </div>
+</div>
+
+<!-- GIVEAWAY INVENTORY MODAL -->
+<div class="overlay" id="giveawayInvModal">
+  <div class="modal" style="width:760px;max-width:96vw">
+    <div class="modal-hd">
+      <div class="modal-title">🎁 คลังของแจก</div>
+      <button class="modal-close" onclick="closeModal('giveawayInvModal')">×</button>
+    </div>
+    <div class="modal-bd">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px;flex-wrap:wrap">
+        <div style="font-size:13px;color:var(--t2)">รายการของแจกที่ใช้ในการออกพื้นที่ — Admin จัดการได้ ทีมเลือกใช้ตอนบันทึกผลงาน</div>
+        <button class="btn-primary" onclick="openGiveawayEditor()">${''}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> เพิ่มของแจก</button>
+      </div>
+      <div id="giveawayInvGrid" class="giveaway-inv-grid"></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn-ghost" onclick="closeModal('giveawayInvModal')">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<!-- GIVEAWAY ITEM EDITOR -->
+<div class="overlay" id="giveawayEditorModal">
+  <div class="modal" style="width:520px;max-width:96vw">
+    <div class="modal-hd">
+      <div class="modal-title" id="giveawayEditorTitle">เพิ่มของแจก</div>
+      <button class="modal-close" onclick="closeModal('giveawayEditorModal')">×</button>
+    </div>
+    <div class="modal-bd">
+      <div class="fgrp">
+        <label class="flabel">ชื่อของแจก *</label>
+        <input class="finp" id="fGivName" placeholder="เช่น แก้วน้ำ, พวงกุญแจ, ปฏิทิน">
+      </div>
+      <div class="sales-grid-2">
+        <div>
+          <label class="flabel">หน่วย</label>
+          <input class="finp" id="fGivUnit" placeholder="ชิ้น / ใบ / กล่อง" value="ชิ้น">
+        </div>
+        <div>
+          <label class="flabel">สต๊อกคงเหลือ</label>
+          <input class="finp" type="number" id="fGivStock" placeholder="0" min="0">
+        </div>
+      </div>
+      <div class="fgrp" style="margin-top:14px">
+        <label class="flabel">รูปของแจก (อัปโหลด — แนะนำให้ภาพไม่เกิน 1MB)</label>
+        <label class="receipt-upload">
+          <input type="file" id="fGivPhotoFile" accept="image/*" onchange="handleGiveawayPhotoUpload(event)"/>
+          <div class="receipt-upload-icon">${''}<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--t1)">เลือกไฟล์รูปภาพ</div>
+            <div style="font-size:11.5px;color:var(--t2);margin-top:2px">JPG, PNG, WebP — ระบบจะย่อขนาดให้</div>
+          </div>
+        </label>
+        <div id="fGivPhotoPreview"></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn-ghost" onclick="closeModal('giveawayEditorModal')">ยกเลิก</button>
+      <button class="btn-primary" onclick="saveGiveawayItem()">บันทึก</button>
+    </div>
   </div>
 </div>
 
@@ -4071,6 +4159,8 @@ let documents = [];
 
 let currentUser = null;
 let salesEvents = [];
+let giveawayInventory = []; // {id, name, photo:base64, unit, stock, createdAt, createdBy}
+let nextGiveawayId = 1;
 let nextSalesId = 1;
 let salesFilterMonth = '';
 let salesFilterUser = 0;
@@ -4398,6 +4488,11 @@ function applyRemoteWorkspace(data){
     const maxSid = salesEvents.reduce((m,s)=>Math.max(m, s.id||0), 0);
     nextSalesId = Math.max(nextSalesId, maxSid + 1);
   }
+  if(Array.isArray(data.giveawayInventory)){
+    giveawayInventory = data.giveawayInventory;
+    const maxGid = giveawayInventory.reduce((m,g)=>Math.max(m, g.id||0), 0);
+    nextGiveawayId = Math.max(nextGiveawayId, maxGid + 1);
+  }
   if(Array.isArray(data.activityLog)){
     activityLog = data.activityLog;
     const maxAid = activityLog.reduce((m,a)=>Math.max(m, a.id||0), 0);
@@ -4500,6 +4595,7 @@ function syncToNeon(){
         nextDocId: nextDocId,
         notifications: notifications.slice(-200),
         salesEvents: _slimSalesForSync(salesEvents),
+        giveawayInventory: giveawayInventory,
         activityLog: activityLog.slice(-500),
         lotterySales: lotterySales,
         lotterySettings: lotterySettings,
@@ -4805,6 +4901,8 @@ function saveAllLocal(){
     localStorage.setItem('tfl_nextNotifId', String(nextNotifId));
     localStorage.setItem('tfl_sales', JSON.stringify(salesEvents));
     localStorage.setItem('tfl_nextSalesId', String(nextSalesId));
+    localStorage.setItem('tfl_giveawayInv', JSON.stringify(giveawayInventory));
+    localStorage.setItem('tfl_nextGiveawayId', String(nextGiveawayId));
     localStorage.setItem('tfl_activity', JSON.stringify(activityLog));
     localStorage.setItem('tfl_nextActivityId', String(nextActivityId));
     localStorage.setItem('tfl_lottery', JSON.stringify(lotterySales));
@@ -4868,6 +4966,12 @@ function loadAll(){
     if(ssi) nextSalesId = Math.max(parseInt(ssi,10)||1, 1);
     const maxSid = salesEvents.reduce((m,s)=>Math.max(m, parseInt(s.id,10)||0), 0);
     if(maxSid >= nextSalesId) nextSalesId = maxSid + 1;
+    const gi = localStorage.getItem('tfl_giveawayInv');
+    if(gi){ const arr = JSON.parse(gi); if(Array.isArray(arr)) giveawayInventory = arr; }
+    const gii = localStorage.getItem('tfl_nextGiveawayId');
+    if(gii) nextGiveawayId = Math.max(parseInt(gii,10)||1, 1);
+    const maxGid2 = giveawayInventory.reduce((m,g)=>Math.max(m, parseInt(g.id,10)||0), 0);
+    if(maxGid2 >= nextGiveawayId) nextGiveawayId = maxGid2 + 1;
     const ac = localStorage.getItem('tfl_activity');
     if(ac){ const arr = JSON.parse(ac); if(Array.isArray(arr)) activityLog = arr; }
     const aci = localStorage.getItem('tfl_nextActivityId');
@@ -16635,6 +16739,7 @@ function renderSales(el){
     </div>`;
 
   const actions = `
+    <button class="btn-ghost" onclick="openGiveawayInv()">🎁 คลังของแจก ${giveawayInventory.length?`<span style="background:var(--p100);color:var(--p700);font-size:11px;padding:1px 7px;border-radius:100px;margin-left:3px;font-weight:800">${giveawayInventory.length}</span>`:''}</button>
     <button class="btn-ghost" onclick="exportSalesReport()">${I.download} Export</button>
     <button class="btn-primary" onclick="openSalesModal()">${I.plus} เพิ่มกิจกรรม</button>`;
   const subText = `${totalEvents} กิจกรรม · ${recordedEvents} บันทึกผลแล้ว · ${pendingEvents} ยังไม่บันทึก`;
@@ -16722,6 +16827,14 @@ function _renderAssigneeGrid(){
 function toggleAssignee(uid){
   if(_salesAssigneeSel.has(uid)) _salesAssigneeSel.delete(uid);
   else _salesAssigneeSel.add(uid);
+  _renderAssigneeGrid();
+}
+function _assigneeSelectAll(){
+  USERS.forEach(u => _salesAssigneeSel.add(u.id));
+  _renderAssigneeGrid();
+}
+function _assigneeClearAll(){
+  _salesAssigneeSel.clear();
   _renderAssigneeGrid();
 }
 
@@ -16940,16 +17053,18 @@ function openSalesResultModal(eventId){
       box.innerHTML = '<div style="padding:12px 14px;background:var(--bg-soft);border-radius:9px;color:var(--t2);font-size:12.5px">ยังไม่มีผู้รับมอบหมาย — แก้กิจกรรมเพื่อเพิ่มสมาชิกก่อน</div>';
     } else {
       box.innerHTML = assignees.map(uid => {
-        const u = USERS.find(x=>x.id===uid);
+        // Robust lookup: tolerate string vs number id mismatch
+        const u = USERS.find(x => x.id === uid) || USERS.find(x => String(x.id) === String(uid));
         const name = u ? u.name : `User #${uid}`;
+        const role = u ? (u.role||'') : '';
         const color = u && u.color ? u.color : '#888';
-        const init = u && (u.init||(u.name||'?')[0]) || '?';
-        const v = mbu[uid] != null ? mbu[uid] : '';
+        const init = (u && (u.init||(u.name||'?')[0])) || '?';
+        const v = mbu[uid] != null ? mbu[uid] : (mbu[String(uid)] != null ? mbu[String(uid)] : '');
         return `<div class="res-mbu-row">
           <div class="res-mbu-avatar" style="background:${color}">${escapeHtmlN(init)}</div>
-          <div class="res-mbu-name">${escapeHtmlN(name)}</div>
+          <div class="res-mbu-name">${escapeHtmlN(name)}${role?`<span class="res-mbu-role">${escapeHtmlN(role)}</span>`:''}</div>
           <input type="number" min="0" placeholder="0" data-uid="${uid}" class="res-mbu-input" oninput="_updateMembersTotal()" value="${v===''?'':parseInt(v,10)}">
-          <span style="font-size:12px;color:var(--t3)">คน</span>
+          <span style="font-size:12px;color:var(--t3);font-weight:600">คน</span>
         </div>`;
       }).join('');
     }
@@ -16960,15 +17075,133 @@ function openSalesResultModal(eventId){
   document.getElementById('fResCostFood').value = r.costFood || '';
   document.getElementById('fResCostTravel').value = r.costTravel || '';
   document.getElementById('fResCostRent').value = r.costRent || '';
-  // Giveaways
+  // Giveaways (now linked to inventory)
   const list = document.getElementById('fResGiveawayList');
   list.innerHTML = '';
-  const items = Array.isArray(r.giveaways) && r.giveaways.length ? r.giveaways : [{name:'',qty:''}];
-  items.forEach(it => addGiveawayRow(it.name||'', it.qty||''));
+  const items = Array.isArray(r.giveaways) && r.giveaways.length ? r.giveaways : [{name:'',qty:'',itemId:null}];
+  items.forEach(it => addGiveawayRow(it.name||'', it.qty||'', it.itemId||null));
   // Receipt
   _resReceiptData = r.receiptData || null;
   _renderReceiptPreview(r.receiptName);
   document.getElementById('salesResultModal').classList.add('show');
+}
+
+// ============ GIVEAWAY INVENTORY ============
+let _editGiveawayId = null;
+let _givPhotoData = null;  // dataURL of current upload
+
+function openGiveawayInv(){
+  renderGiveawayInvGrid();
+  document.getElementById('giveawayInvModal').classList.add('show');
+}
+function renderGiveawayInvGrid(){
+  const grid = document.getElementById('giveawayInvGrid');
+  if(!grid) return;
+  if(giveawayInventory.length === 0){
+    grid.innerHTML = '<div style="grid-column:1/-1;padding:40px 20px;text-align:center;color:var(--t3)">ยังไม่มีของแจกในคลัง — กด "+ เพิ่มของแจก" เพื่อเริ่มต้น</div>';
+    return;
+  }
+  const isAdmin = currentUser && currentUser.role === 'admin';
+  grid.innerHTML = giveawayInventory.slice().sort((a,b)=>(a.name||'').localeCompare(b.name||'','th')).map(g => `
+    <div class="giv-item-card">
+      <div class="giv-item-photo">
+        ${g.photo ? `<img src="${g.photo}" alt="">` : `<div class="giv-item-noph">${''}<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>`}
+      </div>
+      <div class="giv-item-info">
+        <div class="giv-item-name">${escapeHtmlN(g.name)}</div>
+        <div class="giv-item-meta">${g.stock != null ? `<b>${g.stock}</b> ${escapeHtmlN(g.unit||'ชิ้น')} ในคลัง` : `หน่วย: ${escapeHtmlN(g.unit||'ชิ้น')}`}</div>
+      </div>
+      ${isAdmin ? `
+        <div class="giv-item-actions">
+          <button class="icon-btn" onclick="openGiveawayEditor(${g.id})" title="แก้ไข">${I.edit||I.note}</button>
+          <button class="icon-btn danger" onclick="deleteGiveawayItem(${g.id})" title="ลบ">${I.trash}</button>
+        </div>
+      ` : ''}
+    </div>
+  `).join('');
+}
+
+function openGiveawayEditor(id){
+  _editGiveawayId = id || null;
+  _givPhotoData = null;
+  const g = id ? giveawayInventory.find(x => x.id === id) : null;
+  document.getElementById('giveawayEditorTitle').textContent = id ? 'แก้ไขของแจก' : 'เพิ่มของแจก';
+  document.getElementById('fGivName').value = g?.name || '';
+  document.getElementById('fGivUnit').value = g?.unit || 'ชิ้น';
+  document.getElementById('fGivStock').value = g?.stock != null ? g.stock : '';
+  _givPhotoData = g?.photo || null;
+  _renderGivPhotoPreview();
+  document.getElementById('giveawayEditorModal').classList.add('show');
+  setTimeout(()=> document.getElementById('fGivName').focus(), 60);
+}
+
+function handleGiveawayPhotoUpload(ev){
+  const file = ev.target.files && ev.target.files[0];
+  if(!file) return;
+  if(!file.type.startsWith('image/')){ alert('ต้องเป็นไฟล์รูปภาพเท่านั้น'); return; }
+  // Downscale + compress to keep base64 small
+  const img = new Image();
+  const reader = new FileReader();
+  reader.onload = e => {
+    img.onload = () => {
+      const maxDim = 600;
+      let w = img.width, h = img.height;
+      if(w > maxDim || h > maxDim){
+        if(w >= h){ h = Math.round(h * maxDim / w); w = maxDim; }
+        else { w = Math.round(w * maxDim / h); h = maxDim; }
+      }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      _givPhotoData = c.toDataURL('image/jpeg', 0.8);
+      _renderGivPhotoPreview();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function _renderGivPhotoPreview(){
+  const pv = document.getElementById('fGivPhotoPreview');
+  if(!pv) return;
+  if(!_givPhotoData){ pv.innerHTML = ''; return; }
+  pv.innerHTML = `<div class="receipt-preview" style="margin-top:8px">
+    <img src="${_givPhotoData}" style="width:80px;height:80px;object-fit:cover;border-radius:9px"/>
+    <span style="font-size:12.5px;color:var(--t2)">รูปพร้อมใช้</span>
+    <button class="rm" onclick="_givPhotoData=null; _renderGivPhotoPreview()" type="button">×</button>
+  </div>`;
+}
+
+function saveGiveawayItem(){
+  const name = document.getElementById('fGivName').value.trim();
+  if(!name){ alert('กรุณาใส่ชื่อของแจก'); return; }
+  const unit = document.getElementById('fGivUnit').value.trim() || 'ชิ้น';
+  const stockRaw = document.getElementById('fGivStock').value;
+  const stock = stockRaw === '' ? null : (parseInt(stockRaw, 10) || 0);
+  if(_editGiveawayId){
+    const i = giveawayInventory.findIndex(x => x.id === _editGiveawayId);
+    if(i >= 0){
+      giveawayInventory[i] = { ...giveawayInventory[i], name, unit, stock, photo: _givPhotoData, updatedAt: Date.now() };
+    }
+  } else {
+    giveawayInventory.push({
+      id: nextGiveawayId++,
+      name, unit, stock,
+      photo: _givPhotoData,
+      createdAt: Date.now(),
+      createdBy: currentUser ? currentUser.id : null,
+    });
+  }
+  saveAll();
+  closeModal('giveawayEditorModal');
+  renderGiveawayInvGrid();
+}
+
+function deleteGiveawayItem(id){
+  if(!confirm('ลบของแจกชิ้นนี้ออกจากคลัง?')) return;
+  giveawayInventory = giveawayInventory.filter(x => x.id !== id);
+  saveAll();
+  renderGiveawayInvGrid();
 }
 
 function _updateMembersTotal(){
@@ -16980,16 +17213,46 @@ function _updateMembersTotal(){
   if(el) el.textContent = `รวม ${sum.toLocaleString()} คน`;
 }
 
-function addGiveawayRow(name='', qty=''){
+function addGiveawayRow(name='', qty='', itemId=null){
   const list = document.getElementById('fResGiveawayList');
   if(!list) return;
   const row = document.createElement('div');
   row.className = 'giveaway-row';
+  // Try to find matching inventory item by id or name
+  let selected = null;
+  if(itemId) selected = giveawayInventory.find(g => g.id === itemId);
+  if(!selected && name) selected = giveawayInventory.find(g => g.name === name);
+  const thumbHtml = selected && selected.photo
+    ? `<img class="giv-thumb" src="${selected.photo}" alt="">`
+    : `<div class="giv-thumb-empty">🎁</div>`;
+  const opts = giveawayInventory.length
+    ? giveawayInventory.slice().sort((a,b)=>(a.name||'').localeCompare(b.name||'','th')).map(g =>
+        `<option value="${g.id}" ${selected && selected.id===g.id?'selected':''}>${escapeHtmlN(g.name)}${g.stock!=null?` · คงเหลือ ${g.stock} ${escapeHtmlN(g.unit||'ชิ้น')}`:''}</option>`).join('')
+    : '';
   row.innerHTML = `
-    <input type="text" placeholder="ชื่อของแจก" value="${escapeHtmlN(name)}"/>
-    <input type="number" min="0" placeholder="จำนวน" value="${escapeHtmlN(qty)}"/>
+    ${thumbHtml}
+    ${giveawayInventory.length
+      ? `<select onchange="_updateGivRowThumb(this)">
+          <option value="">— เลือกของแจก —</option>
+          ${opts}
+        </select>`
+      : `<input type="text" placeholder="ชื่อของแจก (เพิ่มในคลังก่อนเพื่อใช้ดรอปดาวน์)" value="${escapeHtmlN(name)}"/>`
+    }
+    <input type="number" min="0" placeholder="จำนวน" value="${escapeHtmlN(qty)}" style="width:100px"/>
     <button type="button" class="rm-btn" onclick="this.parentNode.remove()" title="ลบ">×</button>`;
   list.appendChild(row);
+}
+
+function _updateGivRowThumb(selectEl){
+  const id = parseInt(selectEl.value, 10);
+  const g = giveawayInventory.find(x => x.id === id);
+  const thumb = selectEl.parentNode.querySelector('.giv-thumb, .giv-thumb-empty');
+  if(!thumb) return;
+  if(g && g.photo){
+    thumb.outerHTML = `<img class="giv-thumb" src="${g.photo}" alt="">`;
+  } else {
+    thumb.outerHTML = `<div class="giv-thumb-empty">🎁</div>`;
+  }
 }
 
 function handleReceiptUpload(ev){
@@ -17022,9 +17285,21 @@ function saveSalesResult(){
     const i = salesEvents.findIndex(s => s.id === resultEventId);
     if(i < 0) return;
     const giveaways = Array.from(document.querySelectorAll('#fResGiveawayList .giveaway-row')).map(row => {
-      const inps = row.querySelectorAll('input');
-      return { name: inps[0].value.trim(), qty: parseInt(inps[1].value,10) || 0 };
-    }).filter(g => g.name);
+      const sel = row.querySelector('select');
+      const qtyInp = row.querySelector('input[type="number"]');
+      const qty = qtyInp ? (parseInt(qtyInp.value,10) || 0) : 0;
+      if(sel){
+        const id = parseInt(sel.value, 10);
+        const item = giveawayInventory.find(x => x.id === id);
+        if(!item) return null;
+        return { itemId: item.id, name: item.name, unit: item.unit||'', qty };
+      } else {
+        // Fallback freetext input mode (no inventory items yet)
+        const txt = row.querySelector('input[type="text"]');
+        const name = txt ? txt.value.trim() : '';
+        return { name, qty };
+      }
+    }).filter(g => g && g.name && g.qty > 0);
     // Collect per-assignee member counts
     const membersByUser = {};
     document.querySelectorAll('#fResMembersByUser .res-mbu-input').forEach(inp => {
