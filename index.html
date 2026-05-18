@@ -689,6 +689,11 @@
 .sm-gps-btn:hover{background:#7c3aed;color:#fff;border-color:#7c3aed}
 .sm-gps-btn svg{width:13px;height:13px}
 
+.sm-color-grid{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0}
+.sm-color-dot{width:30px;height:30px;border-radius:8px;border:2px solid transparent;cursor:pointer;transition:transform .12s,box-shadow .12s;display:inline-flex;align-items:center;justify-content:center;padding:0}
+.sm-color-dot:hover{transform:scale(1.1)}
+.sm-color-dot.sel{border-color:var(--t1);box-shadow:0 0 0 2px rgba(124,58,237,.3),0 4px 10px rgba(0,0,0,.15)}
+[data-theme="dark"] .sm-color-dot.sel{border-color:#fff}
 .sm-section-hdr{display:flex;align-items:center;gap:12px;margin:24px 0 14px}
 .sm-asg-bulk-btn{padding:5px 12px;background:var(--p100);color:var(--p700);border:1px solid var(--p200);border-radius:100px;font-size:11.5px;font-weight:700;cursor:pointer;transition:background .15s}
 .sm-asg-bulk-btn:hover{background:var(--p200)}
@@ -835,6 +840,16 @@
 .giveaway-row select:focus{outline:none;border-color:var(--p400);box-shadow:0 0 0 3px rgba(167,139,250,.18)}
 .giveaway-row .giv-thumb{width:32px;height:32px;border-radius:7px;object-fit:cover;flex-shrink:0;background:var(--bg-soft)}
 .giveaway-row .giv-thumb-empty{width:32px;height:32px;border-radius:7px;background:var(--bg-soft);display:flex;align-items:center;justify-content:center;color:var(--t3);flex-shrink:0;font-size:14px}
+/* Integration: scraped social video previews */
+.intg-video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.intg-video-grid.yt{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+.intg-video-card{display:flex;flex-direction:column;gap:4px;background:var(--bg-soft);border:1px solid var(--border);border-radius:9px;overflow:hidden;text-decoration:none;color:var(--t1);transition:transform .15s,box-shadow .15s}
+.intg-video-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.intg-video-card img{width:100%;display:block;aspect-ratio:9/16;object-fit:cover}
+.intg-video-card.yt img{aspect-ratio:16/9}
+.intg-video-title{padding:6px 8px 0;font-size:12px;font-weight:700;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.intg-video-meta{padding:0 8px 8px;font-size:11px;color:var(--t3);font-weight:600}
+.intg-video-card:not(.yt) .intg-video-meta{padding:6px 8px}
 .giveaway-row input[type="text"]{flex:1}
 .giveaway-row input[type="number"]{width:120px}
 .giveaway-row .rm-btn{background:var(--bg-hover);border:1px solid var(--border-2);border-radius:8px;width:36px;height:36px;cursor:pointer;color:#dc2626;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;line-height:1}
@@ -3376,16 +3391,22 @@ svg{display:block;flex-shrink:0}
         </div>
       </div>
 
-      <div class="sm-field">
-        <div class="sm-field-lbl">ประเภทงาน</div>
-        <div class="sm-input">
-          <div class="sm-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
-          <select id="fSalesCategory">
-            <option value="field">ลงพื้นที่</option>
-            <option value="booth">ออกบูธ</option>
-            <option value="event">อีเว้นท์</option>
-            <option value="visit">เยี่ยมลูกค้า</option>
-          </select>
+      <div class="sm-row-2">
+        <div class="sm-field">
+          <div class="sm-field-lbl">ประเภทงาน</div>
+          <div class="sm-input">
+            <div class="sm-input-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+            <select id="fSalesCategory">
+              <option value="field">ลงพื้นที่</option>
+              <option value="booth">ออกบูธ</option>
+              <option value="event">อีเว้นท์</option>
+              <option value="visit">เยี่ยมลูกค้า</option>
+            </select>
+          </div>
+        </div>
+        <div class="sm-field">
+          <div class="sm-field-lbl">สีในปฏิทิน</div>
+          <div class="sm-color-grid" id="fSalesColorGrid"></div>
         </div>
       </div>
 
@@ -12967,36 +12988,40 @@ const CONNECT_GUIDES = {
   tiktok: {
     title: '🎵 วิธีเชื่อมต่อ TikTok',
     body: `
+      <p style="background:var(--p50);border:1px solid var(--p200);border-radius:9px;padding:11px 14px;margin-bottom:14px">
+        <b style="color:var(--p700)">✨ ใช้งานง่าย:</b> ไม่ต้อง Access Token! แค่วาง URL ของช่อง TikTok ระบบจะดึงข้อมูล public ให้
+      </p>
       <ol style="padding-left:22px">
-        <li>ไปที่ <a href="https://developers.tiktok.com/" target="_blank" style="color:var(--p600);font-weight:700">TikTok for Developers</a> → Login</li>
-        <li>สร้าง App ใหม่ — Type: <b>Login Kit / Display API</b> (สำหรับ Personal) หรือ <b>Marketing API</b> (Business)</li>
-        <li>เพิ่ม Redirect URL: <code style="background:var(--bg-soft);padding:2px 5px;border-radius:3px;user-select:all">${escapeHtmlN(location.origin)}/</code></li>
-        <li>เปิด Scopes: <code>user.info.basic, video.list, video.publish</code></li>
-        <li>รอการ App Review ผ่าน (1-3 วัน)</li>
-        <li>ใน OAuth Playground: ดึง <b>Access Token</b> → คัดลอกมาวางในการ์ด TikTok</li>
+        <li>เปิดแอป TikTok หรือเว็บ <a href="https://www.tiktok.com" target="_blank" style="color:var(--p600);font-weight:700">tiktok.com</a></li>
+        <li>ไปที่หน้าโปรไฟล์ของคุณ — จะเห็น URL แบบ <code style="background:var(--bg-soft);padding:2px 5px;border-radius:3px">tiktok.com/@username</code></li>
+        <li>ก็อปลิงก์ URL ของช่อง</li>
+        <li>วางในช่องของการ์ด TikTok → กด "เชื่อมต่อ"</li>
+        <li>ระบบจะดึง: ผู้ติดตาม · จำนวนวิดีโอ · ยอด Likes · วิดีโอล่าสุด + ยอด Views</li>
       </ol>
       <p style="background:#fef9c3;border:1px solid #fde68a;border-radius:9px;padding:11px 14px;font-size:12.5px;color:#92400e;margin-top:14px">
-        <b>⚠ หมายเหตุ:</b> TikTok Access Token มีอายุประมาณ 24 ชม. — ต้อง refresh เรื่อยๆ
+        <b>⚠ ข้อจำกัด:</b> ดึงเฉพาะข้อมูล public ของช่อง · ช่องต้องเป็น public (ไม่ใช่ private) · TikTok บางครั้ง rate-limit ลอง refresh ใหม่ภายหลัง
       </p>`
   },
   youtube: {
     title: '▶ วิธีเชื่อมต่อ YouTube',
     body: `
+      <p style="background:var(--p50);border:1px solid var(--p200);border-radius:9px;padding:11px 14px;margin-bottom:14px">
+        <b style="color:var(--p700)">✨ ใช้งานง่าย:</b> ไม่ต้อง OAuth, ไม่ต้อง API Key! แค่วาง URL ของช่อง YouTube
+      </p>
       <ol style="padding-left:22px">
-        <li>ไปที่ <a href="https://console.cloud.google.com/" target="_blank" style="color:var(--p600);font-weight:700">Google Cloud Console</a> → สร้าง Project</li>
-        <li>เปิดใช้ <b>YouTube Data API v3</b> ที่ APIs & Services → Library</li>
-        <li>สร้าง <b>OAuth Client ID</b> (Web application) — เพิ่ม Authorized Redirect URI ตามต้องการ</li>
-        <li>ไปที่ <a href="https://developers.google.com/oauthplayground/" target="_blank" style="color:var(--p600);font-weight:700">OAuth 2.0 Playground</a>
-          <ul style="margin-top:6px">
-            <li>คลิก ⚙ Settings → ติ๊ก "Use your own OAuth credentials" → ใส่ Client ID + Secret</li>
-            <li>เลือก Scope: <code>https://www.googleapis.com/auth/youtube.readonly</code></li>
-            <li>กด "Authorize APIs" → login Google → กด "Exchange authorization code for tokens"</li>
-            <li>คัดลอก <b>Access Token</b> มาวางในการ์ด YouTube</li>
+        <li>เปิดช่อง YouTube ของคุณบน <a href="https://www.youtube.com" target="_blank" style="color:var(--p600);font-weight:700">youtube.com</a></li>
+        <li>ก็อป URL จาก address bar — รูปแบบที่รองรับ:
+          <ul style="margin-top:4px">
+            <li><code style="background:var(--bg-soft);padding:2px 5px;border-radius:3px">youtube.com/@channelname</code></li>
+            <li><code style="background:var(--bg-soft);padding:2px 5px;border-radius:3px">youtube.com/channel/UCxxx...</code></li>
+            <li><code style="background:var(--bg-soft);padding:2px 5px;border-radius:3px">youtube.com/c/customname</code></li>
           </ul>
         </li>
+        <li>วางในช่องของการ์ด YouTube → กด "เชื่อมต่อ"</li>
+        <li>ระบบจะดึง: ชื่อช่อง · subscribers · วิดีโอล่าสุด + ยอด views · thumbnail</li>
       </ol>
-      <p style="background:var(--p50);border:1px solid var(--p200);border-radius:9px;padding:11px 14px;font-size:12.5px;color:var(--t2);margin-top:14px">
-        <b style="color:var(--p700)">💡 Tips:</b> Access Token หมดอายุใน 1 ชม. — ระบบยังไม่รองรับ auto-refresh ต้อง paste ใหม่เมื่อหมดอายุ
+      <p style="background:#fef9c3;border:1px solid #fde68a;border-radius:9px;padding:11px 14px;font-size:12.5px;color:#92400e;margin-top:14px">
+        <b>⚠ ข้อจำกัด:</b> ดึงเฉพาะข้อมูล public · ไม่ได้ข้อมูล watch time / demographics (ต้องใช้ YouTube Analytics API)
       </p>`
   },
   drive: {
@@ -13026,104 +13051,110 @@ function openConnectGuide(platform){
   document.getElementById('connectGuideModal').classList.add('show');
 }
 
-// ============ TIKTOK ============
+// ============ TIKTOK (link-only, server-side scrape) ============
 async function _intgSaveTikTok(){
-  const tok = document.getElementById('intgTtToken')?.value.trim();
-  if(!tok){ alert('กรุณาใส่ TikTok Access Token'); return; }
-  tiktokSettings.accessToken = tok;
-  tiktokSettings.connectedAt = Date.now();
-  // Fetch basic user info
+  const link = document.getElementById('intgTtLink')?.value.trim();
+  if(!link){ alert('กรุณาวาง URL ของช่อง TikTok'); return; }
+  tiktokSettings.channelUrl = link;
+  const btn = document.querySelector('button.intg-btn-primary.tt');
+  if(btn){ btn.disabled = true; btn.textContent = 'กำลังดึงข้อมูล...'; }
   try {
-    const r = await fetch('https://open.tiktokapis.com/v2/user/info/?fields=open_id,display_name,follower_count,avatar_url', {
-      headers: { Authorization: 'Bearer ' + tok }
-    });
+    const r = await fetch('/api/social/tt-fetch?url=' + encodeURIComponent(link));
     const j = await r.json();
-    if(j.data && j.data.user){
-      tiktokSettings.openId = j.data.user.open_id || '';
-      tiktokSettings.displayName = j.data.user.display_name || '';
-      tiktokSettings.followerCount = j.data.user.follower_count || 0;
-    } else if(j.error){
-      alert('TikTok API error: ' + (j.error.message||JSON.stringify(j.error)));
-    }
-  } catch(e){ console.warn('tiktok user info failed', e); }
-  ttConnected = true;
-  await saveAll();
-  rerender();
+    if(!j.ok){ alert('ดึงข้อมูล TikTok ไม่สำเร็จ: ' + (j.error||'unknown')); return; }
+    tiktokSettings.username = j.username || '';
+    tiktokSettings.displayName = j.displayName || j.username || '';
+    tiktokSettings.avatar = j.avatar || '';
+    tiktokSettings.followerCount = j.followerCount || 0;
+    tiktokSettings.videoCount = j.videoCount || 0;
+    tiktokSettings.heartCount = j.heartCount || 0;
+    tiktokSettings.videos = j.videos || [];
+    tiktokSettings.connectedAt = Date.now();
+    tiktokSettings.fetchedAt = j.fetchedAt;
+    ttConnected = true;
+    await saveAll();
+    rerender();
+  } catch(e){ alert('ผิดพลาด: ' + e.message); }
+  finally { if(btn){ btn.disabled = false; } }
 }
 async function _intgRefreshTikTok(){
-  if(!tiktokSettings.accessToken) return;
+  if(!tiktokSettings.channelUrl){ alert('ยังไม่มี URL เก็บไว้ — กรุณาเชื่อมต่อใหม่'); return; }
+  await _intgSaveTikTokFromUrl(tiktokSettings.channelUrl);
+}
+async function _intgSaveTikTokFromUrl(url){
   try {
-    const r = await fetch('https://open.tiktokapis.com/v2/user/info/?fields=open_id,display_name,follower_count', {
-      headers: { Authorization: 'Bearer ' + tiktokSettings.accessToken }
-    });
+    const r = await fetch('/api/social/tt-fetch?url=' + encodeURIComponent(url));
     const j = await r.json();
-    if(j.data && j.data.user){
-      tiktokSettings.displayName = j.data.user.display_name || tiktokSettings.displayName;
-      tiktokSettings.followerCount = j.data.user.follower_count || tiktokSettings.followerCount;
-      await saveAll();
-      rerender();
-    } else if(j.error){
-      alert('TikTok error: ' + (j.error.message||'unknown'));
-    }
-  } catch(e){ alert('ดึงข้อมูล TikTok ไม่สำเร็จ: ' + e.message); }
+    if(!j.ok){ alert('รีเฟรช TikTok ไม่สำเร็จ: ' + (j.error||'unknown')); return; }
+    Object.assign(tiktokSettings, {
+      username: j.username || tiktokSettings.username,
+      displayName: j.displayName || tiktokSettings.displayName,
+      avatar: j.avatar || tiktokSettings.avatar,
+      followerCount: j.followerCount || tiktokSettings.followerCount,
+      videoCount: j.videoCount || tiktokSettings.videoCount,
+      heartCount: j.heartCount || tiktokSettings.heartCount,
+      videos: j.videos || [],
+      fetchedAt: j.fetchedAt,
+    });
+    await saveAll();
+    rerender();
+  } catch(e){ alert('ผิดพลาด: ' + e.message); }
 }
 function _intgDisconnectTikTok(){
   if(!confirm('ตัดการเชื่อมต่อ TikTok?')) return;
-  tiktokSettings = { accessToken:'', openId:'', displayName:'', followerCount:0, connectedAt:0 };
+  tiktokSettings = { channelUrl:'', username:'', displayName:'', avatar:'', followerCount:0, videoCount:0, heartCount:0, videos:[], connectedAt:0 };
   ttConnected = false;
   saveAll();
   rerender();
 }
 
-// ============ YOUTUBE ============
+// ============ YOUTUBE (link-only, server-side scrape) ============
 async function _intgSaveYouTube(){
-  const tok = document.getElementById('intgYtToken')?.value.trim();
-  if(!tok){ alert('กรุณาใส่ YouTube Access Token'); return; }
-  youtubeSettings.accessToken = tok;
-  youtubeSettings.connectedAt = Date.now();
+  const link = document.getElementById('intgYtLink')?.value.trim();
+  if(!link){ alert('กรุณาวาง URL ของช่อง YouTube'); return; }
+  youtubeSettings.channelUrl = link;
+  const btn = document.querySelector('button.intg-btn-primary.yt');
+  if(btn){ btn.disabled = true; btn.textContent = 'กำลังดึงข้อมูล...'; }
   try {
-    const r = await fetch('https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&mine=true', {
-      headers: { Authorization: 'Bearer ' + tok }
-    });
+    const r = await fetch('/api/social/yt-fetch?url=' + encodeURIComponent(link));
     const j = await r.json();
-    if(j.items && j.items[0]){
-      const ch = j.items[0];
-      youtubeSettings.channelId = ch.id;
-      youtubeSettings.channelTitle = ch.snippet?.title || '';
-      youtubeSettings.subscriberCount = parseInt(ch.statistics?.subscriberCount||0, 10);
-      youtubeSettings.viewCount = parseInt(ch.statistics?.viewCount||0, 10);
-    } else if(j.error){
-      alert('YouTube API error: ' + j.error.message);
-    } else {
-      alert('ไม่พบ Channel — token นี้อาจไม่มีสิทธิ์ youtube.readonly');
-    }
-  } catch(e){ console.warn('yt channel info failed', e); }
-  ytConnected = true;
-  await saveAll();
-  rerender();
+    if(!j.ok){ alert('ดึงข้อมูล YouTube ไม่สำเร็จ: ' + (j.error||'unknown')); return; }
+    youtubeSettings.channelId = j.channelId || '';
+    youtubeSettings.channelTitle = j.channelTitle || '';
+    youtubeSettings.avatar = j.avatar || '';
+    youtubeSettings.subscriberText = j.subscriberText || '';
+    youtubeSettings.videoCountText = j.videoCountText || '';
+    youtubeSettings.videos = j.videos || [];
+    youtubeSettings.connectedAt = Date.now();
+    youtubeSettings.fetchedAt = j.fetchedAt;
+    ytConnected = true;
+    await saveAll();
+    rerender();
+  } catch(e){ alert('ผิดพลาด: ' + e.message); }
+  finally { if(btn){ btn.disabled = false; } }
 }
 async function _intgRefreshYouTube(){
-  if(!youtubeSettings.accessToken) return;
+  if(!youtubeSettings.channelUrl){ alert('ยังไม่มี URL เก็บไว้ — กรุณาเชื่อมต่อใหม่'); return; }
   try {
-    const r = await fetch('https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&mine=true', {
-      headers: { Authorization: 'Bearer ' + youtubeSettings.accessToken }
-    });
+    const r = await fetch('/api/social/yt-fetch?url=' + encodeURIComponent(youtubeSettings.channelUrl));
     const j = await r.json();
-    if(j.items && j.items[0]){
-      const ch = j.items[0];
-      youtubeSettings.channelTitle = ch.snippet?.title || youtubeSettings.channelTitle;
-      youtubeSettings.subscriberCount = parseInt(ch.statistics?.subscriberCount||0, 10);
-      youtubeSettings.viewCount = parseInt(ch.statistics?.viewCount||0, 10);
-      await saveAll();
-      rerender();
-    } else if(j.error){
-      alert('YouTube error: ' + j.error.message);
-    }
-  } catch(e){ alert('ดึงข้อมูล YouTube ไม่สำเร็จ: ' + e.message); }
+    if(!j.ok){ alert('รีเฟรช YouTube ไม่สำเร็จ: ' + (j.error||'unknown')); return; }
+    Object.assign(youtubeSettings, {
+      channelId: j.channelId || youtubeSettings.channelId,
+      channelTitle: j.channelTitle || youtubeSettings.channelTitle,
+      avatar: j.avatar || youtubeSettings.avatar,
+      subscriberText: j.subscriberText || youtubeSettings.subscriberText,
+      videoCountText: j.videoCountText || youtubeSettings.videoCountText,
+      videos: j.videos || [],
+      fetchedAt: j.fetchedAt,
+    });
+    await saveAll();
+    rerender();
+  } catch(e){ alert('ผิดพลาด: ' + e.message); }
 }
 function _intgDisconnectYouTube(){
   if(!confirm('ตัดการเชื่อมต่อ YouTube?')) return;
-  youtubeSettings = { accessToken:'', channelId:'', channelTitle:'', subscriberCount:0, viewCount:0, connectedAt:0 };
+  youtubeSettings = { channelUrl:'', channelId:'', channelTitle:'', avatar:'', subscriberText:'', videoCountText:'', videos:[], connectedAt:0 };
   ytConnected = false;
   saveAll();
   rerender();
@@ -13333,68 +13364,98 @@ function renderSocialIntegrations(el){
           `}
         </div>
 
-        <!-- TIKTOK -->
+        <!-- TIKTOK (link-only) -->
         <div class="intg-card ${ttConnected?'connected':''} tt">
           <div class="intg-hdr">
-            <div class="intg-logo tt">T</div>
+            <div class="intg-logo tt">${tiktokSettings.avatar?`<img src="${tiktokSettings.avatar}" style="width:100%;height:100%;border-radius:inherit;object-fit:cover">`:'T'}</div>
             <div style="flex:1;min-width:0">
               <div class="intg-name">TikTok <span class="intg-status ${ttConnected?'on':'off'}">${ttConnected?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
-              <p class="intg-desc">ดูยอด Follow / Views / Engagement (ใส่ Access Token จาก TikTok Developer Portal)</p>
+              <p class="intg-desc">วาง URL ช่อง TikTok → ดึงวิดีโอ + ยอด View อัตโนมัติ</p>
             </div>
-            <button class="intg-guide-btn" onclick="openConnectGuide('tiktok')" title="วิธีเชื่อมต่อ">${I.lightbulb} วิธีเชื่อม</button>
           </div>
           ${ttConnected ? `
             <div class="intg-account">
-              <div class="intg-account-thumb tt">T</div>
+              <div class="intg-account-thumb tt" style="overflow:hidden">${tiktokSettings.avatar?`<img src="${tiktokSettings.avatar}" style="width:100%;height:100%;object-fit:cover">`:'T'}</div>
               <div class="intg-account-info">
-                <div class="intg-account-name">${escapeHtmlN(tiktokSettings.displayName||'TikTok Account')}</div>
-                <div class="intg-account-meta">${tiktokSettings.followerCount?fmtNum(tiktokSettings.followerCount)+' followers · ':''}เชื่อมเมื่อ ${new Date(tiktokSettings.connectedAt).toLocaleDateString('th-TH')}</div>
+                <div class="intg-account-name">${escapeHtmlN(tiktokSettings.displayName||tiktokSettings.username||'TikTok')}</div>
+                <div class="intg-account-meta">@${escapeHtmlN(tiktokSettings.username||'')} · อัปเดต ${tiktokSettings.fetchedAt?new Date(tiktokSettings.fetchedAt).toLocaleString('th-TH'):'-'}</div>
               </div>
             </div>
-            <div class="intg-actions">
-              <button class="intg-btn-primary tt" onclick="_intgRefreshTikTok()">↻ ดึงข้อมูลล่าสุด</button>
+            <div class="intg-stat-row">
+              <div class="intg-stat"><div class="intg-stat-val">${fmtNum(tiktokSettings.followerCount||0)}</div><div class="intg-stat-lbl">Followers</div></div>
+              <div class="intg-stat"><div class="intg-stat-val">${fmtNum(tiktokSettings.videoCount||0)}</div><div class="intg-stat-lbl">Videos</div></div>
+              <div class="intg-stat"><div class="intg-stat-val">${fmtNum(tiktokSettings.heartCount||0)}</div><div class="intg-stat-lbl">❤ Likes</div></div>
+            </div>
+            ${Array.isArray(tiktokSettings.videos) && tiktokSettings.videos.length ? `
+              <div style="margin-top:14px">
+                <div style="font-size:12px;color:var(--t2);font-weight:700;margin-bottom:8px">📹 วิดีโอล่าสุด (${tiktokSettings.videos.length})</div>
+                <div class="intg-video-grid">
+                  ${tiktokSettings.videos.slice(0,6).map(v=>`
+                    <a href="${escapeHtmlN(v.url)}" target="_blank" rel="noopener" class="intg-video-card">
+                      ${v.thumbnail?`<img src="${v.thumbnail}" alt="">`:'<div style="aspect-ratio:9/16;background:var(--bg-soft)"></div>'}
+                      <div class="intg-video-meta">▶ ${fmtNum(v.viewCount||0)} · ❤ ${fmtNum(v.likeCount||0)}</div>
+                    </a>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+            <div class="intg-actions" style="margin-top:14px">
+              <button class="intg-btn-primary tt" onclick="_intgRefreshTikTok()">↻ ดึงข้อมูลใหม่</button>
               <button class="intg-btn-ghost danger" onclick="_intgDisconnectTikTok()">ตัดการเชื่อมต่อ</button>
             </div>
           ` : `
             <div class="intg-token-row">
-              <input type="password" class="intg-token-input" id="intgTtToken" placeholder="TikTok Access Token" style="min-height:auto;padding:11px 14px;font-family:inherit"/>
-              <div class="intg-token-help">ต้องมี Business / Display API access · Token มีอายุ 24 ชม. — กดปุ่ม "วิธีเชื่อม" เพื่อดูขั้นตอน</div>
+              <input type="text" class="intg-token-input" id="intgTtLink" placeholder="https://www.tiktok.com/@username" style="min-height:auto;padding:11px 14px;font-family:inherit"/>
+              <div class="intg-token-help">วาง URL ช่อง TikTok ของคุณ (ไม่ต้องใช้ Access Token!) · ระบบจะดึงวิดีโอล่าสุด + ยอด View ให้อัตโนมัติ</div>
             </div>
             <div class="intg-actions">
-              <button class="intg-btn-primary tt" onclick="_intgSaveTikTok()">บันทึก & เชื่อมต่อ</button>
+              <button class="intg-btn-primary tt" onclick="_intgSaveTikTok()">เชื่อมต่อ TikTok</button>
             </div>
           `}
         </div>
 
-        <!-- YOUTUBE -->
+        <!-- YOUTUBE (link-only) -->
         <div class="intg-card ${ytConnected?'connected':''} yt">
           <div class="intg-hdr">
-            <div class="intg-logo yt">▶</div>
+            <div class="intg-logo yt">${youtubeSettings.avatar?`<img src="${youtubeSettings.avatar}" style="width:100%;height:100%;border-radius:inherit;object-fit:cover">`:'▶'}</div>
             <div style="flex:1;min-width:0">
               <div class="intg-name">YouTube <span class="intg-status ${ytConnected?'on':'off'}">${ytConnected?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
-              <p class="intg-desc">Subscribers · views · watch time (ใส่ OAuth Access Token จาก Google Cloud)</p>
+              <p class="intg-desc">วาง URL ช่อง YouTube → ดึงวิดีโอ + Subscribers + views อัตโนมัติ</p>
             </div>
-            <button class="intg-guide-btn" onclick="openConnectGuide('youtube')" title="วิธีเชื่อมต่อ">${I.lightbulb} วิธีเชื่อม</button>
           </div>
           ${ytConnected ? `
             <div class="intg-account">
-              <div class="intg-account-thumb yt">▶</div>
+              <div class="intg-account-thumb yt" style="overflow:hidden">${youtubeSettings.avatar?`<img src="${youtubeSettings.avatar}" style="width:100%;height:100%;object-fit:cover">`:'▶'}</div>
               <div class="intg-account-info">
                 <div class="intg-account-name">${escapeHtmlN(youtubeSettings.channelTitle||'YouTube Channel')}</div>
-                <div class="intg-account-meta">${youtubeSettings.subscriberCount?fmtNum(youtubeSettings.subscriberCount)+' subs · ':''}${youtubeSettings.viewCount?fmtNum(youtubeSettings.viewCount)+' views · ':''}เชื่อมเมื่อ ${new Date(youtubeSettings.connectedAt).toLocaleDateString('th-TH')}</div>
+                <div class="intg-account-meta">${escapeHtmlN(youtubeSettings.subscriberText||'')} · อัปเดต ${youtubeSettings.fetchedAt?new Date(youtubeSettings.fetchedAt).toLocaleString('th-TH'):'-'}</div>
               </div>
             </div>
-            <div class="intg-actions">
-              <button class="intg-btn-primary yt" onclick="_intgRefreshYouTube()">↻ ดึงข้อมูลล่าสุด</button>
+            ${Array.isArray(youtubeSettings.videos) && youtubeSettings.videos.length ? `
+              <div style="margin-top:14px">
+                <div style="font-size:12px;color:var(--t2);font-weight:700;margin-bottom:8px">📹 วิดีโอล่าสุด (${youtubeSettings.videos.length})</div>
+                <div class="intg-video-grid yt">
+                  ${youtubeSettings.videos.slice(0,6).map(v=>`
+                    <a href="${escapeHtmlN(v.url)}" target="_blank" rel="noopener" class="intg-video-card yt">
+                      ${v.thumbnail?`<img src="${v.thumbnail}" alt="">`:''}
+                      <div class="intg-video-title" title="${escapeHtmlN(v.title)}">${escapeHtmlN(v.title)}</div>
+                      <div class="intg-video-meta">${escapeHtmlN(v.viewCount||'')}${v.publishedAt?' · '+escapeHtmlN(v.publishedAt):''}</div>
+                    </a>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+            <div class="intg-actions" style="margin-top:14px">
+              <button class="intg-btn-primary yt" onclick="_intgRefreshYouTube()">↻ ดึงข้อมูลใหม่</button>
               <button class="intg-btn-ghost danger" onclick="_intgDisconnectYouTube()">ตัดการเชื่อมต่อ</button>
             </div>
           ` : `
             <div class="intg-token-row">
-              <input type="password" class="intg-token-input" id="intgYtToken" placeholder="YouTube Data API OAuth Access Token" style="min-height:auto;padding:11px 14px;font-family:inherit"/>
-              <div class="intg-token-help">Token จาก OAuth Playground หรือ Google Cloud Console · Scope: <code>youtube.readonly</code> + <code>youtube.force-ssl</code> — กด "วิธีเชื่อม" เพื่อดูขั้นตอน</div>
+              <input type="text" class="intg-token-input" id="intgYtLink" placeholder="https://www.youtube.com/@channelname หรือ /channel/UCxxx" style="min-height:auto;padding:11px 14px;font-family:inherit"/>
+              <div class="intg-token-help">วาง URL ช่อง YouTube ของคุณ (ไม่ต้องใช้ OAuth!) · ระบบจะดึงข้อมูล public ของช่องให้</div>
             </div>
             <div class="intg-actions">
-              <button class="intg-btn-primary yt" onclick="_intgSaveYouTube()">บันทึก & เชื่อมต่อ</button>
+              <button class="intg-btn-primary yt" onclick="_intgSaveYouTube()">เชื่อมต่อ YouTube</button>
             </div>
           `}
         </div>
@@ -16087,6 +16148,7 @@ function getCalendarEvents(){
         date: dateStr,
         title: s.title || s.location || catLabel,
         cls: 'sales', meta: s,
+        color: s.color || '',
       });
     }
   });
@@ -16169,10 +16231,12 @@ function renderCalCell(dateStr, dayNum, otherMo, eventsByDate, today){
   const evts = eventsByDate[dateStr] || [];
   const maxShow = 4;
   const more = evts.length > maxShow ? evts.length - maxShow : 0;
-  const evtsHtml = evts.slice(0, maxShow).map(e => `
-    <div class="cal-evt ${e.cls}" draggable="true" data-id="${e.id}" data-type="${e.type}" data-refid="${e.refId}" onclick="onCalEvtClick('${e.id}')" title="${escapeHtmlN(e.title)}">
+  const evtsHtml = evts.slice(0, maxShow).map(e => {
+    const styleAttr = e.color ? ` style="background:${e.color};color:#fff;border-color:${e.color}"` : '';
+    return `<div class="cal-evt ${e.cls}" draggable="true" data-id="${e.id}" data-type="${e.type}" data-refid="${e.refId}" onclick="onCalEvtClick('${e.id}')" title="${escapeHtmlN(e.title)}"${styleAttr}>
       ${escapeHtmlN(e.title)}
-    </div>`).join('');
+    </div>`;
+  }).join('');
   return `<div class="cal-cell ${otherMo?'other-mo':''} ${isToday?'today':''}" data-date="${dateStr}">
     <div class="cal-daynum">${dayNum}</div>
     ${evtsHtml}
@@ -16860,8 +16924,34 @@ function openSalesModal(id){
   };
   _salesAssigneeSel = new Set(Array.isArray(e?.assignees) ? e.assignees : (e?.userId ? [e.userId] : (currentUser ? [currentUser.id] : [])));
   _renderAssigneeGrid();
+  _selectedSalesColor = e?.color || '';
+  _renderSalesColorGrid();
   document.getElementById('salesModal').classList.add('show');
 }
+
+const SALES_COLOR_OPTIONS = [
+  { key:'',         label:'อัตโนมัติ', color:'#f59e0b' },
+  { key:'#7c3aed',  label:'ม่วง',     color:'#7c3aed' },
+  { key:'#ec4899',  label:'ชมพู',     color:'#ec4899' },
+  { key:'#ef4444',  label:'แดง',      color:'#ef4444' },
+  { key:'#f59e0b',  label:'ส้ม',      color:'#f59e0b' },
+  { key:'#10b981',  label:'เขียว',    color:'#10b981' },
+  { key:'#0ea5e9',  label:'ฟ้า',      color:'#0ea5e9' },
+  { key:'#6366f1',  label:'น้ำเงิน',  color:'#6366f1' },
+  { key:'#06b6d4',  label:'ฟ้าอม',    color:'#06b6d4' },
+  { key:'#84cc16',  label:'เขียวอ่อน', color:'#84cc16' },
+];
+let _selectedSalesColor = '';
+function _renderSalesColorGrid(){
+  const g = document.getElementById('fSalesColorGrid');
+  if(!g) return;
+  g.innerHTML = SALES_COLOR_OPTIONS.map(c => `
+    <button type="button" class="sm-color-dot ${(_selectedSalesColor||'') === c.key ? 'sel' : ''}" style="background:${c.color}" onclick="_pickSalesColor('${c.key}')" title="${c.label}">
+      ${c.key===''?'<span style="font-size:14px;color:#fff;font-weight:800">A</span>':''}
+    </button>
+  `).join('');
+}
+function _pickSalesColor(k){ _selectedSalesColor = k; _renderSalesColorGrid(); }
 
 function saveSalesEvent(){
   try {
@@ -16875,6 +16965,7 @@ function saveSalesEvent(){
     const data = {
       title,
       category: document.getElementById('fSalesCategory').value || 'field',
+      color: _selectedSalesColor || '',
       startDate, endDate, date: startDate,
       location: document.getElementById('fSalesLocation').value.trim(),
       gpsLink: document.getElementById('fSalesGps').value.trim(),
