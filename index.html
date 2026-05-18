@@ -4621,6 +4621,12 @@ function _slimSalesForSync(arr){
 
 function syncToNeon(){
   if(!neonEnabled) return;
+  // Safety guard: never push an empty USERS array to Neon — it would wipe the team's accounts.
+  // If memory is empty (e.g. transient load failure), skip the push and let the next remote-pull restore us.
+  if(!Array.isArray(USERS) || USERS.length === 0){
+    console.warn('[Neon] Skipping sync: local USERS is empty (would have wiped remote)');
+    return;
+  }
   clearTimeout(neonSyncTimer);
   neonSyncTimer = setTimeout(async ()=>{
     if(neonSyncInProgress) return;
