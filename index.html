@@ -808,6 +808,11 @@
 /* Result modal — giveaway list */
 .giveaway-list{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
 .giveaway-row{display:flex;gap:8px;align-items:center}
+.res-mbu-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg-soft);border:1px solid var(--border);border-radius:10px}
+.res-mbu-avatar{width:30px;height:30px;border-radius:50%;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.res-mbu-name{flex:1;font-size:13.5px;font-weight:600;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.res-mbu-input{width:90px;padding:7px 10px;border:1px solid var(--border-2);border-radius:7px;font-size:13px;text-align:right;font-weight:700}
+.res-mbu-input:focus{outline:none;border-color:var(--p400);box-shadow:0 0 0 3px rgba(167,139,250,.18)}
 .giveaway-row input[type="text"]{flex:1}
 .giveaway-row input[type="number"]{width:120px}
 .giveaway-row .rm-btn{background:var(--bg-hover);border:1px solid var(--border-2);border-radius:8px;width:36px;height:36px;cursor:pointer;color:#dc2626;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;line-height:1}
@@ -3447,13 +3452,11 @@ svg{display:block;flex-shrink:0}
       <button class="modal-close" onclick="closeModal('salesResultModal')">×</button>
     </div>
     <div class="modal-bd">
-      <div class="sales-grid-2">
-        <div>
-          <div class="sales-field-lbl">จำนวนสมัครสมาชิก</div>
-          <input type="number" id="fResMembers" min="0" placeholder="0"/>
-        </div>
-        <div></div>
+      <div class="sales-field-lbl" style="display:flex;align-items:center;justify-content:space-between">
+        <span>จำนวนสมัครสมาชิก <span style="color:var(--t3);font-weight:500">(แยกเป็นรายคน)</span></span>
+        <span id="fResMembersTotal" style="font-size:12.5px;color:var(--p700);font-weight:800">รวม 0 คน</span>
       </div>
+      <div id="fResMembersByUser" style="display:flex;flex-direction:column;gap:8px;margin-top:8px"></div>
       <div style="margin-top:14px">
         <div class="sales-field-lbl">ปัญหาที่พบ</div>
         <textarea id="fResProblems" rows="3" placeholder="บันทึกปัญหา/อุปสรรค ที่เจอระหว่างทำงาน..."></textarea>
@@ -16508,6 +16511,59 @@ function renderSales(el){
     }
   </div>`;
 
+  // Top users by member signups — aggregate from result.membersByUser across all events
+  const userTally = new Map();  // uid -> {members, events}
+  events.forEach(e => {
+    const r = e.result;
+    if(!r) return;
+    if(r.membersByUser && typeof r.membersByUser === 'object'){
+      for(const [uid, n] of Object.entries(r.membersByUser)){
+        const id = parseInt(uid, 10);
+        const cnt = parseInt(n, 10) || 0;
+        if(!id || cnt <= 0) continue;
+        const cur = userTally.get(id) || { members:0, events:0 };
+        cur.members += cnt; cur.events++;
+        userTally.set(id, cur);
+      }
+    } else if(r.members && Array.isArray(e.assignees) && e.assignees.length === 1){
+      // Legacy: solo-assignee events get full credit
+      const id = e.assignees[0];
+      const cur = userTally.get(id) || { members:0, events:0 };
+      cur.members += +r.members; cur.events++;
+      userTally.set(id, cur);
+    }
+  });
+  const userRanks = Array.from(userTally.entries())
+    .map(([uid, v]) => ({ user: USERS.find(u=>u.id===uid), uid, members:v.members, events:v.events }))
+    .filter(x => x.user)
+    .sort((a,b) => b.members - a.members)
+    .slice(0,5);
+  const maxUserMembers = Math.max(1, ...userRanks.map(x=>x.members));
+  const userRankPanel = `<div class="sd-panel">
+    <h3 class="sd-panel-title">🏆 อันดับผู้หาลูกค้าได้เยอะที่สุด <span class="sd-tag">Top 5</span></h3>
+    ${userRanks.length===0? '<div style="color:var(--t2);font-size:13px;padding:20px 0;text-align:center">ยังไม่มีข้อมูล — เริ่มบันทึกผลงานเพื่อจัดอันดับ</div>' :
+      `<div class="member-rank">
+        ${userRanks.map((x, i) => {
+          const posCls = i===0?'gold':i===1?'silver':i===2?'bronze':'';
+          const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+          const u = x.user;
+          const init = u.init || (u.name||'?')[0];
+          return `<div class="member-rank-row" onclick="setSalesUser(${x.uid})" style="cursor:pointer" title="คลิกเพื่อ filter ดูเฉพาะคนนี้">
+            <div class="member-rank-pos ${posCls}">${i+1}</div>
+            <div class="member-rank-info" style="display:flex;align-items:center;gap:10px">
+              <div style="width:34px;height:34px;border-radius:50%;background:${u.color||'#888'};color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">${escapeHtmlN(init)}</div>
+              <div style="flex:1;min-width:0">
+                <div class="member-rank-name">${escapeHtmlN(u.name)} ${medal}</div>
+                <div class="member-rank-stats"><b style="color:#10b981">${x.members.toLocaleString()} คน</b> · ${x.events} กิจกรรม · เฉลี่ย ${(x.members/x.events).toFixed(1)} คน/งาน</div>
+              </div>
+            </div>
+            <div class="member-rank-bar"><div class="b" style="width:${x.members/maxUserMembers*100}%"></div></div>
+          </div>`;
+        }).join('')}
+      </div>`
+    }
+  </div>`;
+
   // Aggregated problems
   const allProblems = events.filter(e => e.result?.problems).map(e => ({
     text: e.result.problems,
@@ -16626,10 +16682,15 @@ function renderSales(el){
 
       <div class="sd-panels">
         ${costPanel}
-        ${rankPanel || `<div class="sd-panel">
+        ${userRankPanel}
+      </div>
+
+      <div class="sd-panels">
+        ${rankPanel}
+        <div class="sd-panel">
           <h3 class="sd-panel-title">ของแจกในเดือนนี้</h3>
           ${(()=>{ const g={}; events.forEach(e=>(e.result?.giveaways||[]).forEach(it=>{g[it.name]=(g[it.name]||0)+(+it.qty||0)})); const arr=Object.entries(g).sort((a,b)=>b[1]-a[1]); return arr.length? `<div class="problem-list">${arr.slice(0,8).map(([n,q])=>`<div class="problem-row" style="border-left-color:#f59e0b"><b>${escapeHtmlN(n)}</b> <span style="float:right;font-weight:700;color:var(--t1)">${q}</span></div>`).join('')}</div>`:'<div style="color:var(--t2);font-size:13px;padding:20px 0;text-align:center">ยังไม่มีข้อมูล</div>';})()}
-        </div>`}
+        </div>
       </div>
 
       ${problemsPanel}
@@ -16866,7 +16927,34 @@ function openSalesResultModal(eventId){
   if(!ev){ alert('ไม่พบกิจกรรม'); return; }
   const r = ev.result || {};
   document.getElementById('salesResultModalTitle').textContent = `บันทึกผลงาน: ${ev.title||ev.location||'กิจกรรม'}`;
-  document.getElementById('fResMembers').value = r.members || '';
+  // Build per-assignee member-count rows (assignees may be array of user IDs; fall back to event.userId)
+  const assignees = (Array.isArray(ev.assignees) && ev.assignees.length) ? ev.assignees : (ev.userId? [ev.userId] : []);
+  const mbu = (r && r.membersByUser && typeof r.membersByUser === 'object') ? r.membersByUser : {};
+  // Back-compat: if no per-user breakdown but legacy total exists with exactly 1 assignee, default that user to total
+  if(Object.keys(mbu).length === 0 && assignees.length === 1 && r && r.members){
+    mbu[assignees[0]] = r.members;
+  }
+  const box = document.getElementById('fResMembersByUser');
+  if(box){
+    if(assignees.length === 0){
+      box.innerHTML = '<div style="padding:12px 14px;background:var(--bg-soft);border-radius:9px;color:var(--t2);font-size:12.5px">ยังไม่มีผู้รับมอบหมาย — แก้กิจกรรมเพื่อเพิ่มสมาชิกก่อน</div>';
+    } else {
+      box.innerHTML = assignees.map(uid => {
+        const u = USERS.find(x=>x.id===uid);
+        const name = u ? u.name : `User #${uid}`;
+        const color = u && u.color ? u.color : '#888';
+        const init = u && (u.init||(u.name||'?')[0]) || '?';
+        const v = mbu[uid] != null ? mbu[uid] : '';
+        return `<div class="res-mbu-row">
+          <div class="res-mbu-avatar" style="background:${color}">${escapeHtmlN(init)}</div>
+          <div class="res-mbu-name">${escapeHtmlN(name)}</div>
+          <input type="number" min="0" placeholder="0" data-uid="${uid}" class="res-mbu-input" oninput="_updateMembersTotal()" value="${v===''?'':parseInt(v,10)}">
+          <span style="font-size:12px;color:var(--t3)">คน</span>
+        </div>`;
+      }).join('');
+    }
+  }
+  _updateMembersTotal();
   document.getElementById('fResProblems').value = r.problems || '';
   document.getElementById('fResCostFuel').value = r.costFuel || '';
   document.getElementById('fResCostFood').value = r.costFood || '';
@@ -16881,6 +16969,15 @@ function openSalesResultModal(eventId){
   _resReceiptData = r.receiptData || null;
   _renderReceiptPreview(r.receiptName);
   document.getElementById('salesResultModal').classList.add('show');
+}
+
+function _updateMembersTotal(){
+  let sum = 0;
+  document.querySelectorAll('#fResMembersByUser .res-mbu-input').forEach(inp => {
+    sum += parseInt(inp.value, 10) || 0;
+  });
+  const el = document.getElementById('fResMembersTotal');
+  if(el) el.textContent = `รวม ${sum.toLocaleString()} คน`;
 }
 
 function addGiveawayRow(name='', qty=''){
@@ -16928,8 +17025,17 @@ function saveSalesResult(){
       const inps = row.querySelectorAll('input');
       return { name: inps[0].value.trim(), qty: parseInt(inps[1].value,10) || 0 };
     }).filter(g => g.name);
+    // Collect per-assignee member counts
+    const membersByUser = {};
+    document.querySelectorAll('#fResMembersByUser .res-mbu-input').forEach(inp => {
+      const uid = parseInt(inp.dataset.uid, 10);
+      const n = parseInt(inp.value, 10) || 0;
+      if(uid && n > 0) membersByUser[uid] = n;
+    });
+    const membersTotal = Object.values(membersByUser).reduce((a,n)=>a+n, 0);
     const result = {
-      members: parseInt(document.getElementById('fResMembers').value,10) || 0,
+      members: membersTotal,
+      membersByUser,
       problems: document.getElementById('fResProblems').value.trim(),
       giveaways,
       costFuel: parseFloat(document.getElementById('fResCostFuel').value) || 0,
