@@ -850,6 +850,28 @@
 .intg-video-title{padding:6px 8px 0;font-size:12px;font-weight:700;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .intg-video-meta{padding:0 8px 8px;font-size:11px;color:var(--t3);font-weight:600}
 .intg-video-card:not(.yt) .intg-video-meta{padding:6px 8px}
+/* Social Analytics video grids */
+.sa-vid-grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+.sa-vid-grid.yt{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.sa-vid-card{position:relative;display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:11px;overflow:hidden;text-decoration:none;color:var(--t1);transition:transform .15s,box-shadow .15s}
+.sa-vid-card:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.1)}
+.sa-vid-card img{width:100%;display:block;aspect-ratio:9/16;object-fit:cover}
+.sa-vid-card.yt img{aspect-ratio:16/9}
+.sa-vid-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,.85),transparent);color:#fff;padding:14px 10px 8px;font-size:11.5px;font-weight:700;line-height:1.45}
+.sa-vid-yt-info{padding:8px 10px}
+.sa-vid-yt-title{font-size:12.5px;font-weight:700;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:4px}
+.sa-vid-yt-meta{font-size:11px;color:var(--t3);font-weight:600}
+.sa-vid-top{display:flex;flex-direction:column;gap:10px;padding-top:10px}
+.sa-vid-top-row{display:flex;align-items:center;gap:12px;padding:10px;background:var(--bg-soft);border:1px solid var(--border);border-radius:11px;text-decoration:none;color:var(--t1);transition:transform .15s}
+.sa-vid-top-row:hover{transform:translateX(2px)}
+.sa-vid-rank{width:34px;height:34px;border-radius:9px;background:var(--p100);color:var(--p700);font-weight:900;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sa-vid-rank.gold{background:#fef3c7;color:#b45309}
+.sa-vid-rank.silver{background:#e5e7eb;color:#4b5563}
+.sa-vid-rank.bronze{background:#fed7aa;color:#9a3412}
+.sa-vid-top-thumb{width:56px;height:74px;object-fit:cover;border-radius:7px;flex-shrink:0}
+.sa-vid-top-info{flex:1;min-width:0}
+.sa-vid-top-title{font-weight:700;font-size:13px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:4px}
+.sa-vid-top-stats{font-size:11.5px;color:var(--t2);font-weight:600}
 .giveaway-row input[type="text"]{flex:1}
 .giveaway-row input[type="number"]{width:120px}
 .giveaway-row .rm-btn{background:var(--bg-hover);border:1px solid var(--border-2);border-radius:8px;width:36px;height:36px;cursor:pointer;color:#dc2626;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;line-height:1}
@@ -13626,21 +13648,154 @@ function renderSocialAnalytics(el){
           Facebook
           ${!fbPostState.pageId?'<span class="sa-soon-badge" style="background:#fee2e2;color:#dc2626">ยังไม่เชื่อม</span>':''}
         </button>
-        <button class="sa-tab disabled" onclick="alert('TikTok API กำลังเตรียม — เร็วๆนี้')">
+        <button class="sa-tab ${socialTab==='tiktok'?'active':''}" onclick="setSocialTab('tiktok')">
           <span class="icon-pill tt">T</span>
           TikTok
-          <span class="sa-soon-badge">SOON</span>
+          ${!ttConnected?'<span class="sa-soon-badge" style="background:#fee2e2;color:#dc2626">ยังไม่เชื่อม</span>':''}
         </button>
-        <button class="sa-tab disabled" onclick="alert('YouTube API กำลังเตรียม — เร็วๆนี้')">
+        <button class="sa-tab ${socialTab==='youtube'?'active':''}" onclick="setSocialTab('youtube')">
           <span class="icon-pill yt">Y</span>
           YouTube
-          <span class="sa-soon-badge">SOON</span>
+          ${!ytConnected?'<span class="sa-soon-badge" style="background:#fee2e2;color:#dc2626">ยังไม่เชื่อม</span>':''}
         </button>
       </div>
 
       ${socialTab === 'overview' ? _saRenderOverview() : ''}
       ${socialTab === 'facebook' ? _saRenderFacebook() : ''}
+      ${socialTab === 'tiktok' ? _saRenderTikTok() : ''}
+      ${socialTab === 'youtube' ? _saRenderYouTube() : ''}
     </div>`;
+}
+
+// Parse loose "subscriber count" string (e.g. "4.97 แสน", "1.2M", "12K") to a number
+function _saParseLooseNumber(s){
+  if(typeof s !== 'string') return 0;
+  const txt = s.replace(/,/g,'').trim();
+  // Pure number
+  const pure = txt.match(/^\d+(\.\d+)?$/);
+  if(pure) return Math.round(parseFloat(txt));
+  // Thai multipliers
+  const thMul = { 'แสน':100000, 'ล้าน':1000000, 'พัน':1000, 'หมื่น':10000, 'ร้อย':100 };
+  for(const k of Object.keys(thMul)){
+    const m = txt.match(new RegExp('([\\d.,]+)\\s*'+k));
+    if(m) return Math.round(parseFloat(m[1])*thMul[k]);
+  }
+  // English multipliers
+  const m = txt.match(/([\d.,]+)\s*([KkMmBb])/);
+  if(m){
+    const mul = m[2].toLowerCase()==='k'?1000:m[2].toLowerCase()==='m'?1000000:1000000000;
+    return Math.round(parseFloat(m[1])*mul);
+  }
+  // Fallback: extract leading digits
+  const n = parseInt(txt.replace(/[^\d]/g,''),10);
+  return isFinite(n)?n:0;
+}
+
+function _saRenderTikTok(){
+  if(!ttConnected){
+    return `<div class="sa-panel" style="text-align:center;padding:60px 20px">
+      <div style="font-size:46px;margin-bottom:10px">🎵</div>
+      <div style="font-size:18px;font-weight:800;color:var(--t1);margin-bottom:6px">ยังไม่เชื่อม TikTok</div>
+      <div style="color:var(--t2);margin-bottom:18px">ไปที่ "เชื่อมต่อแพลตฟอร์ม" → วาง URL ช่อง TikTok</div>
+      <button class="btn-primary" onclick="navigateTo('socialIntegrations')">ไปเชื่อม TikTok →</button>
+    </div>`;
+  }
+  const t = tiktokSettings;
+  const top = [...(t.videos||[])].sort((a,b)=>(b.viewCount||0)-(a.viewCount||0)).slice(0,3);
+  return `
+    <div class="sa-row">
+      <div class="sa-panel">
+        <div class="sa-panel-hdr" style="display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--border)">
+          ${t.avatar?`<img src="${escapeHtmlN(t.avatar)}" style="width:56px;height:56px;border-radius:50%;object-fit:cover">`:''}
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:800;font-size:16px">${escapeHtmlN(t.displayName||t.username)}</div>
+            <div style="font-size:12px;color:var(--t2)">@${escapeHtmlN(t.username||'')} · อัปเดตเมื่อ ${t.fetchedAt?new Date(t.fetchedAt).toLocaleString('th-TH'):'-'}</div>
+          </div>
+          <button class="btn-ghost" onclick="_intgRefreshTikTok()">↻</button>
+        </div>
+        <div class="sa-platform-grid" style="margin-top:14px">
+          <div class="sa-platform-card"><div class="sa-platform-lbl">Followers</div><div class="sa-platform-val">${(t.followerCount||0).toLocaleString()}</div></div>
+          <div class="sa-platform-card"><div class="sa-platform-lbl">Videos</div><div class="sa-platform-val">${(t.videoCount||0).toLocaleString()}</div></div>
+          <div class="sa-platform-card"><div class="sa-platform-lbl">❤ Likes</div><div class="sa-platform-val">${(t.heartCount||0).toLocaleString()}</div></div>
+          <div class="sa-platform-card"><div class="sa-platform-lbl">Following</div><div class="sa-platform-val">${(t.followingCount||0).toLocaleString()}</div></div>
+        </div>
+      </div>
+    </div>
+
+    ${Array.isArray(t.videos) && t.videos.length ? `
+      <div class="sa-panel" style="margin-top:18px">
+        <div class="sa-panel-hdr"><div class="sa-panel-title">🏆 Top วิดีโอตามยอด Views</div></div>
+        <div class="sa-vid-top">
+          ${top.map((v,i)=>`
+            <a href="${escapeHtmlN(v.url)}" target="_blank" rel="noopener" class="sa-vid-top-row">
+              <div class="sa-vid-rank ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i+1}</div>
+              ${v.thumbnail?`<img src="${escapeHtmlN(v.thumbnail)}" class="sa-vid-top-thumb">`:''}
+              <div class="sa-vid-top-info">
+                <div class="sa-vid-top-title">${escapeHtmlN(v.title||'(ไม่มีคำบรรยาย)')}</div>
+                <div class="sa-vid-top-stats">▶ ${fmtNum(v.viewCount||0)} views · ❤ ${fmtNum(v.likeCount||0)} · 💬 ${fmtNum(v.commentCount||0)} · ↗ ${fmtNum(v.shareCount||0)}</div>
+              </div>
+            </a>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="sa-panel" style="margin-top:18px">
+        <div class="sa-panel-hdr"><div class="sa-panel-title">📹 วิดีโอทั้งหมด (${t.videos.length})</div></div>
+        <div class="sa-vid-grid tt">
+          ${t.videos.map(v=>`
+            <a href="${escapeHtmlN(v.url)}" target="_blank" rel="noopener" class="sa-vid-card">
+              ${v.thumbnail?`<img src="${escapeHtmlN(v.thumbnail)}" alt="">`:''}
+              <div class="sa-vid-overlay">▶ ${fmtNum(v.viewCount||0)}<br>❤ ${fmtNum(v.likeCount||0)}</div>
+            </a>
+          `).join('')}
+        </div>
+      </div>
+    ` : '<div class="sa-panel" style="margin-top:18px;text-align:center;color:var(--t3);padding:30px">ยังไม่พบวิดีโอ — ลองรีเฟรช</div>'}
+  `;
+}
+
+function _saRenderYouTube(){
+  if(!ytConnected){
+    return `<div class="sa-panel" style="text-align:center;padding:60px 20px">
+      <div style="font-size:46px;margin-bottom:10px">▶</div>
+      <div style="font-size:18px;font-weight:800;color:var(--t1);margin-bottom:6px">ยังไม่เชื่อม YouTube</div>
+      <div style="color:var(--t2);margin-bottom:18px">ไปที่ "เชื่อมต่อแพลตฟอร์ม" → วาง URL ช่อง YouTube</div>
+      <button class="btn-primary" onclick="navigateTo('socialIntegrations')">ไปเชื่อม YouTube →</button>
+    </div>`;
+  }
+  const y = youtubeSettings;
+  return `
+    <div class="sa-row">
+      <div class="sa-panel">
+        <div class="sa-panel-hdr" style="display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--border)">
+          ${y.avatar?`<img src="${escapeHtmlN(y.avatar)}" style="width:56px;height:56px;border-radius:50%;object-fit:cover">`:''}
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:800;font-size:16px">${escapeHtmlN(y.channelTitle||'YouTube Channel')}</div>
+            <div style="font-size:12px;color:var(--t2)">${escapeHtmlN(y.subscriberText||'')} · ${escapeHtmlN(y.videoCountText||'')} · อัปเดตเมื่อ ${y.fetchedAt?new Date(y.fetchedAt).toLocaleString('th-TH'):'-'}</div>
+          </div>
+          <a href="${escapeHtmlN(y.channelUrl||('https://www.youtube.com/channel/'+y.channelId))}" target="_blank" class="btn-ghost">เปิดช่อง</a>
+          <button class="btn-ghost" onclick="_intgRefreshYouTube()">↻</button>
+        </div>
+      </div>
+    </div>
+
+    ${Array.isArray(y.videos) && y.videos.length ? `
+      <div class="sa-panel" style="margin-top:18px">
+        <div class="sa-panel-hdr"><div class="sa-panel-title">📹 วิดีโอล่าสุด (${y.videos.length})</div></div>
+        <div class="sa-vid-grid yt">
+          ${y.videos.map(v=>`
+            <a href="${escapeHtmlN(v.url)}" target="_blank" rel="noopener" class="sa-vid-card yt">
+              ${v.thumbnail?`<img src="${escapeHtmlN(v.thumbnail)}" alt="">`:''}
+              <div class="sa-vid-yt-info">
+                <div class="sa-vid-yt-title">${escapeHtmlN(v.title)}</div>
+                <div class="sa-vid-yt-meta">${escapeHtmlN(v.viewCount||'')}${v.publishedAt?' · '+escapeHtmlN(v.publishedAt):''}${v.duration?' · '+escapeHtmlN(v.duration):''}</div>
+              </div>
+            </a>
+          `).join('')}
+        </div>
+      </div>
+    ` : '<div class="sa-panel" style="margin-top:18px;text-align:center;color:var(--t3);padding:30px">ยังไม่พบวิดีโอ — ลองรีเฟรช</div>'}
+  `;
 }
 
 function _saRenderOverview(){
@@ -13649,9 +13804,21 @@ function _saRenderOverview(){
   const fbReach = fb && !fb.error ? (fb.reach||0) : 0;
   const fbEngaged = fb && !fb.error ? (fb.engaged||0) : 0;
 
-  const totalFollowers = fbFollowers; // + tiktok + youtube
-  const totalReach = fbReach;
-  const totalEngaged = fbEngaged;
+  // TikTok totals (from scraped data)
+  const ttFollowers = ttConnected ? (tiktokSettings.followerCount||0) : 0;
+  const ttHearts = ttConnected ? (tiktokSettings.heartCount||0) : 0;
+  const ttVideos = ttConnected ? (tiktokSettings.videos||[]) : [];
+  const ttViewSum = ttVideos.reduce((s,v)=>s+(v.viewCount||0), 0);
+  const ttLikeSum = ttVideos.reduce((s,v)=>s+(v.likeCount||0), 0);
+
+  // YouTube totals (subscriber text → loose number; view sum from recent videos isn't great; use subscriber count)
+  const ytSubs = ytConnected ? _saParseLooseNumber(youtubeSettings.subscriberText||'') : 0;
+  const ytVideos = ytConnected ? (youtubeSettings.videos||[]) : [];
+  const ytViewSum = ytVideos.reduce((s,v)=>s+_saParseLooseNumber(v.viewCount||''), 0);
+
+  const totalFollowers = fbFollowers + ttFollowers + ytSubs;
+  const totalReach = fbReach + ttViewSum + ytViewSum;
+  const totalEngaged = fbEngaged + ttLikeSum;
 
   return `
     <div class="sa-platform-grid">
@@ -13669,32 +13836,32 @@ function _saRenderOverview(){
           <div>การมีส่วนร่วม<b>${(fbEngaged||0).toLocaleString()}</b></div>
         </div>
       </div>
-      <div class="sa-platform-card" style="opacity:.6">
+      <div class="sa-platform-card${!ttConnected?' soft':''}" style="${!ttConnected?'opacity:.6':''}">
         <div class="sa-platform-hdr">
           <div class="sa-platform-logo tt">T</div>
-          <div class="sa-platform-name">TikTok <span class="sa-soon-badge">SOON</span></div>
+          <div class="sa-platform-name">TikTok${!ttConnected?' <span class="sa-soon-badge" style="background:#fee2e2;color:#dc2626">ยังไม่เชื่อม</span>':''}</div>
         </div>
-        <div class="sa-platform-lbl">ผู้ติดตามรวม</div>
-        <div class="sa-platform-val">—</div>
-        <div class="sa-platform-trend">ยังไม่เชื่อม API</div>
-        ${_saMiniChart([], '#fe2c55')}
+        <div class="sa-platform-lbl">ผู้ติดตาม</div>
+        <div class="sa-platform-val">${ttConnected?ttFollowers.toLocaleString():'—'}</div>
+        <div class="sa-platform-trend">${ttConnected?`▶ ${fmtNum(ttViewSum)} views รวม · ${ttVideos.length} วิดีโอ`:'<a onclick="navigateTo(\\'socialIntegrations\\')" style="color:var(--p600);cursor:pointer;font-weight:700">+ เชื่อมต่อ</a>'}</div>
+        ${_saMiniChart(ttVideos.slice().reverse().map(v=>({value:v.viewCount||0})), '#fe2c55')}
         <div class="sa-platform-sub">
-          <div>ยอดเข้าชม<b>—</b></div>
-          <div>การมีส่วนร่วม<b>—</b></div>
+          <div>ยอดเข้าชม<b>${ttConnected?fmtNum(ttViewSum):'—'}</b></div>
+          <div>❤ Likes<b>${ttConnected?fmtNum(ttHearts):'—'}</b></div>
         </div>
       </div>
-      <div class="sa-platform-card" style="opacity:.6">
+      <div class="sa-platform-card${!ytConnected?' soft':''}" style="${!ytConnected?'opacity:.6':''}">
         <div class="sa-platform-hdr">
           <div class="sa-platform-logo yt">Y</div>
-          <div class="sa-platform-name">YouTube <span class="sa-soon-badge">SOON</span></div>
+          <div class="sa-platform-name">YouTube${!ytConnected?' <span class="sa-soon-badge" style="background:#fee2e2;color:#dc2626">ยังไม่เชื่อม</span>':''}</div>
         </div>
-        <div class="sa-platform-lbl">ผู้ติดตามรวม</div>
-        <div class="sa-platform-val">—</div>
-        <div class="sa-platform-trend">ยังไม่เชื่อม API</div>
-        ${_saMiniChart([], '#ff0000')}
+        <div class="sa-platform-lbl">Subscribers</div>
+        <div class="sa-platform-val">${ytConnected?(ytSubs?fmtNum(ytSubs):escapeHtmlN(youtubeSettings.subscriberText||'—')):'—'}</div>
+        <div class="sa-platform-trend">${ytConnected?`📹 ${ytVideos.length} วิดีโอ · ${escapeHtmlN(youtubeSettings.videoCountText||'')}`:'<a onclick="navigateTo(\\'socialIntegrations\\')" style="color:var(--p600);cursor:pointer;font-weight:700">+ เชื่อมต่อ</a>'}</div>
+        ${_saMiniChart(ytVideos.slice().reverse().map(v=>({value:_saParseLooseNumber(v.viewCount||'')})), '#ff0000')}
         <div class="sa-platform-sub">
-          <div>ยอดวิว<b>—</b></div>
-          <div>เวลารับชม<b>—</b></div>
+          <div>ยอดวิว<b>${ytConnected?fmtNum(ytViewSum):'—'}</b></div>
+          <div>ช่อง<b>${ytConnected?escapeHtmlN(youtubeSettings.channelTitle||'').slice(0,12):'—'}</b></div>
         </div>
       </div>
       <div class="sa-platform-card">
@@ -13716,21 +13883,25 @@ function _saRenderOverview(){
     <div class="sa-row">
       <div class="sa-panel">
         <div class="sa-panel-hdr">
-          <div class="sa-panel-title">การเข้าถึงรวม <small>${(fbReach||0).toLocaleString()}</small></div>
+          <div class="sa-panel-title">การเข้าถึงรวม <small>${(fbReach+ttViewSum+ytViewSum).toLocaleString()}</small></div>
           <div style="font-size:11px;color:var(--t2)">${socialDateStart} → ${socialDateEnd}</div>
         </div>
         ${_saBigChart(fb?.series?.impressions||[], '#1877f2', 'Facebook')}
         <div class="sa-legend">
-          <span><span class="dot" style="background:#1877f2"></span>Facebook</span>
-          <span style="opacity:.5"><span class="dot" style="background:#fe2c55"></span>TikTok (SOON)</span>
-          <span style="opacity:.5"><span class="dot" style="background:#ff0000"></span>YouTube (SOON)</span>
+          <span><span class="dot" style="background:#1877f2"></span>Facebook ${fmtNum(fbReach)}</span>
+          <span${!ttConnected?' style="opacity:.5"':''}><span class="dot" style="background:#fe2c55"></span>TikTok ${ttConnected?fmtNum(ttViewSum):'(ยังไม่เชื่อม)'}</span>
+          <span${!ytConnected?' style="opacity:.5"':''}><span class="dot" style="background:#ff0000"></span>YouTube ${ytConnected?fmtNum(ytViewSum):'(ยังไม่เชื่อม)'}</span>
         </div>
       </div>
       <div class="sa-panel">
         <div class="sa-panel-hdr">
           <div class="sa-panel-title">สัดส่วนการมีส่วนร่วม</div>
         </div>
-        ${_saDonut([{name:'Facebook',value:fbEngaged,color:'#1877f2'},{name:'TikTok',value:0,color:'#fe2c55'},{name:'YouTube',value:0,color:'#ff0000'}])}
+        ${_saDonut([
+          {name:'Facebook',value:fbEngaged,color:'#1877f2'},
+          {name:'TikTok',value:ttLikeSum,color:'#fe2c55'},
+          {name:'YouTube',value:ytViewSum,color:'#ff0000'}
+        ])}
       </div>
     </div>
 
