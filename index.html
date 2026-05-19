@@ -1685,6 +1685,16 @@
 .lot-period-pill{background:none;border:none;padding:8px 14px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:700;border-radius:8px;transition:all .15s ease;font-family:inherit}
 .lot-period-pill:hover{color:var(--t1)}
 .lot-period-pill.active{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 4px 12px rgba(16,185,129,.25)}
+.lot-cal-dows{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;font-size:11px;font-weight:700;color:var(--t2);text-align:center;padding:6px 0;border-bottom:1px solid var(--border);margin-bottom:4px}
+.lot-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.lot-cal-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--t1);background:transparent;border-radius:8px;cursor:pointer;transition:background .12s ease,color .12s ease;user-select:none}
+.lot-cal-cell:hover{background:var(--bg-hover)}
+.lot-cal-cell.outside{color:var(--t3);opacity:.4}
+.lot-cal-cell.today{box-shadow:inset 0 0 0 2px #10b981}
+.lot-cal-cell.in-range{background:rgba(16,185,129,.18);color:var(--t1);border-radius:0}
+.lot-cal-cell.range-start{background:#10b981;color:#fff;border-radius:8px 0 0 8px}
+.lot-cal-cell.range-end{background:#10b981;color:#fff;border-radius:0 8px 8px 0}
+.lot-cal-cell.range-start.range-end{border-radius:8px}
 .lot-target-card{padding:18px 22px;background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:#fff;border-radius:16px;margin-bottom:20px;display:flex;align-items:center;gap:18px;box-shadow:0 10px 30px rgba(16,185,129,.25)}
 .lot-target-info{flex:1;min-width:0}
 .lot-target-lbl{font-size:12px;font-weight:600;opacity:.9;text-transform:uppercase;letter-spacing:.5px}
@@ -3355,6 +3365,44 @@ svg{display:block;flex-shrink:0}
   </div>
 </div>
 
+<!-- LOTTERY DATE RANGE PICKER MODAL -->
+<div class="overlay" id="lotDatePickerModal">
+  <div class="modal" style="width:min(440px,calc(100vw - 32px))">
+    <div class="modal-hd">
+      <div class="modal-title">📅 เลือกช่วงวันที่</div>
+      <button class="modal-close" onclick="closeModal('lotDatePickerModal')">×</button>
+    </div>
+    <div class="modal-bd" style="user-select:none">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+        <button class="btn-ghost" style="font-size:11.5px;padding:5px 10px" onclick="lotCalPreset('last7')">7 วันล่าสุด</button>
+        <button class="btn-ghost" style="font-size:11.5px;padding:5px 10px" onclick="lotCalPreset('last30')">30 วันล่าสุด</button>
+        <button class="btn-ghost" style="font-size:11.5px;padding:5px 10px" onclick="lotCalPreset('thisMonth')">เดือนนี้</button>
+        <button class="btn-ghost" style="font-size:11.5px;padding:5px 10px" onclick="lotCalPreset('lastMonth')">เดือนก่อน</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <label style="font-size:12px;color:var(--t2);font-weight:600">เลือกเดือน:</label>
+        <input type="month" id="lotCalMonthSel" onchange="lotCalSetMonth()" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--t1);font-size:13px"/>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <button class="icon-btn" onclick="lotCalNav(-1)" title="เดือนก่อน">‹</button>
+        <div id="lotCalTitle" style="font-weight:800;font-size:14px;color:var(--t1)"></div>
+        <button class="icon-btn" onclick="lotCalNav(1)" title="เดือนหน้า">›</button>
+      </div>
+      <div class="lot-cal-dows">
+        <div>อา</div><div>จ</div><div>อ</div><div>พ</div><div>พฤ</div><div>ศ</div><div>ส</div>
+      </div>
+      <div id="lotCalGrid" class="lot-cal-grid" onmouseleave="lotCalDragging=false"></div>
+      <div id="lotCalSummary" style="margin-top:10px;padding:8px 12px;background:var(--bg-soft);border-radius:8px;font-size:12.5px;color:var(--t1);font-weight:600;text-align:center"></div>
+      <div style="font-size:11px;color:var(--t2);margin-top:6px;text-align:center">💡 คลิกแล้วลาก หรือคลิก 2 จุด เพื่อเลือกช่วง</div>
+    </div>
+    <div class="modal-ft">
+      <button class="sm-btn-cancel" onclick="lotCalClear()">ล้าง</button>
+      <button class="sm-btn-cancel" onclick="closeModal('lotDatePickerModal')">ยกเลิก</button>
+      <button class="lot-btn-save" onclick="lotCalApply()">ใช้ช่วงนี้</button>
+    </div>
+  </div>
+</div>
+
 <!-- LOTTERY TARGET MODAL -->
 <div class="overlay" id="lotteryTargetModal">
   <div class="modal lot-modal" style="width:min(480px,calc(100vw - 32px))">
@@ -3380,6 +3428,11 @@ svg{display:block;flex-shrink:0}
         <label class="lot-fld-lbl">เป้าต่อปี (Kip)</label>
         <input type="number" id="fLotTargetYear" min="0" step="1000" placeholder="600000000"/>
         <div style="font-size:11px;color:var(--t2);margin-top:4px">รวมยอดขายทั้งปีปัจจุบัน</div>
+      </div>
+      <div class="lot-fld">
+        <label class="lot-fld-lbl">ค่าโควต้า/งวด (Kip)</label>
+        <input type="number" id="fLotQuota" min="0" step="1000" placeholder="0"/>
+        <div style="font-size:11px;color:var(--t2);margin-top:4px">ค่าที่ต้องจ่ายให้หวยพัฒนาต่อ 1 งวด — ใช้คำนวณกำไรหลังหักโควต้า</div>
       </div>
     </div>
     <div class="modal-ft">
@@ -4223,7 +4276,13 @@ let nextLotteryId = 1;
 let editLotteryId = null;
 let lotteryFilter = '30d';
 let lotteryChartMode = 'daily';
-let lotterySettings = { monthlyTarget: 50000000, periodTarget: 5000000, yearlyTarget: 600000000 };
+let lotteryCustomStart = null;
+let lotteryCustomEnd = null;
+let lotCalView = { y: new Date().getFullYear(), m: new Date().getMonth() };
+let lotCalDragA = null;
+let lotCalDragB = null;
+let lotCalDragging = false;
+let lotterySettings = { monthlyTarget: 50000000, periodTarget: 5000000, yearlyTarget: 600000000, quotaPerPeriod: 0 };
 let attendanceRecords = [];
 let nextAttendanceId = 1;
 let leaveRequests = [];
@@ -11875,14 +11934,25 @@ function _fmtKipShort(n){
   return String(Math.round(n));
 }
 
-function setLotteryFilter(v){ lotteryFilter = v; rerender(); }
+function setLotteryFilter(v){
+  lotteryFilter = v;
+  if(v !== 'custom'){ lotteryCustomStart = null; lotteryCustomEnd = null; }
+  rerender();
+}
 function setLotteryChart(v){ lotteryChartMode = v; rerender(); }
 
 function _getLotteryRange(){
   const now = new Date();
   const today = now.toISOString().slice(0,10);
   let start, end = today, label;
-  if(lotteryFilter === 'today'){ start = today; label = 'วันนี้'; }
+  if(lotteryFilter === 'custom' && lotteryCustomStart && lotteryCustomEnd){
+    const a = lotteryCustomStart, b = lotteryCustomEnd;
+    start = a <= b ? a : b;
+    end   = a <= b ? b : a;
+    const fmt = s => `${s.slice(8,10)}/${s.slice(5,7)}/${s.slice(0,4)}`;
+    label = start === end ? fmt(start) : `${fmt(start)} – ${fmt(end)}`;
+  }
+  else if(lotteryFilter === 'today'){ start = today; label = 'วันนี้'; }
   else if(lotteryFilter === '7d'){
     const d = new Date(now); d.setDate(d.getDate()-6);
     start = d.toISOString().slice(0,10); label = '7 วันล่าสุด';
@@ -11895,6 +11965,153 @@ function _getLotteryRange(){
     start = today.slice(0,4) + '-01-01'; label = 'ปีนี้';
   } else { start = '1900-01-01'; label = 'ทั้งหมด'; }
   return { start, end, label };
+}
+
+// ===== Date Range Picker (drag-select calendar) =====
+const _TH_MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const _TH_DAYS = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+function _ymd(y,m,d){ return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
+function openLotteryDatePicker(){
+  if(lotteryCustomStart){
+    lotCalView.y = parseInt(lotteryCustomStart.slice(0,4),10);
+    lotCalView.m = parseInt(lotteryCustomStart.slice(5,7),10) - 1;
+    lotCalDragA = lotteryCustomStart;
+    lotCalDragB = lotteryCustomEnd;
+  } else {
+    const n = new Date();
+    lotCalView = { y: n.getFullYear(), m: n.getMonth() };
+    lotCalDragA = null; lotCalDragB = null;
+  }
+  lotCalDragging = false;
+  document.getElementById('lotDatePickerModal').classList.add('show');
+  renderLotCal();
+}
+function lotCalNav(delta){
+  let y = lotCalView.y, m = lotCalView.m + delta;
+  if(m < 0){ m = 11; y--; } else if(m > 11){ m = 0; y++; }
+  lotCalView = { y, m };
+  renderLotCal();
+}
+function lotCalSetMonth(){
+  const ym = document.getElementById('lotCalMonthSel').value; // 'YYYY-MM'
+  if(!ym) return;
+  const [y,m] = ym.split('-').map(Number);
+  lotCalView = { y, m: m-1 };
+  // Auto-select entire month
+  const lastDay = new Date(y, m, 0).getDate();
+  lotCalDragA = _ymd(y, m-1, 1);
+  lotCalDragB = _ymd(y, m-1, lastDay);
+  renderLotCal();
+}
+function lotCalCellDown(date){
+  lotCalDragging = true;
+  lotCalDragA = date;
+  lotCalDragB = date;
+  renderLotCal();
+}
+function lotCalCellEnter(date){
+  if(!lotCalDragging) return;
+  lotCalDragB = date;
+  renderLotCal();
+}
+function lotCalCellUp(date){
+  if(lotCalDragging){ lotCalDragB = date; lotCalDragging = false; renderLotCal(); }
+}
+function lotCalCellClick(date){
+  // For tap (no drag): if no start yet → set start; else set end
+  if(lotCalDragging) return;
+  if(!lotCalDragA || (lotCalDragA && lotCalDragB && lotCalDragA !== lotCalDragB)){
+    lotCalDragA = date; lotCalDragB = date;
+  } else {
+    lotCalDragB = date;
+  }
+  renderLotCal();
+}
+function lotCalApply(){
+  if(!lotCalDragA){ alert('กรุณาเลือกช่วงวันที่'); return; }
+  const a = lotCalDragA, b = lotCalDragB || a;
+  lotteryCustomStart = a <= b ? a : b;
+  lotteryCustomEnd   = a <= b ? b : a;
+  lotteryFilter = 'custom';
+  lotteryChartMode = 'daily';
+  closeModal('lotDatePickerModal');
+  rerender();
+}
+function lotCalClear(){
+  lotCalDragA = null; lotCalDragB = null;
+  renderLotCal();
+}
+function lotCalPreset(kind){
+  const now = new Date();
+  const today = now.toISOString().slice(0,10);
+  let s = today, e = today;
+  if(kind === 'last7'){ const d = new Date(now); d.setDate(d.getDate()-6); s = d.toISOString().slice(0,10); }
+  else if(kind === 'last30'){ const d = new Date(now); d.setDate(d.getDate()-29); s = d.toISOString().slice(0,10); }
+  else if(kind === 'thisMonth'){ s = today.slice(0,8)+'01'; }
+  else if(kind === 'lastMonth'){
+    const d = new Date(now.getFullYear(), now.getMonth()-1, 1);
+    const last = new Date(now.getFullYear(), now.getMonth(), 0);
+    s = d.toISOString().slice(0,10);
+    e = last.toISOString().slice(0,10);
+  }
+  lotCalDragA = s; lotCalDragB = e;
+  lotCalView.y = parseInt(s.slice(0,4),10);
+  lotCalView.m = parseInt(s.slice(5,7),10) - 1;
+  renderLotCal();
+}
+function renderLotCal(){
+  const { y, m } = lotCalView;
+  const first = new Date(y, m, 1);
+  const startDow = first.getDay();
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const prevMonthDays = new Date(y, m, 0).getDate();
+  const today = new Date().toISOString().slice(0,10);
+  const a = lotCalDragA, b = lotCalDragB;
+  const rangeStart = (a && b) ? (a <= b ? a : b) : a;
+  const rangeEnd   = (a && b) ? (a <= b ? b : a) : a;
+  // Header
+  document.getElementById('lotCalTitle').textContent = `${_TH_MONTHS[m]} ${y + 543}`;
+  // Build cells (6 rows × 7 cols)
+  let html = '';
+  let dayCounter = 1 - startDow;
+  for(let row = 0; row < 6; row++){
+    for(let col = 0; col < 7; col++){
+      let cy = y, cm = m, cd = dayCounter, outside = false;
+      if(dayCounter < 1){ cm = m-1; if(cm<0){cm=11;cy--} cd = prevMonthDays + dayCounter; outside = true; }
+      else if(dayCounter > daysInMonth){ cm = m+1; if(cm>11){cm=0;cy++} cd = dayCounter - daysInMonth; outside = true; }
+      const ds = _ymd(cy, cm, cd);
+      const inRange = rangeStart && rangeEnd && ds >= rangeStart && ds <= rangeEnd;
+      const isStart = ds === rangeStart;
+      const isEnd   = ds === rangeEnd;
+      const isToday = ds === today;
+      const cls = ['lot-cal-cell'];
+      if(outside) cls.push('outside');
+      if(inRange) cls.push('in-range');
+      if(isStart) cls.push('range-start');
+      if(isEnd) cls.push('range-end');
+      if(isToday) cls.push('today');
+      html += `<div class="${cls.join(' ')}" data-date="${ds}"
+        onmousedown="lotCalCellDown('${ds}');event.preventDefault();"
+        onmouseenter="lotCalCellEnter('${ds}')"
+        onmouseup="lotCalCellUp('${ds}')"
+        onclick="lotCalCellClick('${ds}')"
+        ontouchstart="lotCalCellDown('${ds}');event.preventDefault();"
+        ontouchend="lotCalCellUp('${ds}')"
+      >${cd}</div>`;
+      dayCounter++;
+    }
+  }
+  document.getElementById('lotCalGrid').innerHTML = html;
+  // Summary
+  const sumEl = document.getElementById('lotCalSummary');
+  if(rangeStart && rangeEnd){
+    const days = Math.round((new Date(rangeEnd) - new Date(rangeStart))/86400000) + 1;
+    sumEl.textContent = `เลือก: ${rangeStart} → ${rangeEnd} (${days} วัน)`;
+  } else if(rangeStart){
+    sumEl.textContent = `เลือก: ${rangeStart}`;
+  } else {
+    sumEl.textContent = 'ยังไม่เลือกช่วง';
+  }
 }
 
 function _filteredLottery(){
@@ -11964,12 +12181,14 @@ function openLotteryTargetModal(){
   document.getElementById('fLotTargetPeriod').value = lotterySettings.periodTarget || 5000000;
   document.getElementById('fLotTarget').value = lotterySettings.monthlyTarget || 50000000;
   document.getElementById('fLotTargetYear').value = lotterySettings.yearlyTarget || 600000000;
+  document.getElementById('fLotQuota').value = lotterySettings.quotaPerPeriod || 0;
   document.getElementById('lotteryTargetModal').classList.add('show');
 }
 function saveLotteryTarget(){
   lotterySettings.periodTarget = parseFloat(document.getElementById('fLotTargetPeriod').value) || 0;
   lotterySettings.monthlyTarget = parseFloat(document.getElementById('fLotTarget').value) || 0;
   lotterySettings.yearlyTarget = parseFloat(document.getElementById('fLotTargetYear').value) || 0;
+  lotterySettings.quotaPerPeriod = parseFloat(document.getElementById('fLotQuota').value) || 0;
   saveAll();
   closeModal('lotteryTargetModal');
   rerender();
@@ -12068,6 +12287,9 @@ function renderLottery(el){
   const sumSales = records.reduce((a,r)=>a+(+r.salesTotal||0), 0);
   const sumPrize = records.reduce((a,r)=>a+(+r.prizeTotal||0), 0);
   const sumProfit = sumSales - sumPrize;
+  const quotaPerPeriod = +lotterySettings.quotaPerPeriod || 0;
+  const sumQuota = quotaPerPeriod * records.length;
+  const sumProfitAfterQuota = sumProfit - sumQuota;
   const sumNew = records.reduce((a,r)=>a+(+r.newMembers||0), 0);
   const avgActive = records.length ? Math.round(records.reduce((a,r)=>a+(+r.activeUsers||0), 0) / records.length) : 0;
 
@@ -12122,12 +12344,14 @@ function renderLottery(el){
         <th class="num">ยอดขาย (Kip)</th>
         <th class="num">รางวัล (Kip)</th>
         <th class="num">กำไร (Kip)</th>
+        ${quotaPerPeriod > 0 ? '<th class="num">หลังหักโควต้า</th>' : ''}
         <th class="num">สมาชิกใหม่</th>
         <th></th>
       </tr></thead>
       <tbody>
         ${records.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(r => {
           const profit = (+r.salesTotal||0) - (+r.prizeTotal||0);
+          const profitAfter = profit - quotaPerPeriod;
           return `<tr>
             <td>${escapeHtmlN(r.date)}</td>
             <td>${escapeHtmlN(r.periodNo||'—')}</td>
@@ -12135,6 +12359,7 @@ function renderLottery(el){
             <td class="num">${(+r.salesTotal||0).toLocaleString()}</td>
             <td class="num">${(+r.prizeTotal||0).toLocaleString()}</td>
             <td class="num ${profit>=0?'profit-cell':'loss-cell'}">${profit.toLocaleString()}</td>
+            ${quotaPerPeriod > 0 ? `<td class="num ${profitAfter>=0?'profit-cell':'loss-cell'}">${profitAfter.toLocaleString()}</td>` : ''}
             <td class="num">${(+r.newMembers||0).toLocaleString()}</td>
             <td class="sales-actions">
               <button class="icon-btn" onclick="openLotteryModal(${r.id})" title="แก้ไข">${I.edit}</button>
@@ -12162,6 +12387,7 @@ function renderLottery(el){
           <button class="lot-period-pill ${lotteryFilter==='month'?'active':''}" onclick="setLotteryFilter('month')">เดือนนี้</button>
           <button class="lot-period-pill ${lotteryFilter==='year'?'active':''}" onclick="setLotteryFilter('year')">ปีนี้</button>
           <button class="lot-period-pill ${lotteryFilter==='all'?'active':''}" onclick="setLotteryFilter('all')">ทั้งหมด</button>
+          <button class="lot-period-pill ${lotteryFilter==='custom'?'active':''}" onclick="openLotteryDatePicker()" title="เลือกช่วงวันเอง">📅 ${lotteryFilter==='custom' ? range.label : 'เลือกช่วง'}</button>
         </div>
       </div>
 
@@ -12190,6 +12416,12 @@ function renderLottery(el){
           <div class="lot-kpi-val" style="color:${sumProfit>=0?'#059669':'#dc2626'}">${_fmtKipShort(sumProfit)}</div>
           <div class="lot-kpi-sub">${sumSales>0? (sumProfit/sumSales*100).toFixed(1)+'% margin' : '—'}</div>
         </div>
+        ${quotaPerPeriod > 0 ? `
+        <div class="lot-kpi profit">
+          <div class="lot-kpi-lbl">กำไรหลังหักโควต้า</div>
+          <div class="lot-kpi-val" style="color:${sumProfitAfterQuota>=0?'#059669':'#dc2626'}">${_fmtKipShort(sumProfitAfterQuota)}</div>
+          <div class="lot-kpi-sub">หัก ${_fmtKipShort(sumQuota)} (${records.length} งวด × ${_fmtKipShort(quotaPerPeriod)})</div>
+        </div>` : ''}
         <div class="lot-kpi member">
           <div class="lot-kpi-lbl">สมาชิกใหม่รวม</div>
           <div class="lot-kpi-val">${sumNew.toLocaleString()}</div>
@@ -13849,7 +14081,7 @@ function _saRenderOverview(){
         </div>
         <div class="sa-platform-lbl">ผู้ติดตาม</div>
         <div class="sa-platform-val">${ttConnected?ttFollowers.toLocaleString():'—'}</div>
-        <div class="sa-platform-trend">${ttConnected?`▶ ${fmtNum(ttViewSum)} views รวม · ${ttVideos.length} วิดีโอ`:'<a onclick="navigateTo(\\'socialIntegrations\\')" style="color:var(--p600);cursor:pointer;font-weight:700">+ เชื่อมต่อ</a>'}</div>
+        <div class="sa-platform-trend">${ttConnected?`▶ ${fmtNum(ttViewSum)} views รวม · ${ttVideos.length} วิดีโอ`:'<a onclick="navigateTo(\'socialIntegrations\')" style="color:var(--p600);cursor:pointer;font-weight:700">+ เชื่อมต่อ</a>'}</div>
         ${_saMiniChart(ttVideos.slice().reverse().map(v=>({value:v.viewCount||0})), '#fe2c55')}
         <div class="sa-platform-sub">
           <div>ยอดเข้าชม<b>${ttConnected?fmtNum(ttViewSum):'—'}</b></div>
@@ -13863,7 +14095,7 @@ function _saRenderOverview(){
         </div>
         <div class="sa-platform-lbl">Subscribers</div>
         <div class="sa-platform-val">${ytConnected?(ytSubs?fmtNum(ytSubs):escapeHtmlN(youtubeSettings.subscriberText||'—')):'—'}</div>
-        <div class="sa-platform-trend">${ytConnected?`📹 ${ytVideos.length} วิดีโอ · ${escapeHtmlN(youtubeSettings.videoCountText||'')}`:'<a onclick="navigateTo(\\'socialIntegrations\\')" style="color:var(--p600);cursor:pointer;font-weight:700">+ เชื่อมต่อ</a>'}</div>
+        <div class="sa-platform-trend">${ytConnected?`📹 ${ytVideos.length} วิดีโอ · ${escapeHtmlN(youtubeSettings.videoCountText||'')}`:'<a onclick="navigateTo(\'socialIntegrations\')" style="color:var(--p600);cursor:pointer;font-weight:700">+ เชื่อมต่อ</a>'}</div>
         ${_saMiniChart(ytVideos.slice().reverse().map(v=>({value:_saParseLooseNumber(v.viewCount||'')})), '#ff0000')}
         <div class="sa-platform-sub">
           <div>ยอดวิว<b>${ytConnected?fmtNum(ytViewSum):'—'}</b></div>
