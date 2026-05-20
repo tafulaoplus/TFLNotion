@@ -3018,6 +3018,10 @@ svg{display:block;flex-shrink:0}
       <div id="viewFbPosts" class="view"></div>
       <div id="viewSocialAnalytics" class="view"></div>
       <div id="viewSocialIntegrations" class="view"></div>
+      <div id="viewContent" class="view"></div>
+      <div id="viewStats" class="view"></div>
+      <div id="viewPostPerformance" class="view"></div>
+      <div id="viewAdSpend" class="view"></div>
       <div id="viewSales" class="view"></div>
       <div id="viewActivity" class="view"></div>
       <div id="viewCalendar" class="view"></div>
@@ -4347,7 +4351,6 @@ let socialDateStart = (() => { const d = new Date(); d.setDate(d.getDate()-29); 
 let socialDateEnd = new Date().toISOString().slice(0,10);
 let socialData = { fb:null, tt:null, yt:null };
 let socialLoading = false;
-let facebookTab = localStorage.getItem('tfl_fb_tab') || 'goLive'; // goLive | live | liveAi | posts | postPerf | analytics
 // Post Performance state
 let postPerfConn = { enabled: false, connectedAt: null, token: '', pageId: '', pageName: '', pages: [], testStatus: 'idle', testMessage: '' };
 let postPerfData = { posts: [], loading: false, error: '', fetchedAt: null };
@@ -5901,14 +5904,14 @@ function initApp(){
   let startView = 'dashboard';
   try {
     const saved = localStorage.getItem('tfl_currentView');
-    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','facebook','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','postPerformance','adSpend','sales','activity','calendar','lottery','attendance'];
+    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','content','stats','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','postPerformance','adSpend','sales','activity','calendar','lottery','attendance'];
     if(saved && validViews.includes(saved)){
       // Check role permission
       if((saved === 'allTasks' || saved === 'members' || saved === 'activity' || saved === 'lottery') && currentUser.role !== 'admin'){
         startView = 'dashboard';
       } else if(saved === 'socialIntegrations' && currentUser.role !== 'admin'){
         startView = 'dashboard';
-      } else if((saved === 'facebook' || saved === 'fbLive' || saved === 'fbGoLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics' || saved === 'postPerformance' || saved === 'adSpend') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
+      } else if((saved === 'content' || saved === 'stats' || saved === 'fbLive' || saved === 'fbGoLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics' || saved === 'postPerformance' || saved === 'adSpend') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
         startView = 'dashboard';
       } else {
         startView = saved;
@@ -5992,15 +5995,20 @@ function renderSidebar(){
 
   // Social section (Admin + Social can see)
   if(isSocial){
-    const isFbView = currentView==='facebook' || currentView==='fbLive' || currentView==='fbGoLive' || currentView==='fbLiveAuto' || currentView==='fbPosts' || currentView==='socialAnalytics' || currentView==='postPerformance';
+    const isContentView = currentView==='content' || currentView==='fbPosts' || currentView==='fbGoLive';
+    const isStatsView = currentView==='stats' || currentView==='postPerformance' || currentView==='fbLive' || currentView==='fbLiveAuto' || currentView==='socialAnalytics';
     html += `<div class="nav-sec">Social</div>
-      <div class="nav-item ${isFbView?'active':''}" onclick="navigateTo('facebook')">
-        <span class="nav-icon">${I.facebook}</span>
-        <span class="nav-label">Facebook</span>
+      <div class="nav-item ${isContentView?'active':''}" onclick="navigateTo('content')">
+        <span class="nav-icon">${I.edit||I.note}</span>
+        <span class="nav-label">คอนเทนต์</span>
+      </div>
+      <div class="nav-item ${isStatsView?'active':''}" onclick="navigateTo('stats')">
+        <span class="nav-icon">${I.barChart||I.trending}</span>
+        <span class="nav-label">สถิติ</span>
       </div>
       ${adSpendConn.enabled ? `<div class="nav-item ${currentView==='adSpend'?'active':''}" onclick="navigateTo('adSpend')">
         <span class="nav-icon">${I.diamond||I.barChart}</span>
-        <span class="nav-label">Ad Spend Tracker</span>
+        <span class="nav-label">งบโฆษณา</span>
       </div>` : ''}
       ${isAdmin? `<div class="nav-item ${currentView==='socialIntegrations'?'active':''}" onclick="navigateTo('socialIntegrations')">
         <span class="nav-icon">${I.settings||I.cloud}</span>
@@ -6333,7 +6341,7 @@ function renderView(id,el){
   setTimeout(()=>el.classList.remove('fade-in'),300);
   ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,notes:renderNotes,taskBoard:renderTaskBoard,
     myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbGoLive:renderFbGoLive,fbLiveAuto:renderFbLiveAuto,
-    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,facebook:renderFacebook,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations,postPerformance:renderPostPerformance,adSpend:renderAdSpend}[id]||(()=>{}))(el);
+    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,content:renderContent,stats:renderStats,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations,postPerformance:renderPostPerformance,adSpend:renderAdSpend}[id]||(()=>{}))(el);
 }
 
 function rerender(){ const el=document.getElementById('view'+cap(currentView)); if(el) renderView(currentView,el); }
@@ -13535,33 +13543,56 @@ async function _intgDisconnectDrive(){
   } catch(e){ alert('ผิดพลาด: ' + e.message); }
 }
 
-// ===================== FACEBOOK UNIFIED MENU =====================
-function setFacebookTab(t){
-  facebookTab = t;
-  try { localStorage.setItem('tfl_fb_tab', t); } catch(_){}
+// ===================== SOCIAL — CONTENT & STATS HUBS =====================
+let contentTab = localStorage.getItem('tfl_content_tab') || 'posts'; // posts | live
+let statsTab = localStorage.getItem('tfl_stats_tab') || 'postPerf';   // postPerf | live | ai | overview
+
+function setContentTab(t){
+  contentTab = t;
+  try { localStorage.setItem('tfl_content_tab', t); } catch(_){}
   rerender();
 }
-function renderFacebook(el){
-  const tabs = [
-    { id: 'goLive',    label: 'ไลฟ์สด',          icon: '🔴', render: typeof renderFbGoLive==='function'?renderFbGoLive:null },
-    { id: 'live',      label: 'Live สถิติ',     icon: '📊', render: typeof renderFbLive==='function'?renderFbLive:null },
-    { id: 'liveAi',    label: 'Live AI',         icon: '✨', render: typeof renderFbLiveAuto==='function'?renderFbLiveAuto:null },
-    { id: 'posts',     label: 'โพสต์ Manager',   icon: '📝', render: renderFbPosts },
-    { id: 'postPerf',  label: 'Post Performance',icon: '📈', render: renderPostPerformance },
-    { id: 'analytics', label: 'Social Analytics',icon: '📊', render: renderSocialAnalytics },
-  ];
-  const active = tabs.find(t => t.id === facebookTab) || tabs[0];
+function setStatsTab(t){
+  statsTab = t;
+  try { localStorage.setItem('tfl_stats_tab', t); } catch(_){}
+  rerender();
+}
+
+function _renderTabHub(el, tabs, activeTabId, setterName){
+  const active = tabs.find(t => t.id === activeTabId) || tabs[0];
   el.innerHTML = `
     <div class="fb-tab-bar">
-      ${tabs.map(t=>`<button class="fb-tab ${t.id===active.id?'active':''}" onclick="setFacebookTab('${t.id}')">${t.icon} ${t.label}</button>`).join('')}
+      ${tabs.map(t=>`<button class="fb-tab ${t.id===active.id?'active':''}" onclick="${setterName}('${t.id}')">${t.icon} ${t.label}</button>`).join('')}
     </div>
-    <div id="fbTabContent"></div>`;
-  const inner = el.querySelector('#fbTabContent');
-  if(active.render){
-    active.render(inner);
+    <div id="hubTabContent"></div>`;
+  const inner = el.querySelector('#hubTabContent');
+  if(active.render && typeof active.render === 'function'){
+    try { active.render(inner); }
+    catch(e){
+      console.error('Tab render failed:', e);
+      inner.innerHTML = `<div class="page-content"><div class="empty-state" style="color:#dc2626">⚠ โหลด tab ไม่ได้: ${escapeHtmlN(e.message)}</div></div>`;
+    }
   } else {
     inner.innerHTML = `<div class="page-content"><div class="empty-state">ฟีเจอร์นี้ยังไม่พร้อม</div></div>`;
   }
+}
+
+function renderContent(el){
+  const tabs = [
+    { id: 'posts', label: 'โพสต์ Manager', icon: '📝', render: renderFbPosts },
+    { id: 'live',  label: 'ไลฟ์สด',         icon: '🔴', render: typeof renderFbGoLive==='function'?renderFbGoLive:null },
+  ];
+  _renderTabHub(el, tabs, contentTab, 'setContentTab');
+}
+
+function renderStats(el){
+  const tabs = [
+    { id: 'postPerf', label: 'Post Performance', icon: '📈', render: renderPostPerformance },
+    { id: 'live',     label: 'Live สถิติ',       icon: '📊', render: typeof renderFbLive==='function'?renderFbLive:null },
+    { id: 'ai',       label: 'AI Insights',      icon: '✨', render: typeof renderFbLiveAuto==='function'?renderFbLiveAuto:null },
+    { id: 'overview', label: 'ภาพรวม',           icon: '🌐', render: renderSocialAnalytics },
+  ];
+  _renderTabHub(el, tabs, statsTab, 'setStatsTab');
 }
 
 // ===================== POST PERFORMANCE & AD SPEND TRACKER =====================
