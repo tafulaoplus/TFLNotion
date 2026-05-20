@@ -13617,20 +13617,15 @@ async function loadPostPerfData(){
     const tok = encodeURIComponent(fbPostState.pageToken);
     const since = Math.floor(new Date(postPerfRange.since).getTime()/1000);
     const until = Math.floor(new Date(postPerfRange.until + 'T23:59:59').getTime()/1000);
-    const fields = 'id,message,story,created_time,permalink_url,full_picture,attachments{media_type,type},insights.metric(post_impressions,post_impressions_unique,post_engaged_users,post_reactions_by_type_total,post_clicks)';
-    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}/posts?fields=${encodeURIComponent(fields)}&since=${since}&until=${until}&limit=50&access_token=${tok}`);
+    // Step 1: fetch posts WITHOUT insights first (always works)
+    const baseFields = 'id,message,story,created_time,permalink_url,full_picture,attachments{media_type,type,description},shares,likes.summary(true).limit(0),comments.summary(true).limit(0),reactions.summary(true).limit(0)';
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}/published_posts?fields=${encodeURIComponent(baseFields)}&since=${since}&until=${until}&limit=50&access_token=${tok}`);
     const j = await r.json();
-    if(j.error) throw new Error(j.error.message);
-    postPerfData.posts = (j.data||[]).map(p => {
-      const ins = {};
-      if(p.insights && Array.isArray(p.insights.data)){
-        p.insights.data.forEach(m => {
-          const v = m.values && m.values[0] ? m.values[0].value : null;
-          ins[m.name] = v;
-        });
-      }
-      const reactions = ins.post_reactions_by_type_total || {};
-      const totalReactions = Object.values(reactions).reduce((s,n)=>s+(+n||0), 0);
+    if(j.error){
+      console.error('FB API error (posts):', j.error);
+      throw new Error(`Graph API: ${j.error.message} (code ${j.error.code||'?'}, type ${j.error.type||'?'})`);
+    }
+    let posts = (j.data||[]).map(p => {
       const mediaType = p.attachments?.data?.[0]?.media_type || p.attachments?.data?.[0]?.type || 'text';
       return {
         id: p.id,
@@ -13639,16 +13634,44 @@ async function loadPostPerfData(){
         permalink: p.permalink_url,
         picture: p.full_picture,
         mediaType,
-        impressions: ins.post_impressions || 0,
-        reach: ins.post_impressions_unique || 0,
-        engaged: ins.post_engaged_users || 0,
-        clicks: ins.post_clicks || 0,
-        reactions: totalReactions,
-        reactionsBreakdown: reactions,
+        impressions: 0,
+        reach: 0,
+        engaged: 0,
+        clicks: 0,
+        reactions: p.reactions?.summary?.total_count || 0,
+        likes: p.likes?.summary?.total_count || 0,
+        comments: p.comments?.summary?.total_count || 0,
+        shares: p.shares?.count || 0,
       };
     });
+    // Step 2: fetch insights per-post in parallel (may fail for some, that's OK)
+    if(posts.length){
+      const metrics = 'post_impressions,post_impressions_unique,post_clicks';
+      const insightResults = await Promise.allSettled(posts.map(p =>
+        fetch(`https://graph.facebook.com/${FB_API_VERSION}/${p.id}/insights?metric=${metrics}&access_token=${tok}`)
+          .then(r=>r.json())
+      ));
+      insightResults.forEach((res, i) => {
+        if(res.status !== 'fulfilled' || res.value.error) return;
+        const ins = {};
+        (res.value.data||[]).forEach(m => {
+          const v = m.values && m.values[0] ? m.values[0].value : null;
+          ins[m.name] = +v || 0;
+        });
+        posts[i].impressions = ins.post_impressions || 0;
+        posts[i].reach = ins.post_impressions_unique || 0;
+        posts[i].clicks = ins.post_clicks || 0;
+        // Approximate engaged users from reactions + comments + shares + clicks
+        posts[i].engaged = (posts[i].reactions||0) + (posts[i].comments||0) + (posts[i].shares||0) + (posts[i].clicks||0);
+      });
+    }
+    postPerfData.posts = posts;
     postPerfData.fetchedAt = Date.now();
+    if(posts.length === 0){
+      postPerfData.error = 'ไม่พบโพสต์ในช่วงนี้ — ลองขยายช่วงวันที่ หรือ ตรวจสอบว่าเชื่อม Page ที่ถูก';
+    }
   } catch(err){
+    console.error('Post Performance error:', err);
     postPerfData.error = err.message;
   }
   postPerfData.loading = false;
@@ -13675,16 +13698,21 @@ function renderPostPerformance(el){
     setTimeout(()=>loadPostPerfData(), 50);
   }
   const posts = postPerfData.posts.slice().sort((a,b) => {
-    if(postPerfSort === 'engagement') return b.engaged - a.engaged;
+    if(postPerfSort === 'engagement') return (b.reactions+b.comments+b.shares) - (a.reactions+a.comments+a.shares);
     if(postPerfSort === 'reach') return b.reach - a.reach;
     if(postPerfSort === 'impressions') return b.impressions - a.impressions;
+    if(postPerfSort === 'comments') return b.comments - a.comments;
     return b.createdTime.localeCompare(a.createdTime);
   });
   const sumReach = posts.reduce((s,p)=>s+(+p.reach||0), 0);
   const sumImp = posts.reduce((s,p)=>s+(+p.impressions||0), 0);
   const sumEng = posts.reduce((s,p)=>s+(+p.engaged||0), 0);
   const sumReact = posts.reduce((s,p)=>s+(+p.reactions||0), 0);
+  const sumLikes = posts.reduce((s,p)=>s+(+p.likes||0), 0);
+  const sumComments = posts.reduce((s,p)=>s+(+p.comments||0), 0);
+  const sumShares = posts.reduce((s,p)=>s+(+p.shares||0), 0);
   const avgER = sumReach > 0 ? (sumEng / sumReach * 100) : 0;
+  const hasInsights = sumImp > 0 || sumReach > 0;
   // Best time analysis
   const hourBuckets = Array(24).fill(0).map(()=>({impressions:0,count:0}));
   posts.forEach(p => {
@@ -13697,10 +13725,10 @@ function renderPostPerformance(el){
   const typeBreakdown = {};
   posts.forEach(p => {
     const t = p.mediaType || 'text';
-    if(!typeBreakdown[t]) typeBreakdown[t] = { count:0, impressions:0, engaged:0 };
+    if(!typeBreakdown[t]) typeBreakdown[t] = { count:0, impressions:0, engagement:0 };
     typeBreakdown[t].count++;
     typeBreakdown[t].impressions += p.impressions;
-    typeBreakdown[t].engaged += p.engaged;
+    typeBreakdown[t].engagement += (p.reactions||0) + (p.comments||0) + (p.shares||0);
   });
   el.innerHTML = topbarSimple('barChart','Post Performance', `${fbPostState.pageName} · ${posts.length} โพสต์ในช่วง`) + `
     <div class="page-content" style="max-width:1200px">
@@ -13712,19 +13740,24 @@ function renderPostPerformance(el){
       </div>
       ${postPerfData.error ? `<div style="padding:14px;background:#fee;border:1px solid #fcc;border-radius:10px;color:#c00;margin-bottom:14px">⚠ ${escapeHtmlN(postPerfData.error)}</div>` : ''}
       <div class="lot-kpi-grid" style="margin-bottom:18px">
-        <div class="lot-kpi sales"><div class="lot-kpi-lbl">Reach รวม</div><div class="lot-kpi-val">${fmtNum(sumReach)}</div><div class="lot-kpi-sub">${sumReach.toLocaleString()} คน</div></div>
-        <div class="lot-kpi prize"><div class="lot-kpi-lbl">Impressions รวม</div><div class="lot-kpi-val">${fmtNum(sumImp)}</div><div class="lot-kpi-sub">${sumImp.toLocaleString()} ครั้ง</div></div>
-        <div class="lot-kpi profit"><div class="lot-kpi-lbl">Engagement</div><div class="lot-kpi-val">${fmtNum(sumEng)}</div><div class="lot-kpi-sub">${avgER.toFixed(2)}% Engagement Rate</div></div>
-        <div class="lot-kpi member"><div class="lot-kpi-lbl">Reactions</div><div class="lot-kpi-val">${fmtNum(sumReact)}</div><div class="lot-kpi-sub">รวมทุกประเภท</div></div>
-        <div class="lot-kpi active"><div class="lot-kpi-lbl">เวลาโพสต์ที่ดีที่สุด</div><div class="lot-kpi-val">${bestHour?String(bestHour.h).padStart(2,'0')+':00':'—'}</div><div class="lot-kpi-sub">${bestHour?fmtNum(Math.round(bestHour.avg))+' impressions เฉลี่ย':'ยังไม่มีข้อมูล'}</div></div>
-        <div class="lot-kpi growth"><div class="lot-kpi-lbl">โพสต์ในช่วง</div><div class="lot-kpi-val">${posts.length}</div><div class="lot-kpi-sub">เฉลี่ย ${posts.length?Math.round(sumImp/posts.length):0} imp/โพสต์</div></div>
+        <div class="lot-kpi sales"><div class="lot-kpi-lbl">โพสต์ในช่วง</div><div class="lot-kpi-val">${posts.length}</div><div class="lot-kpi-sub">${fbPostState.pageName}</div></div>
+        <div class="lot-kpi prize"><div class="lot-kpi-lbl">Reactions รวม</div><div class="lot-kpi-val">${fmtNum(sumReact)}</div><div class="lot-kpi-sub">${sumLikes.toLocaleString()} likes</div></div>
+        <div class="lot-kpi profit"><div class="lot-kpi-lbl">Comments</div><div class="lot-kpi-val">${fmtNum(sumComments)}</div><div class="lot-kpi-sub">${posts.length?Math.round(sumComments/posts.length):0} ต่อโพสต์</div></div>
+        <div class="lot-kpi member"><div class="lot-kpi-lbl">Shares</div><div class="lot-kpi-val">${fmtNum(sumShares)}</div><div class="lot-kpi-sub">${posts.length?Math.round(sumShares/posts.length):0} ต่อโพสต์</div></div>
+        ${hasInsights?`
+        <div class="lot-kpi active"><div class="lot-kpi-lbl">Reach รวม</div><div class="lot-kpi-val">${fmtNum(sumReach)}</div><div class="lot-kpi-sub">${fmtNum(sumImp)} impressions</div></div>
+        <div class="lot-kpi growth"><div class="lot-kpi-lbl">เวลาโพสต์ที่ดีที่สุด</div><div class="lot-kpi-val">${bestHour && bestHour.avg>0?String(bestHour.h).padStart(2,'0')+':00':'—'}</div><div class="lot-kpi-sub">${bestHour && bestHour.avg>0?fmtNum(Math.round(bestHour.avg))+' imp เฉลี่ย':'ยังไม่มีข้อมูล'}</div></div>
+        `:`
+        <div class="lot-kpi active"><div class="lot-kpi-lbl">Engagement รวม</div><div class="lot-kpi-val">${fmtNum(sumReact+sumComments+sumShares)}</div><div class="lot-kpi-sub">likes+comments+shares</div></div>
+        <div class="lot-kpi growth" style="opacity:.7"><div class="lot-kpi-lbl">Reach/Impressions</div><div class="lot-kpi-val">—</div><div class="lot-kpi-sub">Insights ไม่พร้อมใช้สำหรับ token นี้</div></div>
+        `}
       </div>
       ${Object.keys(typeBreakdown).length ? `
       <div class="sd-panel" style="margin-bottom:18px">
         <div class="sd-panel-title">ผลงานตามประเภทคอนเทนต์</div>
-        <table class="lot-table"><thead><tr><th>ประเภท</th><th class="num">จำนวน</th><th class="num">Impressions เฉลี่ย</th><th class="num">Engagement เฉลี่ย</th></tr></thead><tbody>
-        ${Object.entries(typeBreakdown).sort((a,b)=>b[1].impressions-a[1].impressions).map(([t,v])=>`
-          <tr><td><b>${escapeHtmlN(t)}</b></td><td class="num">${v.count}</td><td class="num">${fmtNum(Math.round(v.impressions/v.count))}</td><td class="num">${fmtNum(Math.round(v.engaged/v.count))}</td></tr>
+        <table class="lot-table"><thead><tr><th>ประเภท</th><th class="num">จำนวน</th>${hasInsights?'<th class="num">Imp. เฉลี่ย</th>':''}<th class="num">Engagement เฉลี่ย</th></tr></thead><tbody>
+        ${Object.entries(typeBreakdown).sort((a,b)=>b[1].engagement-a[1].engagement).map(([t,v])=>`
+          <tr><td><b>${escapeHtmlN(t)}</b></td><td class="num">${v.count}</td>${hasInsights?`<td class="num">${fmtNum(Math.round(v.impressions/v.count))}</td>`:''}<td class="num">${fmtNum(Math.round(v.engagement/v.count))}</td></tr>
         `).join('')}
         </tbody></table>
       </div>` : ''}
@@ -13733,8 +13766,9 @@ function renderPostPerformance(el){
           <div class="h-l" style="font-size:14px;font-weight:800">โพสต์ทั้งหมด (${posts.length})</div>
           <div class="chart-tabs">
             <button class="chart-tab ${postPerfSort==='engagement'?'active':''}" onclick="setPostPerfSort('engagement')">Engagement</button>
-            <button class="chart-tab ${postPerfSort==='reach'?'active':''}" onclick="setPostPerfSort('reach')">Reach</button>
-            <button class="chart-tab ${postPerfSort==='impressions'?'active':''}" onclick="setPostPerfSort('impressions')">Impressions</button>
+            <button class="chart-tab ${postPerfSort==='comments'?'active':''}" onclick="setPostPerfSort('comments')">Comments</button>
+            ${hasInsights?`<button class="chart-tab ${postPerfSort==='reach'?'active':''}" onclick="setPostPerfSort('reach')">Reach</button>
+            <button class="chart-tab ${postPerfSort==='impressions'?'active':''}" onclick="setPostPerfSort('impressions')">Impressions</button>`:''}
             <button class="chart-tab ${postPerfSort==='date'?'active':''}" onclick="setPostPerfSort('date')">วันที่</button>
           </div>
         </div>
@@ -13746,10 +13780,14 @@ function renderPostPerformance(el){
               <div style="padding:12px">
                 <div style="font-size:12.5px;line-height:1.4;color:var(--t1);height:54px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical">${escapeHtmlN(p.message||'(ไม่มีข้อความ)')}</div>
                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0;font-size:11px;color:var(--t2)">
-                  <div><b style="color:var(--t1);display:block;font-size:13px">${fmtNum(p.reach)}</b>Reach</div>
-                  <div><b style="color:var(--t1);display:block;font-size:13px">${fmtNum(p.impressions)}</b>Imp.</div>
-                  <div><b style="color:var(--t1);display:block;font-size:13px">${fmtNum(p.engaged)}</b>Eng.</div>
+                  <div title="Reactions"><b style="color:var(--t1);display:block;font-size:13px">${fmtNum(p.reactions)}</b>👍 Reactions</div>
+                  <div title="Comments"><b style="color:var(--t1);display:block;font-size:13px">${fmtNum(p.comments)}</b>💬 Comments</div>
+                  <div title="Shares"><b style="color:var(--t1);display:block;font-size:13px">${fmtNum(p.shares)}</b>↗ Shares</div>
                 </div>
+                ${(p.impressions||p.reach)?`<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:8px;font-size:11px;color:var(--t2);padding-top:6px;border-top:1px dashed var(--border)">
+                  <div><b style="color:var(--t1);display:block;font-size:13px">${fmtNum(p.reach)}</b>Reach</div>
+                  <div><b style="color:var(--t1);display:block;font-size:13px">${fmtNum(p.impressions)}</b>Impressions</div>
+                </div>`:''}
                 <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--t2);border-top:1px solid var(--border);padding-top:8px">
                   <span>${new Date(p.createdTime).toLocaleDateString('th-TH')}</span>
                   ${p.permalink?`<a href="${escapeHtmlN(p.permalink)}" target="_blank" rel="noopener" style="color:#1877f2;font-weight:700">เปิดดู →</a>`:''}
