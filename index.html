@@ -4356,6 +4356,7 @@ let postPerfConn = { enabled: false, connectedAt: null, token: '', pageId: '', p
 let postPerfData = { posts: [], loading: false, error: '', fetchedAt: null };
 let postPerfRange = { since: (()=>{const d=new Date();d.setDate(d.getDate()-29);return d.toISOString().slice(0,10);})(), until: new Date().toISOString().slice(0,10) };
 let postPerfSort = 'engagement'; // engagement | reach | impressions | date
+let postPerfShowAll = false;
 // Ad Spend Tracker state
 let adSpendConn = { enabled: false, adAccountId: '', adAccountName: '', currency: 'THB', accounts: [], connectedAt: null, token: '', testStatus: 'idle', testMessage: '' };
 let adSpendData = { campaigns: [], summary: null, loading: false, error: '', fetchedAt: null };
@@ -13824,7 +13825,8 @@ async function loadPostPerfData(){
     // Use /posts endpoint (same as Social Analytics — works with basic Page Token)
     // Filter by date client-side after fetch to avoid since/until causing empty results
     const baseFields = 'id,message,story,created_time,permalink_url,full_picture,attachments{media_type,type,description},shares,likes.summary(true).limit(0),comments.summary(true).limit(0),reactions.summary(true).limit(0)';
-    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${postPerfConn.pageId}/posts?fields=${encodeURIComponent(baseFields)}&limit=100&access_token=${tok}`);
+    const fetchLimit = postPerfShowAll ? 200 : 100;
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${postPerfConn.pageId}/posts?fields=${encodeURIComponent(baseFields)}&limit=${fetchLimit}&access_token=${tok}`);
     const j = await r.json();
     if(j.error){
       console.error('FB API error (posts):', j.error);
@@ -13853,13 +13855,15 @@ async function loadPostPerfData(){
         shares: p.shares?.count || 0,
       };
     });
-    // Client-side date filter (so user can adjust range without re-fetching)
-    const sinceMs = new Date(postPerfRange.since).getTime();
-    const untilMs = new Date(postPerfRange.until + 'T23:59:59').getTime();
-    posts = posts.filter(p => {
-      const t = new Date(p.createdTime).getTime();
-      return t >= sinceMs && t <= untilMs;
-    });
+    // Client-side date filter (skip when "ดูทั้งหมด" is on)
+    if(!postPerfShowAll){
+      const sinceMs = new Date(postPerfRange.since).getTime();
+      const untilMs = new Date(postPerfRange.until + 'T23:59:59').getTime();
+      posts = posts.filter(p => {
+        const t = new Date(p.createdTime).getTime();
+        return t >= sinceMs && t <= untilMs;
+      });
+    }
     // Step 2: fetch insights per-post in parallel (may fail for some, that's OK)
     if(posts.length){
       const metrics = 'post_impressions,post_impressions_unique,post_clicks';
@@ -13900,11 +13904,14 @@ async function loadPostPerfData(){
 }
 function setPostPerfRange(which, v){
   if(which==='since') postPerfRange.since = v; else postPerfRange.until = v;
-  // Re-fetch to re-apply client-side date filter to the same 100 fetched posts
-  // (cheap because /posts call is fast; this also clears stale "error" state)
+  postPerfShowAll = false;
   loadPostPerfData();
 }
 function setPostPerfSort(s){ postPerfSort = s; rerender(); }
+function togglePostPerfShowAll(){
+  postPerfShowAll = !postPerfShowAll;
+  loadPostPerfData();
+}
 
 function renderPostPerformance(el){
   if(!postPerfConn.enabled){
@@ -13953,11 +13960,12 @@ function renderPostPerformance(el){
     typeBreakdown[t].impressions += p.impressions;
     typeBreakdown[t].engagement += (p.reactions||0) + (p.comments||0) + (p.shares||0);
   });
-  el.innerHTML = topbarSimple('barChart','Post Performance', `${escapeHtmlN(postPerfConn.pageName)} · ${posts.length} โพสต์ในช่วง`) + `
+  el.innerHTML = topbarSimple('barChart','Post Performance', `${escapeHtmlN(postPerfConn.pageName)} · ${posts.length} โพสต์${postPerfShowAll?' (ทั้งหมด)':'ในช่วง'}`) + `
     <div class="page-content" style="max-width:1200px">
       <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-bottom:18px;padding:14px;background:var(--bg-soft);border-radius:12px">
-        <div><label style="font-size:11px;color:var(--t2);font-weight:700;display:block;margin-bottom:4px">จาก</label><input type="date" value="${postPerfRange.since}" onchange="setPostPerfRange('since',this.value)" style="padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--t1)"/></div>
-        <div><label style="font-size:11px;color:var(--t2);font-weight:700;display:block;margin-bottom:4px">ถึง</label><input type="date" value="${postPerfRange.until}" onchange="setPostPerfRange('until',this.value)" style="padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--t1)"/></div>
+        <div><label style="font-size:11px;color:var(--t2);font-weight:700;display:block;margin-bottom:4px">จาก</label><input type="date" value="${postPerfRange.since}" onchange="setPostPerfRange('since',this.value)" ${postPerfShowAll?'disabled':''} style="padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--t1);${postPerfShowAll?'opacity:.45':''}"/></div>
+        <div><label style="font-size:11px;color:var(--t2);font-weight:700;display:block;margin-bottom:4px">ถึง</label><input type="date" value="${postPerfRange.until}" onchange="setPostPerfRange('until',this.value)" ${postPerfShowAll?'disabled':''} style="padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--t1);${postPerfShowAll?'opacity:.45':''}"/></div>
+        <button class="${postPerfShowAll?'btn-primary':'btn-ghost'}" onclick="togglePostPerfShowAll()" style="${postPerfShowAll?'background:linear-gradient(135deg,#ec4899,#f472b6)':''}" title="${postPerfShowAll?'แสดงเฉพาะช่วงวันที่':'ดูโพสต์ทั้งหมด (สูงสุด 200 โพสต์ล่าสุด)'}">${postPerfShowAll?'✓ ดูทั้งหมด':'🗂 ดูทั้งหมด'}</button>
         <button class="btn-ghost" onclick="loadPostPerfData()" ${postPerfData.loading?'disabled':''}>${postPerfData.loading?'กำลังโหลด…':'↻ รีเฟรช'}</button>
         ${postPerfData.fetchedAt?`<span style="font-size:11.5px;color:var(--t2);margin-left:auto">อัปเดต ${new Date(postPerfData.fetchedAt).toLocaleString('th-TH')}</span>`:''}
       </div>
