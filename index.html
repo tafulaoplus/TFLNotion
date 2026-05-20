@@ -13565,28 +13565,78 @@ async function _intgTestPostPerfToken(){
   postPerfConn.testMessage = 'กำลังทดสอบ…';
   rerender();
   try {
-    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/me/accounts?fields=id,name,access_token,fan_count&limit=50&access_token=${encodeURIComponent(tok)}`);
-    const j = await r.json();
-    if(j.error) throw new Error(`${j.error.message} (code ${j.error.code||'?'})`);
-    const pages = j.data || [];
-    if(pages.length === 0){
-      // Try as page token directly — call /me
-      const r2 = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/me?fields=id,name,fan_count&access_token=${encodeURIComponent(tok)}`);
-      const j2 = await r2.json();
-      if(j2.error) throw new Error(j2.error.message);
-      if(!j2.id) throw new Error('ไม่พบ Page หรือ User ID');
-      postPerfConn.pages = [{ id: j2.id, name: j2.name, access_token: tok, fan_count: j2.fan_count }];
-    } else {
-      postPerfConn.pages = pages;
+    const enc = encodeURIComponent(tok);
+    // Step A: check token type + scopes via debug_token
+    let tokenInfo = null;
+    try {
+      const dr = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/me?fields=id,name&access_token=${enc}`);
+      const dj = await dr.json();
+      if(dj.error) throw new Error(dj.error.message);
+      tokenInfo = { id: dj.id, name: dj.name };
+    } catch(e){
+      throw new Error(`Token ใช้ไม่ได้: ${e.message}`);
     }
-    postPerfConn.testStatus = 'ok';
-    postPerfConn.testMessage = `✓ ทดสอบผ่าน · พบ ${postPerfConn.pages.length} เพจ`;
+    // Step B: try /me/accounts (works for User Token with pages_show_list)
+    let pages = [];
+    let usedFallback = false;
+    try {
+      const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/me/accounts?fields=id,name,access_token,fan_count&limit=50&access_token=${enc}`);
+      const j = await r.json();
+      if(j.error){
+        console.warn('/me/accounts failed:', j.error);
+        throw new Error(j.error.message);
+      }
+      pages = j.data || [];
+    } catch(e){
+      console.warn('Falling back: treat token as Page Token');
+      usedFallback = true;
+    }
+    if(pages.length === 0){
+      // Fallback: treat as page token — token's "me" IS the page
+      pages = [{ id: tokenInfo.id, name: tokenInfo.name, access_token: tok }];
+    }
+    postPerfConn.pages = pages;
+    // Step C: probe ability to read posts on first page
+    let canReadPosts = false, probeErr = '';
+    try {
+      const probePage = pages[0];
+      const probeToken = probePage.access_token || tok;
+      const pr = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${probePage.id}/published_posts?fields=id,created_time&limit=1&access_token=${encodeURIComponent(probeToken)}`);
+      const pj = await pr.json();
+      if(pj.error){ probeErr = pj.error.message; }
+      else { canReadPosts = true; }
+    } catch(e){ probeErr = e.message; }
+    postPerfConn.testStatus = canReadPosts ? 'ok' : 'failed';
+    postPerfConn.testMessage = canReadPosts
+      ? `✓ ทดสอบผ่าน · พบ ${pages.length} เพจ · อ่านโพสต์ได้${usedFallback?' (ใช้ Page Token)':''}`
+      : `✗ พบเพจแล้ว แต่อ่านโพสต์ไม่ได้: ${probeErr || 'ไม่ทราบสาเหตุ'}\n💡 ลองเพิ่ม scope pages_read_engagement หรือใช้ User Token ที่ admin ของเพจ approve แล้ว`;
     rerender();
   } catch(err){
     console.error('Post Perf token test error:', err);
     postPerfConn.testStatus = 'failed';
     postPerfConn.testMessage = '✗ ' + err.message;
     rerender();
+  }
+}
+async function _intgCheckPostPerfPerms(){
+  const ta = document.getElementById('intgPostPerfToken');
+  const tok = (ta && ta.value.trim()) || postPerfConn.token;
+  if(!tok){ alert('วาง Token ก่อน'); return; }
+  try {
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/me/permissions?access_token=${encodeURIComponent(tok)}`);
+    const j = await r.json();
+    if(j.error) throw new Error(j.error.message);
+    const granted = (j.data||[]).filter(p=>p.status==='granted').map(p=>p.permission);
+    const declined = (j.data||[]).filter(p=>p.status!=='granted').map(p=>p.permission);
+    const needed = ['pages_show_list','pages_read_engagement','pages_read_user_content'];
+    const missing = needed.filter(n => !granted.includes(n));
+    let msg = `Token Permissions:\n\n✓ Granted (${granted.length}):\n${granted.join(', ')||'(ไม่มี)'}\n`;
+    if(declined.length) msg += `\n✗ Declined:\n${declined.join(', ')}\n`;
+    msg += `\n📝 Post Performance ต้องการ:\n${needed.join(', ')}\n`;
+    if(missing.length) msg += `\n⚠ ขาด: ${missing.join(', ')}`; else msg += `\n✅ ครบทุก scope ที่จำเป็น`;
+    alert(msg);
+  } catch(err){
+    alert('เช็ค permissions ไม่ได้: ' + err.message);
   }
 }
 function _intgEnablePostPerf(){
@@ -13661,6 +13711,27 @@ async function _intgTestAdSpendToken(){
     rerender();
   }
 }
+async function _intgCheckAdSpendPerms(){
+  const ta = document.getElementById('intgAdSpendToken');
+  const tok = (ta && ta.value.trim()) || adSpendConn.token;
+  if(!tok){ alert('วาง Token ก่อน'); return; }
+  try {
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/me/permissions?access_token=${encodeURIComponent(tok)}`);
+    const j = await r.json();
+    if(j.error) throw new Error(j.error.message);
+    const granted = (j.data||[]).filter(p=>p.status==='granted').map(p=>p.permission);
+    const declined = (j.data||[]).filter(p=>p.status!=='granted').map(p=>p.permission);
+    const needed = ['ads_read','ads_management','business_management'];
+    const missing = needed.filter(n => !granted.includes(n));
+    let msg = `Token Permissions:\n\n✓ Granted (${granted.length}):\n${granted.join(', ')||'(ไม่มี)'}\n`;
+    if(declined.length) msg += `\n✗ Declined:\n${declined.join(', ')}\n`;
+    msg += `\n📝 Ad Spend Tracker ต้องการ:\n${needed.join(', ')}\n`;
+    if(missing.length) msg += `\n⚠ ขาด: ${missing.join(', ')}`; else msg += `\n✅ ครบทุก scope ที่จำเป็น`;
+    alert(msg);
+  } catch(err){
+    alert('เช็ค permissions ไม่ได้: ' + err.message);
+  }
+}
 function _intgConnectAdSpend(){
   if(adSpendConn.testStatus !== 'ok' || !adSpendConn.accounts.length){
     alert('ต้องทดสอบ token ก่อน'); return;
@@ -13718,7 +13789,11 @@ async function loadPostPerfData(){
     const j = await r.json();
     if(j.error){
       console.error('FB API error (posts):', j.error);
-      throw new Error(`Graph API: ${j.error.message} (code ${j.error.code||'?'}, type ${j.error.type||'?'})`);
+      let hint = '';
+      if(j.error.code === 200 || /permission/i.test(j.error.message)) hint = '\n💡 Token ขาด scope "pages_read_engagement" — กลับไปหน้าเชื่อมต่อ กดปุ่ม "🔍 ดู Permissions"';
+      else if(j.error.code === 190) hint = '\n💡 Token หมดอายุ — สร้าง token ใหม่ที่ Graph API Explorer';
+      else if(j.error.code === 100) hint = '\n💡 Page ID อาจผิด หรือใช้ User Token แทน Page Token';
+      throw new Error(`Graph API: ${j.error.message} (code ${j.error.code||'?'})${hint}`);
     }
     let posts = (j.data||[]).map(p => {
       const mediaType = p.attachments?.data?.[0]?.media_type || p.attachments?.data?.[0]?.type || 'text';
@@ -14258,6 +14333,7 @@ function renderSocialIntegrations(el){
             ` : ''}
             <div class="intg-actions">
               <button class="intg-btn-ghost" onclick="_intgTestPostPerfToken()" ${postPerfConn.testStatus==='testing'?'disabled':''}>${postPerfConn.testStatus==='testing'?'กำลังทดสอบ…':'🧪 ทดสอบการเชื่อมต่อ'}</button>
+              <button class="intg-btn-ghost" onclick="_intgCheckPostPerfPerms()">🔍 ดู Permissions</button>
               ${postPerfConn.testStatus === 'ok' ? `<button class="intg-btn-primary" style="background:linear-gradient(135deg,#ec4899,#f472b6)" onclick="_intgEnablePostPerf()">เชื่อมต่อ →</button>` : ''}
             </div>
           `}
@@ -14305,6 +14381,7 @@ function renderSocialIntegrations(el){
             ` : ''}
             <div class="intg-actions">
               <button class="intg-btn-ghost" onclick="_intgTestAdSpendToken()" ${adSpendConn.testStatus==='testing'?'disabled':''}>${adSpendConn.testStatus==='testing'?'กำลังทดสอบ…':'🧪 ทดสอบการเชื่อมต่อ'}</button>
+              <button class="intg-btn-ghost" onclick="_intgCheckAdSpendPerms()">🔍 ดู Permissions</button>
               ${adSpendConn.testStatus === 'ok' && adSpendConn.accounts.length ? `<button class="intg-btn-primary" style="background:linear-gradient(135deg,#10b981,#059669)" onclick="_intgConnectAdSpend()">เชื่อมต่อ →</button>` : ''}
             </div>
           `}
