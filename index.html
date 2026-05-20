@@ -4342,12 +4342,12 @@ let socialDateEnd = new Date().toISOString().slice(0,10);
 let socialData = { fb:null, tt:null, yt:null };
 let socialLoading = false;
 // Post Performance state
-let postPerfConn = { enabled: false, connectedAt: null };
+let postPerfConn = { enabled: false, connectedAt: null, token: '', pageId: '', pageName: '', pages: [], testStatus: 'idle', testMessage: '' };
 let postPerfData = { posts: [], loading: false, error: '', fetchedAt: null };
 let postPerfRange = { since: (()=>{const d=new Date();d.setDate(d.getDate()-29);return d.toISOString().slice(0,10);})(), until: new Date().toISOString().slice(0,10) };
 let postPerfSort = 'engagement'; // engagement | reach | impressions | date
 // Ad Spend Tracker state
-let adSpendConn = { enabled: false, adAccountId: '', adAccountName: '', currency: 'THB', accounts: [], connectedAt: null };
+let adSpendConn = { enabled: false, adAccountId: '', adAccountName: '', currency: 'THB', accounts: [], connectedAt: null, token: '', testStatus: 'idle', testMessage: '' };
 let adSpendData = { campaigns: [], summary: null, loading: false, error: '', fetchedAt: null };
 let adSpendRange = { since: (()=>{const d=new Date();d.setDate(d.getDate()-29);return d.toISOString().slice(0,10);})(), until: new Date().toISOString().slice(0,10) };
 let adSpendGroupBy = 'campaign'; // campaign | adset | ad
@@ -4638,6 +4638,9 @@ function applyRemoteWorkspace(data){
   if(data.postPerfConn && typeof data.postPerfConn === 'object'){
     postPerfConn.enabled = !!data.postPerfConn.enabled;
     postPerfConn.connectedAt = data.postPerfConn.connectedAt || null;
+    postPerfConn.token = data.postPerfConn.token || '';
+    postPerfConn.pageId = data.postPerfConn.pageId || '';
+    postPerfConn.pageName = data.postPerfConn.pageName || '';
   }
   if(data.adSpendConn && typeof data.adSpendConn === 'object'){
     adSpendConn.enabled = !!data.adSpendConn.enabled;
@@ -4645,6 +4648,7 @@ function applyRemoteWorkspace(data){
     adSpendConn.adAccountName = data.adSpendConn.adAccountName || '';
     adSpendConn.currency = data.adSpendConn.currency || 'THB';
     adSpendConn.connectedAt = data.adSpendConn.connectedAt || null;
+    adSpendConn.token = data.adSpendConn.token || '';
   }
   if(data.fbConnection && typeof data.fbConnection === 'object'){
     if(data.fbConnection.pageToken){
@@ -4736,8 +4740,8 @@ function syncToNeon(){
           pageName: fbPostState.pageName || '',
           pageToken: fbPostState.pageToken || '',
         },
-        postPerfConn: postPerfConn,
-        adSpendConn: { enabled: adSpendConn.enabled, adAccountId: adSpendConn.adAccountId, adAccountName: adSpendConn.adAccountName, currency: adSpendConn.currency, connectedAt: adSpendConn.connectedAt },
+        postPerfConn: { enabled: postPerfConn.enabled, connectedAt: postPerfConn.connectedAt, token: postPerfConn.token, pageId: postPerfConn.pageId, pageName: postPerfConn.pageName },
+        adSpendConn: { enabled: adSpendConn.enabled, adAccountId: adSpendConn.adAccountId, adAccountName: adSpendConn.adAccountName, currency: adSpendConn.currency, connectedAt: adSpendConn.connectedAt, token: adSpendConn.token },
         googleDriveSettings: googleDriveSettings,
         tiktokSettings: tiktokSettings,
         youtubeSettings: youtubeSettings,
@@ -13552,36 +13556,115 @@ async function _intgDisconnectDrive(){
 }
 
 // ===================== POST PERFORMANCE & AD SPEND TRACKER =====================
-async function _intgEnablePostPerf(){
-  if(!fbPostState.pageId || !fbPostState.pageToken){ alert('ต้องเชื่อม Facebook Page ก่อน'); return; }
+async function _intgTestPostPerfToken(){
+  const ta = document.getElementById('intgPostPerfToken');
+  const tok = (ta && ta.value.trim()) || postPerfConn.token;
+  if(!tok){ alert('วาง Token ก่อน'); return; }
+  postPerfConn.token = tok;
+  postPerfConn.testStatus = 'testing';
+  postPerfConn.testMessage = 'กำลังทดสอบ…';
+  rerender();
+  try {
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/me/accounts?fields=id,name,access_token,fan_count&limit=50&access_token=${encodeURIComponent(tok)}`);
+    const j = await r.json();
+    if(j.error) throw new Error(`${j.error.message} (code ${j.error.code||'?'})`);
+    const pages = j.data || [];
+    if(pages.length === 0){
+      // Try as page token directly — call /me
+      const r2 = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/me?fields=id,name,fan_count&access_token=${encodeURIComponent(tok)}`);
+      const j2 = await r2.json();
+      if(j2.error) throw new Error(j2.error.message);
+      if(!j2.id) throw new Error('ไม่พบ Page หรือ User ID');
+      postPerfConn.pages = [{ id: j2.id, name: j2.name, access_token: tok, fan_count: j2.fan_count }];
+    } else {
+      postPerfConn.pages = pages;
+    }
+    postPerfConn.testStatus = 'ok';
+    postPerfConn.testMessage = `✓ ทดสอบผ่าน · พบ ${postPerfConn.pages.length} เพจ`;
+    rerender();
+  } catch(err){
+    console.error('Post Perf token test error:', err);
+    postPerfConn.testStatus = 'failed';
+    postPerfConn.testMessage = '✗ ' + err.message;
+    rerender();
+  }
+}
+function _intgEnablePostPerf(){
+  if(postPerfConn.testStatus !== 'ok' || !postPerfConn.pages.length){
+    alert('ต้องทดสอบ token ก่อน'); return;
+  }
+  const sel = document.getElementById('intgPostPerfPageSel');
+  let chosen;
+  if(sel && sel.value){
+    chosen = postPerfConn.pages.find(p => p.id === sel.value);
+  } else {
+    chosen = postPerfConn.pages[0];
+  }
+  if(!chosen){ alert('เลือกเพจก่อน'); return; }
+  postPerfConn.pageId = chosen.id;
+  postPerfConn.pageName = chosen.name;
+  // Prefer page-specific access token if available, fallback to user token
+  postPerfConn.token = chosen.access_token || postPerfConn.token;
   postPerfConn.enabled = true;
   postPerfConn.connectedAt = Date.now();
+  postPerfConn.testStatus = 'idle';
+  postPerfConn.testMessage = '';
   saveAll();
+  rerender();
+}
+function _intgReconnectPostPerf(){
+  postPerfConn.enabled = false;
+  postPerfConn.testStatus = 'idle';
+  postPerfConn.testMessage = '';
+  postPerfConn.pages = [];
   rerender();
 }
 function _intgDisablePostPerf(){
-  if(!confirm('ปิดการใช้งาน Post Performance?')) return;
+  if(!confirm('ปิดการใช้งาน Post Performance? (token จะถูกลบด้วย)')) return;
   postPerfConn.enabled = false;
   postPerfConn.connectedAt = null;
+  postPerfConn.token = '';
+  postPerfConn.pageId = '';
+  postPerfConn.pageName = '';
+  postPerfConn.pages = [];
+  postPerfConn.testStatus = 'idle';
+  postPerfConn.testMessage = '';
   saveAll();
   rerender();
 }
-async function _intgLoadAdAccounts(){
-  if(!fbPostState.pageToken){ alert('ต้องเชื่อม Facebook ก่อน'); return; }
-  const btn = event && event.target; if(btn) { btn.disabled = true; btn.textContent = 'กำลังโหลด…'; }
+
+async function _intgTestAdSpendToken(){
+  const ta = document.getElementById('intgAdSpendToken');
+  const tok = (ta && ta.value.trim()) || adSpendConn.token;
+  if(!tok){ alert('วาง Token ก่อน'); return; }
+  adSpendConn.token = tok;
+  adSpendConn.testStatus = 'testing';
+  adSpendConn.testMessage = 'กำลังทดสอบ…';
+  rerender();
   try {
-    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/me/adaccounts?fields=id,name,account_id,currency,account_status&access_token=${encodeURIComponent(fbPostState.pageToken)}`);
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/me/adaccounts?fields=id,name,account_id,currency,account_status&limit=50&access_token=${encodeURIComponent(tok)}`);
     const j = await r.json();
-    if(j.error) throw new Error(j.error.message);
+    if(j.error) throw new Error(`${j.error.message} (code ${j.error.code||'?'})`);
     adSpendConn.accounts = (j.data||[]).map(a => ({ id: a.id, account_id: a.account_id, name: a.name, currency: a.currency, status: a.account_status }));
-    if(adSpendConn.accounts.length === 0){ alert('ไม่พบบัญชีโฆษณา (ตรวจสอบว่า token มี scope ads_read + business_management)'); }
+    if(adSpendConn.accounts.length === 0){
+      adSpendConn.testStatus = 'failed';
+      adSpendConn.testMessage = '✗ ไม่พบบัญชีโฆษณา (ตรวจสอบ scope ads_read + business_management)';
+    } else {
+      adSpendConn.testStatus = 'ok';
+      adSpendConn.testMessage = `✓ ทดสอบผ่าน · พบ ${adSpendConn.accounts.length} บัญชี`;
+    }
     rerender();
   } catch(err){
-    alert('โหลดบัญชีโฆษณาไม่สำเร็จ: ' + err.message);
-    if(btn) { btn.disabled = false; btn.textContent = 'โหลดบัญชีโฆษณา'; }
+    console.error('Ad Spend token test error:', err);
+    adSpendConn.testStatus = 'failed';
+    adSpendConn.testMessage = '✗ ' + err.message;
+    rerender();
   }
 }
 function _intgConnectAdSpend(){
+  if(adSpendConn.testStatus !== 'ok' || !adSpendConn.accounts.length){
+    alert('ต้องทดสอบ token ก่อน'); return;
+  }
   const sel = document.getElementById('intgAdAccSel');
   if(!sel || !sel.value){ alert('เลือกบัญชีโฆษณาก่อน'); return; }
   const acc = adSpendConn.accounts.find(a => a.id === sel.value);
@@ -13591,35 +13674,47 @@ function _intgConnectAdSpend(){
   adSpendConn.adAccountName = acc.name;
   adSpendConn.currency = acc.currency || 'THB';
   adSpendConn.connectedAt = Date.now();
+  adSpendConn.testStatus = 'idle';
+  adSpendConn.testMessage = '';
   saveAll();
   rerender();
 }
+function _intgReconnectAdSpend(){
+  adSpendConn.enabled = false;
+  adSpendConn.testStatus = 'idle';
+  adSpendConn.testMessage = '';
+  rerender();
+}
 function _intgDisableAdSpend(){
-  if(!confirm('ปิดการใช้งาน Ad Spend Tracker?')) return;
+  if(!confirm('ปิดการใช้งาน Ad Spend Tracker? (token จะถูกลบด้วย)')) return;
   adSpendConn.enabled = false;
   adSpendConn.adAccountId = '';
   adSpendConn.adAccountName = '';
   adSpendConn.connectedAt = null;
+  adSpendConn.token = '';
+  adSpendConn.accounts = [];
+  adSpendConn.testStatus = 'idle';
+  adSpendConn.testMessage = '';
   saveAll();
   rerender();
 }
 
 // ============ POST PERFORMANCE PAGE ============
 async function loadPostPerfData(){
-  if(!fbPostState.pageId || !fbPostState.pageToken){
-    postPerfData.error = 'ต้องเชื่อม Facebook Page ก่อน';
+  if(!postPerfConn.pageId || !postPerfConn.token){
+    postPerfData.error = 'ยังไม่ได้เชื่อมต่อ Post Performance';
     rerender(); return;
   }
   postPerfData.loading = true;
   postPerfData.error = '';
   rerender();
   try {
-    const tok = encodeURIComponent(fbPostState.pageToken);
+    const tok = encodeURIComponent(postPerfConn.token);
     const since = Math.floor(new Date(postPerfRange.since).getTime()/1000);
     const until = Math.floor(new Date(postPerfRange.until + 'T23:59:59').getTime()/1000);
     // Step 1: fetch posts WITHOUT insights first (always works)
     const baseFields = 'id,message,story,created_time,permalink_url,full_picture,attachments{media_type,type,description},shares,likes.summary(true).limit(0),comments.summary(true).limit(0),reactions.summary(true).limit(0)';
-    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}/published_posts?fields=${encodeURIComponent(baseFields)}&since=${since}&until=${until}&limit=50&access_token=${tok}`);
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${postPerfConn.pageId}/published_posts?fields=${encodeURIComponent(baseFields)}&since=${since}&until=${until}&limit=50&access_token=${tok}`);
     const j = await r.json();
     if(j.error){
       console.error('FB API error (posts):', j.error);
@@ -13730,7 +13825,7 @@ function renderPostPerformance(el){
     typeBreakdown[t].impressions += p.impressions;
     typeBreakdown[t].engagement += (p.reactions||0) + (p.comments||0) + (p.shares||0);
   });
-  el.innerHTML = topbarSimple('barChart','Post Performance', `${fbPostState.pageName} · ${posts.length} โพสต์ในช่วง`) + `
+  el.innerHTML = topbarSimple('barChart','Post Performance', `${escapeHtmlN(postPerfConn.pageName)} · ${posts.length} โพสต์ในช่วง`) + `
     <div class="page-content" style="max-width:1200px">
       <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-bottom:18px;padding:14px;background:var(--bg-soft);border-radius:12px">
         <div><label style="font-size:11px;color:var(--t2);font-weight:700;display:block;margin-bottom:4px">จาก</label><input type="date" value="${postPerfRange.since}" onchange="setPostPerfRange('since',this.value)" style="padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--t1)"/></div>
@@ -13740,7 +13835,7 @@ function renderPostPerformance(el){
       </div>
       ${postPerfData.error ? `<div style="padding:14px;background:#fee;border:1px solid #fcc;border-radius:10px;color:#c00;margin-bottom:14px">⚠ ${escapeHtmlN(postPerfData.error)}</div>` : ''}
       <div class="lot-kpi-grid" style="margin-bottom:18px">
-        <div class="lot-kpi sales"><div class="lot-kpi-lbl">โพสต์ในช่วง</div><div class="lot-kpi-val">${posts.length}</div><div class="lot-kpi-sub">${fbPostState.pageName}</div></div>
+        <div class="lot-kpi sales"><div class="lot-kpi-lbl">โพสต์ในช่วง</div><div class="lot-kpi-val">${posts.length}</div><div class="lot-kpi-sub">${escapeHtmlN(postPerfConn.pageName)}</div></div>
         <div class="lot-kpi prize"><div class="lot-kpi-lbl">Reactions รวม</div><div class="lot-kpi-val">${fmtNum(sumReact)}</div><div class="lot-kpi-sub">${sumLikes.toLocaleString()} likes</div></div>
         <div class="lot-kpi profit"><div class="lot-kpi-lbl">Comments</div><div class="lot-kpi-val">${fmtNum(sumComments)}</div><div class="lot-kpi-sub">${posts.length?Math.round(sumComments/posts.length):0} ต่อโพสต์</div></div>
         <div class="lot-kpi member"><div class="lot-kpi-lbl">Shares</div><div class="lot-kpi-val">${fmtNum(sumShares)}</div><div class="lot-kpi-sub">${posts.length?Math.round(sumShares/posts.length):0} ต่อโพสต์</div></div>
@@ -13802,7 +13897,7 @@ function renderPostPerformance(el){
 
 // ============ AD SPEND TRACKER PAGE ============
 async function loadAdSpendData(){
-  if(!adSpendConn.adAccountId || !fbPostState.pageToken){
+  if(!adSpendConn.adAccountId || !adSpendConn.token){
     adSpendData.error = 'ยังไม่ได้เชื่อมบัญชีโฆษณา';
     rerender(); return;
   }
@@ -13810,7 +13905,7 @@ async function loadAdSpendData(){
   adSpendData.error = '';
   rerender();
   try {
-    const tok = encodeURIComponent(fbPostState.pageToken);
+    const tok = encodeURIComponent(adSpendConn.token);
     const lvl = adSpendGroupBy; // 'campaign' | 'adset' | 'ad'
     const fields = 'campaign_id,campaign_name,adset_id,adset_name,ad_id,ad_name,spend,impressions,reach,clicks,ctr,cpc,cpm,actions,objective';
     const tr = `{'since':'${adSpendRange.since}','until':'${adSpendRange.until}'}`;
@@ -14126,30 +14221,44 @@ function renderSocialIntegrations(el){
           <div class="intg-hdr">
             <div class="intg-logo" style="background:linear-gradient(135deg,#ec4899,#f472b6)">📊</div>
             <div style="flex:1;min-width:0">
-              <div class="intg-name">Post Performance <span class="intg-status ${postPerfConn.enabled?'on':'off'}">${postPerfConn.enabled?'เปิดใช้งาน':'ปิดอยู่'}</span></div>
-              <p class="intg-desc">วิเคราะห์ Reach, Engagement, เวลาโพสต์ที่ดีที่สุด, ประเภทคอนเทนต์ที่ได้ผล (ใช้ FB Page ที่เชื่อมแล้ว)</p>
+              <div class="intg-name">Post Performance <span class="intg-status ${postPerfConn.enabled?'on':'off'}">${postPerfConn.enabled?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
+              <p class="intg-desc">วิเคราะห์ Reactions/Comments/Shares · Reach · เวลาโพสต์ที่ดีที่สุด · ประเภทคอนเทนต์ที่ได้ผล</p>
             </div>
           </div>
-          ${!fbConnected ? `
-            <p style="font-size:12px;color:var(--t2);line-height:1.6;background:var(--bg-soft);padding:11px;border-radius:9px;margin:14px 0">⚠ ต้องเชื่อม Facebook Page ก่อน (ด้านบน) แล้วค่อยกลับมาเปิดใช้งาน</p>
-          ` : postPerfConn.enabled ? `
+          ${postPerfConn.enabled ? `
             <div class="intg-account">
               <div class="intg-account-thumb" style="background:linear-gradient(135deg,#ec4899,#f472b6)">📊</div>
               <div class="intg-account-info">
-                <div class="intg-account-name">เปิดใช้งานแล้ว</div>
-                <div class="intg-account-meta">เชื่อมเมื่อ ${postPerfConn.connectedAt?new Date(postPerfConn.connectedAt).toLocaleString('th-TH'):'-'} · ใช้ Page: ${escapeHtmlN(fbPostState.pageName||'')}</div>
+                <div class="intg-account-name">${escapeHtmlN(postPerfConn.pageName)}</div>
+                <div class="intg-account-meta">Page ID: ${escapeHtmlN(postPerfConn.pageId)} · เชื่อมเมื่อ ${postPerfConn.connectedAt?new Date(postPerfConn.connectedAt).toLocaleString('th-TH'):'-'}</div>
               </div>
             </div>
             <div class="intg-actions">
               <button class="intg-btn-primary" style="background:linear-gradient(135deg,#ec4899,#f472b6)" onclick="navigateTo('postPerformance')">เปิดหน้า Post Performance →</button>
-              <button class="intg-btn-ghost danger" onclick="_intgDisablePostPerf()">ปิดการใช้งาน</button>
+              <button class="intg-btn-ghost" onclick="_intgTestPostPerfToken()">↻ ทดสอบเชื่อมต่อใหม่</button>
+              <button class="intg-btn-ghost" onclick="_intgReconnectPostPerf()">เปลี่ยน Token</button>
+              <button class="intg-btn-ghost danger" onclick="_intgDisablePostPerf()">ตัดการเชื่อมต่อ</button>
             </div>
+            ${postPerfConn.testMessage ? `<div style="margin-top:10px;padding:8px 12px;background:${postPerfConn.testStatus==='ok'?'rgba(16,185,129,.12)':postPerfConn.testStatus==='failed'?'rgba(239,68,68,.12)':'var(--bg-soft)'};border-radius:8px;font-size:12px;color:${postPerfConn.testStatus==='ok'?'#059669':postPerfConn.testStatus==='failed'?'#dc2626':'var(--t1)'}">${escapeHtmlN(postPerfConn.testMessage)}</div>` : ''}
           ` : `
-            <div class="intg-token-help" style="margin:12px 0">
-              <b style="color:var(--t1)">สิ่งที่จะได้:</b> KPI Reach/Impressions/Engagement Rate · จัดอันดับโพสต์ที่ผลดี/ไม่ดี · วิเคราะห์ประเภทคอนเทนต์ที่เวิร์ค · เวลาโพสต์ที่ดีที่สุด
+            <div class="intg-token-row">
+              <textarea class="intg-token-input" id="intgPostPerfToken" placeholder="วาง Access Token (User Token ที่มี pages_read_engagement + pages_show_list หรือ Page Token ก็ได้)">${escapeHtmlN(postPerfConn.token||'')}</textarea>
+              <div class="intg-token-help">Token ต้องมี scope: <code>pages_read_engagement</code>, <code>pages_show_list</code> · ขอที่ <a href="https://developers.facebook.com/tools/explorer" target="_blank">Graph API Explorer</a></div>
             </div>
+            ${postPerfConn.testStatus !== 'idle' && postPerfConn.testMessage ? `
+              <div style="margin:10px 0;padding:10px 12px;background:${postPerfConn.testStatus==='ok'?'rgba(16,185,129,.12)':postPerfConn.testStatus==='failed'?'rgba(239,68,68,.12)':'var(--bg-soft)'};border-radius:8px;font-size:12.5px;color:${postPerfConn.testStatus==='ok'?'#059669':postPerfConn.testStatus==='failed'?'#dc2626':'var(--t1)'};font-weight:600">${escapeHtmlN(postPerfConn.testMessage)}</div>
+            ` : ''}
+            ${postPerfConn.testStatus === 'ok' && postPerfConn.pages.length ? `
+              <div style="margin:14px 0">
+                <label style="font-size:12px;font-weight:700;color:var(--t1);display:block;margin-bottom:6px">เลือก Page</label>
+                <select id="intgPostPerfPageSel" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:9px;background:var(--bg);color:var(--t1);font-size:13px">
+                  ${postPerfConn.pages.map(p => `<option value="${escapeHtmlN(p.id)}">${escapeHtmlN(p.name)} · ${(p.fan_count||0).toLocaleString()} fans</option>`).join('')}
+                </select>
+              </div>
+            ` : ''}
             <div class="intg-actions">
-              <button class="intg-btn-primary" style="background:linear-gradient(135deg,#ec4899,#f472b6)" onclick="_intgEnablePostPerf()">เปิดใช้งาน Post Performance</button>
+              <button class="intg-btn-ghost" onclick="_intgTestPostPerfToken()" ${postPerfConn.testStatus==='testing'?'disabled':''}>${postPerfConn.testStatus==='testing'?'กำลังทดสอบ…':'🧪 ทดสอบการเชื่อมต่อ'}</button>
+              ${postPerfConn.testStatus === 'ok' ? `<button class="intg-btn-primary" style="background:linear-gradient(135deg,#ec4899,#f472b6)" onclick="_intgEnablePostPerf()">เชื่อมต่อ →</button>` : ''}
             </div>
           `}
         </div>
@@ -14159,13 +14268,11 @@ function renderSocialIntegrations(el){
           <div class="intg-hdr">
             <div class="intg-logo" style="background:linear-gradient(135deg,#10b981,#059669)">💰</div>
             <div style="flex:1;min-width:0">
-              <div class="intg-name">Ad Spend Tracker <span class="intg-status ${adSpendConn.enabled?'on':'off'}">${adSpendConn.enabled?'เปิดใช้งาน':'ปิดอยู่'}</span></div>
-              <p class="intg-desc">ติดตามงบโฆษณา ROAS CPC CPM · แยกตาม Campaign / Ad Set / Ad</p>
+              <div class="intg-name">Ad Spend Tracker <span class="intg-status ${adSpendConn.enabled?'on':'off'}">${adSpendConn.enabled?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
+              <p class="intg-desc">ติดตามงบโฆษณา CPC CPM CTR · Leads/Purchases · แยกตาม Campaign/Ad Set/Ad</p>
             </div>
           </div>
-          ${!fbConnected ? `
-            <p style="font-size:12px;color:var(--t2);line-height:1.6;background:var(--bg-soft);padding:11px;border-radius:9px;margin:14px 0">⚠ ต้องเชื่อม Facebook ก่อน (token ต้องมี ads_read + business_management)</p>
-          ` : adSpendConn.enabled ? `
+          ${adSpendConn.enabled ? `
             <div class="intg-account">
               <div class="intg-account-thumb" style="background:linear-gradient(135deg,#10b981,#059669)">💰</div>
               <div class="intg-account-info">
@@ -14175,28 +14282,31 @@ function renderSocialIntegrations(el){
             </div>
             <div class="intg-actions">
               <button class="intg-btn-primary" style="background:linear-gradient(135deg,#10b981,#059669)" onclick="navigateTo('adSpend')">เปิดหน้า Ad Spend Tracker →</button>
-              <button class="intg-btn-ghost danger" onclick="_intgDisableAdSpend()">ปิดการใช้งาน</button>
+              <button class="intg-btn-ghost" onclick="_intgTestAdSpendToken()">↻ ทดสอบเชื่อมต่อใหม่</button>
+              <button class="intg-btn-ghost" onclick="_intgReconnectAdSpend()">เปลี่ยน Token / บัญชี</button>
+              <button class="intg-btn-ghost danger" onclick="_intgDisableAdSpend()">ตัดการเชื่อมต่อ</button>
             </div>
+            ${adSpendConn.testMessage ? `<div style="margin-top:10px;padding:8px 12px;background:${adSpendConn.testStatus==='ok'?'rgba(16,185,129,.12)':adSpendConn.testStatus==='failed'?'rgba(239,68,68,.12)':'var(--bg-soft)'};border-radius:8px;font-size:12px;color:${adSpendConn.testStatus==='ok'?'#059669':adSpendConn.testStatus==='failed'?'#dc2626':'var(--t1)'}">${escapeHtmlN(adSpendConn.testMessage)}</div>` : ''}
           ` : `
-            ${adSpendConn.accounts && adSpendConn.accounts.length ? `
+            <div class="intg-token-row">
+              <textarea class="intg-token-input" id="intgAdSpendToken" placeholder="วาง User Access Token ที่มี ads_read + business_management">${escapeHtmlN(adSpendConn.token||'')}</textarea>
+              <div class="intg-token-help">Token ต้องมี scope: <code>ads_read</code>, <code>ads_management</code>, <code>business_management</code> · ใช้ User Token เท่านั้น (Page Token ไม่ทำงาน)</div>
+            </div>
+            ${adSpendConn.testStatus !== 'idle' && adSpendConn.testMessage ? `
+              <div style="margin:10px 0;padding:10px 12px;background:${adSpendConn.testStatus==='ok'?'rgba(16,185,129,.12)':adSpendConn.testStatus==='failed'?'rgba(239,68,68,.12)':'var(--bg-soft)'};border-radius:8px;font-size:12.5px;color:${adSpendConn.testStatus==='ok'?'#059669':adSpendConn.testStatus==='failed'?'#dc2626':'var(--t1)'};font-weight:600">${escapeHtmlN(adSpendConn.testMessage)}</div>
+            ` : ''}
+            ${adSpendConn.testStatus === 'ok' && adSpendConn.accounts.length ? `
               <div style="margin:14px 0">
                 <label style="font-size:12px;font-weight:700;color:var(--t1);display:block;margin-bottom:6px">เลือกบัญชีโฆษณา</label>
                 <select id="intgAdAccSel" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:9px;background:var(--bg);color:var(--t1);font-size:13px">
                   ${adSpendConn.accounts.map(a => `<option value="${escapeHtmlN(a.id)}">${escapeHtmlN(a.name)} · ${escapeHtmlN(a.account_id)} · ${escapeHtmlN(a.currency||'')}</option>`).join('')}
                 </select>
               </div>
-              <div class="intg-actions">
-                <button class="intg-btn-primary" style="background:linear-gradient(135deg,#10b981,#059669)" onclick="_intgConnectAdSpend()">เชื่อมต่อบัญชีนี้</button>
-                <button class="intg-btn-ghost" onclick="_intgLoadAdAccounts()">โหลดใหม่</button>
-              </div>
-            ` : `
-              <div class="intg-token-help" style="margin:12px 0">
-                <b style="color:var(--t1)">สิ่งที่จะได้:</b> งบที่ใช้รวม + แยกตาม Campaign/Ad Set/Ad · CPC CPM CTR · จำนวน Leads & Purchases · ต้นทุน/Lead · ต้นทุน/Conversion
-              </div>
-              <div class="intg-actions">
-                <button class="intg-btn-primary" style="background:linear-gradient(135deg,#10b981,#059669)" onclick="_intgLoadAdAccounts()">โหลดบัญชีโฆษณา</button>
-              </div>
-            `}
+            ` : ''}
+            <div class="intg-actions">
+              <button class="intg-btn-ghost" onclick="_intgTestAdSpendToken()" ${adSpendConn.testStatus==='testing'?'disabled':''}>${adSpendConn.testStatus==='testing'?'กำลังทดสอบ…':'🧪 ทดสอบการเชื่อมต่อ'}</button>
+              ${adSpendConn.testStatus === 'ok' && adSpendConn.accounts.length ? `<button class="intg-btn-primary" style="background:linear-gradient(135deg,#10b981,#059669)" onclick="_intgConnectAdSpend()">เชื่อมต่อ →</button>` : ''}
+            </div>
           `}
         </div>
 
