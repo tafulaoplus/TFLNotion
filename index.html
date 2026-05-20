@@ -2947,6 +2947,1504 @@ svg{display:block;flex-shrink:0}
 @media (min-width:768px) and (max-width:1100px){
   .stats-grid{grid-template-columns:repeat(2,1fr)}
 }
+
+/* ╔══════════════════════════════════════════════════════════════════╗
+   ║ DESIGN SYSTEM v2 — Premium Dashboard Aesthetic                   ║
+   ║ Inspired by glassmorphism + vibrant gradient references          ║
+   ║ All overrides — does NOT touch existing classes structurally     ║
+   ╚══════════════════════════════════════════════════════════════════╝ */
+
+/* === Design tokens override === */
+:root{
+  --ds-radius-sm:10px;
+  --ds-radius:14px;
+  --ds-radius-lg:20px;
+  --ds-radius-xl:28px;
+  --ds-blur:18px;
+  --ds-gradient-primary:linear-gradient(135deg,#7c3aed 0%,#3b82f6 100%);
+  --ds-gradient-pink:linear-gradient(135deg,#ec4899 0%,#8b5cf6 100%);
+  --ds-gradient-blue:linear-gradient(135deg,#3b82f6 0%,#06b6d4 100%);
+  --ds-gradient-success:linear-gradient(135deg,#10b981 0%,#06b6d4 100%);
+  --ds-gradient-warn:linear-gradient(135deg,#f59e0b 0%,#ef4444 100%);
+  --ds-glass-bg:rgba(255,255,255,.7);
+  --ds-glass-border:rgba(255,255,255,.85);
+  --ds-glow:0 0 80px rgba(124,58,237,.18);
+  --ds-shadow-card:0 4px 24px rgba(17,24,39,.06),0 1px 2px rgba(17,24,39,.04);
+  --ds-shadow-pop:0 24px 60px -12px rgba(17,24,39,.22),0 8px 24px rgba(17,24,39,.1);
+}
+[data-theme="dark"]{
+  /* Deeper, richer dark background — premium feel */
+  --bg:#0a0e1f;
+  --bg-soft:#131736;
+  --bg-sidebar:#0a0e1f;
+  --bg-hover:#1c2148;
+  --card:#131736;
+  --border:#22264a;
+  --border-2:#2e3360;
+  --t1:#f1f3fb;
+  --t2:#b4bbe0;
+  --t3:#7b82ac;
+  --t4:#4b5180;
+  --ds-glass-bg:rgba(28,33,72,.55);
+  --ds-glass-border:rgba(167,139,250,.18);
+  --ds-glow:0 0 100px rgba(124,58,237,.25);
+  --ds-shadow-card:0 4px 24px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+  --ds-shadow-pop:0 24px 60px -12px rgba(0,0,0,.6),0 8px 24px rgba(0,0,0,.4);
+}
+
+/* === Background — gradient mesh with subtle glow blobs === */
+body{
+  font-family:'Inter','SF Pro Display','Sukhumvit Set',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:var(--bg);
+  position:relative;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(124,58,237,.18) 0%, transparent 35%),
+    radial-gradient(circle at 88% 82%, rgba(236,72,153,.12) 0%, transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(59,130,246,.10) 0%, transparent 45%);
+}
+[data-theme="dark"] body::before{
+  background:
+    radial-gradient(circle at 12% 18%, rgba(124,58,237,.28) 0%, transparent 35%),
+    radial-gradient(circle at 88% 82%, rgba(236,72,153,.18) 0%, transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(59,130,246,.16) 0%, transparent 45%);
+}
+.app,.view,#mainContent,.main-content{position:relative;z-index:1}
+
+/* === Sidebar — glassy, sleek === */
+.sidebar{
+  background:var(--bg-sidebar);
+  border-right:1px solid var(--border);
+  backdrop-filter:blur(var(--ds-blur));
+  -webkit-backdrop-filter:blur(var(--ds-blur));
+  padding:18px 14px;
+}
+[data-theme="dark"] .sidebar{
+  background:linear-gradient(180deg, rgba(10,14,31,.95) 0%, rgba(13,16,40,.92) 100%);
+  border-right-color:rgba(167,139,250,.08);
+}
+.nav-sec{
+  font-size:10.5px;font-weight:800;letter-spacing:1.5px;
+  color:var(--t3);text-transform:uppercase;
+  padding:14px 14px 8px;margin-top:8px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;margin-bottom:2px;
+  border-radius:12px;
+  font-size:13.5px;font-weight:600;color:var(--t2);
+  cursor:pointer;transition:all .18s cubic-bezier(.4,0,.2,1);
+  position:relative;
+}
+.nav-item:hover{
+  background:var(--bg-hover);
+  color:var(--t1);
+  transform:translateX(2px);
+}
+.nav-item.active{
+  background:linear-gradient(135deg, rgba(124,58,237,.16) 0%, rgba(59,130,246,.12) 100%);
+  color:var(--t1);
+  box-shadow:inset 0 0 0 1px rgba(124,58,237,.25);
+}
+[data-theme="dark"] .nav-item.active{
+  background:linear-gradient(135deg, rgba(167,139,250,.22) 0%, rgba(96,165,250,.16) 100%);
+  box-shadow:inset 0 0 0 1px rgba(167,139,250,.35),0 4px 16px rgba(124,58,237,.2);
+  color:#fff;
+}
+.nav-item.active::before{
+  content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:3px;height:18px;border-radius:0 3px 3px 0;
+  background:linear-gradient(180deg,#a78bfa,#3b82f6);
+}
+.nav-icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;flex-shrink:0;opacity:.85;
+}
+.nav-item.active .nav-icon{opacity:1}
+.nav-label{font-weight:600;letter-spacing:.1px}
+.nav-badge{
+  background:var(--ds-gradient-primary);color:#fff;
+  font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:10px;
+  margin-left:auto;
+}
+
+/* === Logo area === */
+.brand-wrap,.logo-wrap{padding:6px 8px 18px}
+.brand-name,.logo-text{
+  font-size:18px;font-weight:800;letter-spacing:.2px;
+  background:var(--ds-gradient-primary);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+
+/* === Topbar === */
+.topbar{
+  background:rgba(255,255,255,.6);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(var(--ds-blur));
+  -webkit-backdrop-filter:blur(var(--ds-blur));
+  padding:16px 24px;
+}
+[data-theme="dark"] .topbar{
+  background:rgba(10,14,31,.65);
+  border-bottom-color:rgba(167,139,250,.08);
+}
+.topbar h1,.topbar h2,.topbar-title{
+  font-size:22px;font-weight:800;color:var(--t1);letter-spacing:-.2px;
+}
+.topbar-subtitle{font-size:13px;color:var(--t2);margin-top:2px}
+
+/* === Universal Cards === */
+.modal,.panel,.stat-card,.member-card,.live-stat,.file-card,.task-card,
+.aa-section,.aa-kpi,.live-chart-card,.live-session-card,.live-ai-card,
+.live-ai-history-card,.user-card,.intg-card,.lot-kpi,.sr-kpi,.sr-section,
+.sr-stat,.sr-kpi-grid > div,.feat-mini,.note-card,.dashboard-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--ds-radius);
+  box-shadow:var(--ds-shadow-card);
+  transition:transform .2s cubic-bezier(.4,0,.2,1),box-shadow .2s cubic-bezier(.4,0,.2,1),border-color .15s ease;
+}
+[data-theme="dark"] .modal,
+[data-theme="dark"] .panel,
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .live-stat,
+[data-theme="dark"] .aa-section,
+[data-theme="dark"] .aa-kpi,
+[data-theme="dark"] .live-chart-card,
+[data-theme="dark"] .lot-kpi,
+[data-theme="dark"] .sr-kpi,
+[data-theme="dark"] .sr-section,
+[data-theme="dark"] .sr-stat,
+[data-theme="dark"] .intg-card{
+  background:linear-gradient(135deg, rgba(28,33,72,.7) 0%, rgba(19,23,54,.7) 100%);
+  border-color:rgba(167,139,250,.12);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+
+/* KPI cards — bigger, bolder */
+.lot-kpi,.sr-kpi,.sr-stat{
+  padding:20px 22px;border-radius:var(--ds-radius-lg);
+}
+.lot-kpi-val,.sr-kpi-val,.sr-stat-val{
+  font-size:30px;font-weight:800;line-height:1.05;letter-spacing:-.5px;
+  background:linear-gradient(180deg, var(--t1) 0%, var(--t2) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  font-feature-settings:'tnum';
+}
+[data-theme="dark"] .lot-kpi-val,
+[data-theme="dark"] .sr-kpi-val,
+[data-theme="dark"] .sr-stat-val{
+  background:linear-gradient(180deg, #ffffff 0%, #c8cef0 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.lot-kpi-lbl,.sr-kpi-lbl,.sr-stat-lbl{
+  font-size:11px;font-weight:700;color:var(--t3);
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;
+}
+
+/* Card hover */
+.lot-kpi:hover,.sr-kpi:hover,.intg-card:hover,.stat-card:hover,.member-card:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--ds-shadow-pop);
+  border-color:rgba(124,58,237,.35);
+}
+[data-theme="dark"] .lot-kpi:hover,
+[data-theme="dark"] .sr-kpi:hover,
+[data-theme="dark"] .intg-card:hover{
+  border-color:rgba(167,139,250,.4);
+}
+
+/* === Buttons === */
+.btn-primary{
+  background:var(--ds-gradient-primary);
+  color:#fff;border:none;
+  padding:11px 22px;border-radius:11px;
+  font-size:13.5px;font-weight:700;letter-spacing:.1px;
+  cursor:pointer;font-family:inherit;
+  box-shadow:0 4px 14px rgba(124,58,237,.32),0 1px 2px rgba(0,0,0,.08);
+  transition:all .18s cubic-bezier(.4,0,.2,1);
+  display:inline-flex;align-items:center;gap:6px;
+}
+.btn-primary:hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 24px rgba(124,58,237,.45),0 2px 4px rgba(0,0,0,.1);
+}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost,.btn-cancel{
+  background:var(--bg-soft);
+  border:1px solid var(--border-2);
+  color:var(--t1);
+  padding:10px 18px;border-radius:11px;
+  font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;
+  transition:all .15s ease;display:inline-flex;align-items:center;gap:6px;
+}
+.btn-ghost:hover,.btn-cancel:hover{
+  border-color:var(--p400);color:var(--p600);
+  background:var(--bg);
+}
+[data-theme="dark"] .btn-ghost,
+[data-theme="dark"] .btn-cancel{
+  background:rgba(255,255,255,.04);
+  border-color:rgba(255,255,255,.1);
+}
+[data-theme="dark"] .btn-ghost:hover,
+[data-theme="dark"] .btn-cancel:hover{
+  background:rgba(167,139,250,.12);
+  border-color:rgba(167,139,250,.5);
+  color:#c4b5fd;
+}
+
+/* === Inputs === */
+input[type="text"],input[type="email"],input[type="password"],input[type="number"],
+input[type="date"],input[type="month"],input[type="time"],input[type="search"],
+input[type="tel"],input[type="url"],select,textarea,
+.finp,.fsel,.ftxt,.search-inp,.dd-search{
+  background:var(--bg-soft);
+  border:1.5px solid var(--border-2);
+  border-radius:11px;
+  padding:11px 14px;
+  font-size:13.5px;color:var(--t1);
+  font-family:inherit;
+  transition:border-color .15s ease,box-shadow .15s ease,background .15s ease;
+}
+input:focus,select:focus,textarea:focus,
+.finp:focus,.fsel:focus,.ftxt:focus,.search-inp:focus{
+  outline:none;
+  border-color:var(--p500);
+  box-shadow:0 0 0 4px rgba(124,58,237,.12);
+}
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea,
+[data-theme="dark"] .finp,
+[data-theme="dark"] .fsel,
+[data-theme="dark"] .ftxt{
+  background:rgba(255,255,255,.04);
+  border-color:rgba(255,255,255,.1);
+  color:#f1f3fb;
+}
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus{
+  background:rgba(255,255,255,.06);
+  border-color:#a78bfa;
+  box-shadow:0 0 0 4px rgba(167,139,250,.15);
+}
+
+/* === Tables (exclude .db-table — it has special resizable structure) === */
+.lot-table,.data-table,.sr-table{
+  border-radius:var(--ds-radius);overflow:hidden;
+  background:var(--card);
+}
+.lot-table thead th,.data-table thead th,.sr-table thead th{
+  background:var(--bg-soft);
+  color:var(--t3);
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;
+  padding:14px 16px;
+}
+.lot-table tbody td,.data-table tbody td,.sr-table tbody td{
+  padding:14px 16px;border-bottom:1px solid var(--border);
+}
+.lot-table tbody tr:hover,.data-table tbody tr:hover,.sr-table tbody tr:hover{
+  background:var(--bg-hover);
+}
+/* .db-table — keep original structure (padding:0 on td so .cell controls inner spacing, no overflow:hidden so resize handle works) */
+.db-table{background:var(--card)}
+.db-table th{background:var(--bg-soft)!important;font-size:11px!important;text-transform:uppercase;letter-spacing:.6px}
+/* Wider resize handle (easier to grab) + clearer hover cue */
+.db-table .resize-handle{width:8px;right:-4px;background:transparent;transition:background .15s ease}
+.db-table .resize-handle::after{content:'';position:absolute;right:3px;top:25%;height:50%;width:2px;background:transparent;border-radius:2px;transition:background .15s ease}
+.db-table th:hover .resize-handle::after{background:var(--border-2)}
+.db-table .resize-handle:hover::after,.db-table .resize-handle.dragging::after{background:var(--p500)}
+.db-table .resize-handle:hover,.db-table .resize-handle.dragging{background:rgba(124,58,237,.08)}
+
+/* === Modal === */
+.overlay{
+  background:rgba(10,14,31,.6);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+.modal{
+  border-radius:var(--ds-radius-xl);
+  box-shadow:var(--ds-shadow-pop);
+}
+.modal-hd{
+  padding:22px 26px;
+  border-bottom:1px solid var(--border);
+}
+.modal-title{
+  font-size:18px;font-weight:800;color:var(--t1);letter-spacing:-.2px;
+}
+.modal-bd{padding:22px 26px}
+.modal-ft{padding:18px 26px;border-top:1px solid var(--border);gap:10px}
+
+/* === Section titles & headings === */
+h1,h2,h3{letter-spacing:-.3px}
+.section-title,.page-title{
+  font-size:20px;font-weight:800;color:var(--t1);
+  margin:0 0 16px;letter-spacing:-.2px;
+}
+
+/* === Login page premium === */
+.login-page{
+  background:radial-gradient(circle at 20% 30%, rgba(124,58,237,.12) 0%, transparent 50%),
+             radial-gradient(circle at 80% 70%, rgba(236,72,153,.08) 0%, transparent 50%),
+             var(--bg);
+  min-height:100vh;
+}
+[data-theme="dark"] .login-page{
+  background:radial-gradient(circle at 20% 30%, rgba(124,58,237,.25) 0%, transparent 50%),
+             radial-gradient(circle at 80% 70%, rgba(236,72,153,.15) 0%, transparent 50%),
+             #0a0e1f;
+}
+.login-box,.user-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--ds-radius-lg);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+}
+[data-theme="dark"] .login-box{
+  background:rgba(28,33,72,.55);
+  border-color:rgba(167,139,250,.18);
+  box-shadow:var(--ds-shadow-pop),inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+/* === Scrollbar polish === */
+*::-webkit-scrollbar{width:10px;height:10px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{
+  background:var(--border-2);
+  border-radius:5px;
+  border:2px solid transparent;
+  background-clip:padding-box;
+}
+*::-webkit-scrollbar-thumb:hover{background:var(--t4);background-clip:padding-box;border:2px solid transparent}
+[data-theme="dark"] *::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,.08);
+  background-clip:padding-box;border:2px solid transparent;
+}
+[data-theme="dark"] *::-webkit-scrollbar-thumb:hover{
+  background:rgba(255,255,255,.18);background-clip:padding-box;border:2px solid transparent;
+}
+
+/* === Badges === */
+.rbadge,.role-badge,.intg-status{
+  display:inline-flex;align-items:center;
+  padding:4px 10px;border-radius:8px;
+  font-size:10.5px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.5px;
+}
+
+/* === Animations === */
+@keyframes ds-fade-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-in,.view.fade-in{animation:ds-fade-in .35s cubic-bezier(.4,0,.2,1)}
+
+/* === Mobile responsive === */
+@media (max-width:768px){
+  .topbar{padding:14px 16px}
+  .topbar h1,.topbar h2,.topbar-title{font-size:18px}
+  .lot-kpi,.sr-kpi,.sr-stat{padding:16px}
+  .lot-kpi-val,.sr-kpi-val,.sr-stat-val{font-size:24px}
+  .modal{border-radius:var(--ds-radius-lg)}
+  .modal-hd,.modal-bd,.modal-ft{padding-left:18px;padding-right:18px}
+  .btn-primary,.btn-ghost,.btn-cancel{padding:10px 16px;font-size:13px}
+  .page-content{padding:14px 12px!important}
+  /* Sidebar drawer on mobile */
+  .sidebar{
+    position:fixed;left:0;top:0;bottom:0;
+    width:280px;z-index:100;
+    transform:translateX(-100%);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+    box-shadow:var(--ds-shadow-pop);
+  }
+  .sidebar.open{transform:translateX(0)}
+}
+
+/* === Print: clean white for reports === */
+@media print{
+  body::before{display:none!important}
+  body{background:#fff!important}
+}
+
+/* === Subtle glow on focused interactive elements === */
+.btn-primary:focus-visible,
+.nav-item:focus-visible,
+input:focus-visible{
+  outline:2px solid var(--p500);outline-offset:2px;
+}
+
+/* === Improved tab bar (Facebook hub etc.) === */
+.fb-tab-bar{
+  padding:8px;background:var(--bg-soft);
+  border-radius:var(--ds-radius);
+  border-bottom:none;
+  margin-bottom:18px;
+  gap:4px;
+}
+.fb-tab{
+  padding:9px 16px;border-radius:10px;
+  font-size:13px;font-weight:700;
+  background:transparent;color:var(--t2);
+  display:inline-flex;align-items:center;gap:7px;
+  transition:all .15s ease;
+}
+.fb-tab:hover{background:var(--bg-hover);color:var(--t1)}
+.fb-tab.active{
+  background:var(--ds-gradient-primary);color:#fff;
+  box-shadow:0 4px 14px rgba(124,58,237,.35);
+}
+.fb-tab svg{width:15px;height:15px}
+
+/* === KPI icon — bigger, gradient bg matches reference === */
+.sr-kpi-icon{
+  width:48px;height:48px;border-radius:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.2);
+  margin-bottom:14px;
+}
+.sr-kpi-icon svg{width:24px;height:24px}
+
+/* === Login page user-card === */
+.user-card{
+  padding:14px 18px;border-radius:13px;
+  border:1.5px solid var(--border);
+  background:var(--card);
+  transition:all .15s ease;
+  cursor:pointer;
+}
+.user-card:hover{
+  border-color:var(--p400);
+  transform:translateY(-1px);
+  box-shadow:0 8px 20px rgba(124,58,237,.18);
+}
+.user-card.selected{
+  border-color:var(--p500);
+  background:linear-gradient(135deg,rgba(124,58,237,.08) 0%, rgba(59,130,246,.06) 100%);
+  box-shadow:0 8px 24px rgba(124,58,237,.2);
+}
+
+/* === Final polish: text selection color === */
+::selection{background:rgba(124,58,237,.3);color:inherit}
+
+/* ╔═══════════════════════════════════════════════════════════╗
+   ║ AD LIBRARY page                                           ║
+   ╚═══════════════════════════════════════════════════════════╝ */
+.adlib-toolbar{
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  margin-bottom:14px;padding:14px;
+  background:var(--bg-soft);border-radius:14px;
+}
+.adlib-search-wrap{
+  flex:1;display:flex;align-items:center;gap:8px;
+  padding:0 14px;height:42px;
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:11px;min-width:220px;
+}
+.adlib-search-wrap svg{color:var(--t3);flex-shrink:0}
+.adlib-search{
+  flex:1;border:none;background:transparent;outline:none;
+  color:var(--t1);font-size:13.5px;font-family:inherit;padding:0;height:100%;
+}
+.adlib-country{
+  height:42px;padding:0 14px;
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:11px;color:var(--t1);font-size:13px;font-weight:600;
+  cursor:pointer;font-family:inherit;
+}
+.adlib-presets{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px;padding:0 4px}
+.adlib-presets-lbl{font-size:12.5px;color:var(--t3);font-weight:700;margin-right:4px}
+.adlib-preset{
+  padding:7px 14px;
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:50px;font-size:12.5px;font-weight:700;color:var(--t2);
+  cursor:pointer;font-family:inherit;transition:all .15s ease;
+}
+.adlib-preset:hover{border-color:var(--p400);color:var(--p600)}
+.adlib-preset.active{
+  background:linear-gradient(135deg,#7c3aed,#a78bfa);
+  color:#fff;border-color:transparent;
+  box-shadow:0 4px 12px rgba(124,58,237,.3);
+}
+.adlib-info{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:16px;margin-bottom:14px;
+  background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(239,68,68,.04));
+  border:1px solid rgba(245,158,11,.2);border-radius:14px;
+}
+.adlib-info-ic{
+  flex-shrink:0;width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(245,158,11,.3);
+}
+.adlib-info b{display:block;color:var(--t1);font-weight:800;font-size:14px;margin-bottom:4px}
+.adlib-info p{margin:0;color:var(--t2);font-size:13px;line-height:1.55}
+.adlib-iframe-wrap{
+  position:relative;
+  width:100%;height:600px;
+  border-radius:14px;overflow:hidden;
+  background:var(--bg-soft);border:1px solid var(--border);
+}
+.adlib-iframe-wrap iframe{width:100%;height:100%;border:none;display:block}
+.adlib-iframe-fallback{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px;text-align:center;
+  background:var(--card);
+  /* Show fallback by default (iframe will appear on top if it loads — usually it can't due to X-Frame-Options) */
+  z-index:1;
+}
+.adlib-iframe-wrap iframe:not([src=""]){
+  position:relative;z-index:2;
+  /* If iframe loads, it covers the fallback */
+}
+.adlib-fallback-ic{
+  width:64px;height:64px;border-radius:18px;
+  background:linear-gradient(135deg,#f59e0b,#fbbf24);
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  margin-bottom:16px;box-shadow:0 8px 20px rgba(245,158,11,.3);
+}
+.adlib-fallback-ic svg{width:32px;height:32px}
+.adlib-iframe-fallback h3{margin:0 0 6px;font-size:18px;font-weight:800;color:var(--t1)}
+.adlib-iframe-fallback p{margin:0;color:var(--t2);font-size:13.5px;max-width:420px}
+.adlib-tips{margin-top:24px}
+.adlib-tips h3{margin:0 0 14px;font-size:15px;font-weight:800;color:var(--t1)}
+.adlib-tip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.adlib-tip{
+  padding:18px;border-radius:14px;
+  background:var(--card);border:1px solid var(--border);
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.adlib-tip:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,58,237,.12)}
+[data-theme="dark"] .adlib-tip{
+  background:linear-gradient(135deg,rgba(28,33,72,.7),rgba(19,23,54,.7));
+  border-color:rgba(167,139,250,.15);
+}
+.adlib-tip-ic{
+  width:38px;height:38px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  margin-bottom:10px;box-shadow:0 4px 12px rgba(0,0,0,.15);
+}
+.adlib-tip h4{margin:0 0 6px;font-size:14px;font-weight:800;color:var(--t1)}
+.adlib-tip p{margin:0;color:var(--t2);font-size:12.5px;line-height:1.5}
+
+/* ╔═══════════════════════════════════════════════════════════╗
+   ║ TIKTOK TREND SCRAPER                                      ║
+   ╚═══════════════════════════════════════════════════════════╝ */
+.trend-beta-banner{
+  display:flex;gap:14px;align-items:center;
+  padding:14px 18px;margin-bottom:18px;
+  background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(239,68,68,.06));
+  border:1px solid rgba(245,158,11,.25);border-radius:14px;
+}
+.trend-beta-ic{
+  flex-shrink:0;width:40px;height:40px;border-radius:11px;
+  background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px rgba(245,158,11,.35);
+}
+.trend-beta-banner b{display:block;color:var(--t1);font-weight:800;font-size:13.5px;margin-bottom:2px}
+.trend-beta-banner p{margin:0;color:var(--t2);font-size:12.5px;line-height:1.5}
+
+.trend-summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:18px}
+.trend-summary-card{
+  padding:18px;border-radius:16px;
+  background:var(--card);border:1px solid var(--border);
+  transition:transform .2s ease;
+}
+.trend-summary-card:hover{transform:translateY(-2px)}
+[data-theme="dark"] .trend-summary-card{
+  background:linear-gradient(135deg,rgba(28,33,72,.7),rgba(19,23,54,.7));
+  border-color:rgba(167,139,250,.12);
+}
+.trend-sum-ic{
+  width:40px;height:40px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  margin-bottom:10px;box-shadow:0 4px 12px rgba(0,0,0,.18);
+}
+.trend-sum-ic svg{width:20px;height:20px}
+.trend-sum-lbl{font-size:11.5px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.trend-sum-val{font-size:26px;font-weight:800;color:var(--t1);font-feature-settings:'tnum';line-height:1.1}
+.trend-sum-sub{font-size:11.5px;color:var(--t3);margin-top:6px;display:flex;align-items:center;gap:6px}
+.trend-growth{font-weight:800;padding:2px 7px;border-radius:6px;font-size:11px}
+.trend-growth.up{background:rgba(16,185,129,.12);color:#059669}
+.trend-growth.down{background:rgba(239,68,68,.12);color:#dc2626}
+
+.trend-row-2col{display:grid;grid-template-columns:1.5fr 1fr;gap:14px;margin-bottom:18px}
+@media (max-width:980px){.trend-row-2col{grid-template-columns:1fr}}
+
+.trend-insight-panel{}
+.trend-insights{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.trend-insights li{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--bg-soft);border-radius:10px;font-size:13px;color:var(--t1);line-height:1.5}
+.trend-insights .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
+
+.trend-tab-bar{display:flex;gap:6px;flex-wrap:wrap;padding:6px;background:var(--bg-soft);border-radius:12px;margin-bottom:14px}
+.trend-tab{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 16px;border-radius:9px;
+  background:transparent;border:none;color:var(--t2);
+  font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
+  transition:all .15s ease;
+}
+.trend-tab svg{width:14px;height:14px}
+.trend-tab:hover{background:var(--bg-hover);color:var(--t1)}
+.trend-tab.active{
+  background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;
+  box-shadow:0 4px 12px rgba(124,58,237,.3);
+}
+
+.trend-filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.trend-filter-bar select{
+  padding:8px 14px;background:var(--card);border:1.5px solid var(--border);
+  border-radius:9px;color:var(--t1);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;
+}
+
+.trend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.trend-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;
+  transition:transform .25s cubic-bezier(.4,0,.2,1),box-shadow .25s ease;
+}
+.trend-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(124,58,237,.18)}
+[data-theme="dark"] .trend-card{
+  background:linear-gradient(135deg,rgba(28,33,72,.7),rgba(19,23,54,.7));
+  border-color:rgba(167,139,250,.12);
+}
+.trend-thumb{
+  position:relative;width:100%;aspect-ratio:9/16;max-height:280px;
+  display:flex;align-items:center;justify-content:center;
+}
+.trend-thumb-placeholder{color:rgba(255,255,255,.3)}
+.trend-thumb-placeholder svg{width:48px;height:48px}
+.trend-duration{
+  position:absolute;bottom:8px;left:8px;
+  padding:3px 8px;background:rgba(0,0,0,.7);color:#fff;
+  border-radius:6px;font-size:11px;font-weight:700;font-feature-settings:'tnum';
+}
+.trend-score-badge{
+  position:absolute;top:8px;right:8px;
+  padding:4px 9px;
+  background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;
+  border-radius:8px;font-size:11.5px;font-weight:800;
+  box-shadow:0 4px 12px rgba(245,158,11,.5);
+}
+.trend-card-body{padding:14px}
+.trend-user{font-size:12.5px;font-weight:700;color:var(--p500);margin-bottom:4px}
+.trend-caption{font-size:13px;color:var(--t1);line-height:1.4;margin-bottom:10px;height:36px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.trend-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.trend-tag{font-size:11px;color:var(--p500);background:rgba(124,58,237,.1);padding:2px 8px;border-radius:6px;font-weight:600}
+.trend-stats{display:flex;gap:10px;font-size:11px;color:var(--t3);font-weight:600;font-feature-settings:'tnum'}
+
+.trend-list-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;overflow:hidden;
+}
+[data-theme="dark"] .trend-list-card{
+  background:linear-gradient(135deg,rgba(28,33,72,.7),rgba(19,23,54,.7));
+  border-color:rgba(167,139,250,.12);
+}
+.trend-list-hd,.trend-list-row{
+  display:grid;grid-template-columns:50px 1fr 100px 110px 100px;
+  align-items:center;gap:14px;padding:14px 18px;
+}
+.trend-list-hd{background:var(--bg-soft);font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+.trend-list-row{border-top:1px solid var(--border);transition:background .15s ease}
+.trend-list-row:hover{background:var(--bg-hover)}
+.trend-list-row.trend-sound-row{grid-template-columns:50px 1fr 120px 120px}
+.num{text-align:right;font-feature-settings:'tnum';font-weight:600}
+.trend-rank{font-size:14px;font-weight:800;color:var(--p500);font-feature-settings:'tnum'}
+.trend-list-name{font-weight:700;color:var(--t1);font-size:13.5px;display:flex;align-items:center;gap:8px}
+.trend-sound-ic{display:inline-flex;width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;align-items:center;justify-content:center}
+.trend-sound-ic svg{width:14px;height:14px}
+
+@media (max-width:768px){
+  .trend-list-hd,.trend-list-row{grid-template-columns:36px 1fr 80px 80px;font-size:12px;padding:10px 12px;gap:8px}
+  .trend-list-row > div:last-child{display:none}
+  .trend-tab{padding:8px 12px;font-size:12px}
+}
+
+/* === Member Filter Cards (allTasks page) === */
+.member-filter-strip{
+  display:flex;gap:10px;flex-wrap:wrap;
+  margin-bottom:20px;
+}
+.member-filter-card{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 14px 8px 8px;
+  border:1.5px solid var(--border);
+  background:var(--card);
+  border-radius:50px;
+  cursor:pointer;
+  transition:all .18s cubic-bezier(.4,0,.2,1);
+  min-width:0;
+}
+.member-filter-card:hover{
+  border-color:var(--p400);
+  transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(124,58,237,.15);
+}
+.member-filter-card.active{
+  border-color:transparent;
+  background:linear-gradient(135deg,#7c3aed,#a78bfa);
+  color:#fff;
+  box-shadow:0 8px 20px rgba(124,58,237,.35);
+}
+.member-filter-card.active .mfc-name,
+.member-filter-card.active .mfc-count{color:#fff}
+[data-theme="dark"] .member-filter-card{
+  background:linear-gradient(135deg,rgba(28,33,72,.7),rgba(19,23,54,.7));
+  border-color:rgba(167,139,250,.18);
+}
+[data-theme="dark"] .member-filter-card:hover{
+  border-color:rgba(167,139,250,.5);
+}
+.mfc-av{
+  width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;color:#fff;
+  flex-shrink:0;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+}
+.mfc-av.all-icon{
+  background:linear-gradient(135deg,#7c3aed,#a78bfa);
+  color:#fff;
+}
+.mfc-av.all-icon svg{width:18px;height:18px}
+.member-filter-card.active .mfc-av{box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.mfc-body{display:flex;flex-direction:column;gap:1px;min-width:0}
+.mfc-name{font-size:13px;font-weight:700;color:var(--t1);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
+.mfc-count{font-size:11px;color:var(--t3);font-weight:600;line-height:1.1}
+@media (max-width:520px){
+  .member-filter-strip{gap:8px}
+  .member-filter-card{padding:6px 12px 6px 6px}
+  .mfc-av{width:28px;height:28px;font-size:11px}
+  .mfc-name{font-size:12px;max-width:100px}
+  .mfc-count{font-size:10.5px}
+}
+
+/* === Emoji button picker (clickable hint) === */
+.emoji-btn-picker{
+  width:52px;height:52px;font-size:26px;
+  border:1.5px solid var(--border-2);
+  border-radius:12px;
+  background:var(--bg-soft);
+  cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;flex-shrink:0;
+  transition:all .18s cubic-bezier(.4,0,.2,1);
+}
+.emoji-btn-picker:hover{
+  border-color:var(--p400);
+  background:var(--card);
+  transform:scale(1.06);
+  box-shadow:0 8px 20px rgba(124,58,237,.18);
+}
+.emoji-btn-picker:active{transform:scale(.98)}
+.emoji-btn-picker::after{
+  content:'✏';
+  position:absolute;bottom:-3px;right:-3px;
+  width:18px;height:18px;font-size:10px;
+  background:linear-gradient(135deg,#7c3aed,#a78bfa);
+  color:#fff;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 6px rgba(124,58,237,.4);
+  border:2px solid var(--card);
+}
+[data-theme="dark"] .emoji-btn-picker{
+  background:rgba(255,255,255,.05);
+  border-color:rgba(255,255,255,.12);
+}
+[data-theme="dark"] .emoji-btn-picker:hover{
+  background:rgba(167,139,250,.15);
+  border-color:rgba(167,139,250,.5);
+}
+
+/* === Thai Month Picker === */
+.thmp{position:relative;display:inline-flex;min-width:140px}
+.thmp-btn{
+  display:inline-flex;align-items:center;justify-content:space-between;gap:8px;
+  width:100%;padding:9px 12px;
+  background:var(--bg-soft);border:1.5px solid var(--border-2);
+  border-radius:9px;
+  font-family:inherit;font-size:13px;font-weight:600;color:var(--t1);
+  cursor:pointer;transition:all .15s ease;
+}
+.thmp-btn:hover{border-color:var(--p400);color:var(--p600)}
+.thmp-btn:focus{outline:none;border-color:var(--p500);box-shadow:0 0 0 4px rgba(124,58,237,.12)}
+[data-theme="dark"] .thmp-btn{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);color:#f1f3fb}
+[data-theme="dark"] .thmp-btn:hover{background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.5);color:#c4b5fd}
+.thmp-label{flex:1;text-align:left;font-feature-settings:'tnum'}
+.thmp-arrow{flex-shrink:0;color:var(--t3);transition:transform .2s ease}
+.thmp[data-id]:has(.thmp-popup) .thmp-arrow{transform:rotate(180deg);color:var(--p500)}
+.thmp-popup{
+  position:absolute;top:calc(100% + 6px);left:0;z-index:200;
+  width:260px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:0 16px 40px -8px rgba(17,24,39,.2),0 4px 12px rgba(0,0,0,.08);
+  padding:10px;
+  animation:thmpIn .18s cubic-bezier(.4,0,.2,1);
+}
+[data-theme="dark"] .thmp-popup{
+  background:linear-gradient(135deg,rgba(28,33,72,.95) 0%,rgba(19,23,54,.95) 100%);
+  border-color:rgba(167,139,250,.2);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:0 16px 40px -8px rgba(0,0,0,.6),0 4px 12px rgba(0,0,0,.4);
+}
+@keyframes thmpIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.thmp-year-nav{display:flex;align-items:center;justify-content:space-between;padding:4px 6px;margin-bottom:6px}
+.thmp-nav-btn{
+  width:28px;height:28px;border-radius:8px;
+  background:transparent;border:none;color:var(--t2);
+  font-size:18px;font-weight:700;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .12s ease;
+}
+.thmp-nav-btn:hover{background:var(--bg-hover);color:var(--p500)}
+.thmp-year{font-size:14px;font-weight:800;color:var(--t1);font-feature-settings:'tnum'}
+.thmp-year-btn{
+  background:transparent;border:none;
+  padding:6px 14px;border-radius:8px;
+  cursor:pointer;font-family:inherit;
+  transition:all .12s ease;
+}
+.thmp-year-btn:hover{background:var(--bg-hover);color:var(--p500)}
+.thmp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px 2px}
+.thmp-grid-years{grid-template-columns:repeat(3,1fr)}
+.thmp-grid-years .thmp-cell{padding:12px 6px;font-size:13.5px}
+.thmp-cell{
+  padding:10px 4px;border-radius:9px;
+  background:transparent;border:none;color:var(--t1);
+  font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;
+  transition:all .12s ease;
+}
+.thmp-cell:hover{background:var(--bg-hover)}
+.thmp-cell.sel{
+  background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;font-weight:800;
+  box-shadow:0 4px 12px rgba(124,58,237,.35);
+}
+.thmp-ft{display:flex;gap:6px;padding:8px 4px 2px;border-top:1px solid var(--border);margin-top:6px}
+.thmp-ft-btn{
+  flex:1;padding:8px 10px;border-radius:8px;
+  background:var(--bg-soft);border:none;color:var(--t2);
+  font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;
+  transition:all .12s ease;
+}
+.thmp-ft-btn:hover{background:var(--bg-hover);color:var(--t1)}
+.thmp-ft-btn.primary{background:rgba(124,58,237,.08);color:var(--p600)}
+.thmp-ft-btn.primary:hover{background:rgba(124,58,237,.15);color:var(--p700)}
+[data-theme="dark"] .thmp-ft-btn{background:rgba(255,255,255,.04);color:#b4bbe0}
+[data-theme="dark"] .thmp-ft-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+[data-theme="dark"] .thmp-ft-btn.primary{background:rgba(167,139,250,.15);color:#c4b5fd}
+@media (max-width:480px){
+  .thmp-popup{width:240px;right:0;left:auto}
+}
+
+/* === Language toggle button === */
+.lang-toggle{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:30px;min-width:44px;padding:0 12px;
+  background:var(--bg-soft);border:1px solid var(--border-2);
+  border-radius:9px;color:var(--t1);
+  font-family:inherit;font-size:11.5px;font-weight:800;letter-spacing:.5px;
+  cursor:pointer;transition:all .18s ease;
+  flex-shrink:0;
+}
+.lang-toggle:hover{
+  background:var(--card);border-color:var(--p400);
+  color:var(--p600);transform:translateY(-1px);
+}
+.lang-toggle:active{transform:translateY(0)}
+[data-theme="dark"] .lang-toggle{
+  background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);
+}
+[data-theme="dark"] .lang-toggle:hover{
+  background:rgba(167,139,250,.15);border-color:rgba(167,139,250,.5);
+  color:#c4b5fd;
+}
+.lang-toggle-current{display:inline-block}
+
+/* === User dropdown sync indicator === */
+.user-dd-sync{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;margin:6px 8px;
+  background:var(--bg-soft);border-radius:10px;
+  font-size:12.5px;color:var(--t2);cursor:pointer;
+  transition:background .15s ease;
+}
+.user-dd-sync:hover{background:var(--bg-hover)}
+.user-dd-sync-dot{
+  width:8px;height:8px;border-radius:50%;
+  flex-shrink:0;
+  box-shadow:0 0 8px currentColor;
+}
+.user-dd-sync.on .user-dd-sync-dot{animation:livePulse 2.5s infinite}
+.user-dd-sync.sync .user-dd-sync-dot{animation:livePulse 1.2s infinite}
+.user-dd-sync-txt{font-size:12.5px}
+.user-dd-sync-txt b{color:var(--t1);font-weight:700}
+.user-dd-sync.on .user-dd-sync-txt b{color:#10b981}
+.user-dd-sync.sync .user-dd-sync-txt b{color:#f59e0b}
+.user-dd-sync.err .user-dd-sync-txt b{color:#ef4444}
+.user-dd-sync.off .user-dd-sync-txt b{color:var(--t3)}
+
+/* === Mobile hamburger button — premium === */
+.sidebar-toggle{
+  background:var(--card)!important;
+  border:1px solid var(--border)!important;
+  border-radius:12px!important;
+  width:42px!important;height:42px!important;
+  box-shadow:0 4px 14px rgba(17,24,39,.1),0 1px 2px rgba(0,0,0,.05)!important;
+  font-size:20px!important;
+  color:var(--t1)!important;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+.sidebar-toggle:hover{
+  transform:scale(1.05);
+  box-shadow:0 6px 18px rgba(124,58,237,.18);
+}
+[data-theme="dark"] .sidebar-toggle{
+  background:rgba(28,33,72,.85)!important;
+  border-color:rgba(167,139,250,.18)!important;
+  color:#f1f3fb!important;
+}
+.sidebar-backdrop{
+  background:rgba(10,14,31,.6);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+
+/* === Dashboard / Overview polish === */
+.dashboard-card,.stat-card{padding:22px;border-radius:var(--ds-radius-lg)}
+.stat-card .stat-val,.stat-val,.kpi-val{
+  font-size:32px;font-weight:800;letter-spacing:-.5px;line-height:1.05;
+  font-feature-settings:'tnum';
+}
+.stat-card .stat-lbl,.stat-lbl{
+  font-size:11.5px;font-weight:700;color:var(--t3);
+  text-transform:uppercase;letter-spacing:.6px;
+}
+
+/* === Page content max-width and centering === */
+.page-content{padding:24px 28px;animation:ds-fade-in .35s cubic-bezier(.4,0,.2,1)}
+
+/* === Avatar group (Notion-style) === */
+.avatar-group{display:flex;align-items:center}
+.avatar-group .av,.assignee-av,.uav{
+  border:2px solid var(--card);
+  box-shadow:0 2px 4px rgba(0,0,0,.08);
+}
+
+/* === Dropdown / select arrow === */
+select{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237b82ac' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat:no-repeat;
+  background-position:right 12px center;
+  background-size:14px;
+  padding-right:36px;
+  -webkit-appearance:none;-moz-appearance:none;appearance:none;
+}
+
+/* === Checkbox / radio polish === */
+input[type="checkbox"],input[type="radio"]{
+  width:18px;height:18px;
+  border:1.5px solid var(--border-2);
+  border-radius:5px;
+  cursor:pointer;
+  accent-color:#7c3aed;
+}
+input[type="radio"]{border-radius:50%}
+
+/* === Empty state polish === */
+.empty-state{
+  padding:48px 24px;text-align:center;color:var(--t2);
+  border-radius:var(--ds-radius-lg);
+  background:linear-gradient(135deg, rgba(124,58,237,.04) 0%, rgba(59,130,246,.02) 100%);
+}
+[data-theme="dark"] .empty-state{
+  background:linear-gradient(135deg, rgba(167,139,250,.06) 0%, rgba(96,165,250,.04) 100%);
+}
+
+/* === Notification badge (sidebar) === */
+.notif-badge,.unread-badge,.nav-badge{
+  font-feature-settings:'tnum';
+  min-width:18px;
+  text-align:center;
+}
+
+/* === Toast / Alert polish === */
+.toast,.alert-banner{
+  border-radius:var(--ds-radius);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  box-shadow:var(--ds-shadow-pop);
+}
+
+/* === Calendar polish === */
+.cal-cell,.cal-grid > div{
+  border-radius:10px;
+  transition:background .15s ease;
+}
+
+/* === Mobile gentle polish === */
+@media (max-width:768px){
+  .nav-item{padding:13px 14px}
+  .modal-title{font-size:16px}
+  .sr-kpi-icon{width:42px;height:42px}
+  .sr-kpi-icon svg{width:20px;height:20px}
+  .sr-cover h1{font-size:20px}
+  .sr-toolbar{padding:12px;gap:8px}
+  .sr-print{margin-left:0;width:100%;justify-content:center;margin-top:6px}
+  .fb-tab{padding:8px 12px;font-size:12px}
+  /* Stack KPI grid to 1 column on small mobile */
+  .lot-kpi-grid,.sr-kpi-grid{grid-template-columns:1fr 1fr!important;gap:10px}
+  .sr-stat-row{grid-template-columns:1fr 1fr!important}
+}
+@media (max-width:480px){
+  .lot-kpi-grid,.sr-kpi-grid{grid-template-columns:1fr!important}
+  .topbar{padding:12px 14px 12px 64px}
+}
+
+/* ╔═══════════════════════════════════════════════════════════╗
+   ║ CHART HELPERS                                             ║
+   ╚═══════════════════════════════════════════════════════════╝ */
+.ds-donut{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.ds-donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.ds-donut-val{font-size:28px;font-weight:800;color:var(--t1);line-height:1;letter-spacing:-.5px;font-feature-settings:'tnum';background:linear-gradient(180deg,var(--t1) 0%,var(--t2) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+[data-theme="dark"] .ds-donut-val{background:linear-gradient(180deg,#fff 0%,#c8cef0 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ds-donut-sub{font-size:11px;font-weight:600;color:var(--t3);margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
+
+.ds-bars{position:relative;width:100%}
+.ds-bars-row{display:flex;align-items:flex-end;gap:10px;width:100%;padding:0 4px}
+.ds-bar-col{flex:1;display:flex;align-items:flex-end;justify-content:center;position:relative;min-width:0;cursor:pointer;transition:transform .2s ease}
+.ds-bar-col:hover{transform:translateY(-2px)}
+.ds-bar-fill{
+  width:100%;max-width:32px;
+  border-radius:12px 12px 4px 4px;
+  transition:height .6s cubic-bezier(.4,0,.2,1),filter .2s ease;
+  position:relative;
+  /* Gradient fade — bright top → transparent bottom (Blanted style) */
+  background:linear-gradient(180deg, var(--bar-c1, #a78bfa) 0%, var(--bar-c2, #7c3aed) 50%, transparent 100%);
+  opacity:.55;
+}
+.ds-bar-col:hover .ds-bar-fill{
+  opacity:.9;
+  filter:drop-shadow(0 0 14px var(--bar-c1));
+}
+.ds-bar-col.highlight .ds-bar-fill{
+  opacity:1;
+  filter:drop-shadow(0 0 20px var(--bar-c1)) drop-shadow(0 0 8px var(--bar-c2));
+  background:linear-gradient(180deg, var(--bar-c1, #c4b5fd) 0%, var(--bar-c2, #a78bfa) 40%, var(--bar-c2, #7c3aed) 70%, transparent 100%);
+}
+.ds-bar-peak{position:absolute;top:-30px;left:50%;transform:translateX(-50%);background:rgba(124,58,237,.95);color:#fff;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:800;white-space:nowrap;box-shadow:0 6px 16px rgba(124,58,237,.4);z-index:2;font-feature-settings:'tnum'}
+.ds-bar-peak::after{content:'';position:absolute;bottom:-3px;left:50%;transform:translateX(-50%) rotate(45deg);width:6px;height:6px;background:rgba(124,58,237,.95)}
+.ds-bars-labels{display:flex;gap:10px;margin-top:10px;padding:0 4px}
+.ds-bar-lbl{flex:1;text-align:center;font-size:11.5px;font-weight:600;color:var(--t3);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color .2s ease}
+.ds-bar-lbl.highlight{color:var(--p400);font-weight:800}
+.ds-empty{padding:24px;text-align:center;color:var(--t3);font-size:13px}
+
+/* Multi-segment donut */
+.ds-donut-multi{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.ds-donut-multi .ds-donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.ds-donut-ic{
+  width:54px;height:54px;border-radius:14px;
+  background:linear-gradient(135deg,#a78bfa,#7c3aed);
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  box-shadow:0 8px 20px rgba(124,58,237,.4),inset 0 1px 0 rgba(255,255,255,.2);
+}
+.ds-donut-ic svg{width:26px;height:26px}
+.ds-donut-empty{font-size:11.5px;color:var(--t3);margin-top:8px}
+
+.ds-legend{display:flex;flex-direction:column;gap:10px}
+.ds-legend-item{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--t1)}
+.ds-legend-dot{width:14px;height:14px;border-radius:5px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.ds-legend-lbl{flex:1;color:var(--t2);font-weight:600}
+.ds-legend-val{font-weight:800;color:var(--t1);font-feature-settings:'tnum';font-size:13.5px}
+
+.ds-progress{width:100%;background:var(--bg-soft);border-radius:99px;overflow:hidden}
+.ds-progress-fill{height:100%;border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+/* ╔═══════════════════════════════════════════════════════════╗
+   ║ DASHBOARD V2 — Hero, KPI grid, Charts                     ║
+   ╚═══════════════════════════════════════════════════════════╝ */
+.dash2{padding:24px clamp(16px,2.5vw,36px);width:100%;max-width:1800px;margin:0 auto;display:grid;gap:18px;box-sizing:border-box}
+.dash2-hero{
+  padding:28px 32px;border-radius:24px;
+  background:linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#7c3aed 100%);
+  color:#fff;position:relative;overflow:hidden;
+  box-shadow:0 16px 40px -8px rgba(124,58,237,.4);
+  display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;
+}
+.dash2-hero::before{
+  content:'';position:absolute;top:-40%;right:-10%;
+  width:60%;height:180%;
+  background:radial-gradient(ellipse, rgba(236,72,153,.3) 0%, transparent 60%);
+  pointer-events:none;
+}
+.dash2-hero-greeting{font-size:14px;font-weight:600;opacity:.85;margin-bottom:6px;letter-spacing:.2px}
+.dash2-hero-name{font-size:36px;font-weight:800;letter-spacing:-.8px;line-height:1.1;margin-bottom:8px;background:linear-gradient(135deg,#fff 0%,#c4b5fd 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.dash2-hero-sub{font-size:14px;opacity:.85;line-height:1.5;max-width:480px}
+.dash2-hero-date{font-size:12.5px;opacity:.7;margin-top:14px;display:flex;align-items:center;gap:8px;font-weight:600}
+.dash2-hero-chart{position:relative;z-index:2}
+.dash2-hero-time-card{
+  padding:16px 20px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+  border-radius:16px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  min-width:180px;text-align:right;
+}
+.dash2-hero-time{font-size:32px;font-weight:800;letter-spacing:-.5px;font-feature-settings:'tnum'}
+.dash2-hero-day{font-size:13px;opacity:.85;margin-top:4px}
+
+.dash2-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.dash2-kpi{
+  padding:20px;border-radius:18px;
+  background:var(--card);border:1px solid var(--border);
+  position:relative;overflow:hidden;
+  transition:transform .2s ease,box-shadow .2s ease,border-color .15s ease;
+}
+.dash2-kpi:hover{transform:translateY(-3px);box-shadow:var(--ds-shadow-pop);border-color:rgba(124,58,237,.3)}
+[data-theme="dark"] .dash2-kpi{
+  background:linear-gradient(135deg,rgba(28,33,72,.7) 0%,rgba(19,23,54,.7) 100%);
+  border-color:rgba(167,139,250,.12);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.dash2-kpi-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.dash2-kpi-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.18)}
+.dash2-kpi-icon svg{width:20px;height:20px}
+.dash2-kpi-icon.purple{background:linear-gradient(135deg,#7c3aed,#a78bfa)}
+.dash2-kpi-icon.blue{background:linear-gradient(135deg,#3b82f6,#06b6d4)}
+.dash2-kpi-icon.pink{background:linear-gradient(135deg,#ec4899,#f472b6)}
+.dash2-kpi-icon.green{background:linear-gradient(135deg,#10b981,#34d399)}
+.dash2-kpi-icon.orange{background:linear-gradient(135deg,#f59e0b,#fbbf24)}
+.dash2-kpi-trend{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:7px;display:inline-flex;align-items:center;gap:3px}
+.dash2-kpi-trend.up{background:rgba(16,185,129,.12);color:#059669}
+.dash2-kpi-trend.down{background:rgba(239,68,68,.12);color:#dc2626}
+.dash2-kpi-trend.neutral{background:var(--bg-soft);color:var(--t3)}
+.dash2-kpi-lbl{font-size:11.5px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.dash2-kpi-val{font-size:30px;font-weight:800;letter-spacing:-.6px;line-height:1.05;color:var(--t1);font-feature-settings:'tnum'}
+.dash2-kpi-spark{margin-top:10px;height:36px}
+
+.dash2-row{display:grid;gap:14px}
+.dash2-row.cols-2{grid-template-columns:2fr 1fr}
+.dash2-row.cols-3{grid-template-columns:1fr 1fr 1fr}
+.dash2-row.eq-2{grid-template-columns:1fr 1fr}
+
+.dash2-card{
+  padding:20px;border-radius:18px;
+  background:var(--card);border:1px solid var(--border);
+  display:flex;flex-direction:column;gap:14px;min-width:0;
+}
+[data-theme="dark"] .dash2-card{
+  background:linear-gradient(135deg,rgba(28,33,72,.7) 0%,rgba(19,23,54,.7) 100%);
+  border-color:rgba(167,139,250,.12);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.dash2-card-hd{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dash2-card-title{font-size:15px;font-weight:800;color:var(--t1);letter-spacing:-.2px}
+.dash2-card-sub{font-size:12px;color:var(--t3);margin-top:2px}
+.dash2-card-link{font-size:12px;font-weight:700;color:var(--p500);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;background:rgba(124,58,237,.08);transition:background .15s ease}
+.dash2-card-link:hover{background:rgba(124,58,237,.15)}
+[data-theme="dark"] .dash2-card-link{background:rgba(167,139,250,.12)}
+[data-theme="dark"] .dash2-card-link:hover{background:rgba(167,139,250,.22)}
+
+.dash2-list{display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto}
+.dash2-list-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:11px;transition:background .12s ease}
+.dash2-list-item:hover{background:var(--bg-hover)}
+.dash2-list-av{width:34px;height:34px;border-radius:50%;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.dash2-list-body{flex:1;min-width:0}
+.dash2-list-name{font-size:13px;font-weight:700;color:var(--t1);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dash2-list-sub{font-size:11.5px;color:var(--t3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dash2-list-meta{font-size:11px;color:var(--t3);white-space:nowrap;flex-shrink:0}
+.dash2-list-badge{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:7px;flex-shrink:0;text-transform:uppercase;letter-spacing:.4px}
+.dash2-list-badge.live{background:#ef4444;color:#fff;display:inline-flex;align-items:center;gap:4px}
+.dash2-list-badge.live::before{content:'';width:6px;height:6px;border-radius:50%;background:#fff;animation:livePulse 1.5s infinite}
+.dash2-list-badge.waiting{background:var(--bg-soft);color:var(--t2)}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+.dash2-empty{padding:36px 20px;text-align:center;color:var(--t3);font-size:13px;border-radius:12px;background:linear-gradient(135deg,rgba(124,58,237,.04),rgba(59,130,246,.02))}
+[data-theme="dark"] .dash2-empty{background:linear-gradient(135deg,rgba(167,139,250,.06),rgba(96,165,250,.04))}
+.dash2-empty-ic{display:flex;justify-content:center;margin-bottom:10px;color:var(--t4);opacity:.6}
+.dash2-empty-ic svg{width:36px;height:36px}
+
+.dash2-todo-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:background .12s ease}
+.dash2-todo-row:hover{background:var(--bg-hover)}
+.dash2-todo-check{width:18px;height:18px;border:2px solid var(--border-2);border-radius:6px;flex-shrink:0}
+.dash2-todo-name{flex:1;min-width:0;font-size:13px;font-weight:600;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dash2-todo-tag{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:6px;flex-shrink:0}
+.dash2-todo-due{font-size:11px;color:var(--t3);font-weight:600;flex-shrink:0}
+.dash2-todo-due.overdue{color:#dc2626}
+.dash2-todo-due.today{color:#f59e0b}
+
+/* Big bar chart card (Blanted-style) */
+.dash2-bigchart{
+  padding:28px 32px;border-radius:24px;
+  background:linear-gradient(135deg,#1e1b4b 0%,#312e81 40%,#4c1d95 100%);
+  position:relative;overflow:hidden;
+  box-shadow:0 16px 40px -8px rgba(76,29,149,.4);
+  color:#fff;
+}
+.dash2-bigchart::before{
+  content:'';position:absolute;top:-30%;right:-15%;width:50%;height:160%;
+  background:radial-gradient(ellipse, rgba(167,139,250,.25) 0%, transparent 60%);
+  pointer-events:none;
+}
+.dash2-bigchart-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;position:relative;z-index:1;flex-wrap:wrap;gap:12px}
+.dash2-bigchart-lbl{font-size:13px;font-weight:600;opacity:.85;margin-bottom:4px}
+.dash2-bigchart-val{font-size:36px;font-weight:800;letter-spacing:-.8px;line-height:1.1;font-feature-settings:'tnum';background:linear-gradient(135deg,#fff 0%,#c4b5fd 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.dash2-bigchart-gain{margin-top:8px;display:flex;align-items:center;gap:8px;font-size:13px}
+.dash2-bigchart-gain-val{font-weight:800;color:#34d399;font-feature-settings:'tnum'}
+.dash2-bigchart .dash2-card-link{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.15)}
+.dash2-bigchart .dash2-card-link:hover{background:rgba(255,255,255,.2)}
+.dash2-bigchart .dash2-card-sub{color:rgba(255,255,255,.7)}
+/* Bars inside bigchart use white gradients */
+.dash2-bigchart .ds-bar-fill{
+  background:linear-gradient(180deg, #c4b5fd 0%, #a78bfa 45%, rgba(167,139,250,.15) 90%, transparent 100%);
+  opacity:.78;
+}
+.dash2-bigchart .ds-bar-col:hover .ds-bar-fill{
+  opacity:1;
+  filter:drop-shadow(0 0 14px #c4b5fd);
+}
+.dash2-bigchart .ds-bar-col.highlight .ds-bar-fill{
+  opacity:1;
+  background:linear-gradient(180deg, #ffffff 0%, #e9d5ff 30%, #c4b5fd 55%, #a78bfa 80%, rgba(167,139,250,.3) 100%);
+  filter:drop-shadow(0 0 26px #c4b5fd) drop-shadow(0 0 12px #e9d5ff);
+}
+.dash2-bigchart .ds-bar-lbl{color:rgba(255,255,255,.55);font-weight:600}
+.dash2-bigchart .ds-bar-lbl.highlight{color:#fff;font-weight:800}
+.dash2-bigchart .ds-bar-peak{background:rgba(255,255,255,.95);color:#1e1b4b}
+.dash2-bigchart .ds-bar-peak::after{background:rgba(255,255,255,.95)}
+
+/* Donut card layout (Blanted-style: donut + legend side-by-side) */
+.dash2-donut-card{position:relative;overflow:hidden}
+.dash2-donut-card::before{
+  content:'';position:absolute;top:-40%;left:-20%;width:60%;height:180%;
+  background:radial-gradient(ellipse, rgba(124,58,237,.12) 0%, transparent 60%);
+  pointer-events:none;
+}
+.dash2-donut-wrap{display:flex;align-items:center;gap:24px;padding:10px 0;position:relative;z-index:1;flex-wrap:wrap}
+.dash2-donut-area{flex-shrink:0}
+.dash2-donut-info{flex:1;min-width:160px;display:flex;flex-direction:column;gap:18px}
+.dash2-donut-total{}
+.dash2-donut-total-lbl{font-size:12px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.dash2-donut-total-val{font-size:32px;font-weight:800;color:var(--t1);letter-spacing:-.5px;line-height:1.05;font-feature-settings:'tnum';background:linear-gradient(135deg,#a78bfa,#7c3aed);-webkit-background-clip:text;background-clip:text;color:transparent}
+.dash2-donut-total-sub{font-size:12px;color:var(--t3);margin-top:3px}
+
+/* Mobile bigchart */
+@media (max-width:768px){
+  .dash2-bigchart{padding:20px;border-radius:18px}
+  .dash2-bigchart-val{font-size:26px}
+  .dash2-donut-wrap{flex-direction:column;gap:16px}
+  .dash2-donut-area{align-self:center}
+  .dash2-donut-info{width:100%}
+}
+
+/* Quick actions */
+.dash2-quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.dash2-quick-btn{padding:14px 12px;border-radius:13px;background:var(--bg-soft);border:1px solid var(--border);text-align:center;cursor:pointer;transition:all .15s ease;font-family:inherit;color:var(--t1);font-weight:600;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.dash2-quick-btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(124,58,237,.15);border-color:var(--p400);background:var(--card)}
+.dash2-quick-btn .ic{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+
+/* === Mobile responsive for Dashboard v2 === */
+@media (max-width:1100px){
+  .dash2-kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .dash2-row.cols-2,.dash2-row.cols-3{grid-template-columns:1fr}
+  .dash2-row.eq-2{grid-template-columns:1fr}
+}
+@media (max-width:768px){
+  .dash2{padding:14px 12px;gap:12px}
+  .dash2-hero{padding:22px 20px;grid-template-columns:1fr;border-radius:20px}
+  .dash2-hero-name{font-size:26px}
+  .dash2-hero-sub{font-size:13px}
+  .dash2-hero-time-card{display:none}
+  .dash2-kpi{padding:16px;border-radius:14px}
+  .dash2-kpi-val{font-size:24px}
+  .dash2-card{padding:16px;border-radius:14px}
+  .dash2-list-item{padding:8px 10px;gap:10px}
+  .dash2-list-av{width:32px;height:32px;font-size:11px}
+  .dash2-list-name{font-size:12.5px}
+  .dash2-list-sub{font-size:11px}
+}
+@media (max-width:480px){
+  .dash2-kpi-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .dash2-kpi{padding:14px}
+  .dash2-kpi-val{font-size:22px}
+  .dash2-kpi-icon{width:36px;height:36px}
+  .dash2-kpi-icon svg{width:18px;height:18px}
+  .dash2-hero-greeting{font-size:13px}
+  .dash2-hero-name{font-size:22px}
+}
+
+/* ╔═══════════════════════════════════════════════════════════╗
+   ║ MOBILE RESPONSIVE SWEEP — Anti-Overlap Safety             ║
+   ╚═══════════════════════════════════════════════════════════╝ */
+/* Universal — prevent horizontal scroll */
+*{box-sizing:border-box}
+html,body{max-width:100vw;overflow-x:hidden}
+.main-content,#mainContent,.app,.page-content{max-width:100%;min-width:0}
+
+/* Tables become scrollable on mobile */
+@media (max-width:768px){
+  .lot-table,.data-table,.db-table,.sr-table{font-size:12px}
+  .lot-table-wrap,.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+}
+
+/* Topbar mobile — prevent search/buttons squishing */
+@media (max-width:768px){
+  .topbar{flex-wrap:wrap;gap:8px;min-height:60px;padding:12px 14px 12px 64px}
+  .topbar > *{min-width:0}
+  .topbar-title,.topbar h1,.topbar h2{font-size:17px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .topbar-subtitle{display:none}
+  .topbar-actions{flex-wrap:wrap;gap:6px;justify-content:flex-end}
+  .search-inp{width:140px!important;font-size:13px}
+}
+
+/* Modal mobile — full width, no horizontal overflow */
+@media (max-width:520px){
+  .overlay{padding:8px}
+  .modal{
+    width:100%!important;
+    max-width:calc(100vw - 16px)!important;
+    max-height:calc(100vh - 16px)!important;
+    border-radius:18px!important;
+    margin:0;
+  }
+  .modal-bd{max-height:calc(100vh - 180px);overflow-y:auto}
+  .modal-hd,.modal-bd,.modal-ft{padding:14px 18px}
+  .modal-title{font-size:15px}
+}
+
+/* Form rows on mobile — stack vertically */
+@media (max-width:520px){
+  .sales-field-lbl,.form-row,.form-grid,.flex-row{flex-wrap:wrap}
+  .form-grid{grid-template-columns:1fr!important}
+  .lot-fld input,.lot-fld select,.lot-fld textarea{width:100%}
+  input[type="text"],input[type="email"],input[type="password"],input[type="number"],
+  input[type="date"],input[type="month"],input[type="time"],
+  textarea,select{max-width:100%}
+}
+
+/* Integrations grid → 1 col on mobile */
+@media (max-width:980px){
+  .intg-grid{grid-template-columns:1fr!important}
+  .intg-card{grid-column:span 1!important}
+}
+
+/* Member cards, task cards stacking */
+@media (max-width:768px){
+  .stats-grid,.members-grid,.live-stats{grid-template-columns:repeat(2,1fr)!important;gap:10px}
+}
+@media (max-width:480px){
+  .stats-grid,.members-grid,.live-stats{grid-template-columns:1fr!important}
+}
+
+/* Lottery target cards stack on mobile */
+@media (max-width:768px){
+  .lot-target-grid{grid-template-columns:1fr!important}
+}
+
+/* Social Report toolbar mobile — stack rows */
+@media (max-width:768px){
+  .sr-toolbar{flex-direction:column;align-items:stretch}
+  .sr-toolbar > *{width:100%}
+  .sr-presets{justify-content:flex-start}
+  .sr-dates{justify-content:flex-start}
+  .sr-print,.sr-refresh{justify-content:center}
+  .sr-stat-row{grid-template-columns:1fr 1fr!important}
+  .sr-section{padding:16px}
+  .sr-section-title{font-size:16px}
+}
+@media (max-width:480px){
+  .sr-cover{padding:18px}
+  .sr-cover h1{font-size:18px}
+  .sr-stat-row{grid-template-columns:1fr!important}
+  .sr-table{font-size:11px}
+  .sr-table th,.sr-table td{padding:8px 10px}
+}
+
+/* Sidebar — improved drawer behavior */
+@media (max-width:980px){
+  .sidebar{
+    width:280px;
+    z-index:1000;
+    transform:translateX(-100%);
+    transition:transform .25s cubic-bezier(.4,0,.2,1);
+  }
+  .sidebar.open{transform:translateX(0)}
+  .main-content{margin-left:0!important}
+}
+@media (max-width:480px){
+  .sidebar{width:85vw;max-width:300px}
+}
+
+/* Calendar mobile compact */
+@media (max-width:520px){
+  .cal-grid{font-size:11px}
+  .cal-cell,.cal-grid > div{padding:4px;min-height:42px}
+}
+
+/* Tabs (Facebook hub, etc.) horizontal scroll on mobile */
+@media (max-width:768px){
+  .fb-tab-bar{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap}
+  .fb-tab{flex-shrink:0}
+}
+
+/* Buttons stacking on tiny mobile */
+@media (max-width:380px){
+  .btn-primary,.btn-ghost,.btn-cancel{padding:10px 12px;font-size:12.5px}
+  .modal-ft{flex-direction:column;gap:8px}
+  .modal-ft button{width:100%}
+}
+
+/* Image / video / iframe responsive */
+img,video,iframe,canvas{max-width:100%;height:auto}
+
+/* Ensure long text in cards doesn't blow out width */
+.dash2-list-name,.dash2-list-sub,.sr-post-link,.lot-kpi-sub,.sr-kpi-sub{
+  word-break:break-word;
+  overflow-wrap:anywhere;
+}
+
+/* Charts — ensure mini charts don't overflow */
+.dash2-kpi-spark svg,.ds-bars,.ds-donut{max-width:100%}
+.dash2-card svg{max-width:100%;height:auto}
+
+/* Notification dropdown mobile */
+@media (max-width:520px){
+  .notif-drop,.notification-panel{width:calc(100vw - 32px)!important;right:8px!important;left:auto!important}
+}
+
+/* User menu dropdown mobile */
+@media (max-width:520px){
+  .user-menu-drop{right:8px!important;left:auto!important;width:calc(100vw - 32px);max-width:280px}
+}
+
+/* Avatar groups on small screens */
+@media (max-width:480px){
+  .avatar-group .av,.assignee-av{width:24px!important;height:24px!important;font-size:10px}
+}
+
+/* Form fields full width on mobile */
+@media (max-width:520px){
+  .lot-fld,.sm-field,.sales-field{width:100%}
+  input,select,textarea{width:100%;max-width:100%}
+  input[type="date"],input[type="month"]{min-width:0;width:100%}
+}
+
+/* Hover effects disabled on touch devices (avoid stuck-hover) */
+@media (hover:none){
+  .nav-item:hover,.dash2-kpi:hover,.dash2-card:hover,
+  .sr-kpi:hover,.lot-kpi:hover,.intg-card:hover,
+  .btn-primary:hover,.btn-ghost:hover,.user-card:hover{
+    transform:none;
+  }
+}
 </style>
 </head>
 <body>
@@ -3110,6 +4608,8 @@ svg{display:block;flex-shrink:0}
       <div id="viewSocialIntegrations" class="view"></div>
       <div id="viewSocialReport" class="view"></div>
       <div id="viewSocialManage" class="view"></div>
+      <div id="viewAdLibrary" class="view"></div>
+      <div id="viewTrendScraper" class="view"></div>
       <div id="viewPostPerformance" class="view"></div>
       <div id="viewAdSpend" class="view"></div>
       <div id="viewSales" class="view"></div>
@@ -3479,7 +4979,7 @@ svg{display:block;flex-shrink:0}
       </div>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
         <label style="font-size:12px;color:var(--t2);font-weight:600">เลือกเดือน:</label>
-        <input type="month" id="lotCalMonthSel" onchange="lotCalSetMonth()" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--t1);font-size:13px"/>
+        <div id="lotCalMonthSelWrap" style="flex:1"></div>
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
         <button class="icon-btn" onclick="lotCalNav(-1)" title="เดือนก่อน">‹</button>
@@ -3802,7 +5302,7 @@ svg{display:block;flex-shrink:0}
     </div>
     <div class="modal-body">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-        <button id="taskEmojiBtn" onclick="pickEmojiForModal(event)" style="width:48px;height:48px;font-size:24px;border:1.5px solid var(--border-2);border-radius:10px;background:#fff;cursor:pointer">📝</button>
+        <button id="taskEmojiBtn" class="emoji-btn-picker" onclick="pickEmojiForModal(event)" title="คลิกเพื่อเปลี่ยนอิโมจิ">📝</button>
         <input class="finp" id="fTaskName" placeholder="ชื่องาน..." style="flex:1;font-size:16px;font-weight:600">
       </div>
       <div class="fgrp">
@@ -3852,7 +5352,7 @@ svg{display:block;flex-shrink:0}
     </div>
     <div class="modal-body">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-        <button id="docEmojiBtn" onclick="pickEmojiForDoc(event)" style="width:48px;height:48px;font-size:24px;border:1.5px solid var(--border-2);border-radius:10px;background:#fff;cursor:pointer">📄</button>
+        <button id="docEmojiBtn" class="emoji-btn-picker" onclick="pickEmojiForDoc(event)" title="คลิกเพื่อเปลี่ยนอิโมจิ">📄</button>
         <input class="finp" id="fDocName" placeholder="ชื่อเอกสาร..." style="flex:1;font-size:16px;font-weight:600">
       </div>
       <div class="fgrp">
@@ -4228,6 +5728,303 @@ svg{display:block;flex-shrink:0}
 
 <script>
 // ========== SVG ICONS ==========
+// ============ THAI MONTH PICKER (replaces native <input type="month">) ============
+const _THMP_MONTHS_TH = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const _THMP_MONTHS_LO = ['ມັງ.','ກຸມ.','ມີນາ','ເມສາ','ພຶດ.','ມິຖ.','ກໍລ.','ສິງ.','ກັນ.','ຕຸລາ','ພະ.','ທັນ.'];
+function _thmpDisplay(ym){
+  if(!ym) return (typeof CURRENT_LANG!=='undefined' && CURRENT_LANG==='lo') ? 'ເລືອກເດືອນ' : 'เลือกเดือน';
+  const [y, m] = ym.split('-').map(Number);
+  const lo = typeof CURRENT_LANG!=='undefined' && CURRENT_LANG==='lo';
+  const arr = lo ? _THMP_MONTHS_LO : _THMP_MONTHS_TH;
+  const yearLabel = lo ? y : (y + 543);
+  return (arr[m-1]||'') + ' ' + yearLabel;
+}
+function thaiMonthPicker(opts){
+  const { id, value, onchange, placeholder } = opts || {};
+  const display = _thmpDisplay(value || '');
+  return `<div class="thmp" data-id="${id}">
+    <input type="hidden" id="${id}" value="${value||''}" data-onchange="${onchange||''}">
+    <button type="button" class="thmp-btn" onclick="_thmpOpen('${id}')">
+      <span class="thmp-label">${display}</span>
+      <svg class="thmp-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+  </div>`;
+}
+function _thmpOpen(id){
+  // close any open
+  document.querySelectorAll('.thmp-popup').forEach(p=>p.remove());
+  const wrap = document.querySelector(`.thmp[data-id="${id}"]`);
+  if(!wrap) return;
+  const input = document.getElementById(id);
+  const curY = input.value ? parseInt(input.value.slice(0,4),10) : new Date().getFullYear();
+  const popup = document.createElement('div');
+  popup.className = 'thmp-popup';
+  popup.dataset.year = curY;
+  popup.dataset.mode = 'months';
+  popup.innerHTML = _thmpPopupHTML(id, curY, input.value, 'months');
+  wrap.appendChild(popup);
+  setTimeout(()=>document.addEventListener('click', _thmpOutside, true), 0);
+}
+function _thmpOutside(e){
+  if(!e.target.closest('.thmp')){
+    document.querySelectorAll('.thmp-popup').forEach(p=>p.remove());
+    document.removeEventListener('click', _thmpOutside, true);
+  }
+}
+function _thmpPopupHTML(id, year, value, mode){
+  const lo = typeof CURRENT_LANG!=='undefined' && CURRENT_LANG==='lo';
+  const yearLabel = lo ? year : (year + 543);
+  const labelClear = lo ? 'ລ້າງ' : 'ล้าง';
+  const labelThis = lo ? 'ເດືອນນີ້' : 'เดือนนี้';
+  if(mode === 'years'){
+    // Year picker: 12 years grid (3 cols × 4 rows), centered on current year
+    const startY = year - 5;
+    const selYear = value ? parseInt(value.slice(0,4),10) : null;
+    return `
+      <div class="thmp-year-nav">
+        <button type="button" class="thmp-nav-btn" onclick="event.stopPropagation();_thmpNavYearPage('${id}',-12)">‹</button>
+        <button type="button" class="thmp-year thmp-year-btn" onclick="event.stopPropagation();_thmpSetMode('${id}','months')" title="${lo?'ກັບໄປເລືອກເດືອນ':'กลับไปเลือกเดือน'}">${lo?(startY+'-'+(startY+11)):((startY+543)+'-'+(startY+11+543))}</button>
+        <button type="button" class="thmp-nav-btn" onclick="event.stopPropagation();_thmpNavYearPage('${id}',12)">›</button>
+      </div>
+      <div class="thmp-grid thmp-grid-years">
+        ${Array.from({length:12},(_,i)=>{
+          const y = startY + i;
+          const isSel = y === selYear;
+          const display = lo ? y : (y + 543);
+          return `<button type="button" class="thmp-cell ${isSel?'sel':''}" onclick="event.stopPropagation();_thmpPickYear('${id}',${y})">${display}</button>`;
+        }).join('')}
+      </div>
+      <div class="thmp-ft">
+        <button type="button" class="thmp-ft-btn" onclick="event.stopPropagation();_thmpSetMode('${id}','months')">${lo?'ກັບໄປ':'กลับ'}</button>
+        <button type="button" class="thmp-ft-btn primary" onclick="event.stopPropagation();_thmpPickYear('${id}',${new Date().getFullYear()})">${lo?'ປີນີ້':'ปีนี้'}</button>
+      </div>`;
+  }
+  // months mode
+  const arr = lo ? _THMP_MONTHS_LO : _THMP_MONTHS_TH;
+  return `
+    <div class="thmp-year-nav">
+      <button type="button" class="thmp-nav-btn" onclick="event.stopPropagation();_thmpNav('${id}',-1)">‹</button>
+      <button type="button" class="thmp-year thmp-year-btn" onclick="event.stopPropagation();_thmpSetMode('${id}','years')" title="${lo?'ກົດເພື່ອເລືອກປີ':'กดเพื่อเลือกปี'}">${yearLabel}</button>
+      <button type="button" class="thmp-nav-btn" onclick="event.stopPropagation();_thmpNav('${id}',1)">›</button>
+    </div>
+    <div class="thmp-grid">
+      ${arr.map((m,i)=>{
+        const ym = year + '-' + String(i+1).padStart(2,'0');
+        const isSel = ym === value;
+        return `<button type="button" class="thmp-cell ${isSel?'sel':''}" onclick="event.stopPropagation();_thmpSelect('${id}','${ym}')">${m}</button>`;
+      }).join('')}
+    </div>
+    <div class="thmp-ft">
+      <button type="button" class="thmp-ft-btn" onclick="event.stopPropagation();_thmpClear('${id}')">${labelClear}</button>
+      <button type="button" class="thmp-ft-btn primary" onclick="event.stopPropagation();_thmpThis('${id}')">${labelThis}</button>
+    </div>`;
+}
+function _thmpNav(id, delta){
+  const popup = document.querySelector(`.thmp[data-id="${id}"] .thmp-popup`);
+  if(!popup) return;
+  const newY = parseInt(popup.dataset.year, 10) + delta;
+  popup.dataset.year = newY;
+  const input = document.getElementById(id);
+  popup.innerHTML = _thmpPopupHTML(id, newY, input.value, popup.dataset.mode || 'months');
+}
+function _thmpNavYearPage(id, delta){
+  const popup = document.querySelector(`.thmp[data-id="${id}"] .thmp-popup`);
+  if(!popup) return;
+  const newY = parseInt(popup.dataset.year, 10) + delta;
+  popup.dataset.year = newY;
+  const input = document.getElementById(id);
+  popup.innerHTML = _thmpPopupHTML(id, newY, input.value, 'years');
+}
+function _thmpSetMode(id, mode){
+  const popup = document.querySelector(`.thmp[data-id="${id}"] .thmp-popup`);
+  if(!popup) return;
+  popup.dataset.mode = mode;
+  const input = document.getElementById(id);
+  const curY = parseInt(popup.dataset.year, 10);
+  popup.innerHTML = _thmpPopupHTML(id, curY, input.value, mode);
+}
+function _thmpPickYear(id, year){
+  const popup = document.querySelector(`.thmp[data-id="${id}"] .thmp-popup`);
+  if(!popup) return;
+  popup.dataset.year = year;
+  popup.dataset.mode = 'months';
+  const input = document.getElementById(id);
+  popup.innerHTML = _thmpPopupHTML(id, year, input.value, 'months');
+}
+function _thmpSelect(id, ym){
+  const input = document.getElementById(id);
+  input.value = ym;
+  const wrap = document.querySelector(`.thmp[data-id="${id}"]`);
+  if(wrap){
+    const label = wrap.querySelector('.thmp-label');
+    if(label) label.textContent = _thmpDisplay(ym);
+    wrap.querySelectorAll('.thmp-popup').forEach(p=>p.remove());
+  }
+  document.removeEventListener('click', _thmpOutside, true);
+  // Trigger callback
+  const cb = input.dataset.onchange;
+  if(cb && typeof window[cb] === 'function'){ try { window[cb](ym); } catch(e){ console.error(e); } }
+  else { try { input.dispatchEvent(new Event('change',{bubbles:true})); } catch(_){} }
+}
+function _thmpClear(id){
+  _thmpSelect(id, '');
+}
+function _thmpThis(id){
+  const n = new Date();
+  _thmpSelect(id, n.getFullYear() + '-' + String(n.getMonth()+1).padStart(2,'0'));
+}
+
+// ============ I18N (TH / LO) ============
+let CURRENT_LANG = localStorage.getItem('tfl_lang') || 'th';
+const T_DICT = {
+  th: {
+    // Sidebar nav
+    menu_main: 'เมนูหลัก', menu_admin: 'Admin', menu_social: 'Social',
+    nav_drag_hint: 'ลากเพื่อจัดเรียง',
+    nav_dashboard: 'ภาพรวม', nav_library: 'ไลบรารี', nav_files: 'เอกสาร', nav_notes: 'Note',
+    nav_tasks: 'ติดตามงาน', nav_mytasks: 'งานของฉัน', nav_alltasks: 'งานทั้งหมด',
+    nav_sales: 'ออกพื้นที่', nav_calendar: 'ปฏิทิน', nav_members: 'จัดการสมาชิก',
+    nav_activity: 'Activity Log', nav_lottery: 'หวยพัฒนาลาว', nav_attendance: 'ระบบลงเวลา',
+    nav_social_report: 'รายงานผล Social', nav_social_manage: 'จัดการ Social',
+    nav_adspend: 'งบโฆษณา', nav_integrations: 'เชื่อมต่อแพลตฟอร์ม',
+    // Common buttons
+    btn_add: 'เพิ่ม', btn_edit: 'แก้ไข', btn_delete: 'ลบ', btn_save: 'บันทึก',
+    btn_cancel: 'ยกเลิก', btn_close: 'ปิด', btn_refresh: 'รีเฟรช',
+    btn_new: 'ใหม่', btn_view_all: 'ดูทั้งหมด', btn_add_task: 'งานใหม่',
+    btn_import: 'นำเข้า', btn_export: 'ส่งออก', btn_print: 'พิมพ์',
+    // Status
+    status_online: 'ออนไลน์', status_offline: 'ออฟไลน์', status_syncing: 'กำลังซิงค์',
+    status_error: 'ขัดข้อง',
+    // Dashboard
+    dash_greeting_morning: 'อรุณสวัสดิ์',
+    dash_greeting_afternoon: 'สวัสดีตอนบ่าย',
+    dash_greeting_evening: 'สวัสดียามค่ำ',
+    dash_greeting_night: 'สวัสดียามดึก',
+    dash_hero_sub: 'มาดูภาพรวมงานวันนี้กัน ทีมของคุณกำลังทำงานเต็มที่',
+    dash_sales_today: 'ยอดขายวันนี้',
+    dash_live_viewers: 'คนดู Live',
+    dash_new_members: 'สมาชิกใหม่',
+    dash_tasks_todo: 'งานที่ต้องทำ',
+    dash_no_live: 'ไม่มี Live ขณะนี้',
+    dash_broadcasting: 'กำลังถ่ายทอด',
+    dash_urgent: 'ด่วน',
+    dash_ok: 'ทันเวลา',
+    dash_total_year: 'ยอดขายรวมปีนี้',
+    dash_this_month: 'เดือนนี้ทำได้',
+    dash_progress: 'ความคืบหน้างาน',
+    dash_done: 'เสร็จแล้ว',
+    dash_in_progress: 'กำลังทำ',
+    dash_waiting: 'รอเริ่ม',
+    dash_remaining: 'คงเหลือ',
+    dash_live_today: 'ไลฟ์สดวันนี้',
+    dash_no_live_today: 'ยังไม่มีไลฟ์วันนี้',
+    dash_recent_activity: 'กิจกรรมล่าสุด',
+    dash_no_activity: 'ยังไม่มีกิจกรรม',
+    dash_my_tasks: 'งานของฉัน',
+    dash_all_done: 'เคลียร์งานหมดแล้ว!',
+    dash_quick_actions: 'ทางลัด',
+    dash_quick_lottery: 'หวยพัฒนา', dash_quick_attendance: 'ลงเวลา',
+    dash_quick_sales: 'ออกพื้นที่', dash_quick_report: 'Social Report',
+    dash_quick_calendar: 'ปฏิทิน', dash_quick_note: 'Note',
+    // User menu
+    user_edit_profile: 'แก้ไขโปรไฟล์',
+    user_export: 'Export ข้อมูล (.json)',
+    user_import: 'Import ข้อมูล',
+    user_sync_cloud: 'ซิงค์ข้อมูลขึ้น Cloud',
+    user_logout: 'ออกจากระบบ',
+    user_sync_status: 'สถานะการซิงค์',
+    // Lang toggle
+    lang_th: 'ไทย', lang_lo: 'ลาว',
+    // Misc
+    loading: 'กำลังโหลด…',
+    no_data: 'ไม่มีข้อมูล',
+    total: 'รวม',
+    today: 'วันนี้',
+    yesterday: 'เมื่อวาน',
+    days_ago: 'วันที่แล้ว',
+    overdue: 'เลยกำหนด',
+  },
+  lo: {
+    // Sidebar nav
+    menu_main: 'ເມນູຫຼັກ', menu_admin: 'ຜູ້ດູແລ', menu_social: 'ໂຊຊຽວ',
+    nav_drag_hint: 'ລາກເພື່ອຈັດລຽງ',
+    nav_dashboard: 'ພາບລວມ', nav_library: 'ຫ້ອງສະໝຸດ', nav_files: 'ເອກະສານ', nav_notes: 'ບັນທຶກ',
+    nav_tasks: 'ຕິດຕາມວຽກ', nav_mytasks: 'ວຽກຂອງຂ້ອຍ', nav_alltasks: 'ວຽກທັງໝົດ',
+    nav_sales: 'ອອກພື້ນທີ່', nav_calendar: 'ປະຕິທິນ', nav_members: 'ຈັດການສະມາຊິກ',
+    nav_activity: 'ປະຫວັດການເຄື່ອນໄຫວ', nav_lottery: 'ຫວຍພັດທະນາລາວ', nav_attendance: 'ລົງເວລາ',
+    nav_social_report: 'ລາຍງານ Social', nav_social_manage: 'ຈັດການ Social',
+    nav_adspend: 'ງົບໂຄສະນາ', nav_integrations: 'ເຊື່ອມຕໍ່ແພລດຟອມ',
+    // Common buttons
+    btn_add: 'ເພີ່ມ', btn_edit: 'ແກ້ໄຂ', btn_delete: 'ລຶບ', btn_save: 'ບັນທຶກ',
+    btn_cancel: 'ຍົກເລີກ', btn_close: 'ປິດ', btn_refresh: 'ໂຫຼດໃໝ່',
+    btn_new: 'ໃໝ່', btn_view_all: 'ເບິ່ງທັງໝົດ', btn_add_task: 'ວຽກໃໝ່',
+    btn_import: 'ນຳເຂົ້າ', btn_export: 'ສົ່ງອອກ', btn_print: 'ພິມ',
+    // Status
+    status_online: 'ອອນລາຍ', status_offline: 'ອອບລາຍ', status_syncing: 'ກຳລັງຊິງຄ໌',
+    status_error: 'ຂັດຂ້ອງ',
+    // Dashboard
+    dash_greeting_morning: 'ສະບາຍດີຕອນເຊົ້າ',
+    dash_greeting_afternoon: 'ສະບາຍດີຕອນບ່າຍ',
+    dash_greeting_evening: 'ສະບາຍດີຕອນແລງ',
+    dash_greeting_night: 'ສະບາຍດີຕອນເດິກ',
+    dash_hero_sub: 'ມາເບິ່ງພາບລວມວຽກມື້ນີ້ກັນ ທີມຂອງທ່ານກຳລັງເຮັດວຽກເຕັມທີ່',
+    dash_sales_today: 'ຍອດຂາຍມື້ນີ້',
+    dash_live_viewers: 'ຄົນເບິ່ງ Live',
+    dash_new_members: 'ສະມາຊິກໃໝ່',
+    dash_tasks_todo: 'ວຽກທີ່ຕ້ອງເຮັດ',
+    dash_no_live: 'ບໍ່ມີ Live ຂະນະນີ້',
+    dash_broadcasting: 'ກຳລັງຖ່າຍທອດ',
+    dash_urgent: 'ດ່ວນ',
+    dash_ok: 'ທັນເວລາ',
+    dash_total_year: 'ຍອດຂາຍລວມປີນີ້',
+    dash_this_month: 'ເດືອນນີ້ເຮັດໄດ້',
+    dash_progress: 'ຄວາມຄືບໜ້າວຽກ',
+    dash_done: 'ສຳເລັດແລ້ວ',
+    dash_in_progress: 'ກຳລັງເຮັດ',
+    dash_waiting: 'ລໍຖ້າ',
+    dash_remaining: 'ຍັງເຫຼືອ',
+    dash_live_today: 'Live ມື້ນີ້',
+    dash_no_live_today: 'ຍັງບໍ່ມີ Live ມື້ນີ້',
+    dash_recent_activity: 'ກິດຈະກຳຫຼ້າສຸດ',
+    dash_no_activity: 'ຍັງບໍ່ມີກິດຈະກຳ',
+    dash_my_tasks: 'ວຽກຂອງຂ້ອຍ',
+    dash_all_done: 'ສຳເລັດທຸກວຽກແລ້ວ!',
+    dash_quick_actions: 'ທາງລັດ',
+    dash_quick_lottery: 'ຫວຍພັດທະນາ', dash_quick_attendance: 'ລົງເວລາ',
+    dash_quick_sales: 'ອອກພື້ນທີ່', dash_quick_report: 'ລາຍງານ Social',
+    dash_quick_calendar: 'ປະຕິທິນ', dash_quick_note: 'ບັນທຶກ',
+    // User menu
+    user_edit_profile: 'ແກ້ໄຂໂປຣໄຟລ໌',
+    user_export: 'ສົ່ງອອກຂໍ້ມູນ (.json)',
+    user_import: 'ນຳເຂົ້າຂໍ້ມູນ',
+    user_sync_cloud: 'ຊິງຄ໌ຂໍ້ມູນຂຶ້ນ Cloud',
+    user_logout: 'ອອກຈາກລະບົບ',
+    user_sync_status: 'ສະຖານະການຊິງຄ໌',
+    // Lang toggle
+    lang_th: 'ໄທ', lang_lo: 'ລາວ',
+    // Misc
+    loading: 'ກຳລັງໂຫຼດ…',
+    no_data: 'ບໍ່ມີຂໍ້ມູນ',
+    total: 'ລວມ',
+    today: 'ມື້ນີ້',
+    yesterday: 'ມື້ວານ',
+    days_ago: 'ມື້ກ່ອນ',
+    overdue: 'ເກີນກຳນົດ',
+  },
+};
+function t(key, fallback){
+  return (T_DICT[CURRENT_LANG] && T_DICT[CURRENT_LANG][key]) || T_DICT.th[key] || fallback || key;
+}
+function toggleLang(){
+  CURRENT_LANG = CURRENT_LANG === 'th' ? 'lo' : 'th';
+  try { localStorage.setItem('tfl_lang', CURRENT_LANG); } catch(_){}
+  document.documentElement.setAttribute('data-lang', CURRENT_LANG);
+  try { renderSidebar(); } catch(_){}
+  try { rerender(); } catch(_){}
+}
+// Apply data-lang on load
+try { document.documentElement.setAttribute('data-lang', CURRENT_LANG); } catch(_){}
+
 const I = {
   home:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
   book:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
@@ -4615,18 +6412,22 @@ function setNeonStatus(s, err){
   try { updateSyncBadge(); } catch(_){}
 }
 function updateSyncBadge(){
+  // Legacy syncBadge in topbar (removed) — keep guard for any leftover ref
   const el = document.getElementById('syncBadge');
-  if(!el) return;
-  const map = {
-    offline:  { cls:'off',  txt:'Offline',  title:'ใช้งานออฟไลน์ — ข้อมูลเก็บใน localStorage' },
-    connecting:{ cls:'wait',txt:'Connecting',title:'กำลังเชื่อมต่อ Neon...' },
-    online:   { cls:'ok',   txt:'Online',   title:'เชื่อม Neon แล้ว — ข้อมูล sync อัตโนมัติ' },
-    error:    { cls:'err',  txt:'Sync Error',title:'เชื่อม Neon ไม่ได้: '+neonLastError },
-  };
-  const s = map[neonStatus] || map.offline;
-  el.className = 'sync-badge ' + s.cls;
-  el.textContent = s.txt;
-  el.title = s.title;
+  if(el){
+    const map = {
+      offline:{cls:'off',txt:'Offline'}, connecting:{cls:'wait',txt:'Connecting'},
+      online:{cls:'ok',txt:'Online'}, error:{cls:'err',txt:'Sync Error'},
+    };
+    const s = map[neonStatus] || map.offline;
+    el.className = 'sync-badge ' + s.cls;
+    el.textContent = s.txt;
+  }
+  // New sync indicator in user dropdown — refresh if dropdown is open
+  const dd = document.getElementById('userDropdown');
+  if(dd && dd.classList.contains('show')){
+    try { renderUserDropdown(); } catch(_){}
+  }
 }
 
 async function initNeonSync(){
@@ -5704,11 +7505,148 @@ async function applyImport(){
 
 // ========== EMOJI LIST ==========
 const EMOJIS = {
-  smile: ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','🤥','😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','🤯','🤠','🥳','🥸','😎','🤓','🧐'],
-  obj: ['📝','📄','📃','📑','📰','📊','📈','📉','📌','📍','📎','🖇️','📏','📐','✂️','🗑️','🔒','🔓','🔑','🗝️','🔨','⛏️','⚒️','🛠️','🔧','🔩','⚙️','🧰','🧲','⚗️','🧪','🧫','🔬','🔭','📡','💻','⌨️','🖥️','🖨️','🖱️','📱','📞','📟','📠','📺','📻','💡','🔦','🔋','🔌','📚','📖','📓','📔','📕','📗','📘','📙','📒','📋','📁','📂','🗂️','📅','📆','💼','✏️','🖊️','🖋️','🎯','🚀','✨'],
-  symbol: ['✅','❌','⭕','🚫','❓','❔','❕','❗','‼️','⁉️','💯','🔥','⭐','🌟','💫','✨','💥','💢','💦','💨','🕳️','💭','🗯️','♨️','💤','⚡','☀️','🌙','⛅','☁️','🌈','💎','🏆','🥇','🥈','🥉','🎖️','🏅','🎗️','🎟️','🎫','🎪','🎭','🎨','🎬','🎤','🎧','🎼','🎵','🎶','🎯','🎲','🧩','🎮'],
-  food: ['🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🍆','🥑','🥦','🥬','🥒','🌶️','🫑','🌽','🥕','🥔','🍠','🥐','🥯','🍞','🥖','🥨','🧀','🥚','🍳','🧈','🥞','🧇','🥓','🥩','🍗','🍖','🌭','🍔','🍟','🍕','🥪','🥙','🧆','🌮','🌯','🫔','🥗','🍝','🍜','🍲','🍛','🍣','🍱','🥟','🥡','🍤','🍙','🍚','🍘','🍥','🥠','🍢','🍡','🍧','🍨','🍦','🥧','🧁','🍰','🎂','🍮','🍭','🍬','🍫','🍿','🍩','🍪','☕','🍵','🧃','🥤','🍶','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🧉','🍾'],
-  animal: ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐽','🐸','🐵','🙈','🙉','🙊','🐒','🐔','🐧','🐦','🐤','🐣','🐥','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐝','🪱','🐛','🦋','🐌','🐞','🐜','🪰','🪲','🦗','🕷️','🦂','🐢','🐍','🦎','🦖','🦕','🐙','🦑','🦐','🦞','🦀','🐡','🐠','🐟','🐬','🐳','🐋','🦈','🐊','🐅','🐆','🦓','🦍','🦧','🐘','🦣','🦛','🦏','🐪','🐫','🦒','🦘','🦬','🐃','🐂','🐄','🐎','🐖','🐏','🐑','🦙','🐐','🦌','🐕','🐩','🦮','🐈','🐓','🦃','🦚','🦜','🦢','🦩','🕊️','🐇','🦝','🦨','🦡','🦫','🦦','🦥','🐁','🐀','🐿️','🦔'],
+  smile: [
+    // Happy
+    '😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','🫠','😉','😊','😇',
+    // Love
+    '🥰','😍','🤩','😘','😗','☺️','😚','😙','🥲',
+    // Tongue
+    '😋','😛','😜','🤪','😝','🤑',
+    // Hands & face
+    '🤗','🤭','🫢','🫣','🤫','🤔','🫡',
+    // Neutral
+    '🤐','🤨','😐','😑','😶','🫥','😶‍🌫️','😏','😒','🙄','😬','😮‍💨','🤥','🫨',
+    // Sad
+    '😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','😵‍💫','🤯',
+    // Cool
+    '🤠','🥳','🥸','😎','🤓','🧐',
+    // Worried/scared
+    '😕','🫤','😟','🙁','☹️','😮','😯','😲','😳','🥺','🥹','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱',
+    // Angry
+    '😤','😡','😠','🤬','😈','👿','💀','☠️',
+    // Other faces
+    '💩','🤡','👹','👺','👻','👽','👾','🤖','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾',
+    // Hearts
+    '❤️','🩷','🧡','💛','💚','💙','🩵','💜','🖤','🩶','🤍','🤎','💔','❤️‍🔥','❤️‍🩹','💖','💗','💓','💞','💕','💟','❣️','💌','💋','💯',
+    // Hands
+    '👋','🤚','🖐️','✋','🖖','🫱','🫲','🫳','🫴','🫷','🫸','👌','🤌','🤏','✌️','🤞','🫰','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','🫵','👍','👎','✊','👊','🤛','🤜','👏','🙌','🫶','👐','🤲','🤝','🙏',
+    // People
+    '🧑','👤','👥','🫂','👶','👧','🧒','👦','👩','🧑','👨','👵','🧓','👴','👲','👳‍♀️','👳','👳‍♂️','🧕','👮‍♀️','👮','👮‍♂️','👷‍♀️','👷','👷‍♂️','💂‍♀️','💂','💂‍♂️','🕵️‍♀️','🕵️','🕵️‍♂️',
+    // Body
+    '💪','🦾','🦿','🦵','🦶','👂','🦻','👃','🧠','🫀','🫁','🦷','🦴','👀','👁️','👅','👄','🫦',
+  ],
+  animal: [
+    // Mammals
+    '🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐻‍❄️','🐨','🐯','🦁','🐮','🐷','🐽','🐸','🐵','🙈','🙉','🙊','🐒',
+    // Birds
+    '🐔','🐧','🐦','🐤','🐣','🐥','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐦‍⬛','🪿',
+    // Bugs
+    '🐝','🪱','🐛','🦋','🐌','🐞','🐜','🪰','🪲','🦗','🪳','🕷️','🕸️','🦂',
+    // Reptiles & amphibians
+    '🐢','🐍','🦎','🦖','🦕',
+    // Sea
+    '🐙','🦑','🦐','🦞','🦀','🐡','🐠','🐟','🐬','🐳','🐋','🦈','🦭','🐊',
+    // Big mammals
+    '🐅','🐆','🦓','🦍','🦧','🐘','🦣','🦛','🦏','🐪','🐫','🦒','🦘','🦬','🐃','🐂','🐄','🐎','🐖','🐏','🐑','🦙','🐐','🦌',
+    // Pets
+    '🐕','🐩','🦮','🐈','🐈‍⬛','🪶','🐓','🦃','🦤','🦚','🦜','🦢','🦩','🕊️','🐇','🦝','🦨','🦡','🦫','🦦','🦥','🐁','🐀','🐿️','🦔',
+    // Plants
+    '🌵','🎄','🌲','🌳','🌴','🪵','🌱','🌿','☘️','🍀','🎍','🪴','🎋','🍃','🍂','🍁','🍄','🪨','🌾','💐','🌷','🌹','🥀','🪷','🌺','🌸','🌼','🌻',
+    // Sky
+    '🌞','🌝','🌛','🌜','🌚','🌕','🌖','🌗','🌘','🌑','🌒','🌓','🌔','🌙','🌎','🌍','🌏','🪐','💫','⭐','🌟','✨','⚡','☄️','💥','🔥','🌈','☀️','🌤️','⛅','🌥️','☁️','🌦️','🌧️','⛈️','🌩️','🌨️','❄️','☃️','⛄','🌬️','💨','💧','💦','🫧','☂️','☔','🌊','🌫️',
+  ],
+  food: [
+    // Fruits
+    '🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝',
+    // Veg
+    '🍅','🍆','🥑','🥦','🥬','🥒','🌶️','🫑','🌽','🥕','🫒','🧄','🧅','🥔','🍠','🫛','🫘',
+    // Bread
+    '🥐','🥯','🍞','🥖','🥨','🧀','🥚','🍳','🧈','🥞','🧇','🥓','🥩','🍗','🍖','🦴','🌭','🍔','🍟','🍕','🥪','🥙','🧆','🌮','🌯','🫔','🥗',
+    // Asian
+    '🍝','🍜','🍲','🫕','🥘','🍛','🍣','🍱','🥟','🥠','🥡','🍤','🍙','🍚','🍘','🍥','🍢','🍡',
+    // Sweet
+    '🍧','🍨','🍦','🥧','🧁','🍰','🎂','🍮','🍭','🍬','🍫','🍿','🍩','🍪','🌰','🥜','🫚',
+    // Drinks
+    '☕','🍵','🧃','🥤','🧋','🍶','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🧉','🍾','🧊','🥛','🍼','🫗',
+    // Utensils
+    '🍽️','🍴','🥄','🥢','🧂',
+  ],
+  activity: [
+    // Sports
+    '⚽','🏀','🏈','⚾','🥎','🎾','🏐','🏉','🥏','🎱','🪀','🏓','🏸','🏒','🏑','🥍','🏏','🪃','🥅','⛳','🪁','🏹','🎣','🤿','🥊','🥋','🎽','🛹','🛼','🛷','⛸️','🥌','🎿','⛷️','🏂','🪂',
+    // People activities
+    '🏋️‍♀️','🏋️','🏋️‍♂️','🤼‍♀️','🤼','🤼‍♂️','🤸‍♀️','🤸','🤸‍♂️','⛹️‍♀️','⛹️','⛹️‍♂️','🤺','🤾‍♀️','🤾','🤾‍♂️','🏌️‍♀️','🏌️','🏌️‍♂️','🏇','🧘‍♀️','🧘','🧘‍♂️','🏄‍♀️','🏄','🏄‍♂️','🏊‍♀️','🏊','🏊‍♂️','🤽‍♀️','🤽','🤽‍♂️','🚣‍♀️','🚣','🚣‍♂️','🧗‍♀️','🧗','🧗‍♂️','🚵‍♀️','🚵','🚵‍♂️','🚴‍♀️','🚴','🚴‍♂️',
+    // Music & art
+    '🎼','🎵','🎶','🎤','🎧','🎙️','🎚️','🎛️','📻','🎷','🪗','🎸','🎺','🎻','🪕','🥁','🪘','🎹','🎬','🎨','🎭','🎪','🎟️','🎫','🎠','🎡','🎢',
+    // Games
+    '🎮','🕹️','🎰','🎲','🧩','♟️','🎴','🀄','🃏','🎯','🎱','🎳','🎷','🎸','🎺','🎻',
+    // Awards
+    '🏆','🥇','🥈','🥉','🏅','🎖️','🏵️','🎗️',
+  ],
+  travel: [
+    // Transport
+    '🚗','🚕','🚙','🚌','🚎','🏎️','🚓','🚑','🚒','🚐','🛻','🚚','🚛','🚜','🛵','🏍️','🛺','🚲','🛴','🛹','🛼','🚏','🛣️','🛤️','🛢️','⛽','🚨','🚥','🚦','🛑','🚧','⚓','⛵','🛶','🚤','🛳️','⛴️','🛥️','🚢','✈️','🛩️','🛫','🛬','🪂','💺','🚁','🚟','🚠','🚡','🛰️','🚀','🛸',
+    // Building
+    '🏠','🏡','🏘️','🏚️','🏗️','🏭','🏢','🏬','🏣','🏤','🏥','🏦','🏨','🏪','🏫','🏩','💒','🏛️','⛪','🕌','🕍','🛕','🕋','⛩️','🛤️','🛣️','🗾','🎑','🏞️','🌅','🌄','🌠','🎇','🎆','🌇','🌆','🏙️','🌃','🌌','🌉','🌁',
+    // Places
+    '🗽','🗼','🏰','🏯','🏟️','🎡','🎢','🎠','⛲','⛱️','🏖️','🏝️','🏜️','🌋','⛰️','🏔️','🗻','🏕️','⛺','🛖',
+  ],
+  obj: [
+    // Tech
+    '⌚','📱','📲','💻','⌨️','🖥️','🖨️','🖱️','🖲️','🕹️','🗜️','💽','💾','💿','📀','📼','📷','📸','📹','🎥','📽️','🎞️','📞','☎️','📟','📠','📺','📻','🎙️','🎚️','🎛️','🧭','⏱️','⏲️','⏰','🕰️','⌛','⏳','📡','🔋','🪫','🔌','💡','🔦','🕯️','🪔',
+    // Office
+    '📝','📄','📃','📑','📰','🗞️','📊','📈','📉','📌','📍','📎','🖇️','📏','📐','✂️','🗑️','🔒','🔓','🔏','🔐','🔑','🗝️','📚','📖','📓','📔','📕','📗','📘','📙','📒','📋','📁','📂','🗂️','🗃️','🗄️','📅','📆','🗓️','💼','✏️','🖊️','🖋️','🖌️','🖍️',
+    // Tools
+    '🔨','⛏️','⚒️','🛠️','🪚','🔧','🪛','🔩','⚙️','🧰','🧲','🪜','🪝','🪞','🪟','🪤','🧹','🧺','🧻','🚽','🚰','🚿','🛁','🧼','🪥','🧽','🪣','🧴','🛒',
+    // Money
+    '💰','🪙','💴','💵','💶','💷','💸','💳','🪪','💎','⚖️','🪧','💹',
+    // Science
+    '⚗️','🧪','🧫','🔬','🔭','📡','🧬','🦠','💊','💉','🩸','🩹','🩺','🩻','🧯',
+  ],
+  symbol: [
+    // Check/X
+    '✅','☑️','✔️','❎','❌','⭕','🚫','⛔','📛','🔞','♨️','⚠️','🚸','🔱','⚜️','🔰','♻️','✳️','❇️','💠',
+    // Question
+    '❓','❔','❕','❗','‼️','⁉️','〽️','💯',
+    // Emotion symbols
+    '🔥','⭐','🌟','💫','✨','💥','💢','💦','💨','🕳️','💭','🗯️','💤',
+    // Weather
+    '⚡','☀️','🌙','⛅','☁️','🌈','☂️','☔','❄️','☃️','🌊',
+    // Awards
+    '💎','🏆','🥇','🥈','🥉','🎖️','🏅','🎗️',
+    // Tickets
+    '🎟️','🎫',
+    // Religion
+    '☪️','✝️','☦️','☸️','✡️','🕉️','🛐','⛎','♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓',
+    // Math
+    '➕','➖','➗','✖️','🟰','♾️',
+    // Currency
+    '💲','💱',
+    // Other
+    '™️','©️','®️',
+    // Arrows
+    '⬆️','↗️','➡️','↘️','⬇️','↙️','⬅️','↖️','↕️','↔️','↩️','↪️','⤴️','⤵️','🔃','🔄','🔙','🔚','🔛','🔜','🔝',
+    // Media controls
+    '🔇','🔈','🔉','🔊','📢','📣','📯','🔔','🔕','▶️','⏸️','⏯️','⏹️','⏺️','⏭️','⏮️','⏩','⏪','⏫','⏬','◀️','🔀','🔁','🔂',
+    // Shapes
+    '🔴','🟠','🟡','🟢','🔵','🟣','🟤','⚫','⚪','🟥','🟧','🟨','🟩','🟦','🟪','🟫','⬛','⬜','◼️','◻️','◾','◽','▪️','▫️','🔶','🔷','🔸','🔹','🔺','🔻','💠','🔘','🔳','🔲',
+  ],
+  flag: [
+    // World
+    '🏁','🚩','🎌','🏴','🏳️','🏳️‍🌈','🏳️‍⚧️','🏴‍☠️',
+    // Asia (selected)
+    '🇹🇭','🇱🇦','🇻🇳','🇰🇭','🇲🇲','🇲🇾','🇸🇬','🇮🇩','🇵🇭','🇰🇷','🇯🇵','🇨🇳','🇹🇼','🇭🇰','🇮🇳','🇧🇩','🇵🇰',
+    // Middle East
+    '🇦🇪','🇸🇦','🇰🇼','🇶🇦','🇮🇱','🇹🇷','🇮🇷',
+    // Europe
+    '🇬🇧','🇩🇪','🇫🇷','🇮🇹','🇪🇸','🇵🇹','🇳🇱','🇧🇪','🇨🇭','🇸🇪','🇳🇴','🇩🇰','🇫🇮','🇮🇸','🇮🇪','🇵🇱','🇨🇿','🇦🇹','🇬🇷','🇷🇺','🇺🇦','🇭🇺','🇷🇴',
+    // Americas
+    '🇺🇸','🇨🇦','🇲🇽','🇧🇷','🇦🇷','🇨🇱','🇵🇪','🇨🇴',
+    // Oceania
+    '🇦🇺','🇳🇿',
+    // Africa
+    '🇿🇦','🇪🇬','🇲🇦','🇰🇪','🇳🇬',
+  ],
 };
 
 // ========== INIT ==========
@@ -6005,14 +7943,14 @@ function initApp(){
   let startView = 'dashboard';
   try {
     const saved = localStorage.getItem('tfl_currentView');
-    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','socialReport','socialManage','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','postPerformance','adSpend','sales','activity','calendar','lottery','attendance'];
+    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','socialReport','socialManage','adLibrary','trendScraper','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','postPerformance','adSpend','sales','activity','calendar','lottery','attendance'];
     if(saved && validViews.includes(saved)){
       // Check role permission
       if((saved === 'allTasks' || saved === 'members' || saved === 'activity' || saved === 'lottery') && currentUser.role !== 'admin'){
         startView = 'dashboard';
       } else if(saved === 'socialIntegrations' && currentUser.role !== 'admin'){
         startView = 'dashboard';
-      } else if((saved === 'socialReport' || saved === 'socialManage' || saved === 'fbLive' || saved === 'fbGoLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics' || saved === 'postPerformance' || saved === 'adSpend') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
+      } else if((saved === 'socialReport' || saved === 'socialManage' || saved === 'adLibrary' || saved === 'trendScraper' || saved === 'fbLive' || saved === 'fbGoLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics' || saved === 'postPerformance' || saved === 'adSpend') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
         startView = 'dashboard';
       } else {
         startView = saved;
@@ -6063,14 +8001,15 @@ function renderSidebar(){
   const isAdmin = currentUser.role==='admin';
   const isSocial = currentUser.role==='social' || isAdmin;
   const defaultItems = [
-    {id:'attendance', icon:I.clock, label:'ระบบลงเวลา'},
-    {id:'dashboard', icon:I.home, label:'ภาพรวม'},
-    {id:'files', icon:I.folder, label:'เอกสาร'},
-    {id:'notes', icon:I.note, label:'Note'},
-    {id:'taskBoard', icon:I.grid, label:'ติดตามงาน'},
-    {id:'myTasks', icon:I.check, label:'งานของฉัน'},
-    {id:'sales', icon:I.mapPin, label:'ออกพื้นที่'},
-    {id:'calendar', icon:I.calendar, label:'ปฏิทิน'},
+    {id:'attendance', icon:I.clock, label:t('nav_attendance')},
+    {id:'dashboard', icon:I.home, label:t('nav_dashboard')},
+    {id:'files', icon:I.folder, label:t('nav_files')},
+    {id:'notes', icon:I.note, label:t('nav_notes')},
+    {id:'taskBoard', icon:I.grid, label:t('nav_tasks')},
+    {id:'myTasks', icon:I.check, label:t('nav_mytasks')},
+    {id:'sales', icon:I.mapPin, label:t('nav_sales')},
+    {id:'calendar', icon:I.calendar, label:t('nav_calendar')},
+    {id:'lottery', icon:I.trending, label:t('nav_lottery')},
   ];
   // Apply saved order if any
   let items = defaultItems;
@@ -6088,7 +8027,7 @@ function renderSidebar(){
       }
     }
   } catch(_){}
-  let html = `<div class="nav-sec">เมนูหลัก ${isAdmin?'<span style="font-size:10px;color:var(--t3);font-weight:500;float:right;text-transform:none">↕ ลากเพื่อจัดเรียง</span>':''}</div>`;
+  let html = `<div class="nav-sec">${t('menu_main')} ${isAdmin?'<span style="font-size:10px;color:var(--t3);font-weight:500;float:right;text-transform:none">↕ '+t('nav_drag_hint')+'</span>':''}</div>`;
   items.forEach(it => {
     html += `<div class="nav-item ${currentView===it.id?'active':''}" onclick="navigateTo('${it.id}')" ${isAdmin?`draggable="true" data-navid="${it.id}" ondragstart="_navDragStart(event)" ondragover="_navDragOver(event)" ondrop="_navDrop(event)" ondragend="_navDragEnd(event)"`:''}>
       <span class="nav-icon">${it.icon}</span><span class="nav-label">${it.label}</span></div>`;
@@ -6098,36 +8037,42 @@ function renderSidebar(){
   if(isSocial){
     const isReportView = currentView==='socialReport' || currentView==='socialAnalytics' || currentView==='postPerformance' || currentView==='fbLive' || currentView==='fbLiveAuto' || currentView==='adSpend';
     const isManageView = currentView==='socialManage' || currentView==='fbPosts' || currentView==='fbGoLive';
-    html += `<div class="nav-sec">Social</div>
+    html += `<div class="nav-sec">${t('menu_social')}</div>
       <div class="nav-item ${isReportView?'active':''}" onclick="navigateTo('socialReport')">
         <span class="nav-icon">${I.barChart}</span>
-        <span class="nav-label">รายงานผล Social</span>
+        <span class="nav-label">${t('nav_social_report')}</span>
       </div>
       <div class="nav-item ${isManageView?'active':''}" onclick="navigateTo('socialManage')">
         <span class="nav-icon">${I.edit}</span>
-        <span class="nav-label">จัดการ Social</span>
+        <span class="nav-label">${t('nav_social_manage')}</span>
+      </div>
+      <div class="nav-item ${currentView==='adLibrary'?'active':''}" onclick="navigateTo('adLibrary')">
+        <span class="nav-icon">${I.search}</span>
+        <span class="nav-label">${CURRENT_LANG==='lo'?'ສອດແນມໂຄສະນາ':'สอดส่อง Ads คู่แข่ง'}</span>
+      </div>
+      <div class="nav-item ${currentView==='trendScraper'?'active':''}" onclick="navigateTo('trendScraper')">
+        <span class="nav-icon">${I.trending}</span>
+        <span class="nav-label">${CURRENT_LANG==='lo'?'TikTok Trends':'TikTok Trends'}</span>
+        <span class="nav-badge" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">BETA</span>
       </div>
       ${isAdmin? `<div class="nav-item ${currentView==='socialIntegrations'?'active':''}" onclick="navigateTo('socialIntegrations')">
         <span class="nav-icon">${I.settings}</span>
-        <span class="nav-label">เชื่อมต่อแพลตฟอร์ม</span>
+        <span class="nav-label">${t('nav_integrations')}</span>
       </div>` : ''}`;
   }
 
   if(isAdmin){
-    const pending = tasks.filter(t=>t.status!=='done').length;
-    html += `<div class="nav-sec">Admin</div>
+    const pending = tasks.filter(tk=>tk.status!=='done').length;
+    html += `<div class="nav-sec">${t('menu_admin')}</div>
       <div class="nav-item ${currentView==='allTasks'?'active':''}" onclick="navigateTo('allTasks')">
-        <span class="nav-icon">${I.list}</span><span class="nav-label">งานทั้งหมด</span>
+        <span class="nav-icon">${I.list}</span><span class="nav-label">${t('nav_alltasks')}</span>
         ${pending?`<span class="nav-badge">${pending}</span>`:''}
       </div>
       <div class="nav-item ${currentView==='members'?'active':''}" onclick="navigateTo('members')">
-        <span class="nav-icon">${I.users}</span><span class="nav-label">จัดการสมาชิก</span>
+        <span class="nav-icon">${I.users}</span><span class="nav-label">${t('nav_members')}</span>
       </div>
       <div class="nav-item ${currentView==='activity'?'active':''}" onclick="navigateTo('activity')">
-        <span class="nav-icon">${I.history}</span><span class="nav-label">Activity Log</span>
-      </div>
-      <div class="nav-item ${currentView==='lottery'?'active':''}" onclick="navigateTo('lottery')">
-        <span class="nav-icon">${I.trending}</span><span class="nav-label">ยอดขาย</span>
+        <span class="nav-icon">${I.history}</span><span class="nav-label">${t('nav_activity')}</span>
       </div>`;
   }
   document.getElementById('sidebarNav').innerHTML = html;
@@ -6164,6 +8109,10 @@ function renderUserProfile(){
 }
 
 function renderUserDropdown(){
+  const syncStatus = neonStatus === 'online'      ? { dot: '#10b981', txt: t('status_online'), cls: 'on' }
+                  : neonStatus === 'connecting' ? { dot: '#f59e0b', txt: t('status_syncing'), cls: 'sync' }
+                  : neonStatus === 'error'      ? { dot: '#ef4444', txt: t('status_error'), cls: 'err' }
+                  :                               { dot: '#6b7280', txt: t('status_offline'), cls: 'off' };
   document.getElementById('userDropdown').innerHTML = `
     <div class="user-dd-header">
       ${avatarHTML(currentUser, 40, 14)}
@@ -6172,40 +8121,44 @@ function renderUserDropdown(){
         <div class="user-dd-email">${escapeHtml(currentUser.email)}</div>
       </div>
     </div>
+    <div class="user-dd-sync ${syncStatus.cls}" onclick="forceSyncNow();closeUserMenu()" title="คลิกเพื่อ sync ทันที">
+      <span class="user-dd-sync-dot" style="background:${syncStatus.dot}"></span>
+      <span class="user-dd-sync-txt">${t('user_sync_status')}: <b>${syncStatus.txt}</b></span>
+    </div>
     <div class="user-dd-item" onclick="openProfileEdit()">
       <span class="user-dd-icon">${I.edit}</span>
-      <span>แก้ไขโปรไฟล์</span>
+      <span>${t('user_edit_profile')}</span>
     </div>
     <div class="user-dd-item" onclick="navigateTo('myTasks');closeUserMenu()">
       <span class="user-dd-icon">${I.check}</span>
-      <span>งานของฉัน</span>
+      <span>${t('nav_mytasks')}</span>
     </div>
     <div class="user-dd-item" onclick="navigateTo('notes');closeUserMenu()">
       <span class="user-dd-icon">${I.note}</span>
-      <span>โน้ตของฉัน</span>
+      <span>${t('nav_notes')}</span>
     </div>
     <div class="user-dd-divider"></div>
     <div class="user-dd-item" onclick="exportData()">
       <span class="user-dd-icon">${I.download}</span>
-      <span>Export ข้อมูล (.json)</span>
+      <span>${t('user_export')}</span>
     </div>
     <div class="user-dd-item" onclick="triggerImport()">
       <span class="user-dd-icon">${I.upload}</span>
-      <span>Import ข้อมูล (หลายไฟล์ได้)</span>
+      <span>${t('user_import')}</span>
     </div>
     <div class="user-dd-item" onclick="openUploadCloudModal()">
       <span class="user-dd-icon">${I.cloud}</span>
-      <span>ซิงค์ข้อมูลขึ้น Cloud</span>
+      <span>${t('user_sync_cloud')}</span>
     </div>
     ${currentUser.role==='admin'? `<div class="user-dd-divider"></div>
     <div class="user-dd-item danger" onclick="resetWorkspaceCloud()">
       <span class="user-dd-icon">${I.trash}</span>
-      <span>รีเซ็ต Workspace (ทั้งหมด)</span>
+      <span>${CURRENT_LANG==='lo'?'ຣີເຊັດ Workspace':'รีเซ็ต Workspace'}</span>
     </div>`:''}
     <div class="user-dd-divider"></div>
     <div class="user-dd-item danger" onclick="logout()">
       <span class="user-dd-icon">${I.logout}</span>
-      <span>ออกจากระบบ</span>
+      <span>${t('user_logout')}</span>
     </div>`;
 }
 
@@ -6438,7 +8391,7 @@ function renderView(id,el){
   setTimeout(()=>el.classList.remove('fade-in'),300);
   ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,notes:renderNotes,taskBoard:renderTaskBoard,
     myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbGoLive:renderFbGoLive,fbLiveAuto:renderFbLiveAuto,
-    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,socialReport:renderSocialReport,socialManage:renderSocialManage,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations,postPerformance:renderPostPerformance,adSpend:renderAdSpend}[id]||(()=>{}))(el);
+    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,socialReport:renderSocialReport,socialManage:renderSocialManage,adLibrary:renderAdLibrary,trendScraper:renderTrendScraper,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations,postPerformance:renderPostPerformance,adSpend:renderAdSpend}[id]||(()=>{}))(el);
 }
 
 function rerender(){ const el=document.getElementById('view'+cap(currentView)); if(el) renderView(currentView,el); }
@@ -6590,7 +8543,9 @@ function _closeTopbarMore(e){
 }
 
 function notifBellHTML(){
-  return `<span class="sync-badge off" id="syncBadge" title="คลิกเพื่อ sync ทันที" onclick="forceSyncNow()">Offline</span>
+  return `<button class="lang-toggle" onclick="toggleLang()" title="สลับภาษา / ສະຫຼັບພາສາ" type="button">
+    <span class="lang-toggle-current">${CURRENT_LANG === 'th' ? 'TH' : 'ລາວ'}</span>
+  </button>
   <button class="notif-btn" onclick="toggleNotifPanel(event)" title="แจ้งเตือน" type="button">
     ${I.bell}
     <span class="notif-badge" id="notifBadge" style="display:none">0</span>
@@ -7348,95 +9303,250 @@ function renderDashboard(el){
   const xLabels = pts.map(p => `<text x="${p.x}" y="${P.top+innerH+20}" text-anchor="middle" fill="var(--t2)" font-size="11" font-weight="600">${p.label}</text>`).join('');
   const dots = pts.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4.5" fill="#7c3aed" stroke="#fff" stroke-width="2"><title>${p.label}\n${p.value.toLocaleString()} Kip</title></circle>`).join('');
 
-  el.innerHTML = topbarSimple('dashboard', 'ภาพรวม', `วันนี้ ${new Date().toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'})}`) + `
-    <div class="page-content" style="max-width:1400px">
-      <div class="dash-kpi-grid">
-        <div class="dash-kpi">
-          <div class="dash-kpi-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-          <div class="dash-kpi-body">
-            <div class="dash-kpi-lbl">ยอดขายวันนี้</div>
-            <div class="dash-kpi-val">฿${salesToday.toLocaleString()}</div>
-            <div class="dash-kpi-trend ${salesGrowth>=0?'up':'down'}">${salesGrowth>=0?'▲':'▼'} ${Math.abs(salesGrowth).toFixed(1)}% จากเมื่อวาน</div>
+  // ============ NEW DASHBOARD V2 LAYOUT ============
+  const now = new Date();
+  const hour = now.getHours();
+  const greeting = hour < 6 ? t('dash_greeting_night') : hour < 12 ? t('dash_greeting_morning') : hour < 18 ? t('dash_greeting_afternoon') : t('dash_greeting_evening');
+  const timeStr = String(hour).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+  const dayNamesTh = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+  const dayNamesLo = ['ອາທິດ','ຈັນ','ອັງຄານ','ພຸດ','ພະຫັດ','ສຸກ','ເສົາ'];
+  const dayNames = CURRENT_LANG === 'lo' ? dayNamesLo : dayNamesTh;
+  const todayLabel = `${dayNames[now.getDay()]} ${now.getDate()} ${_thaiMonthShort(String(now.getMonth()+1).padStart(2,'0'))} ${now.getFullYear()+543}`;
+
+  // Compute completion rate for productivity ring
+  const allMyTasks = tasks.filter(t => t.assignees && t.assignees.includes(currentUser.id));
+  const doneMyTasks = allMyTasks.filter(t => t.status === 'done').length;
+  const inProgMyTasks = allMyTasks.filter(t => t.status === 'inprogress' || t.status === 'in_progress').length;
+  const todoMyTasks = allMyTasks.filter(t => t.status === 'todo' || !t.status).length;
+  const totalMyTasks = allMyTasks.length;
+  const completionPct = totalMyTasks > 0 ? Math.round(doneMyTasks/totalMyTasks*100) : 0;
+
+  // Sparkline data
+  const salesSpark = sales7d.map(d => d.value);
+
+  // 12-month sales for big bar chart
+  const monthlyData = [];
+  const curYear = now.getFullYear();
+  const curMonth = now.getMonth();
+  const thaiMonths = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  for(let m = 0; m < 12; m++){
+    const ym = curYear + '-' + String(m+1).padStart(2,'0');
+    const v = lotterySales.filter(l => l.date && l.date.startsWith(ym)).reduce((a,r)=>a+(+r.salesTotal||0), 0);
+    monthlyData.push({ label: thaiMonths[m], value: v });
+  }
+  const monthGain = monthlyData[curMonth].value;
+  const totalYear = monthlyData.reduce((a,d)=>a+d.value, 0);
+
+  // Live list (top 4)
+  const liveListV2 = liveToday.length === 0
+    ? `<div class="dash2-empty"><div class="dash2-empty-ic">${I.videoIc||I.live}</div>ยังไม่มีไลฟ์วันนี้</div>`
+    : liveToday.slice(0,4).map(L => {
+        const isLive = L.status === 'live' || L.isLive;
+        const time = L.startTime ? `${L.startTime}${L.endTime?' - '+L.endTime:''}` : '—';
+        const viewers = +L.peakViewers || +L.viewers || 0;
+        const initLetter = (L.title||'L')[0];
+        return `<div class="dash2-list-item">
+          <div class="dash2-list-av" style="background:linear-gradient(135deg,#ef4444,#dc2626)">${escapeHtmlN(initLetter)}</div>
+          <div class="dash2-list-body">
+            <div class="dash2-list-name">${escapeHtmlN(L.title||'Live')}</div>
+            <div class="dash2-list-sub">${escapeHtmlN(time)} · ${viewers.toLocaleString()} ผู้ชม</div>
           </div>
+          <span class="dash2-list-badge ${isLive?'live':'waiting'}">${isLive?'LIVE':'รอ'}</span>
+        </div>`;
+      }).join('');
+
+  // Activity (top 5)
+  const activityV2 = recentActs.length === 0
+    ? `<div class="dash2-empty"><div class="dash2-empty-ic">${I.activity||I.history}</div>ยังไม่มีกิจกรรม</div>`
+    : recentActs.map(a => {
+        const u = USERS.find(x => x.id === a.userId);
+        const actionTxt = {create:'สร้าง', update:'อัปเดต', delete:'ลบ', login:'เข้าระบบ', checkin:'เช็คอิน', checkout:'เช็คเอาท์'}[a.action] || a.action;
+        const entTxt = {task:'งาน', sales:'กิจกรรม', note:'โน้ต', user:'สมาชิก', live:'Live', document:'เอกสาร', attendance:'ลงเวลา', holiday:'วันหยุด', lottery:'หวย', leave:'ลา'}[a.entityType] || '';
+        return `<div class="dash2-list-item">
+          <div class="dash2-list-av" style="background:${u?.color||'#888'}">${u?.init||(u?.name||'?')[0]||'?'}</div>
+          <div class="dash2-list-body">
+            <div class="dash2-list-name">${escapeHtmlN(a.userName||u?.name||'?')} <span style="color:var(--t3);font-weight:500">${actionTxt}${entTxt?' '+entTxt:''}</span></div>
+            ${a.details?`<div class="dash2-list-sub">${escapeHtmlN(a.details).slice(0,60)}</div>`:''}
+          </div>
+          <div class="dash2-list-meta">${timeAgoN(a.timestamp)}</div>
+        </div>`;
+      }).join('');
+
+  // Tasks
+  const todoListV2 = myTodo.length === 0
+    ? `<div class="dash2-empty"><div class="dash2-empty-ic">${I.checkBig||I.check}</div>เคลียร์งานหมดแล้ว!</div>`
+    : myTodo.slice(0,5).map(t => {
+        const pri = OPTS.priority.find(p => p.id === t.priority);
+        const overdue = t.due && t.due < today;
+        const dueLabel = !t.due ? '—' : (t.due===today?'วันนี้' : overdue?'เลยกำหนด' : `${new Date(t.due).getDate()} ${_thaiMonthShort(String(new Date(t.due).getMonth()+1).padStart(2,'0'))}`);
+        return `<div class="dash2-todo-row" onclick="openTaskDetail(${t.id})">
+          <div class="dash2-todo-check"></div>
+          <div class="dash2-todo-name">${escapeHtmlN(t.name)}</div>
+          ${pri?`<span class="dash2-todo-tag" style="background:${pri.bg};color:${pri.color}">${pri.label}</span>`:''}
+          <span class="dash2-todo-due ${overdue?'overdue':t.due===today?'today':''}">${dueLabel}</span>
+        </div>`;
+      }).join('');
+
+  // 12-month bar chart (Blanted style)
+  const monthBars = dsBars({
+    data: monthlyData,
+    height: 200,
+    gradient: ['#c4b5fd','#7c3aed'],
+    highlightIdx: curMonth,
+    valueFmt: v => '฿' + (v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?Math.round(v/1000)+'k':v),
+  });
+
+  // Multi-segment donut for task breakdown
+  const taskSegments = totalMyTasks === 0 ? [] : [
+    { label: 'เสร็จแล้ว',      value: doneMyTasks,    gradient: ['#a78bfa','#7c3aed'] },
+    { label: 'กำลังทำ',        value: inProgMyTasks,  gradient: ['#60a5fa','#3b82f6'] },
+    { label: 'รอเริ่ม',          value: todoMyTasks,    gradient: ['#fbbf24','#f59e0b'] },
+  ];
+  const taskDonut = dsDonutMulti({
+    segments: taskSegments,
+    size: 180, stroke: 18,
+    centerIcon: I.barChart,
+    centerLabel: '',
+  });
+
+  // Sparklines for KPI cards
+  const salesSparkSvg = dsSparkline({ data: salesSpark, width: 100, height: 32, color: '#a78bfa' });
+
+  el.innerHTML = topbarSimple('dashboard', t('nav_dashboard'), todayLabel) + `
+    <div class="dash2">
+      <!-- HERO -->
+      <div class="dash2-hero">
+        <div>
+          <div class="dash2-hero-greeting">${greeting},</div>
+          <div class="dash2-hero-name">${escapeHtmlN(currentUser.name||'TFL+')}</div>
+          <div class="dash2-hero-sub">${t('dash_hero_sub')}</div>
+          <div class="dash2-hero-date">${I.calendar} ${todayLabel}</div>
         </div>
-        <div class="dash-kpi">
-          <div class="dash-kpi-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div>
-          <div class="dash-kpi-body">
-            <div class="dash-kpi-lbl">คนดู Live ตอนนี้</div>
-            <div class="dash-kpi-val">${totalViewers.toLocaleString()}</div>
-            <div class="dash-kpi-trend ${liveLive.length>0?'up':'neutral'}">${liveLive.length>0?'● กำลังถ่ายทอด '+liveLive.length+' รายการ':'ไม่มี Live ขณะนี้'}</div>
-          </div>
-        </div>
-        <div class="dash-kpi">
-          <div class="dash-kpi-icon pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
-          <div class="dash-kpi-body">
-            <div class="dash-kpi-lbl">สมาชิกใหม่</div>
-            <div class="dash-kpi-val">${newMembersToday.toLocaleString()}</div>
-            <div class="dash-kpi-trend ${membersGrowth>=0?'up':'down'}">${membersGrowth>=0?'▲':'▼'} ${Math.abs(membersGrowth).toFixed(1)}% จากเมื่อวาน</div>
-          </div>
-        </div>
-        <div class="dash-kpi">
-          <div class="dash-kpi-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
-          <div class="dash-kpi-body">
-            <div class="dash-kpi-lbl">งานที่ต้องทำ</div>
-            <div class="dash-kpi-val">${myTodo.length}</div>
-            <div class="dash-kpi-trend ${urgentSoon>0?'down':'neutral'}">${urgentSoon>0?'▼ '+urgentSoon+' งานใกล้หมดเวลา':'ทันเวลา'}</div>
-          </div>
+        <div class="dash2-hero-time-card">
+          <div class="dash2-hero-time">${timeStr}</div>
+          <div class="dash2-hero-day">${dayNames[now.getDay()]}</div>
         </div>
       </div>
 
-      <div class="dash-row">
-        <div class="dash-card">
-          <div class="dash-card-hd">
-            <div class="dash-card-title">ไลฟ์สดวันนี้</div>
-            <a class="dash-card-link" onclick="navigateTo('fbLive')">ดูทั้งหมด</a>
+      <!-- KPI CARDS -->
+      <div class="dash2-kpi-grid">
+        <div class="dash2-kpi">
+          <div class="dash2-kpi-hd">
+            <div class="dash2-kpi-icon purple">${I.dollar||I.dollarBig}</div>
+            <span class="dash2-kpi-trend ${salesGrowth>=0?'up':'down'}">${salesGrowth>=0?'▲':'▼'} ${Math.abs(salesGrowth).toFixed(1)}%</span>
           </div>
-          ${liveListHtml}
+          <div class="dash2-kpi-lbl">${t('dash_sales_today')}</div>
+          <div class="dash2-kpi-val">฿${salesToday.toLocaleString()}</div>
+          <div class="dash2-kpi-spark">${salesSparkSvg}</div>
         </div>
-        <div class="dash-card">
-          <div class="dash-card-hd">
-            <div class="dash-card-title">กิจกรรมล่าสุด</div>
-            <a class="dash-card-link" onclick="${isAdmin?"navigateTo('activity')":''}">${isAdmin?'ดูทั้งหมด':''}</a>
+        <div class="dash2-kpi">
+          <div class="dash2-kpi-hd">
+            <div class="dash2-kpi-icon blue">${I.videoIc||I.live}</div>
+            <span class="dash2-kpi-trend ${liveLive.length>0?'up':'neutral'}">${liveLive.length>0?'● LIVE':'—'}</span>
           </div>
-          ${activityHtml}
+          <div class="dash2-kpi-lbl">${t('dash_live_viewers')}</div>
+          <div class="dash2-kpi-val">${totalViewers.toLocaleString()}</div>
+          <div style="font-size:11.5px;color:var(--t3);margin-top:10px">${liveLive.length>0?t('dash_broadcasting')+' '+liveLive.length:t('dash_no_live')}</div>
+        </div>
+        <div class="dash2-kpi">
+          <div class="dash2-kpi-hd">
+            <div class="dash2-kpi-icon pink">${I.users}</div>
+            <span class="dash2-kpi-trend ${membersGrowth>=0?'up':'down'}">${membersGrowth>=0?'▲':'▼'} ${Math.abs(membersGrowth).toFixed(1)}%</span>
+          </div>
+          <div class="dash2-kpi-lbl">${t('dash_new_members')}</div>
+          <div class="dash2-kpi-val">${newMembersToday.toLocaleString()}</div>
+          <div style="font-size:11.5px;color:var(--t3);margin-top:10px">${t('yesterday')} ${newMembersYesterday}</div>
+        </div>
+        <div class="dash2-kpi">
+          <div class="dash2-kpi-hd">
+            <div class="dash2-kpi-icon green">${I.check}</div>
+            <span class="dash2-kpi-trend ${urgentSoon>0?'down':'neutral'}">${urgentSoon>0?urgentSoon+' '+t('dash_urgent'):t('dash_ok')}</span>
+          </div>
+          <div class="dash2-kpi-lbl">${t('dash_tasks_todo')}</div>
+          <div class="dash2-kpi-val">${myTodo.length}</div>
+          <div style="font-size:11.5px;color:var(--t3);margin-top:10px">${urgentSoon>0?t('dash_urgent'):t('dash_ok')}</div>
         </div>
       </div>
 
-      <div class="dash-row">
-        <div class="dash-card">
-          <div class="dash-card-hd">
-            <div class="dash-card-title">ยอดขาย 7 วันที่ผ่านมา</div>
-            <div style="display:flex;align-items:center;gap:10px">
-              <div style="text-align:right">
-                <div style="font-size:11px;color:var(--t2)">ยอดรวม</div>
-                <div style="font-size:16px;font-weight:800;color:var(--t1);font-feature-settings:'tnum'">฿${sum7d.toLocaleString()}</div>
-              </div>
-              <span style="padding:5px 12px;background:var(--bg-soft);border-radius:8px;font-size:11.5px;font-weight:700;color:var(--t2)">7 วัน</span>
+      <!-- BIG BAR CHART CARD (Blanted-style) -->
+      <div class="dash2-bigchart">
+        <div class="dash2-bigchart-hd">
+          <div>
+            <div class="dash2-bigchart-lbl">${t('dash_total_year')}</div>
+            <div class="dash2-bigchart-val">฿${totalYear.toLocaleString()}</div>
+            <div class="dash2-bigchart-gain">
+              <span class="dash2-card-sub">${t('dash_this_month')}</span>
+              <span class="dash2-bigchart-gain-val">+฿${monthGain.toLocaleString()}</span>
             </div>
           </div>
-          <div style="width:100%;overflow-x:auto">
-            <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;min-width:${W}px;height:${H}px;display:block">
-              <defs>
-                <linearGradient id="dashChartGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#a78bfa" stop-opacity=".35"/>
-                  <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
-                </linearGradient>
-              </defs>
-              ${yLines}
-              <path d="${area}" fill="url(#dashChartGrad)"/>
-              <path d="${path}" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              ${dots}
-              ${xLabels}
-            </svg>
+          <a class="dash2-card-link" onclick="navigateTo('lottery')">${curYear+543} ${I.arrow}</a>
+        </div>
+        ${monthBars}
+      </div>
+
+      <!-- Row: Task breakdown donut + Quick info -->
+      <div class="dash2-row cols-2">
+        <div class="dash2-card dash2-donut-card">
+          <div class="dash2-card-hd">
+            <div>
+              <div class="dash2-card-title">${t('dash_progress')}</div>
+              <div class="dash2-card-sub">${totalMyTasks}</div>
+            </div>
+          </div>
+          <div class="dash2-donut-wrap">
+            <div class="dash2-donut-area">
+              ${taskDonut}
+            </div>
+            <div class="dash2-donut-info">
+              <div class="dash2-donut-total">
+                <div class="dash2-donut-total-lbl">${t('dash_done')}</div>
+                <div class="dash2-donut-total-val">${completionPct}%</div>
+                <div class="dash2-donut-total-sub">${doneMyTasks} / ${totalMyTasks}</div>
+              </div>
+              ${dsDonutLegend(taskSegments)}
+            </div>
           </div>
         </div>
-        <div class="dash-card">
-          <div class="dash-card-hd">
-            <div class="dash-card-title">งานที่ต้องทำ</div>
-            <a class="dash-card-link" onclick="openNewTask('todo')">+ เพิ่มงาน</a>
+        <div class="dash2-card">
+          <div class="dash2-card-hd">
+            <div class="dash2-card-title">${t('dash_live_today')}</div>
+            <a class="dash2-card-link" onclick="navigateTo('socialReport')">${t('btn_view_all')} ${I.arrow}</a>
           </div>
-          ${todoListHtml}
-          ${myTodo.length > 5 ? `<div style="text-align:center;margin-top:8px"><a class="dash-card-link" onclick="navigateTo('myTasks')">ดูทั้งหมด ${myTodo.length} งาน →</a></div>`:''}
+          <div class="dash2-list">${liveListV2}</div>
+        </div>
+      </div>
+
+      <!-- Activity full width -->
+      <div class="dash2-card">
+        <div class="dash2-card-hd">
+          <div class="dash2-card-title">${t('dash_recent_activity')}</div>
+          ${isAdmin?`<a class="dash2-card-link" onclick="navigateTo('activity')">${t('btn_view_all')} ${I.arrow}</a>`:''}
+        </div>
+        <div class="dash2-list">${activityV2}</div>
+      </div>
+
+      <!-- Row: My tasks + Quick actions -->
+      <div class="dash2-row eq-2">
+        <div class="dash2-card">
+          <div class="dash2-card-hd">
+            <div class="dash2-card-title">${t('dash_my_tasks')}</div>
+            <a class="dash2-card-link" onclick="openNewTask('todo')">+ ${t('btn_add_task')}</a>
+          </div>
+          <div class="dash2-list">${todoListV2}</div>
+          ${myTodo.length>5?`<a class="dash2-card-link" onclick="navigateTo('myTasks')" style="align-self:center;margin-top:6px">${t('btn_view_all')} ${myTodo.length} ${I.arrow}</a>`:''}
+        </div>
+        <div class="dash2-card">
+          <div class="dash2-card-hd">
+            <div class="dash2-card-title">${t('dash_quick_actions')}</div>
+          </div>
+          <div class="dash2-quick-grid">
+            <div class="dash2-quick-btn" onclick="navigateTo('lottery')"><div class="ic" style="background:linear-gradient(135deg,#10b981,#34d399)">${I.target}</div>${t('dash_quick_lottery')}</div>
+            <div class="dash2-quick-btn" onclick="navigateTo('attendance')"><div class="ic" style="background:linear-gradient(135deg,#0ea5e9,#38bdf8)">${I.clock}</div>${t('dash_quick_attendance')}</div>
+            <div class="dash2-quick-btn" onclick="navigateTo('sales')"><div class="ic" style="background:linear-gradient(135deg,#ef4444,#f87171)">${I.mapPin}</div>${t('dash_quick_sales')}</div>
+            <div class="dash2-quick-btn" onclick="navigateTo('socialReport')"><div class="ic" style="background:linear-gradient(135deg,#a855f7,#d946ef)">${I.barChart}</div>${t('dash_quick_report')}</div>
+            <div class="dash2-quick-btn" onclick="navigateTo('calendar')"><div class="ic" style="background:linear-gradient(135deg,#f59e0b,#fbbf24)">${I.calendar}</div>${t('dash_quick_calendar')}</div>
+            <div class="dash2-quick-btn" onclick="navigateTo('notes')"><div class="ic" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa)">${I.note}</div>${t('dash_quick_note')}</div>
+          </div>
         </div>
       </div>
     </div>`;
@@ -7444,6 +9554,149 @@ function renderDashboard(el){
 
 function _thaiMonthShort(m){
   return ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][parseInt(m,10)] || '';
+}
+
+// ========== UI CHART HELPERS (Premium Dashboard Style) ==========
+// Donut/Ring chart — animated stroke-dasharray with gradient
+function dsDonut({value=0, max=100, size=140, stroke=12, gradient=['#a78bfa','#3b82f6'], label='', sub=''}={}){
+  const pct = Math.max(0, Math.min(100, max>0?(value/max*100):0));
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  const dash = c * pct / 100;
+  const gid = 'dg-' + Math.random().toString(36).slice(2,8);
+  return `<div class="ds-donut" style="width:${size}px;height:${size}px">
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="transform:rotate(-90deg)">
+      <defs>
+        <linearGradient id="${gid}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${gradient[0]}"/>
+          <stop offset="100%" stop-color="${gradient[1]||gradient[0]}"/>
+        </linearGradient>
+      </defs>
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--border)" stroke-width="${stroke}" opacity=".5"/>
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="url(#${gid})" stroke-width="${stroke}" stroke-linecap="round"
+        stroke-dasharray="${dash} ${c}" style="transition:stroke-dasharray .6s cubic-bezier(.4,0,.2,1)"/>
+    </svg>
+    <div class="ds-donut-center">
+      <div class="ds-donut-val">${label||pct.toFixed(0)+'%'}</div>
+      ${sub?`<div class="ds-donut-sub">${sub}</div>`:''}
+    </div>
+  </div>`;
+}
+
+// Vertical bar chart — Blanted-style with gradient fade
+function dsBars({data=[], height=180, gradient=['#a78bfa','#7c3aed'], showLabels=true, valueFmt=null, highlightIdx=-1}={}){
+  if(!data.length) return '<div class="ds-empty">ไม่มีข้อมูล</div>';
+  const max = Math.max(...data.map(d=>+d.value||0), 1);
+  // Auto-highlight last bar if not specified
+  if(highlightIdx < 0) highlightIdx = data.length - 1;
+  return `<div class="ds-bars" style="height:${height+(showLabels?28:0)}px">
+    <div class="ds-bars-row" style="height:${height}px">
+      ${data.map((d,i)=>{
+        const h = max>0 ? Math.max((+d.value||0) / max * 100, 2) : 2;
+        const isHighlight = i === highlightIdx;
+        const isPeak = (+d.value||0) === max && max>0;
+        const dispVal = valueFmt ? valueFmt(+d.value||0) : (+d.value||0).toLocaleString();
+        return `<div class="ds-bar-col ${isHighlight?'highlight':''}" title="${escapeHtmlN(d.label||'')}: ${dispVal}">
+          ${isPeak?`<div class="ds-bar-peak">${dispVal}</div>`:''}
+          <div class="ds-bar-fill" style="height:${h}%;--bar-c1:${gradient[0]};--bar-c2:${gradient[1]||gradient[0]}"></div>
+        </div>`;
+      }).join('')}
+    </div>
+    ${showLabels?`<div class="ds-bars-labels">
+      ${data.map((d,i)=>`<div class="ds-bar-lbl ${i===highlightIdx?'highlight':''}">${escapeHtmlN(d.label||'')}</div>`).join('')}
+    </div>`:''}
+  </div>`;
+}
+
+// Multi-segment donut — for category breakdown (Blanted style)
+function dsDonutMulti({segments=[], size=200, stroke=22, centerIcon='', centerLabel=''}={}){
+  const total = segments.reduce((s,seg)=>s+(+seg.value||0), 0);
+  if(total === 0){
+    return `<div class="ds-donut-multi" style="width:${size}px;height:${size}px">
+      <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+        <circle cx="${size/2}" cy="${size/2}" r="${(size-stroke)/2}" fill="none" stroke="var(--border)" stroke-width="${stroke}" opacity=".5"/>
+      </svg>
+      <div class="ds-donut-center">${centerIcon?`<div class="ds-donut-ic">${centerIcon}</div>`:''}<div class="ds-donut-empty">ไม่มีข้อมูล</div></div>
+    </div>`;
+  }
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  let cumOffset = 0;
+  const gap = 2; // small gap between segments
+  const arcs = segments.map((seg, i) => {
+    const pct = (+seg.value||0) / total;
+    const arcLen = c * pct - gap;
+    const gid = 'dgm-' + i + '-' + Math.random().toString(36).slice(2,6);
+    const colors = Array.isArray(seg.gradient) ? seg.gradient : [seg.color||'#a78bfa', seg.color||'#a78bfa'];
+    const result = `
+      <defs><linearGradient id="${gid}" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="${colors[0]}"/>
+        <stop offset="100%" stop-color="${colors[1]||colors[0]}"/>
+      </linearGradient></defs>
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="url(#${gid})" stroke-width="${stroke}" stroke-linecap="round"
+        stroke-dasharray="${arcLen} ${c}" stroke-dashoffset="${-cumOffset}"
+        style="transition:stroke-dasharray .6s cubic-bezier(.4,0,.2,1)"/>`;
+    cumOffset += c * pct;
+    return result;
+  }).join('');
+  return `<div class="ds-donut-multi" style="width:${size}px;height:${size}px">
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="transform:rotate(-90deg)">
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="var(--border)" stroke-width="${stroke}" opacity=".3"/>
+      ${arcs}
+    </svg>
+    <div class="ds-donut-center">
+      ${centerIcon?`<div class="ds-donut-ic">${centerIcon}</div>`:''}
+      ${centerLabel?`<div class="ds-donut-val" style="font-size:18px">${centerLabel}</div>`:''}
+    </div>
+  </div>`;
+}
+function dsDonutLegend(segments){
+  const total = segments.reduce((s,seg)=>s+(+seg.value||0), 0);
+  return `<div class="ds-legend">
+    ${segments.map(seg=>{
+      const colors = Array.isArray(seg.gradient) ? seg.gradient : [seg.color||'#a78bfa', seg.color||'#a78bfa'];
+      const pct = total>0 ? ((+seg.value||0)/total*100).toFixed(0) : 0;
+      return `<div class="ds-legend-item">
+        <span class="ds-legend-dot" style="background:linear-gradient(135deg,${colors[0]},${colors[1]||colors[0]})"></span>
+        <span class="ds-legend-lbl">${escapeHtmlN(seg.label||'')}</span>
+        ${seg.value!=null?`<span class="ds-legend-val">${pct}%</span>`:''}
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+// Sparkline — small inline trend chart
+function dsSparkline({data=[], width=140, height=40, color='#a78bfa', fillOpacity=.2}={}){
+  if(!data.length) return '';
+  const values = data.map(d => typeof d === 'object' ? (+d.value||0) : (+d||0));
+  const max = Math.max(...values, 1);
+  const min = Math.min(...values, 0);
+  const range = max - min || 1;
+  const stepX = values.length > 1 ? width / (values.length - 1) : 0;
+  const pts = values.map((v, i) => ({
+    x: i * stepX,
+    y: height - ((v - min) / range * (height - 4)) - 2,
+  }));
+  const path = pts.map((p, i) => (i === 0 ? 'M' : 'L') + p.x.toFixed(1) + ',' + p.y.toFixed(1)).join(' ');
+  const area = path + ` L ${pts[pts.length-1].x},${height} L 0,${height} Z`;
+  const gid = 'sp-' + Math.random().toString(36).slice(2, 8);
+  return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" style="display:block;overflow:visible">
+    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${color}" stop-opacity="${fillOpacity}"/>
+      <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="${area}" fill="url(#${gid})"/>
+    <path d="${path}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${pts[pts.length-1].x}" cy="${pts[pts.length-1].y}" r="3" fill="${color}" stroke="var(--card)" stroke-width="2"/>
+  </svg>`;
+}
+
+// Mini progress bar (for system status, etc.)
+function dsProgress({value=0, max=100, gradient=['#a78bfa','#3b82f6'], height=8}={}){
+  const pct = Math.max(0, Math.min(100, max>0?(value/max*100):0));
+  return `<div class="ds-progress" style="height:${height}px">
+    <div class="ds-progress-fill" style="width:${pct}%;background:linear-gradient(90deg,${gradient[0]},${gradient[1]||gradient[0]})"></div>
+  </div>`;
 }
 
 // ========== LIBRARY ==========
@@ -12102,6 +14355,11 @@ function openLotteryDatePicker(){
   }
   lotCalDragging = false;
   document.getElementById('lotDatePickerModal').classList.add('show');
+  // Populate Thai month picker into placeholder
+  const wrap = document.getElementById('lotCalMonthSelWrap');
+  if(wrap){
+    wrap.innerHTML = thaiMonthPicker({id:'lotCalMonthSel', value:'', onchange:'lotCalSetMonth'});
+  }
   renderLotCal();
 }
 function lotCalNav(delta){
@@ -14510,6 +16768,303 @@ function renderAdSpend(el){
     </div>`;
 }
 
+// ============ AD LIBRARY (FB Ad spy) ============
+let adLibState = { country:'TH', q:'', adType:'all', preset:'cosmetics' };
+const AD_LIBRARY_PRESETS = {
+  cosmetics: { label:'เครื่องสำอาง', q:'ครีม' },
+  lottery: { label:'หวย', q:'หวย' },
+  food: { label:'อาหาร', q:'อาหารเดลิเวอรี' },
+  tech: { label:'เทค', q:'gadget' },
+  finance: { label:'การเงิน', q:'สินเชื่อ' },
+};
+function setAdLibPreset(key){
+  const p = AD_LIBRARY_PRESETS[key];
+  if(!p) return;
+  adLibState.preset = key;
+  adLibState.q = p.q;
+  rerender();
+}
+function setAdLibCountry(c){ adLibState.country = c; rerender(); }
+function openAdLibrary(){
+  const q = adLibState.q || '';
+  const url = `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=${adLibState.country}&q=${encodeURIComponent(q)}&search_type=keyword_unordered&media_type=all`;
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+function renderAdLibrary(el){
+  const isLo = CURRENT_LANG === 'lo';
+  const subtitle = isLo ? 'ສອດແນມໂຄສະນາຄູ່ແຂ່ງໃນ Facebook Ad Library' : 'สอดส่องโฆษณาคู่แข่งใน Facebook Ad Library — รวมข้อมูลสาธารณะที่ Meta เปิดให้ใช้';
+  const presets = Object.entries(AD_LIBRARY_PRESETS).map(([k,v]) =>
+    `<button class="adlib-preset ${adLibState.preset===k?'active':''}" onclick="setAdLibPreset('${k}')">${v.label}</button>`
+  ).join('');
+  const url = `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=${adLibState.country}&q=${encodeURIComponent(adLibState.q||'')}&search_type=keyword_unordered&media_type=all`;
+  el.innerHTML = topbarSimple('barChart', isLo?'ສອດແນມໂຄສະນາ':'Ads Library คู่แข่ง', subtitle) + `
+    <div class="page-content" style="max-width:1400px">
+      <div class="adlib-toolbar">
+        <div class="adlib-search-wrap">
+          ${I.search}
+          <input type="text" class="adlib-search" id="adLibSearchInp" placeholder="${isLo?'ຄົ້ນຫາແບຣນ / ຄຳສຳຄັນ':'ค้นหาแบรนด์ / คำสำคัญ'}" value="${escapeHtmlN(adLibState.q||'')}" onchange="adLibState.q=this.value;rerender()" onkeydown="if(event.key==='Enter'){adLibState.q=this.value;rerender()}"/>
+        </div>
+        <select class="adlib-country" onchange="setAdLibCountry(this.value)">
+          <option value="TH" ${adLibState.country==='TH'?'selected':''}>🇹🇭 ไทย</option>
+          <option value="LA" ${adLibState.country==='LA'?'selected':''}>🇱🇦 ลาว</option>
+          <option value="VN" ${adLibState.country==='VN'?'selected':''}>🇻🇳 เวียดนาม</option>
+          <option value="MY" ${adLibState.country==='MY'?'selected':''}>🇲🇾 มาเลเซีย</option>
+          <option value="ID" ${adLibState.country==='ID'?'selected':''}>🇮🇩 อินโดนีเซีย</option>
+          <option value="PH" ${adLibState.country==='PH'?'selected':''}>🇵🇭 ฟิลิปปินส์</option>
+          <option value="US" ${adLibState.country==='US'?'selected':''}>🇺🇸 สหรัฐฯ</option>
+        </select>
+        <button class="btn-primary" onclick="openAdLibrary()">${I.externalLink} ${isLo?'ເປີດແທັບໃໝ່':'เปิดใน Tab ใหม่'}</button>
+      </div>
+
+      <div class="adlib-presets">
+        <span class="adlib-presets-lbl">${isLo?'ໝວດແນະນຳ':'หมวดแนะนำ'}:</span>
+        ${presets}
+      </div>
+
+      <div class="adlib-info">
+        <div class="adlib-info-ic">${I.lightbulb}</div>
+        <div>
+          <b>${isLo?'ກ່ຽວກັບ Ad Library':'เกี่ยวกับ Ad Library'}</b>
+          <p>${isLo
+            ? 'Facebook Ad Library ເປັນເຄື່ອງມືສາທາລະນະຂອງ Meta ທີ່ໃຫ້ເບິ່ງໂຄສະນາທີ່ກຳລັງເຮັດງານຢູ່. ບໍ່ສາມາດຝັງ (embed) ໃນເວັບໄຊອື່ນໄດ້ ດັ່ງນັ້ນຈຶ່ງເປີດໃນແທັບໃໝ່ແທນ.'
+            : 'Facebook Ad Library เป็นเครื่องมือสาธารณะของ Meta ที่ให้ดูโฆษณาที่กำลังทำงานอยู่ของทุกเพจ Facebook & Instagram — มี Meta ไม่อนุญาตให้ฝัง (embed) ในเว็บอื่น (X-Frame-Options: DENY) จึงต้องเปิดในแท็บใหม่แทน'}</p>
+        </div>
+      </div>
+
+      <div class="adlib-iframe-wrap">
+        <iframe src="${escapeHtmlN(url)}" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
+        <div class="adlib-iframe-fallback">
+          <div class="adlib-fallback-ic">${I.alertBig||I.alert}</div>
+          <h3>${isLo?'ບໍ່ສາມາດສະແດງໃນໜ້ານີ້':'ไม่สามารถแสดงในหน้านี้ได้'}</h3>
+          <p>${isLo?'Facebook ບໍ່ອະນຸຍາດໃຫ້ຝັງ iframe — ກົດປຸ່ມຂ້າງລຸ່ມເພື່ອເປີດໃນແທັບໃໝ່':'Facebook ไม่อนุญาตให้ฝัง iframe — กดปุ่มด้านล่างเพื่อเปิดในแท็บใหม่'}</p>
+          <button class="btn-primary" onclick="openAdLibrary()" style="margin-top:14px">${I.externalLink} ${isLo?'ເປີດແທັບໃໝ່':'เปิด Ad Library ในแท็บใหม่'}</button>
+        </div>
+      </div>
+
+      <div class="adlib-tips">
+        <h3>${isLo?'ເຄັດລັບການໃຊ້ງານ':'เคล็ดลับการใช้งาน'}</h3>
+        <div class="adlib-tip-grid">
+          <div class="adlib-tip">
+            <div class="adlib-tip-ic" style="background:linear-gradient(135deg,#3b82f6,#06b6d4)">${I.target}</div>
+            <h4>${isLo?'ຫາແບຣນຄູ່ແຂ່ງ':'หาแบรนด์คู่แข่ง'}</h4>
+            <p>${isLo?'ພິມຊື່ Page ຫຼື ຄຳສຳຄັນ':'พิมพ์ชื่อ Page หรือคำสำคัญ เช่น "กิจการเดียวกัน"'}</p>
+          </div>
+          <div class="adlib-tip">
+            <div class="adlib-tip-ic" style="background:linear-gradient(135deg,#ec4899,#f472b6)">${I.eye}</div>
+            <h4>${isLo?'ເບິ່ງ Creative ທີ່ໃຊ້':'ดู Creative ที่ใช้'}</h4>
+            <p>${isLo?'ເບິ່ງ video, ຮູບ, copy ທີ່ໃຊ້ໃນໂຄສະນາ':'เห็นวิดีโอ ภาพ และข้อความที่ใช้ ดูว่าอันไหนทำงานนาน'}</p>
+          </div>
+          <div class="adlib-tip">
+            <div class="adlib-tip-ic" style="background:linear-gradient(135deg,#10b981,#34d399)">${I.clock}</div>
+            <h4>${isLo?'ໂຄສະນາທີ່ໃຊ້ດົນ':'โฆษณาที่ใช้นาน = ดี'}</h4>
+            <p>${isLo?'Ads ທີ່ run ດົນສະແດງວ່າມັນ work':'Ads ที่ run มา 30+ วัน = แสดงว่าทำกำไรได้จึงคงไว้'}</p>
+          </div>
+          <div class="adlib-tip">
+            <div class="adlib-tip-ic" style="background:linear-gradient(135deg,#f59e0b,#fbbf24)">${I.zap}</div>
+            <h4>${isLo?'ໄອເດຍ Content':'ไอเดียคอนเทนต์'}</h4>
+            <p>${isLo?'ໃຊ້ເປັນແຮງບັນດານໃຈ ບໍ່ໄດ້ກ໋ອບແບບ':'ใช้เป็นแรงบันดาลใจ — ห้าม copy ตรงๆ'}</p>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ============ TIKTOK TREND SCRAPER (Scaffold) ============
+let trendState = { tab:'discover', sort:'viral', timeRange:'7d', country:'TH', minEng:0 };
+function setTrendTab(t){ trendState.tab = t; rerender(); }
+function setTrendSort(s){ trendState.sort = s; rerender(); }
+function setTrendTime(tr){ trendState.timeRange = tr; rerender(); }
+function renderTrendScraper(el){
+  const isLo = CURRENT_LANG === 'lo';
+  // Demo/placeholder data — real implementation requires backend scraper
+  const mockTrends = [
+    { id:1, thumb:null, user:'@trending_creator', caption:'การเปิดร้านอย่างไรให้ปัง 🔥', hashtags:['#smallbiz','#startup'], views:1240000, likes:89000, comments:4200, shares:2100, trend_score:9850, duration:34 },
+    { id:2, thumb:null, user:'@viral_food', caption:'รสชาติที่ทุกคนพูดถึง', hashtags:['#foodie','#trending'], views:980000, likes:67000, comments:3100, shares:1800, trend_score:8120, duration:28 },
+    { id:3, thumb:null, user:'@thai_dance', caption:'เต้นใหม่มาแรง', hashtags:['#dance','#viral'], views:765000, likes:52000, comments:2400, shares:1500, trend_score:7340, duration:18 },
+    { id:4, thumb:null, user:'@beauty_thai', caption:'รีวิวครีมที่ทุกคนถาม', hashtags:['#review','#beauty'], views:620000, likes:41000, comments:1900, shares:980, trend_score:6280, duration:42 },
+    { id:5, thumb:null, user:'@laughs', caption:'ตลกกระจาย 5555', hashtags:['#funny'], views:450000, likes:38000, comments:1700, shares:850, trend_score:5640, duration:15 },
+    { id:6, thumb:null, user:'@motivation', caption:'แรงบันดาลใจวันจันทร์', hashtags:['#motivation','#life'], views:340000, likes:29000, comments:1200, shares:620, trend_score:4890, duration:25 },
+  ];
+  const topHashtags = [
+    {tag:'#smallbiz', count:34200, growth:142},
+    {tag:'#trending', count:28900, growth:88},
+    {tag:'#review', count:22100, growth:67},
+    {tag:'#dance', count:19500, growth:54},
+    {tag:'#foodie', count:17200, growth:41},
+    {tag:'#beauty', count:14800, growth:32},
+  ];
+  const topSounds = [
+    {name:'Original sound - viral_creator', uses:8920, growth:210},
+    {name:'Trending Beat 2026', uses:6740, growth:165},
+    {name:'Funny Pop Theme', uses:5320, growth:120},
+    {name:'Aesthetic Vibes', uses:4180, growth:88},
+  ];
+  // Mock 24h hourly post heatmap
+  const hourlyData = Array.from({length:24}, (_,h)=>({
+    label: String(h).padStart(2,'0'),
+    value: Math.round(50 + 80*Math.sin((h-6)/24*Math.PI*2) + Math.random()*30 + (h>=18&&h<=22?70:0))
+  }));
+
+  const tabs = [
+    { id:'discover', label: isLo?'ຄົ້ນພົບ':'ค้นพบ', icon:I.search },
+    { id:'hashtags', label: isLo?'ແຮັຊແທັກ':'แฮชแท็ก', icon:I.hash },
+    { id:'sounds',   label: isLo?'ສຽງ':'เสียง', icon:I.headphones||I.zap },
+    { id:'creators', label: isLo?'ຄຣີເອເຕີ້':'ครีเอเตอร์', icon:I.users },
+    { id:'alerts',   label: isLo?'ແຈ້ງເຕືອນ':'แจ้งเตือน', icon:I.bell },
+  ];
+
+  let content = '';
+  if(trendState.tab === 'discover'){
+    content = `
+      <div class="trend-grid">
+        ${mockTrends.map(v => `
+          <div class="trend-card">
+            <div class="trend-thumb" style="background:linear-gradient(135deg,#1e1b4b,#3b0764)">
+              <div class="trend-duration">${v.duration}s</div>
+              <div class="trend-score-badge">🔥 ${(v.trend_score/1000).toFixed(1)}k</div>
+              <div class="trend-thumb-placeholder">${I.videoIc}</div>
+            </div>
+            <div class="trend-card-body">
+              <div class="trend-user">${escapeHtmlN(v.user)}</div>
+              <div class="trend-caption">${escapeHtmlN(v.caption)}</div>
+              <div class="trend-tags">${v.hashtags.map(h=>`<span class="trend-tag">${h}</span>`).join('')}</div>
+              <div class="trend-stats">
+                <span title="Views">👁 ${fmtNum(v.views)}</span>
+                <span title="Likes">❤ ${fmtNum(v.likes)}</span>
+                <span title="Comments">💬 ${fmtNum(v.comments)}</span>
+                <span title="Shares">↗ ${fmtNum(v.shares)}</span>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>`;
+  } else if(trendState.tab === 'hashtags'){
+    content = `
+      <div class="trend-list-card">
+        <div class="trend-list-hd">
+          <div>#</div><div>${isLo?'ແຮັຊແທັກ':'แฮชแท็ก'}</div><div class="num">${isLo?'ໃຊ້':'ใช้'}</div><div class="num">${isLo?'ເຕີບໂຕ':'เติบโต'}</div><div></div>
+        </div>
+        ${topHashtags.map((h,i) => `
+          <div class="trend-list-row">
+            <div class="trend-rank">${i+1}</div>
+            <div class="trend-list-name">${h.tag}</div>
+            <div class="num">${fmtNum(h.count)}</div>
+            <div class="num"><span class="trend-growth ${h.growth>0?'up':'down'}">${h.growth>0?'▲':'▼'} ${Math.abs(h.growth)}%</span></div>
+            <div>${dsSparkline({data:Array.from({length:7},()=>Math.random()*100),width:80,height:24,color:'#a78bfa'})}</div>
+          </div>
+        `).join('')}
+      </div>`;
+  } else if(trendState.tab === 'sounds'){
+    content = `
+      <div class="trend-list-card">
+        <div class="trend-list-hd">
+          <div>#</div><div>${isLo?'ສຽງ':'เพลง / เสียง'}</div><div class="num">${isLo?'ໃຊ້':'จำนวนใช้'}</div><div class="num">${isLo?'ເຕີບໂຕ':'เติบโต'}</div>
+        </div>
+        ${topSounds.map((s,i) => `
+          <div class="trend-list-row trend-sound-row">
+            <div class="trend-rank">${i+1}</div>
+            <div class="trend-list-name"><span class="trend-sound-ic">${I.zap}</span>${escapeHtmlN(s.name)}</div>
+            <div class="num">${fmtNum(s.uses)}</div>
+            <div class="num"><span class="trend-growth up">▲ ${s.growth}%</span></div>
+          </div>
+        `).join('')}
+      </div>`;
+  } else if(trendState.tab === 'creators'){
+    content = `<div class="empty-state">
+      <h3>${isLo?'ຍັງບໍ່ມີຄຣີເອເຕີ້ທີ່ຕິດຕາມ':'ยังไม่มี creator ที่ติดตาม'}</h3>
+      <p style="margin:10px 0">${isLo?'ກົດປຸ່ມເພື່ອເພີ່ມຄຣີເອເຕີ້ TikTok':'กดปุ่มเพื่อเพิ่ม TikTok creator ที่ต้องการติดตาม'}</p>
+      <button class="btn-primary" style="margin-top:12px">${I.plus} ${isLo?'ເພີ່ມຄຣີເອເຕີ້':'เพิ่ม Creator'}</button>
+    </div>`;
+  } else if(trendState.tab === 'alerts'){
+    content = `<div class="empty-state">
+      <h3>${isLo?'ບໍ່ມີການແຈ້ງເຕືອນ':'ยังไม่มีแจ้งเตือน'}</h3>
+      <p style="margin:10px 0">${isLo?'ສ້າງກົດເພື່ອຮັບແຈ້ງເຕືອນເມື່ອ trend ມາ':'ตั้งกฎเพื่อรับแจ้งเตือนเมื่อมี trend มาแรง'}</p>
+    </div>`;
+  }
+
+  el.innerHTML = topbarSimple('barChart', 'TikTok Trends', isLo?'ຄົ້ນພົບ trend ໃໝ່ ແລະ ຕິດຕາມຄູ່ແຂ່ງ':'ค้นพบ trend ใหม่ + ติดตามคู่แข่งบน TikTok') + `
+    <div class="page-content" style="max-width:1600px">
+      <div class="trend-beta-banner">
+        <div class="trend-beta-ic">${I.zap}</div>
+        <div>
+          <b>BETA — ${isLo?'ຍັງເປັນຂໍ້ມູນຕົວຢ່າງ':'ยังเป็นข้อมูลตัวอย่าง'}</b>
+          <p>${isLo?'ລະບົບ scraper ຍັງບໍ່ໄດ້ເຊື່ອມຕໍ່ — ກຳລັງສ້າງ backend (Playwright + Node + Redis Queue)':'ระบบ scraper ยังไม่ได้เชื่อม — กำลังสร้าง backend (Playwright + Node.js + Redis Queue) แยก ดูข้อมูล mock ก่อน'}</p>
+        </div>
+      </div>
+
+      <div class="trend-summary-grid">
+        <div class="trend-summary-card">
+          <div class="trend-sum-ic" style="background:linear-gradient(135deg,#ec4899,#f472b6)">${I.trending}</div>
+          <div class="trend-sum-lbl">${isLo?'Trending videos':'วิดีโอกำลังมา'}</div>
+          <div class="trend-sum-val">2,481</div>
+          <div class="trend-sum-sub"><span class="trend-growth up">▲ 18%</span> ${isLo?'ມື້ນີ້':'วันนี้'}</div>
+        </div>
+        <div class="trend-summary-card">
+          <div class="trend-sum-ic" style="background:linear-gradient(135deg,#a855f7,#7c3aed)">${I.hash}</div>
+          <div class="trend-sum-lbl">${isLo?'ແຮັຊແທັກໃໝ່':'แฮชแท็กใหม่'}</div>
+          <div class="trend-sum-val">156</div>
+          <div class="trend-sum-sub"><span class="trend-growth up">▲ 12%</span></div>
+        </div>
+        <div class="trend-summary-card">
+          <div class="trend-sum-ic" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)">${I.zap}</div>
+          <div class="trend-sum-lbl">${isLo?'ສຽງມາແຮງ':'เสียงมาแรง'}</div>
+          <div class="trend-sum-val">42</div>
+          <div class="trend-sum-sub"><span class="trend-growth up">▲ 24%</span></div>
+        </div>
+        <div class="trend-summary-card">
+          <div class="trend-sum-ic" style="background:linear-gradient(135deg,#10b981,#34d399)">${I.users}</div>
+          <div class="trend-sum-lbl">${isLo?'ຄຣີເອເຕີ້ກຳລັງດັງ':'ครีเอเตอร์ดัง'}</div>
+          <div class="trend-sum-val">89</div>
+          <div class="trend-sum-sub"><span class="trend-growth up">▲ 7%</span></div>
+        </div>
+      </div>
+
+      <div class="trend-row-2col">
+        <div class="dash2-card">
+          <div class="dash2-card-hd">
+            <div>
+              <div class="dash2-card-title">${isLo?'ການໂພສຕາມຊົ່ວໂມງ':'การโพสต์ตามชั่วโมง'}</div>
+              <div class="dash2-card-sub">${isLo?'ຊ່ວງເວລາທີ່ engagement ດີສຸດ':'ช่วงเวลาที่ engagement ดีสุด'}</div>
+            </div>
+          </div>
+          ${dsBars({data:hourlyData, height:140, gradient:['#a78bfa','#7c3aed'], highlightIdx:hourlyData.reduce((mx,d,i,arr)=>d.value>arr[mx].value?i:mx,0)})}
+        </div>
+        <div class="dash2-card trend-insight-panel">
+          <div class="dash2-card-hd">
+            <div class="dash2-card-title">${I.lightbulb} ${isLo?'AI Insights':'AI Insights'}</div>
+          </div>
+          <ul class="trend-insights">
+            <li><span class="dot" style="background:#10b981"></span>${isLo?'ໂພສຕອນ 19:00-22:00 engagement +42%':'โพสต์ช่วง 19:00-22:00 engagement สูงกว่าเฉลี่ย 42%'}</li>
+            <li><span class="dot" style="background:#a78bfa"></span>${isLo?'#smallbiz ກຳລັງເຕີບໂຕເຣ້ວ':'#smallbiz กำลังเติบโตเร็ว 142%'}</li>
+            <li><span class="dot" style="background:#f59e0b"></span>${isLo?'Video ສັ້ນກວ່າ 30s engagement ດີກວ່າ':'วิดีโอสั้นกว่า 30 วินาที engagement ดีกว่า 28%'}</li>
+            <li><span class="dot" style="background:#ec4899"></span>${isLo?'Caption ມີ emoji engagement +18%':'Caption ที่มี emoji engagement สูงกว่า 18%'}</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="trend-tab-bar">
+        ${tabs.map(tab => `<button class="trend-tab ${trendState.tab===tab.id?'active':''}" onclick="setTrendTab('${tab.id}')">${tab.icon} ${tab.label}</button>`).join('')}
+      </div>
+
+      <div class="trend-filter-bar">
+        <select onchange="setTrendTime(this.value)">
+          <option value="1d" ${trendState.timeRange==='1d'?'selected':''}>24 ${isLo?'ຊົ່ວໂມງ':'ชั่วโมง'}</option>
+          <option value="7d" ${trendState.timeRange==='7d'?'selected':''}>7 ${isLo?'ມື້':'วัน'}</option>
+          <option value="30d" ${trendState.timeRange==='30d'?'selected':''}>30 ${isLo?'ມື້':'วัน'}</option>
+          <option value="90d" ${trendState.timeRange==='90d'?'selected':''}>90 ${isLo?'ມື້':'วัน'}</option>
+        </select>
+        <select onchange="setTrendSort(this.value)">
+          <option value="viral" ${trendState.sort==='viral'?'selected':''}>🔥 Viral Score</option>
+          <option value="views" ${trendState.sort==='views'?'selected':''}>👁 ${isLo?'ຍອດເບິ່ງ':'Views'}</option>
+          <option value="engagement" ${trendState.sort==='engagement'?'selected':''}>❤ Engagement</option>
+          <option value="newest" ${trendState.sort==='newest'?'selected':''}>🕐 ${isLo?'ໃໝ່ສຸດ':'ใหม่สุด'}</option>
+        </select>
+      </div>
+
+      ${content}
+    </div>`;
+}
+
 function renderSocialIntegrations(el){
   const fbConnected = !!(fbPostState.pageId && fbPostState.pageToken);
   // Auto-fetch IG only ONCE per session when FB is connected
@@ -14517,9 +17072,10 @@ function renderSocialIntegrations(el){
     _igFetchAttempted = true;
     setTimeout(()=>refreshIgInfo(), 100);
   }
-  // Lazy-fetch Drive server status once per page visit
+  // Lazy-fetch Drive server status once per page visit (claim flag IMMEDIATELY to prevent re-render loop)
   if(!_driveStatusFetched){
-    refreshDriveServerStatus(true).then(()=>{ if(currentView==='socialIntegrations') rerender(); });
+    _driveStatusFetched = true; // prevent re-entry even if fetch fails
+    refreshDriveServerStatus(false).then(()=>{ if(currentView==='socialIntegrations') rerender(); });
   }
   const igConnected = !!(igAccountInfo && igAccountInfo.id);
   const connectedCount = (fbConnected?1:0) + (igConnected?1:0) + (ttConnected?1:0) + (ytConnected?1:0);
@@ -17049,7 +19605,7 @@ function _renderAdminAttDashboard(allUsers, today){
   return `
     <div class="att-month-bar">
       <label>เดือน</label>
-      <input type="month" value="${month}" onchange="setAttMonth(this.value)"/>
+      ${thaiMonthPicker({id:'attMonthSel', value:month, onchange:'setAttMonth'})}
       <span style="margin-left:auto;font-size:12px;color:var(--t2)">รายงานเดือน ${month}</span>
     </div>
 
@@ -18306,7 +20862,7 @@ function renderSales(el){
       <div class="sales-filter-row" style="margin-bottom:18px">
         <div class="sales-filter-field">
           <label>เดือน</label>
-          <input type="month" value="${month}" onchange="setSalesMonth(this.value)"/>
+          ${thaiMonthPicker({id:'salesMonthSel', value:month, onchange:'setSalesMonth'})}
         </div>
         <div class="sales-filter-field">
           <label>สมาชิก</label>
@@ -18949,9 +21505,27 @@ function renderAllTasks(el){
     <button class="btn-primary" onclick="openNewTask('todo')">${I.plus} งานใหม่</button>`;
   el.innerHTML = topbarAllTasks('งานทั้งหมด', `${tasks.length} งานในระบบ`, actions) + `
   <div class="page-content">
-    <div class="filter-row" id="af">
-      <div class="filter-tag active" data-filter="all" onclick="filterAll('all',this)">ทั้งหมด (${tasks.length})</div>
-      ${USERS.map(u=>`<div class="filter-tag" data-filter="u_${u.id}" onclick="filterAll('u_${u.id}',this)">${u.name} (${tasks.filter(t=>t.assignees.includes(u.id)).length})</div>`).join('')}
+    <div class="member-filter-strip" id="af">
+      <div class="member-filter-card active" data-filter="all" onclick="filterAll('all',this)">
+        <div class="mfc-av all-icon">${I.users}</div>
+        <div class="mfc-body">
+          <div class="mfc-name">ทั้งหมด</div>
+          <div class="mfc-count">${tasks.length} งาน</div>
+        </div>
+      </div>
+      ${USERS.map(u=>{
+        const av = u.avatar
+          ? `<div class="mfc-av" style="background:url('${u.avatar}') center/cover"></div>`
+          : `<div class="mfc-av" style="background:${u.color||'#888'};color:#fff">${escapeHtmlN(u.init||(u.name||'?')[0])}</div>`;
+        const count = tasks.filter(t=>t.assignees.includes(u.id)).length;
+        return `<div class="member-filter-card" data-filter="u_${u.id}" onclick="filterAll('u_${u.id}',this)">
+          ${av}
+          <div class="mfc-body">
+            <div class="mfc-name">${escapeHtmlN(u.name)}</div>
+            <div class="mfc-count">${count} งาน</div>
+          </div>
+        </div>`;
+      }).join('')}
     </div>
     <div id="allList">${renderDbTable(tasks)}</div>
   </div>`;
@@ -18959,7 +21533,7 @@ function renderAllTasks(el){
 }
 
 function filterAll(f,el){
-  document.querySelectorAll('#af .filter-tag').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#af .member-filter-card, #af .filter-tag').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
   const filtered=f==='all'?tasks:tasks.filter(t=>t.assignees.includes(parseInt(f.replace('u_',''))));
   document.getElementById('allList').innerHTML=renderDbTable(filtered);
