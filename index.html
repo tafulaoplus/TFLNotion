@@ -818,13 +818,22 @@
 /* Result modal — giveaway list */
 .giveaway-list{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
 .giveaway-row{display:flex;gap:8px;align-items:center}
-.res-mbu-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg-soft);border:1px solid var(--border);border-radius:10px}
-.res-mbu-avatar{width:32px;height:32px;border-radius:50%;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13.5px;flex-shrink:0}
-.res-mbu-name{flex:1;min-width:0;font-size:14px;font-weight:700;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.res-mbu-role{font-size:11px;color:var(--t3);font-weight:500;margin-left:6px}
-.res-mbu-input{width:96px;padding:8px 12px;border:1.5px solid var(--border-2);border-radius:8px;font-size:14px;text-align:right;font-weight:800;color:var(--t1);background:var(--bg)}
+.res-mbu-row{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:10px 12px;padding:12px 14px;background:var(--bg-soft);border:1px solid var(--border);border-radius:11px}
+.res-mbu-avatar{grid-row:1 / span 2;width:38px;height:38px;border-radius:50%;color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.res-mbu-name{grid-column:2 / -1;font-size:14px;font-weight:700;color:var(--t1);line-height:1.3;display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}
+.res-mbu-role{font-size:10.5px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.4px;padding:2px 7px;background:var(--bg);border-radius:5px}
+.res-mbu-input{width:110px;padding:8px 12px;border:1.5px solid var(--border-2);border-radius:8px;font-size:14px;text-align:right;font-weight:800;color:var(--t1);background:var(--bg)}
 .res-mbu-input:focus{outline:none;border-color:var(--p400);box-shadow:0 0 0 3px rgba(167,139,250,.18)}
+.res-mbu-row .res-mbu-unit{font-size:12px;color:var(--t3);font-weight:600}
 [data-theme="dark"] .res-mbu-name{color:#e5e7eb}
+[data-theme="dark"] .res-mbu-role{background:rgba(255,255,255,.06);color:#a1a1aa}
+@media (max-width:520px){
+  .res-mbu-row{grid-template-columns:auto 1fr;grid-template-rows:auto auto;gap:8px}
+  .res-mbu-avatar{grid-row:1 / span 2}
+  .res-mbu-name{grid-column:2;grid-row:1}
+  .res-mbu-input{grid-column:2;grid-row:2;width:100%}
+  .res-mbu-row .res-mbu-unit{display:none}
+}
 .giveaway-inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
 .giv-item-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;transition:transform .15s,box-shadow .15s}
 .giv-item-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
@@ -18637,9 +18646,9 @@ function openSalesResultModal(eventId){
         const v = mbu[uid] != null ? mbu[uid] : (mbu[String(uid)] != null ? mbu[String(uid)] : '');
         return `<div class="res-mbu-row">
           <div class="res-mbu-avatar" style="background:${color}">${escapeHtmlN(init)}</div>
-          <div class="res-mbu-name">${escapeHtmlN(name)}${role?`<span class="res-mbu-role">${escapeHtmlN(role)}</span>`:''}</div>
+          <div class="res-mbu-name"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%">${escapeHtmlN(name)}</span>${role?`<span class="res-mbu-role">${escapeHtmlN(role)}</span>`:''}</div>
           <input type="number" min="0" placeholder="0" data-uid="${uid}" class="res-mbu-input" oninput="_updateMembersTotal()" value="${v===''?'':parseInt(v,10)}">
-          <span style="font-size:12px;color:var(--t3);font-weight:600">คน</span>
+          <span class="res-mbu-unit">คน</span>
         </div>`;
       }).join('');
     }
