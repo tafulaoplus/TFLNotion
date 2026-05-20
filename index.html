@@ -1335,6 +1335,87 @@
 .fbp-page-meta{font-size:11.5px;color:var(--t2);margin-top:2px}
 
 .fb-tab-bar{display:flex;gap:4px;padding:10px 14px;background:var(--bg-soft);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:thin}
+/* ===== Social Report ===== */
+.social-report{padding:24px 28px}
+.sr-toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px 18px;background:var(--bg-soft);border-radius:14px;margin-bottom:24px}
+.sr-presets{display:flex;gap:6px;flex-wrap:wrap}
+.sr-preset{padding:7px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:12.5px;font-weight:700;color:var(--t1);cursor:pointer;font-family:inherit;transition:all .15s ease}
+.sr-preset:hover{border-color:#7c3aed;color:#7c3aed}
+.sr-dates{display:flex;gap:8px;align-items:center}
+.sr-dates input[type="date"]{padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--t1);font-size:12.5px;font-family:inherit}
+.sr-compare-chk{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--t1);font-weight:600;cursor:pointer}
+.sr-refresh,.sr-print{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:9px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;border:1px solid var(--border);background:var(--bg);color:var(--t1);transition:all .15s ease}
+.sr-refresh:hover,.sr-print:hover{border-color:#7c3aed;color:#7c3aed}
+.sr-refresh:disabled{opacity:.6;cursor:wait}
+.sr-print{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;border-color:transparent;margin-left:auto;box-shadow:0 4px 14px rgba(124,58,237,.25)}
+.sr-print:hover{color:#fff;box-shadow:0 6px 20px rgba(124,58,237,.4)}
+.sr-loading,.sr-error{padding:18px;text-align:center;border-radius:12px;font-size:13.5px;color:var(--t2);margin-bottom:18px;display:flex;align-items:center;justify-content:center;gap:8px}
+.sr-error{background:rgba(239,68,68,.1);color:#dc2626;border:1px solid rgba(239,68,68,.2)}
+.sr-cover{padding:28px 26px;background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(167,139,250,.04));border:1px solid var(--border);border-radius:16px;margin-bottom:24px}
+.sr-cover h1{margin:0 0 14px;font-size:26px;font-weight:800;color:var(--t1);display:flex;align-items:center;gap:12px}
+.sr-cover-ic{color:#7c3aed;display:inline-flex;align-items:center}
+.sr-cover-ic svg{width:24px;height:24px}
+.sr-cover-meta{display:flex;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--t2)}
+.sr-cover-meta b{color:var(--t1);font-weight:700}
+.sr-kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:28px}
+.sr-kpi{padding:18px;background:var(--bg);border:1px solid var(--border);border-radius:14px;transition:transform .15s ease,box-shadow .15s ease}
+.sr-kpi:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.sr-kpi-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;margin-bottom:12px;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.sr-kpi-icon svg{width:22px;height:22px}
+.sr-kpi-lbl{font-size:11.5px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.sr-kpi-val{font-size:28px;font-weight:800;color:var(--t1);line-height:1.1;font-feature-settings:'tnum'}
+.sr-kpi-sub{font-size:11.5px;color:var(--t2);margin-top:6px;line-height:1.3}
+.sr-section{margin-bottom:28px;padding:22px;background:var(--bg);border:1px solid var(--border);border-radius:14px}
+.sr-section-title{display:flex;align-items:center;gap:10px;margin:0 0 18px;font-size:18px;font-weight:800;color:var(--t1);padding-bottom:12px;border-bottom:1px solid var(--border)}
+.sr-sec-ic{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;background:var(--bg-soft);border-radius:10px}
+.sr-sec-ic svg{width:18px;height:18px}
+.sr-subtitle{margin:18px 0 10px;font-size:13.5px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px}
+.sr-stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:8px}
+.sr-stat{padding:14px;background:var(--bg-soft);border-radius:11px;text-align:left}
+.sr-stat-lbl{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.sr-stat-val{font-size:22px;font-weight:800;color:var(--t1);line-height:1.1;font-feature-settings:'tnum'}
+.sr-stat-extra{font-size:11px;color:var(--t2);margin-top:3px}
+.sr-unit{font-size:13px;color:var(--t2);font-weight:600}
+.sr-delta{display:inline-block;font-size:11.5px;font-weight:700;margin-top:4px;padding:2px 8px;border-radius:6px}
+.sr-delta-up{background:rgba(16,185,129,.12);color:#059669}
+.sr-delta-down{background:rgba(239,68,68,.12);color:#dc2626}
+.sr-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px}
+.sr-table th{text-align:left;padding:10px 12px;background:var(--bg-soft);font-weight:700;font-size:11.5px;color:var(--t2);text-transform:uppercase;letter-spacing:.4px}
+.sr-table th.num{text-align:right}
+.sr-table td{padding:11px 12px;border-bottom:1px solid var(--border);color:var(--t1)}
+.sr-table td.num{text-align:right;font-feature-settings:'tnum';font-weight:600}
+.sr-table tr:last-child td{border-bottom:none}
+.sr-th-ic{display:inline-flex;color:var(--t2)}
+.sr-post-link{color:#1877f2;text-decoration:none;font-weight:500}
+.sr-post-link:hover{text-decoration:underline}
+.sr-type-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.sr-type-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--bg-soft);border-radius:20px;font-size:12.5px;color:var(--t1)}
+.sr-type-chip b{font-weight:800;color:#7c3aed;font-size:14px}
+.sr-type-chip span{color:var(--t2);text-transform:capitalize}
+.sr-empty,.sr-not-connected{padding:24px;text-align:center;color:var(--t2);background:var(--bg-soft);border-radius:11px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px}
+.sr-not-connected{color:#f59e0b;background:rgba(245,158,11,.08)}
+.sr-insights{background:linear-gradient(135deg,rgba(245,158,11,.06),rgba(124,58,237,.04))}
+.sr-insight-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.sr-insight{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:var(--bg);border-radius:10px;font-size:13.5px;color:var(--t1);line-height:1.5}
+.sr-insight.good{border-left:4px solid #10b981}
+.sr-insight.warn{border-left:4px solid #f59e0b}
+.sr-insight-ic{display:inline-flex;flex-shrink:0;width:22px;height:22px;align-items:center;justify-content:center;border-radius:50%;margin-top:1px}
+.sr-insight.good .sr-insight-ic{background:rgba(16,185,129,.12);color:#059669}
+.sr-insight.warn .sr-insight-ic{background:rgba(245,158,11,.12);color:#d97706}
+.sr-insight-ic svg{width:13px;height:13px}
+.sr-footer{margin-top:24px;text-align:center;font-size:11.5px;color:var(--t2);padding-top:16px;border-top:1px solid var(--border)}
+/* ===== Print CSS ===== */
+@media print {
+  body{background:#fff!important}
+  .sidebar,.topbar,.no-print,.app-credit,.notification-toast,.sidebar-backdrop{display:none!important}
+  .main,.main-content,#main{margin-left:0!important;padding:0!important;width:100%!important}
+  .social-report{padding:14mm 8mm;max-width:100%!important}
+  .sr-section{break-inside:avoid;page-break-inside:avoid;box-shadow:none;border:1px solid #ddd}
+  .sr-kpi{break-inside:avoid;box-shadow:none}
+  .sr-table th{background:#f5f5f5!important;color:#333!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sr-kpi-icon,.sr-sec-ic{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sr-cover{background:#f8f5ff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 .fb-tab-bar::-webkit-scrollbar{height:6px}
 .fb-tab-bar::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 .fb-tab{flex-shrink:0;padding:8px 16px;background:transparent;border:none;border-radius:9px;color:var(--t2);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s ease;white-space:nowrap;display:flex;align-items:center;gap:6px}
@@ -3018,8 +3099,8 @@ svg{display:block;flex-shrink:0}
       <div id="viewFbPosts" class="view"></div>
       <div id="viewSocialAnalytics" class="view"></div>
       <div id="viewSocialIntegrations" class="view"></div>
-      <div id="viewContent" class="view"></div>
-      <div id="viewStats" class="view"></div>
+      <div id="viewSocialReport" class="view"></div>
+      <div id="viewSocialManage" class="view"></div>
       <div id="viewPostPerformance" class="view"></div>
       <div id="viewAdSpend" class="view"></div>
       <div id="viewSales" class="view"></div>
@@ -4218,6 +4299,11 @@ const I = {
   spinSm:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2a10 10 0 0 1 10 10"/></svg>',
   pin:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>',
   palette:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>',
+  printer:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>',
+  refresh:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
+  videoIc:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>',
+  document:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>',
+  dollarBig:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
   edit:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
 };
 
@@ -4357,6 +4443,11 @@ let postPerfData = { posts: [], loading: false, error: '', fetchedAt: null };
 let postPerfRange = { since: (()=>{const d=new Date();d.setDate(d.getDate()-29);return d.toISOString().slice(0,10);})(), until: new Date().toISOString().slice(0,10) };
 let postPerfSort = 'engagement'; // engagement | reach | impressions | date
 let postPerfShowAll = false;
+// Social Report (executive dashboard)
+let socialReportRange = (()=>{const e=new Date();const s=new Date();s.setDate(s.getDate()-29);return {since:s.toISOString().slice(0,10),until:e.toISOString().slice(0,10)};})();
+let socialReportCompare = true; // compare with previous equal-length period
+let socialReportData = { lives: [], posts: [], ads: null, prevAds: null, loading: false, error: '', fetchedAt: null };
+let socialManageTab = localStorage.getItem('tfl_manage_tab') || 'posts'; // posts | live
 // Ad Spend Tracker state
 let adSpendConn = { enabled: false, adAccountId: '', adAccountName: '', currency: 'THB', accounts: [], connectedAt: null, token: '', testStatus: 'idle', testMessage: '' };
 let adSpendData = { campaigns: [], summary: null, loading: false, error: '', fetchedAt: null };
@@ -5905,14 +5996,14 @@ function initApp(){
   let startView = 'dashboard';
   try {
     const saved = localStorage.getItem('tfl_currentView');
-    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','content','stats','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','postPerformance','adSpend','sales','activity','calendar','lottery','attendance'];
+    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','socialReport','socialManage','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','postPerformance','adSpend','sales','activity','calendar','lottery','attendance'];
     if(saved && validViews.includes(saved)){
       // Check role permission
       if((saved === 'allTasks' || saved === 'members' || saved === 'activity' || saved === 'lottery') && currentUser.role !== 'admin'){
         startView = 'dashboard';
       } else if(saved === 'socialIntegrations' && currentUser.role !== 'admin'){
         startView = 'dashboard';
-      } else if((saved === 'content' || saved === 'stats' || saved === 'fbLive' || saved === 'fbGoLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics' || saved === 'postPerformance' || saved === 'adSpend') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
+      } else if((saved === 'socialReport' || saved === 'socialManage' || saved === 'fbLive' || saved === 'fbGoLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics' || saved === 'postPerformance' || saved === 'adSpend') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
         startView = 'dashboard';
       } else {
         startView = saved;
@@ -5996,23 +6087,19 @@ function renderSidebar(){
 
   // Social section (Admin + Social can see)
   if(isSocial){
-    const isContentView = currentView==='content' || currentView==='fbPosts' || currentView==='fbGoLive';
-    const isStatsView = currentView==='stats' || currentView==='postPerformance' || currentView==='fbLive' || currentView==='fbLiveAuto' || currentView==='socialAnalytics';
+    const isReportView = currentView==='socialReport' || currentView==='socialAnalytics' || currentView==='postPerformance' || currentView==='fbLive' || currentView==='fbLiveAuto' || currentView==='adSpend';
+    const isManageView = currentView==='socialManage' || currentView==='fbPosts' || currentView==='fbGoLive';
     html += `<div class="nav-sec">Social</div>
-      <div class="nav-item ${isContentView?'active':''}" onclick="navigateTo('content')">
-        <span class="nav-icon">${I.edit||I.note}</span>
-        <span class="nav-label">คอนเทนต์</span>
+      <div class="nav-item ${isReportView?'active':''}" onclick="navigateTo('socialReport')">
+        <span class="nav-icon">${I.barChart}</span>
+        <span class="nav-label">รายงานผล Social</span>
       </div>
-      <div class="nav-item ${isStatsView?'active':''}" onclick="navigateTo('stats')">
-        <span class="nav-icon">${I.barChart||I.trending}</span>
-        <span class="nav-label">สถิติ</span>
+      <div class="nav-item ${isManageView?'active':''}" onclick="navigateTo('socialManage')">
+        <span class="nav-icon">${I.edit}</span>
+        <span class="nav-label">จัดการ Social</span>
       </div>
-      ${adSpendConn.enabled ? `<div class="nav-item ${currentView==='adSpend'?'active':''}" onclick="navigateTo('adSpend')">
-        <span class="nav-icon">${I.diamond||I.barChart}</span>
-        <span class="nav-label">งบโฆษณา</span>
-      </div>` : ''}
       ${isAdmin? `<div class="nav-item ${currentView==='socialIntegrations'?'active':''}" onclick="navigateTo('socialIntegrations')">
-        <span class="nav-icon">${I.settings||I.cloud}</span>
+        <span class="nav-icon">${I.settings}</span>
         <span class="nav-label">เชื่อมต่อแพลตฟอร์ม</span>
       </div>` : ''}`;
   }
@@ -6342,7 +6429,7 @@ function renderView(id,el){
   setTimeout(()=>el.classList.remove('fade-in'),300);
   ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,notes:renderNotes,taskBoard:renderTaskBoard,
     myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbGoLive:renderFbGoLive,fbLiveAuto:renderFbLiveAuto,
-    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,content:renderContent,stats:renderStats,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations,postPerformance:renderPostPerformance,adSpend:renderAdSpend}[id]||(()=>{}))(el);
+    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,socialReport:renderSocialReport,socialManage:renderSocialManage,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations,postPerformance:renderPostPerformance,adSpend:renderAdSpend}[id]||(()=>{}))(el);
 }
 
 function rerender(){ const el=document.getElementById('view'+cap(currentView)); if(el) renderView(currentView,el); }
@@ -13544,56 +13631,316 @@ async function _intgDisconnectDrive(){
   } catch(e){ alert('ผิดพลาด: ' + e.message); }
 }
 
-// ===================== SOCIAL — CONTENT & STATS HUBS =====================
-let contentTab = localStorage.getItem('tfl_content_tab') || 'posts'; // posts | live
-let statsTab = localStorage.getItem('tfl_stats_tab') || 'postPerf';   // postPerf | live | ai | overview
-
-function setContentTab(t){
-  contentTab = t;
-  try { localStorage.setItem('tfl_content_tab', t); } catch(_){}
+// ===================== SOCIAL MANAGE (Tools: Post Manager + Live Broadcast) =====================
+function setSocialManageTab(t){
+  socialManageTab = t;
+  try { localStorage.setItem('tfl_manage_tab', t); } catch(_){}
   rerender();
 }
-function setStatsTab(t){
-  statsTab = t;
-  try { localStorage.setItem('tfl_stats_tab', t); } catch(_){}
-  rerender();
-}
-
-function _renderTabHub(el, tabs, activeTabId, setterName){
-  const active = tabs.find(t => t.id === activeTabId) || tabs[0];
-  el.innerHTML = `
-    <div class="fb-tab-bar">
-      ${tabs.map(t=>`<button class="fb-tab ${t.id===active.id?'active':''}" onclick="${setterName}('${t.id}')">${t.icon} ${t.label}</button>`).join('')}
-    </div>
-    <div id="hubTabContent"></div>`;
-  const inner = el.querySelector('#hubTabContent');
-  if(active.render && typeof active.render === 'function'){
-    try { active.render(inner); }
-    catch(e){
-      console.error('Tab render failed:', e);
-      inner.innerHTML = `<div class="page-content"><div class="empty-state" style="color:#dc2626">⚠ โหลด tab ไม่ได้: ${escapeHtmlN(e.message)}</div></div>`;
-    }
-  } else {
-    inner.innerHTML = `<div class="page-content"><div class="empty-state">ฟีเจอร์นี้ยังไม่พร้อม</div></div>`;
-  }
-}
-
-function renderContent(el){
+function renderSocialManage(el){
   const tabs = [
     { id: 'posts', label: 'โพสต์ Manager', icon: '📝', render: renderFbPosts },
     { id: 'live',  label: 'ไลฟ์สด',         icon: '🔴', render: typeof renderFbGoLive==='function'?renderFbGoLive:null },
   ];
-  _renderTabHub(el, tabs, contentTab, 'setContentTab');
+  const active = tabs.find(t => t.id === socialManageTab) || tabs[0];
+  el.innerHTML = `
+    <div class="fb-tab-bar">
+      ${tabs.map(t=>`<button class="fb-tab ${t.id===active.id?'active':''}" onclick="setSocialManageTab('${t.id}')">${t.icon} ${t.label}</button>`).join('')}
+    </div>
+    <div id="manageTabContent"></div>`;
+  const inner = el.querySelector('#manageTabContent');
+  if(active.render){
+    try { active.render(inner); }
+    catch(e){
+      console.error('Tab render failed:', e);
+      inner.innerHTML = `<div class="page-content"><div class="empty-state" style="color:#dc2626">⚠ โหลดไม่ได้: ${escapeHtmlN(e.message)}</div></div>`;
+    }
+  } else {
+    inner.innerHTML = `<div class="page-content"><div class="empty-state">ฟีเจอร์นี้ยังไม่พร้อม — ต้องเชื่อม Facebook ก่อน</div></div>`;
+  }
 }
 
-function renderStats(el){
-  const tabs = [
-    { id: 'postPerf', label: 'Post Performance', icon: '📈', render: renderPostPerformance },
-    { id: 'live',     label: 'Live สถิติ',       icon: '📊', render: typeof renderFbLive==='function'?renderFbLive:null },
-    { id: 'ai',       label: 'AI Insights',      icon: '✨', render: typeof renderFbLiveAuto==='function'?renderFbLiveAuto:null },
-    { id: 'overview', label: 'ภาพรวม',           icon: '🌐', render: renderSocialAnalytics },
-  ];
-  _renderTabHub(el, tabs, statsTab, 'setStatsTab');
+// ===================== SOCIAL REPORT (Executive Dashboard, Single-Scroll) =====================
+function setSocialReportRange(which, v){
+  if(which==='since') socialReportRange.since = v; else socialReportRange.until = v;
+  loadSocialReport();
+}
+function setSocialReportPreset(preset){
+  const now = new Date();
+  const today = now.toISOString().slice(0,10);
+  let since = today, until = today;
+  if(preset === '7d'){ const d=new Date(now); d.setDate(d.getDate()-6); since = d.toISOString().slice(0,10); }
+  else if(preset === '30d'){ const d=new Date(now); d.setDate(d.getDate()-29); since = d.toISOString().slice(0,10); }
+  else if(preset === 'thisMonth'){ since = today.slice(0,8)+'01'; }
+  else if(preset === 'lastMonth'){
+    const d = new Date(now.getFullYear(), now.getMonth()-1, 1);
+    const last = new Date(now.getFullYear(), now.getMonth(), 0);
+    since = d.toISOString().slice(0,10); until = last.toISOString().slice(0,10);
+  }
+  socialReportRange.since = since; socialReportRange.until = until;
+  loadSocialReport();
+}
+function toggleSocialReportCompare(){ socialReportCompare = !socialReportCompare; rerender(); }
+function printSocialReport(){ window.print(); }
+
+async function loadSocialReport(){
+  socialReportData.loading = true; socialReportData.error = ''; rerender();
+  const tasks = [];
+  // Live videos via main FB page connection
+  if(fbPostState.pageId && fbPostState.pageToken){
+    tasks.push((async()=>{
+      try {
+        const tok = encodeURIComponent(fbPostState.pageToken);
+        const sinceMs = new Date(socialReportRange.since).getTime();
+        const untilMs = new Date(socialReportRange.until + 'T23:59:59').getTime();
+        const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}/live_videos?fields=id,title,description,permalink_url,broadcast_start_time,broadcast_end_time,status,creation_time,live_views,thumbnails{uri}&limit=100&access_token=${tok}`);
+        const j = await r.json();
+        if(j.error) throw new Error(j.error.message);
+        socialReportData.lives = (j.data||[]).filter(l => {
+          const t = new Date(l.broadcast_start_time || l.creation_time).getTime();
+          return t >= sinceMs && t <= untilMs;
+        });
+      } catch(e){ console.warn('Live fetch failed:', e); socialReportData.lives = []; }
+    })());
+  } else {
+    socialReportData.lives = [];
+  }
+  // Posts via postPerfConn
+  if(postPerfConn.enabled && postPerfConn.pageId && postPerfConn.token){
+    tasks.push((async()=>{
+      try {
+        const tok = encodeURIComponent(postPerfConn.token);
+        const sinceMs = new Date(socialReportRange.since).getTime();
+        const untilMs = new Date(socialReportRange.until + 'T23:59:59').getTime();
+        const fields = 'id,message,story,created_time,permalink_url,full_picture,attachments{media_type,type},shares,likes.summary(true).limit(0),comments.summary(true).limit(0),reactions.summary(true).limit(0)';
+        const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${postPerfConn.pageId}/posts?fields=${encodeURIComponent(fields)}&limit=200&access_token=${tok}`);
+        const j = await r.json();
+        if(j.error) throw new Error(j.error.message);
+        socialReportData.posts = (j.data||[]).filter(p => {
+          const t = new Date(p.created_time).getTime();
+          return t >= sinceMs && t <= untilMs;
+        }).map(p => ({
+          id: p.id, message: p.message||p.story||'', created: p.created_time,
+          permalink: p.permalink_url, picture: p.full_picture,
+          mediaType: p.attachments?.data?.[0]?.media_type || p.attachments?.data?.[0]?.type || 'text',
+          reactions: p.reactions?.summary?.total_count||0,
+          likes: p.likes?.summary?.total_count||0,
+          comments: p.comments?.summary?.total_count||0,
+          shares: p.shares?.count||0,
+        }));
+      } catch(e){ console.warn('Posts fetch failed:', e); socialReportData.posts = []; }
+    })());
+  } else {
+    socialReportData.posts = [];
+  }
+  // Ads via adSpendConn
+  if(adSpendConn.enabled && adSpendConn.adAccountId && adSpendConn.token){
+    tasks.push((async()=>{
+      try {
+        const tok = encodeURIComponent(adSpendConn.token);
+        const fields = 'campaign_name,spend,impressions,reach,clicks,ctr,cpc,cpm,actions';
+        const tr = `{'since':'${socialReportRange.since}','until':'${socialReportRange.until}'}`;
+        const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${adSpendConn.adAccountId}/insights?level=campaign&fields=${encodeURIComponent(fields)}&time_range=${encodeURIComponent(tr)}&limit=100&access_token=${tok}`);
+        const j = await r.json();
+        if(j.error) throw new Error(j.error.message);
+        const campaigns = (j.data||[]).map(d => {
+          const purchases = (d.actions||[]).find(a => a.action_type==='purchase' || a.action_type==='offsite_conversion.fb_pixel_purchase');
+          const leads = (d.actions||[]).find(a => a.action_type==='lead' || a.action_type==='onsite_conversion.lead_grouped');
+          return {
+            name: d.campaign_name||'—', spend:+d.spend||0, impressions:+d.impressions||0,
+            reach:+d.reach||0, clicks:+d.clicks||0, ctr:+d.ctr||0, cpc:+d.cpc||0, cpm:+d.cpm||0,
+            purchases: purchases?+purchases.value:0, leads: leads?+leads.value:0,
+          };
+        });
+        const sum = campaigns.reduce((s,c)=>({
+          spend:s.spend+c.spend, impressions:s.impressions+c.impressions, reach:s.reach+c.reach,
+          clicks:s.clicks+c.clicks, purchases:s.purchases+c.purchases, leads:s.leads+c.leads,
+        }), {spend:0,impressions:0,reach:0,clicks:0,purchases:0,leads:0});
+        socialReportData.ads = { campaigns, sum, currency: adSpendConn.currency };
+        // Previous period for comparison
+        if(socialReportCompare){
+          const days = Math.round((new Date(socialReportRange.until) - new Date(socialReportRange.since))/86400000) + 1;
+          const prevEnd = new Date(socialReportRange.since); prevEnd.setDate(prevEnd.getDate()-1);
+          const prevStart = new Date(prevEnd); prevStart.setDate(prevStart.getDate()-(days-1));
+          const ptr = `{'since':'${prevStart.toISOString().slice(0,10)}','until':'${prevEnd.toISOString().slice(0,10)}'}`;
+          const pr = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${adSpendConn.adAccountId}/insights?fields=spend,impressions,reach,clicks&time_range=${encodeURIComponent(ptr)}&access_token=${tok}`);
+          const pj = await pr.json();
+          if(!pj.error && pj.data && pj.data[0]){
+            const p = pj.data[0];
+            socialReportData.prevAds = { spend:+p.spend||0, impressions:+p.impressions||0, reach:+p.reach||0, clicks:+p.clicks||0 };
+          }
+        }
+      } catch(e){ console.warn('Ads fetch failed:', e); socialReportData.ads = null; }
+    })());
+  } else {
+    socialReportData.ads = null;
+  }
+  try { await Promise.all(tasks); } catch(e){ socialReportData.error = e.message; }
+  socialReportData.loading = false;
+  socialReportData.fetchedAt = Date.now();
+  rerender();
+}
+
+function _fmtDelta(curr, prev){
+  if(!prev || prev === 0) return '';
+  const pct = ((curr - prev) / prev * 100);
+  const cls = pct >= 0 ? 'sr-delta-up' : 'sr-delta-down';
+  const arrow = pct >= 0 ? '▲' : '▼';
+  return `<span class="sr-delta ${cls}">${arrow} ${Math.abs(pct).toFixed(1)}%</span>`;
+}
+
+function renderSocialReport(el){
+  if(socialReportData.fetchedAt === null && !socialReportData.loading){
+    setTimeout(()=>loadSocialReport(), 50);
+  }
+  const lives = socialReportData.lives || [];
+  const posts = socialReportData.posts || [];
+  const ads = socialReportData.ads;
+  // Live stats
+  const liveTotalMins = lives.reduce((s,l)=>{
+    if(l.broadcast_start_time && l.broadcast_end_time){
+      return s + (new Date(l.broadcast_end_time)-new Date(l.broadcast_start_time))/60000;
+    }
+    return s;
+  }, 0);
+  const livePeakViews = lives.reduce((m,l)=>Math.max(m,+l.live_views||0), 0);
+  // Post stats
+  const postReach = posts.reduce((s,p)=>s+p.reactions+p.comments+p.shares, 0);
+  const postEng = posts.reduce((s,p)=>s+p.reactions+p.comments+p.shares, 0);
+  const postReactions = posts.reduce((s,p)=>s+p.reactions, 0);
+  const postComments = posts.reduce((s,p)=>s+p.comments, 0);
+  const postShares = posts.reduce((s,p)=>s+p.shares, 0);
+  // Post type breakdown
+  const typeBreak = {};
+  posts.forEach(p => { typeBreak[p.mediaType] = (typeBreak[p.mediaType]||0) + 1; });
+  // Best time
+  const hourBuckets = Array(24).fill(0).map(()=>({eng:0,count:0}));
+  posts.forEach(p => { const h = new Date(p.created).getHours(); hourBuckets[h].eng += p.reactions+p.comments+p.shares; hourBuckets[h].count++; });
+  const bestHour = hourBuckets.map((b,h)=>({h, avg:b.count?b.eng/b.count:0})).sort((a,b)=>b.avg-a.avg)[0];
+  // Top posts
+  const topPosts = posts.slice().sort((a,b)=>(b.reactions+b.comments+b.shares)-(a.reactions+a.comments+a.shares)).slice(0,5);
+  // Auto insights
+  const insights = [];
+  if(lives.length > 0) insights.push({ type:'good', text: `ทีมไลฟ์สด ${lives.length} ครั้ง รวมเวลา ${Math.round(liveTotalMins)} นาที` });
+  if(lives.length === 0) insights.push({ type:'warn', text: 'ไม่มีการไลฟ์สดในช่วงนี้' });
+  if(posts.length >= 20) insights.push({ type:'good', text: `โพสต์เพจสม่ำเสมอ (${posts.length} โพสต์ในช่วง)` });
+  else if(posts.length < 5) insights.push({ type:'warn', text: `โพสต์น้อยเกินไป (${posts.length} โพสต์) ควรเพิ่มความถี่` });
+  if(ads && ads.sum.spend > 0 && ads.sum.purchases > 0){
+    const cpp = ads.sum.spend / ads.sum.purchases;
+    insights.push({ type:'good', text: `โฆษณามี Conversion ${ads.sum.purchases} ครั้ง · ต้นทุน/ครั้ง ${cpp.toFixed(0)} ${ads.currency}` });
+  }
+  if(ads && socialReportData.prevAds && ads.sum.spend > 0){
+    const pct = ((ads.sum.spend - socialReportData.prevAds.spend) / socialReportData.prevAds.spend * 100);
+    if(Math.abs(pct) > 30) insights.push({ type:pct>0?'warn':'good', text: `งบโฆษณา${pct>0?'เพิ่ม':'ลด'} ${Math.abs(pct).toFixed(0)}% เทียบช่วงก่อน` });
+  }
+
+  const cur = ads?.currency || 'THB';
+  const fmtMoney = n => Math.round(n).toLocaleString() + ' ' + cur;
+
+  el.innerHTML = topbarSimple('barChart','Social Report', `${socialReportRange.since} ถึง ${socialReportRange.until}`) + `
+    <div class="page-content social-report" style="max-width:1200px">
+      <div class="sr-toolbar no-print">
+        <div class="sr-presets">
+          <button class="sr-preset" onclick="setSocialReportPreset('7d')">7 วัน</button>
+          <button class="sr-preset" onclick="setSocialReportPreset('30d')">30 วัน</button>
+          <button class="sr-preset" onclick="setSocialReportPreset('thisMonth')">เดือนนี้</button>
+          <button class="sr-preset" onclick="setSocialReportPreset('lastMonth')">เดือนก่อน</button>
+        </div>
+        <div class="sr-dates">
+          <input type="date" value="${socialReportRange.since}" onchange="setSocialReportRange('since',this.value)"/>
+          <span style="color:var(--t2)">ถึง</span>
+          <input type="date" value="${socialReportRange.until}" onchange="setSocialReportRange('until',this.value)"/>
+        </div>
+        <label class="sr-compare-chk"><input type="checkbox" ${socialReportCompare?'checked':''} onchange="toggleSocialReportCompare()"/> เทียบช่วงก่อน</label>
+        <button class="sr-refresh" onclick="loadSocialReport()" ${socialReportData.loading?'disabled':''}>${I.refresh} ${socialReportData.loading?'กำลังโหลด':'รีเฟรช'}</button>
+        <button class="sr-print" onclick="printSocialReport()">${I.printer} พิมพ์ / Export PDF</button>
+      </div>
+
+      ${socialReportData.loading ? `<div class="sr-loading">${I.spinSm} กำลังโหลดข้อมูล…</div>` : ''}
+      ${socialReportData.error ? `<div class="sr-error">${I.alert} ${escapeHtmlN(socialReportData.error)}</div>` : ''}
+
+      <div class="sr-cover">
+        <h1><span class="sr-cover-ic">${I.barChart}</span> รายงานผล Social Media</h1>
+        <div class="sr-cover-meta">
+          <div><b>ช่วงข้อมูล:</b> ${socialReportRange.since} ถึง ${socialReportRange.until}</div>
+          ${socialReportData.fetchedAt?`<div><b>สร้างเมื่อ:</b> ${new Date(socialReportData.fetchedAt).toLocaleString('th-TH')}</div>`:''}
+          ${currentUser?`<div><b>จัดทำโดย:</b> ${escapeHtmlN(currentUser.name)}</div>`:''}
+        </div>
+      </div>
+
+      <div class="sr-kpi-grid">
+        <div class="sr-kpi"><div class="sr-kpi-icon" style="background:linear-gradient(135deg,#ef4444,#dc2626)">${I.live}</div><div class="sr-kpi-lbl">Live</div><div class="sr-kpi-val">${lives.length}</div><div class="sr-kpi-sub">${Math.round(liveTotalMins)} นาทีรวม</div></div>
+        <div class="sr-kpi"><div class="sr-kpi-icon" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">${I.document}</div><div class="sr-kpi-lbl">โพสต์</div><div class="sr-kpi-val">${posts.length}</div><div class="sr-kpi-sub">${postEng.toLocaleString()} engagement</div></div>
+        <div class="sr-kpi"><div class="sr-kpi-icon" style="background:linear-gradient(135deg,#a855f7,#7c3aed)">${I.heart}</div><div class="sr-kpi-lbl">Engagement รวม</div><div class="sr-kpi-val">${fmtNum(postReactions+postComments+postShares)}</div><div class="sr-kpi-sub">${postReactions} reactions · ${postComments} comments · ${postShares} shares</div></div>
+        <div class="sr-kpi"><div class="sr-kpi-icon" style="background:linear-gradient(135deg,#10b981,#059669)">${I.dollarBig}</div><div class="sr-kpi-lbl">งบโฆษณา</div><div class="sr-kpi-val">${ads?fmtMoney(ads.sum.spend):'—'}</div><div class="sr-kpi-sub">${ads?(socialReportCompare && socialReportData.prevAds ? _fmtDelta(ads.sum.spend, socialReportData.prevAds.spend) : ads.campaigns.length+' campaigns'):'ไม่ได้เชื่อม'}</div></div>
+      </div>
+
+      <section class="sr-section">
+        <h2 class="sr-section-title"><span class="sr-sec-ic" style="color:#ef4444">${I.live}</span> ไลฟ์สด</h2>
+        ${!fbPostState.pageToken ? `<div class="sr-not-connected">${I.alert} ยังไม่เชื่อม Facebook Page — ไปที่หน้า "เชื่อมต่อแพลตฟอร์ม"</div>` :
+        lives.length === 0 ? `<div class="sr-empty">ไม่มีการไลฟ์สดในช่วงนี้</div>` :
+        `<div class="sr-stat-row">
+          <div class="sr-stat"><div class="sr-stat-lbl">จำนวน Live</div><div class="sr-stat-val">${lives.length}</div></div>
+          <div class="sr-stat"><div class="sr-stat-lbl">เวลารวม</div><div class="sr-stat-val">${Math.round(liveTotalMins)} <span class="sr-unit">นาที</span></div></div>
+          <div class="sr-stat"><div class="sr-stat-lbl">Peak Viewers</div><div class="sr-stat-val">${fmtNum(livePeakViews)}</div></div>
+          <div class="sr-stat"><div class="sr-stat-lbl">เฉลี่ย/Live</div><div class="sr-stat-val">${lives.length?Math.round(liveTotalMins/lives.length):0} <span class="sr-unit">นาที</span></div></div>
+        </div>
+        <h3 class="sr-subtitle">Top Live</h3>
+        <table class="sr-table"><thead><tr><th>วันที่</th><th>หัวข้อ</th><th class="num">ความยาว (นาที)</th><th class="num">Peak Views</th></tr></thead><tbody>
+          ${lives.slice().sort((a,b)=>(+b.live_views||0)-(+a.live_views||0)).slice(0,5).map(l=>{
+            const mins = (l.broadcast_start_time && l.broadcast_end_time) ? Math.round((new Date(l.broadcast_end_time)-new Date(l.broadcast_start_time))/60000) : 0;
+            return `<tr><td>${new Date(l.broadcast_start_time||l.creation_time).toLocaleDateString('th-TH')}</td><td>${escapeHtmlN((l.title||l.description||'(ไม่มีหัวข้อ)').slice(0,60))}</td><td class="num">${mins}</td><td class="num">${fmtNum(+l.live_views||0)}</td></tr>`;
+          }).join('')}
+        </tbody></table>`}
+      </section>
+
+      <section class="sr-section">
+        <h2 class="sr-section-title"><span class="sr-sec-ic" style="color:#3b82f6">${I.document}</span> โพสต์เพจ Facebook</h2>
+        ${!postPerfConn.enabled ? `<div class="sr-not-connected">${I.alert} ยังไม่ได้เปิด Post Performance — ไปที่หน้า "เชื่อมต่อแพลตฟอร์ม"</div>` :
+        posts.length === 0 ? `<div class="sr-empty">ไม่มีโพสต์ในช่วงนี้</div>` :
+        `<div class="sr-stat-row">
+          <div class="sr-stat"><div class="sr-stat-lbl">จำนวนโพสต์</div><div class="sr-stat-val">${posts.length}</div></div>
+          <div class="sr-stat"><div class="sr-stat-lbl">Reactions</div><div class="sr-stat-val">${fmtNum(postReactions)}</div></div>
+          <div class="sr-stat"><div class="sr-stat-lbl">Comments</div><div class="sr-stat-val">${fmtNum(postComments)}</div></div>
+          <div class="sr-stat"><div class="sr-stat-lbl">Shares</div><div class="sr-stat-val">${fmtNum(postShares)}</div></div>
+          <div class="sr-stat"><div class="sr-stat-lbl">เวลาดีสุด</div><div class="sr-stat-val">${bestHour?String(bestHour.h).padStart(2,'0')+':00':'—'}</div></div>
+        </div>
+        ${Object.keys(typeBreak).length?`<h3 class="sr-subtitle">ประเภทคอนเทนต์</h3>
+        <div class="sr-type-row">${Object.entries(typeBreak).sort((a,b)=>b[1]-a[1]).map(([t,c])=>`<div class="sr-type-chip"><b>${c}</b> <span>${escapeHtmlN(t)}</span></div>`).join('')}</div>`:''}
+        <h3 class="sr-subtitle">Top 5 โพสต์</h3>
+        <table class="sr-table"><thead><tr><th>วันที่</th><th>โพสต์</th><th class="num"><span class="sr-th-ic">${I.heart}</span></th><th class="num"><span class="sr-th-ic">${I.message}</span></th><th class="num"><span class="sr-th-ic">${I.share}</span></th></tr></thead><tbody>
+          ${topPosts.map(p=>`<tr><td>${new Date(p.created).toLocaleDateString('th-TH')}</td><td><a href="${escapeHtmlN(p.permalink||'#')}" target="_blank" rel="noopener" class="sr-post-link">${escapeHtmlN((p.message||'(ไม่มีข้อความ)').slice(0,80))}</a></td><td class="num">${p.reactions}</td><td class="num">${p.comments}</td><td class="num">${p.shares}</td></tr>`).join('')}
+        </tbody></table>`}
+      </section>
+
+      <section class="sr-section">
+        <h2 class="sr-section-title"><span class="sr-sec-ic" style="color:#10b981">${I.dollarBig}</span> งบโฆษณา</h2>
+        ${!adSpendConn.enabled ? `<div class="sr-not-connected">${I.alert} ยังไม่ได้เปิด Ad Spend Tracker — ไปที่หน้า "เชื่อมต่อแพลตฟอร์ม"</div>` :
+        !ads || ads.campaigns.length === 0 ? `<div class="sr-empty">ไม่มีโฆษณาในช่วงนี้</div>` :
+        `<div class="sr-stat-row">
+          <div class="sr-stat"><div class="sr-stat-lbl">ใช้จ่ายรวม</div><div class="sr-stat-val">${fmtMoney(ads.sum.spend)}</div>${socialReportCompare && socialReportData.prevAds ? _fmtDelta(ads.sum.spend, socialReportData.prevAds.spend):''}</div>
+          <div class="sr-stat"><div class="sr-stat-lbl">Reach</div><div class="sr-stat-val">${fmtNum(ads.sum.reach)}</div>${socialReportCompare && socialReportData.prevAds ? _fmtDelta(ads.sum.reach, socialReportData.prevAds.reach):''}</div>
+          <div class="sr-stat"><div class="sr-stat-lbl">Clicks</div><div class="sr-stat-val">${fmtNum(ads.sum.clicks)}</div></div>
+          <div class="sr-stat"><div class="sr-stat-lbl">CTR</div><div class="sr-stat-val">${ads.sum.impressions>0?(ads.sum.clicks/ads.sum.impressions*100).toFixed(2)+'%':'—'}</div></div>
+          <div class="sr-stat"><div class="sr-stat-lbl">CPC เฉลี่ย</div><div class="sr-stat-val">${ads.sum.clicks>0?fmtMoney(ads.sum.spend/ads.sum.clicks):'—'}</div></div>
+          ${ads.sum.purchases>0?`<div class="sr-stat"><div class="sr-stat-lbl">Purchases</div><div class="sr-stat-val">${ads.sum.purchases}</div><div class="sr-stat-extra">CPP ${fmtMoney(ads.sum.spend/ads.sum.purchases)}</div></div>`:''}
+          ${ads.sum.leads>0?`<div class="sr-stat"><div class="sr-stat-lbl">Leads</div><div class="sr-stat-val">${ads.sum.leads}</div><div class="sr-stat-extra">CPL ${fmtMoney(ads.sum.spend/ads.sum.leads)}</div></div>`:''}
+        </div>
+        <h3 class="sr-subtitle">Top Campaigns (ตามงบ)</h3>
+        <table class="sr-table"><thead><tr><th>Campaign</th><th class="num">Spend</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">CTR</th><th class="num">CPC</th></tr></thead><tbody>
+          ${ads.campaigns.slice().sort((a,b)=>b.spend-a.spend).slice(0,10).map(c=>`<tr><td><b>${escapeHtmlN(c.name)}</b></td><td class="num">${fmtMoney(c.spend)}</td><td class="num">${fmtNum(c.impressions)}</td><td class="num">${fmtNum(c.clicks)}</td><td class="num">${c.ctr.toFixed(2)}%</td><td class="num">${fmtMoney(c.cpc)}</td></tr>`).join('')}
+        </tbody></table>`}
+      </section>
+
+      ${insights.length ? `<section class="sr-section sr-insights">
+        <h2 class="sr-section-title"><span class="sr-sec-ic" style="color:#f59e0b">${I.lightbulb}</span> สรุปผลงาน</h2>
+        <ul class="sr-insight-list">
+          ${insights.map(i=>`<li class="sr-insight ${i.type==='good'?'good':'warn'}"><span class="sr-insight-ic">${i.type==='good'?I.check:I.alert}</span><span>${escapeHtmlN(i.text)}</span></li>`).join('')}
+        </ul>
+      </section>` : ''}
+
+      <div class="sr-footer">© ${new Date().getFullYear()} TFL+ Workspace · รายงานสร้างอัตโนมัติ</div>
+    </div>`;
 }
 
 // ===================== POST PERFORMANCE & AD SPEND TRACKER =====================
