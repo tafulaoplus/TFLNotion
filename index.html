@@ -4341,6 +4341,16 @@ let socialDateStart = (() => { const d = new Date(); d.setDate(d.getDate()-29); 
 let socialDateEnd = new Date().toISOString().slice(0,10);
 let socialData = { fb:null, tt:null, yt:null };
 let socialLoading = false;
+// Post Performance state
+let postPerfConn = { enabled: false, connectedAt: null };
+let postPerfData = { posts: [], loading: false, error: '', fetchedAt: null };
+let postPerfRange = { since: (()=>{const d=new Date();d.setDate(d.getDate()-29);return d.toISOString().slice(0,10);})(), until: new Date().toISOString().slice(0,10) };
+let postPerfSort = 'engagement'; // engagement | reach | impressions | date
+// Ad Spend Tracker state
+let adSpendConn = { enabled: false, adAccountId: '', adAccountName: '', currency: 'THB', accounts: [], connectedAt: null };
+let adSpendData = { campaigns: [], summary: null, loading: false, error: '', fetchedAt: null };
+let adSpendRange = { since: (()=>{const d=new Date();d.setDate(d.getDate()-29);return d.toISOString().slice(0,10);})(), until: new Date().toISOString().slice(0,10) };
+let adSpendGroupBy = 'campaign'; // campaign | adset | ad
 let igAccountInfo = null; // { id, username, name, profile_picture_url, followers_count } via FB page
 let _igFetchAttempted = false;
 // TikTok / YouTube — manual token paste (admin enters access_token from their developer portal)
@@ -4625,6 +4635,17 @@ function applyRemoteWorkspace(data){
     const maxDr = fbDrafts.reduce((m,d)=>Math.max(m, d.id||0), 0);
     nextFbDraftId = Math.max(nextFbDraftId, maxDr + 1);
   }
+  if(data.postPerfConn && typeof data.postPerfConn === 'object'){
+    postPerfConn.enabled = !!data.postPerfConn.enabled;
+    postPerfConn.connectedAt = data.postPerfConn.connectedAt || null;
+  }
+  if(data.adSpendConn && typeof data.adSpendConn === 'object'){
+    adSpendConn.enabled = !!data.adSpendConn.enabled;
+    adSpendConn.adAccountId = data.adSpendConn.adAccountId || '';
+    adSpendConn.adAccountName = data.adSpendConn.adAccountName || '';
+    adSpendConn.currency = data.adSpendConn.currency || 'THB';
+    adSpendConn.connectedAt = data.adSpendConn.connectedAt || null;
+  }
   if(data.fbConnection && typeof data.fbConnection === 'object'){
     if(data.fbConnection.pageToken){
       fbPostState.pageId = data.fbConnection.pageId || '';
@@ -4715,6 +4736,8 @@ function syncToNeon(){
           pageName: fbPostState.pageName || '',
           pageToken: fbPostState.pageToken || '',
         },
+        postPerfConn: postPerfConn,
+        adSpendConn: { enabled: adSpendConn.enabled, adAccountId: adSpendConn.adAccountId, adAccountName: adSpendConn.adAccountName, currency: adSpendConn.currency, connectedAt: adSpendConn.connectedAt },
         googleDriveSettings: googleDriveSettings,
         tiktokSettings: tiktokSettings,
         youtubeSettings: youtubeSettings,
@@ -5867,14 +5890,14 @@ function initApp(){
   let startView = 'dashboard';
   try {
     const saved = localStorage.getItem('tfl_currentView');
-    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','sales','activity','calendar','lottery','attendance'];
+    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','postPerformance','adSpend','sales','activity','calendar','lottery','attendance'];
     if(saved && validViews.includes(saved)){
       // Check role permission
       if((saved === 'allTasks' || saved === 'members' || saved === 'activity' || saved === 'lottery') && currentUser.role !== 'admin'){
         startView = 'dashboard';
       } else if(saved === 'socialIntegrations' && currentUser.role !== 'admin'){
         startView = 'dashboard';
-      } else if((saved === 'fbLive' || saved === 'fbGoLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
+      } else if((saved === 'fbLive' || saved === 'fbGoLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics' || saved === 'postPerformance' || saved === 'adSpend') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
         startView = 'dashboard';
       } else {
         startView = saved;
@@ -5986,6 +6009,14 @@ function renderSidebar(){
           <span class="nav-icon">${I.barChart||I.trending}</span>
           <span class="nav-label">Social Analytics</span>
         </div>
+        ${postPerfConn.enabled ? `<div class="nav-item ${currentView==='postPerformance'?'active':''}" onclick="navigateTo('postPerformance')">
+          <span class="nav-icon">${I.trending||I.barChart}</span>
+          <span class="nav-label">Post Performance</span>
+        </div>` : ''}
+        ${adSpendConn.enabled ? `<div class="nav-item ${currentView==='adSpend'?'active':''}" onclick="navigateTo('adSpend')">
+          <span class="nav-icon">${I.diamond||I.barChart}</span>
+          <span class="nav-label">Ad Spend Tracker</span>
+        </div>` : ''}
         ${isAdmin? `<div class="nav-item ${currentView==='socialIntegrations'?'active':''}" onclick="navigateTo('socialIntegrations')">
           <span class="nav-icon">${I.settings||I.cloud}</span>
           <span class="nav-label">เชื่อมต่อแพลตฟอร์ม</span>
@@ -6318,7 +6349,7 @@ function renderView(id,el){
   setTimeout(()=>el.classList.remove('fade-in'),300);
   ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,notes:renderNotes,taskBoard:renderTaskBoard,
     myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbGoLive:renderFbGoLive,fbLiveAuto:renderFbLiveAuto,
-    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations}[id]||(()=>{}))(el);
+    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations,postPerformance:renderPostPerformance,adSpend:renderAdSpend}[id]||(()=>{}))(el);
 }
 
 function rerender(){ const el=document.getElementById('view'+cap(currentView)); if(el) renderView(currentView,el); }
@@ -13520,6 +13551,340 @@ async function _intgDisconnectDrive(){
   } catch(e){ alert('ผิดพลาด: ' + e.message); }
 }
 
+// ===================== POST PERFORMANCE & AD SPEND TRACKER =====================
+async function _intgEnablePostPerf(){
+  if(!fbPostState.pageId || !fbPostState.pageToken){ alert('ต้องเชื่อม Facebook Page ก่อน'); return; }
+  postPerfConn.enabled = true;
+  postPerfConn.connectedAt = Date.now();
+  saveAll();
+  rerender();
+}
+function _intgDisablePostPerf(){
+  if(!confirm('ปิดการใช้งาน Post Performance?')) return;
+  postPerfConn.enabled = false;
+  postPerfConn.connectedAt = null;
+  saveAll();
+  rerender();
+}
+async function _intgLoadAdAccounts(){
+  if(!fbPostState.pageToken){ alert('ต้องเชื่อม Facebook ก่อน'); return; }
+  const btn = event && event.target; if(btn) { btn.disabled = true; btn.textContent = 'กำลังโหลด…'; }
+  try {
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/me/adaccounts?fields=id,name,account_id,currency,account_status&access_token=${encodeURIComponent(fbPostState.pageToken)}`);
+    const j = await r.json();
+    if(j.error) throw new Error(j.error.message);
+    adSpendConn.accounts = (j.data||[]).map(a => ({ id: a.id, account_id: a.account_id, name: a.name, currency: a.currency, status: a.account_status }));
+    if(adSpendConn.accounts.length === 0){ alert('ไม่พบบัญชีโฆษณา (ตรวจสอบว่า token มี scope ads_read + business_management)'); }
+    rerender();
+  } catch(err){
+    alert('โหลดบัญชีโฆษณาไม่สำเร็จ: ' + err.message);
+    if(btn) { btn.disabled = false; btn.textContent = 'โหลดบัญชีโฆษณา'; }
+  }
+}
+function _intgConnectAdSpend(){
+  const sel = document.getElementById('intgAdAccSel');
+  if(!sel || !sel.value){ alert('เลือกบัญชีโฆษณาก่อน'); return; }
+  const acc = adSpendConn.accounts.find(a => a.id === sel.value);
+  if(!acc) return;
+  adSpendConn.enabled = true;
+  adSpendConn.adAccountId = acc.id;
+  adSpendConn.adAccountName = acc.name;
+  adSpendConn.currency = acc.currency || 'THB';
+  adSpendConn.connectedAt = Date.now();
+  saveAll();
+  rerender();
+}
+function _intgDisableAdSpend(){
+  if(!confirm('ปิดการใช้งาน Ad Spend Tracker?')) return;
+  adSpendConn.enabled = false;
+  adSpendConn.adAccountId = '';
+  adSpendConn.adAccountName = '';
+  adSpendConn.connectedAt = null;
+  saveAll();
+  rerender();
+}
+
+// ============ POST PERFORMANCE PAGE ============
+async function loadPostPerfData(){
+  if(!fbPostState.pageId || !fbPostState.pageToken){
+    postPerfData.error = 'ต้องเชื่อม Facebook Page ก่อน';
+    rerender(); return;
+  }
+  postPerfData.loading = true;
+  postPerfData.error = '';
+  rerender();
+  try {
+    const tok = encodeURIComponent(fbPostState.pageToken);
+    const since = Math.floor(new Date(postPerfRange.since).getTime()/1000);
+    const until = Math.floor(new Date(postPerfRange.until + 'T23:59:59').getTime()/1000);
+    const fields = 'id,message,story,created_time,permalink_url,full_picture,attachments{media_type,type},insights.metric(post_impressions,post_impressions_unique,post_engaged_users,post_reactions_by_type_total,post_clicks)';
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}/posts?fields=${encodeURIComponent(fields)}&since=${since}&until=${until}&limit=50&access_token=${tok}`);
+    const j = await r.json();
+    if(j.error) throw new Error(j.error.message);
+    postPerfData.posts = (j.data||[]).map(p => {
+      const ins = {};
+      if(p.insights && Array.isArray(p.insights.data)){
+        p.insights.data.forEach(m => {
+          const v = m.values && m.values[0] ? m.values[0].value : null;
+          ins[m.name] = v;
+        });
+      }
+      const reactions = ins.post_reactions_by_type_total || {};
+      const totalReactions = Object.values(reactions).reduce((s,n)=>s+(+n||0), 0);
+      const mediaType = p.attachments?.data?.[0]?.media_type || p.attachments?.data?.[0]?.type || 'text';
+      return {
+        id: p.id,
+        message: p.message || p.story || '',
+        createdTime: p.created_time,
+        permalink: p.permalink_url,
+        picture: p.full_picture,
+        mediaType,
+        impressions: ins.post_impressions || 0,
+        reach: ins.post_impressions_unique || 0,
+        engaged: ins.post_engaged_users || 0,
+        clicks: ins.post_clicks || 0,
+        reactions: totalReactions,
+        reactionsBreakdown: reactions,
+      };
+    });
+    postPerfData.fetchedAt = Date.now();
+  } catch(err){
+    postPerfData.error = err.message;
+  }
+  postPerfData.loading = false;
+  rerender();
+}
+function setPostPerfRange(which, v){
+  if(which==='since') postPerfRange.since = v; else postPerfRange.until = v;
+  loadPostPerfData();
+}
+function setPostPerfSort(s){ postPerfSort = s; rerender(); }
+
+function renderPostPerformance(el){
+  if(!postPerfConn.enabled){
+    el.innerHTML = topbarSimple('barChart','Post Performance','ดูประสิทธิภาพโพสต์แต่ละชิ้น') + `
+      <div class="page-content" style="max-width:900px"><div class="empty-state">
+        <div style="font-size:48px;margin-bottom:14px">📊</div>
+        <h3 style="margin:0 0 8px">ยังไม่ได้เปิดใช้งาน</h3>
+        <p style="color:var(--t2);margin:0 0 16px">ไปเปิดใช้งานที่หน้าเชื่อมต่อแพลตฟอร์มก่อน</p>
+        <button class="btn-primary" onclick="navigateTo('socialIntegrations')">ไปเปิดใช้งาน →</button>
+      </div></div>`;
+    return;
+  }
+  if(postPerfData.posts.length === 0 && !postPerfData.loading && !postPerfData.error){
+    setTimeout(()=>loadPostPerfData(), 50);
+  }
+  const posts = postPerfData.posts.slice().sort((a,b) => {
+    if(postPerfSort === 'engagement') return b.engaged - a.engaged;
+    if(postPerfSort === 'reach') return b.reach - a.reach;
+    if(postPerfSort === 'impressions') return b.impressions - a.impressions;
+    return b.createdTime.localeCompare(a.createdTime);
+  });
+  const sumReach = posts.reduce((s,p)=>s+(+p.reach||0), 0);
+  const sumImp = posts.reduce((s,p)=>s+(+p.impressions||0), 0);
+  const sumEng = posts.reduce((s,p)=>s+(+p.engaged||0), 0);
+  const sumReact = posts.reduce((s,p)=>s+(+p.reactions||0), 0);
+  const avgER = sumReach > 0 ? (sumEng / sumReach * 100) : 0;
+  // Best time analysis
+  const hourBuckets = Array(24).fill(0).map(()=>({impressions:0,count:0}));
+  posts.forEach(p => {
+    const h = new Date(p.createdTime).getHours();
+    hourBuckets[h].impressions += p.impressions;
+    hourBuckets[h].count++;
+  });
+  const bestHour = hourBuckets.map((b,h)=>({h,avg:b.count?b.impressions/b.count:0})).sort((a,b)=>b.avg-a.avg)[0];
+  // Media type breakdown
+  const typeBreakdown = {};
+  posts.forEach(p => {
+    const t = p.mediaType || 'text';
+    if(!typeBreakdown[t]) typeBreakdown[t] = { count:0, impressions:0, engaged:0 };
+    typeBreakdown[t].count++;
+    typeBreakdown[t].impressions += p.impressions;
+    typeBreakdown[t].engaged += p.engaged;
+  });
+  el.innerHTML = topbarSimple('barChart','Post Performance', `${fbPostState.pageName} · ${posts.length} โพสต์ในช่วง`) + `
+    <div class="page-content" style="max-width:1200px">
+      <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-bottom:18px;padding:14px;background:var(--bg-soft);border-radius:12px">
+        <div><label style="font-size:11px;color:var(--t2);font-weight:700;display:block;margin-bottom:4px">จาก</label><input type="date" value="${postPerfRange.since}" onchange="setPostPerfRange('since',this.value)" style="padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--t1)"/></div>
+        <div><label style="font-size:11px;color:var(--t2);font-weight:700;display:block;margin-bottom:4px">ถึง</label><input type="date" value="${postPerfRange.until}" onchange="setPostPerfRange('until',this.value)" style="padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--t1)"/></div>
+        <button class="btn-ghost" onclick="loadPostPerfData()" ${postPerfData.loading?'disabled':''}>${postPerfData.loading?'กำลังโหลด…':'↻ รีเฟรช'}</button>
+        ${postPerfData.fetchedAt?`<span style="font-size:11.5px;color:var(--t2);margin-left:auto">อัปเดต ${new Date(postPerfData.fetchedAt).toLocaleString('th-TH')}</span>`:''}
+      </div>
+      ${postPerfData.error ? `<div style="padding:14px;background:#fee;border:1px solid #fcc;border-radius:10px;color:#c00;margin-bottom:14px">⚠ ${escapeHtmlN(postPerfData.error)}</div>` : ''}
+      <div class="lot-kpi-grid" style="margin-bottom:18px">
+        <div class="lot-kpi sales"><div class="lot-kpi-lbl">Reach รวม</div><div class="lot-kpi-val">${fmtNum(sumReach)}</div><div class="lot-kpi-sub">${sumReach.toLocaleString()} คน</div></div>
+        <div class="lot-kpi prize"><div class="lot-kpi-lbl">Impressions รวม</div><div class="lot-kpi-val">${fmtNum(sumImp)}</div><div class="lot-kpi-sub">${sumImp.toLocaleString()} ครั้ง</div></div>
+        <div class="lot-kpi profit"><div class="lot-kpi-lbl">Engagement</div><div class="lot-kpi-val">${fmtNum(sumEng)}</div><div class="lot-kpi-sub">${avgER.toFixed(2)}% Engagement Rate</div></div>
+        <div class="lot-kpi member"><div class="lot-kpi-lbl">Reactions</div><div class="lot-kpi-val">${fmtNum(sumReact)}</div><div class="lot-kpi-sub">รวมทุกประเภท</div></div>
+        <div class="lot-kpi active"><div class="lot-kpi-lbl">เวลาโพสต์ที่ดีที่สุด</div><div class="lot-kpi-val">${bestHour?String(bestHour.h).padStart(2,'0')+':00':'—'}</div><div class="lot-kpi-sub">${bestHour?fmtNum(Math.round(bestHour.avg))+' impressions เฉลี่ย':'ยังไม่มีข้อมูล'}</div></div>
+        <div class="lot-kpi growth"><div class="lot-kpi-lbl">โพสต์ในช่วง</div><div class="lot-kpi-val">${posts.length}</div><div class="lot-kpi-sub">เฉลี่ย ${posts.length?Math.round(sumImp/posts.length):0} imp/โพสต์</div></div>
+      </div>
+      ${Object.keys(typeBreakdown).length ? `
+      <div class="sd-panel" style="margin-bottom:18px">
+        <div class="sd-panel-title">ผลงานตามประเภทคอนเทนต์</div>
+        <table class="lot-table"><thead><tr><th>ประเภท</th><th class="num">จำนวน</th><th class="num">Impressions เฉลี่ย</th><th class="num">Engagement เฉลี่ย</th></tr></thead><tbody>
+        ${Object.entries(typeBreakdown).sort((a,b)=>b[1].impressions-a[1].impressions).map(([t,v])=>`
+          <tr><td><b>${escapeHtmlN(t)}</b></td><td class="num">${v.count}</td><td class="num">${fmtNum(Math.round(v.impressions/v.count))}</td><td class="num">${fmtNum(Math.round(v.engaged/v.count))}</td></tr>
+        `).join('')}
+        </tbody></table>
+      </div>` : ''}
+      <div class="sd-panel">
+        <div class="sales-chart-hd" style="margin-bottom:14px">
+          <div class="h-l" style="font-size:14px;font-weight:800">โพสต์ทั้งหมด (${posts.length})</div>
+          <div class="chart-tabs">
+            <button class="chart-tab ${postPerfSort==='engagement'?'active':''}" onclick="setPostPerfSort('engagement')">Engagement</button>
+            <button class="chart-tab ${postPerfSort==='reach'?'active':''}" onclick="setPostPerfSort('reach')">Reach</button>
+            <button class="chart-tab ${postPerfSort==='impressions'?'active':''}" onclick="setPostPerfSort('impressions')">Impressions</button>
+            <button class="chart-tab ${postPerfSort==='date'?'active':''}" onclick="setPostPerfSort('date')">วันที่</button>
+          </div>
+        </div>
+        ${posts.length === 0 && !postPerfData.loading ? `<div class="empty-state">ไม่มีโพสต์ในช่วงนี้</div>` :
+        `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+          ${posts.slice(0,30).map((p,i)=>`
+            <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--bg)">
+              ${p.picture?`<img src="${p.picture}" style="width:100%;height:140px;object-fit:cover;display:block"/>`:`<div style="height:80px;background:var(--bg-soft);display:flex;align-items:center;justify-content:center;color:var(--t2);font-size:12px">${escapeHtmlN(p.mediaType)}</div>`}
+              <div style="padding:12px">
+                <div style="font-size:12.5px;line-height:1.4;color:var(--t1);height:54px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical">${escapeHtmlN(p.message||'(ไม่มีข้อความ)')}</div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0;font-size:11px;color:var(--t2)">
+                  <div><b style="color:var(--t1);display:block;font-size:13px">${fmtNum(p.reach)}</b>Reach</div>
+                  <div><b style="color:var(--t1);display:block;font-size:13px">${fmtNum(p.impressions)}</b>Imp.</div>
+                  <div><b style="color:var(--t1);display:block;font-size:13px">${fmtNum(p.engaged)}</b>Eng.</div>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--t2);border-top:1px solid var(--border);padding-top:8px">
+                  <span>${new Date(p.createdTime).toLocaleDateString('th-TH')}</span>
+                  ${p.permalink?`<a href="${escapeHtmlN(p.permalink)}" target="_blank" rel="noopener" style="color:#1877f2;font-weight:700">เปิดดู →</a>`:''}
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>`}
+      </div>
+    </div>`;
+}
+
+// ============ AD SPEND TRACKER PAGE ============
+async function loadAdSpendData(){
+  if(!adSpendConn.adAccountId || !fbPostState.pageToken){
+    adSpendData.error = 'ยังไม่ได้เชื่อมบัญชีโฆษณา';
+    rerender(); return;
+  }
+  adSpendData.loading = true;
+  adSpendData.error = '';
+  rerender();
+  try {
+    const tok = encodeURIComponent(fbPostState.pageToken);
+    const lvl = adSpendGroupBy; // 'campaign' | 'adset' | 'ad'
+    const fields = 'campaign_id,campaign_name,adset_id,adset_name,ad_id,ad_name,spend,impressions,reach,clicks,ctr,cpc,cpm,actions,objective';
+    const tr = `{'since':'${adSpendRange.since}','until':'${adSpendRange.until}'}`;
+    const url = `https://graph.facebook.com/${FB_API_VERSION}/${adSpendConn.adAccountId}/insights?level=${lvl}&fields=${encodeURIComponent(fields)}&time_range=${encodeURIComponent(tr)}&limit=100&access_token=${tok}`;
+    const r = await fetch(url);
+    const j = await r.json();
+    if(j.error) throw new Error(j.error.message);
+    adSpendData.campaigns = (j.data||[]).map(d => {
+      const purchases = (d.actions||[]).find(a => a.action_type==='purchase' || a.action_type==='offsite_conversion.fb_pixel_purchase');
+      const leads = (d.actions||[]).find(a => a.action_type==='lead' || a.action_type==='onsite_conversion.lead_grouped');
+      return {
+        id: d.campaign_id || d.adset_id || d.ad_id,
+        name: lvl==='campaign'?d.campaign_name:lvl==='adset'?d.adset_name:d.ad_name,
+        objective: d.objective || '',
+        spend: +d.spend || 0,
+        impressions: +d.impressions || 0,
+        reach: +d.reach || 0,
+        clicks: +d.clicks || 0,
+        ctr: +d.ctr || 0,
+        cpc: +d.cpc || 0,
+        cpm: +d.cpm || 0,
+        purchases: purchases ? +purchases.value : 0,
+        leads: leads ? +leads.value : 0,
+      };
+    });
+    // Summary across all rows
+    const sum = adSpendData.campaigns.reduce((s,c)=>({
+      spend: s.spend+c.spend, impressions: s.impressions+c.impressions, reach: s.reach+c.reach,
+      clicks: s.clicks+c.clicks, purchases: s.purchases+c.purchases, leads: s.leads+c.leads,
+    }), {spend:0,impressions:0,reach:0,clicks:0,purchases:0,leads:0});
+    adSpendData.summary = sum;
+    adSpendData.fetchedAt = Date.now();
+  } catch(err){
+    adSpendData.error = err.message;
+  }
+  adSpendData.loading = false;
+  rerender();
+}
+function setAdSpendRange(which, v){ if(which==='since') adSpendRange.since = v; else adSpendRange.until = v; loadAdSpendData(); }
+function setAdSpendGroupBy(g){ adSpendGroupBy = g; loadAdSpendData(); }
+
+function renderAdSpend(el){
+  if(!adSpendConn.enabled){
+    el.innerHTML = topbarSimple('barChart','Ad Spend Tracker','ติดตามงบโฆษณาและ ROAS') + `
+      <div class="page-content" style="max-width:900px"><div class="empty-state">
+        <div style="font-size:48px;margin-bottom:14px">💰</div>
+        <h3 style="margin:0 0 8px">ยังไม่ได้เปิดใช้งาน</h3>
+        <p style="color:var(--t2);margin:0 0 16px">ไปเปิดใช้งานที่หน้าเชื่อมต่อแพลตฟอร์มก่อน</p>
+        <button class="btn-primary" onclick="navigateTo('socialIntegrations')">ไปเปิดใช้งาน →</button>
+      </div></div>`;
+    return;
+  }
+  if(adSpendData.campaigns.length === 0 && !adSpendData.loading && !adSpendData.error){
+    setTimeout(()=>loadAdSpendData(), 50);
+  }
+  const s = adSpendData.summary || {spend:0,impressions:0,reach:0,clicks:0,purchases:0,leads:0};
+  const cur = adSpendConn.currency || 'THB';
+  const fmtMoney = n => n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' ' + cur;
+  const avgCpc = s.clicks > 0 ? s.spend / s.clicks : 0;
+  const avgCpm = s.impressions > 0 ? s.spend / s.impressions * 1000 : 0;
+  const avgCtr = s.impressions > 0 ? s.clicks / s.impressions * 100 : 0;
+  const cpl = s.leads > 0 ? s.spend / s.leads : 0;
+  const cpp = s.purchases > 0 ? s.spend / s.purchases : 0;
+  const sorted = adSpendData.campaigns.slice().sort((a,b)=>b.spend - a.spend);
+  el.innerHTML = topbarSimple('barChart', 'Ad Spend Tracker', `${escapeHtmlN(adSpendConn.adAccountName)} · ${cur}`) + `
+    <div class="page-content" style="max-width:1300px">
+      <div style="display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-bottom:18px;padding:14px;background:var(--bg-soft);border-radius:12px">
+        <div><label style="font-size:11px;color:var(--t2);font-weight:700;display:block;margin-bottom:4px">จาก</label><input type="date" value="${adSpendRange.since}" onchange="setAdSpendRange('since',this.value)" style="padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--t1)"/></div>
+        <div><label style="font-size:11px;color:var(--t2);font-weight:700;display:block;margin-bottom:4px">ถึง</label><input type="date" value="${adSpendRange.until}" onchange="setAdSpendRange('until',this.value)" style="padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--t1)"/></div>
+        <div><label style="font-size:11px;color:var(--t2);font-weight:700;display:block;margin-bottom:4px">แยกตาม</label>
+          <select onchange="setAdSpendGroupBy(this.value)" style="padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--t1)">
+            <option value="campaign" ${adSpendGroupBy==='campaign'?'selected':''}>Campaign</option>
+            <option value="adset" ${adSpendGroupBy==='adset'?'selected':''}>Ad Set</option>
+            <option value="ad" ${adSpendGroupBy==='ad'?'selected':''}>Ad</option>
+          </select>
+        </div>
+        <button class="btn-ghost" onclick="loadAdSpendData()" ${adSpendData.loading?'disabled':''}>${adSpendData.loading?'กำลังโหลด…':'↻ รีเฟรช'}</button>
+        ${adSpendData.fetchedAt?`<span style="font-size:11.5px;color:var(--t2);margin-left:auto">อัปเดต ${new Date(adSpendData.fetchedAt).toLocaleString('th-TH')}</span>`:''}
+      </div>
+      ${adSpendData.error ? `<div style="padding:14px;background:#fee;border:1px solid #fcc;border-radius:10px;color:#c00;margin-bottom:14px">⚠ ${escapeHtmlN(adSpendData.error)}</div>` : ''}
+      <div class="lot-kpi-grid" style="margin-bottom:18px">
+        <div class="lot-kpi sales"><div class="lot-kpi-lbl">ใช้จ่ายรวม</div><div class="lot-kpi-val">${fmtMoney(s.spend)}</div><div class="lot-kpi-sub">${sorted.length} ${adSpendGroupBy}</div></div>
+        <div class="lot-kpi prize"><div class="lot-kpi-lbl">Reach</div><div class="lot-kpi-val">${fmtNum(s.reach)}</div><div class="lot-kpi-sub">${fmtNum(s.impressions)} impressions</div></div>
+        <div class="lot-kpi profit"><div class="lot-kpi-lbl">Clicks</div><div class="lot-kpi-val">${fmtNum(s.clicks)}</div><div class="lot-kpi-sub">${avgCtr.toFixed(2)}% CTR</div></div>
+        <div class="lot-kpi member"><div class="lot-kpi-lbl">CPC เฉลี่ย</div><div class="lot-kpi-val">${fmtMoney(avgCpc)}</div><div class="lot-kpi-sub">CPM ${fmtMoney(avgCpm)}</div></div>
+        <div class="lot-kpi active"><div class="lot-kpi-lbl">Leads</div><div class="lot-kpi-val">${fmtNum(s.leads)}</div><div class="lot-kpi-sub">${s.leads>0?'CPL '+fmtMoney(cpl):'—'}</div></div>
+        <div class="lot-kpi growth"><div class="lot-kpi-lbl">Purchases</div><div class="lot-kpi-val">${fmtNum(s.purchases)}</div><div class="lot-kpi-sub">${s.purchases>0?'ต้นทุน/ซื้อ '+fmtMoney(cpp):'—'}</div></div>
+      </div>
+      <div class="sd-panel">
+        <div class="sd-panel-title">${adSpendGroupBy==='campaign'?'Campaign':adSpendGroupBy==='adset'?'Ad Set':'Ad'} Performance</div>
+        ${sorted.length===0 && !adSpendData.loading ? `<div class="empty-state">ไม่มีข้อมูลในช่วงนี้</div>` :
+        `<div style="overflow-x:auto"><table class="lot-table">
+          <thead><tr><th>ชื่อ</th><th class="num">Spend</th><th class="num">Reach</th><th class="num">Imp.</th><th class="num">Clicks</th><th class="num">CTR</th><th class="num">CPC</th><th class="num">CPM</th><th class="num">Leads</th><th class="num">Purchases</th></tr></thead>
+          <tbody>
+            ${sorted.map(c=>`<tr>
+              <td><b>${escapeHtmlN(c.name||'—')}</b>${c.objective?`<div style="font-size:10.5px;color:var(--t2)">${escapeHtmlN(c.objective)}</div>`:''}</td>
+              <td class="num"><b>${fmtMoney(c.spend)}</b></td>
+              <td class="num">${fmtNum(c.reach)}</td>
+              <td class="num">${fmtNum(c.impressions)}</td>
+              <td class="num">${fmtNum(c.clicks)}</td>
+              <td class="num">${c.ctr.toFixed(2)}%</td>
+              <td class="num">${fmtMoney(c.cpc)}</td>
+              <td class="num">${fmtMoney(c.cpm)}</td>
+              <td class="num">${c.leads||'—'}</td>
+              <td class="num">${c.purchases||'—'}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table></div>`}
+      </div>
+    </div>`;
+}
+
 function renderSocialIntegrations(el){
   const fbConnected = !!(fbPostState.pageId && fbPostState.pageToken);
   // Auto-fetch IG only ONCE per session when FB is connected
@@ -13715,6 +14080,85 @@ function renderSocialIntegrations(el){
             <div class="intg-actions">
               <button class="intg-btn-primary yt" onclick="_intgSaveYouTube()">เชื่อมต่อ YouTube</button>
             </div>
+          `}
+        </div>
+
+        <!-- POST PERFORMANCE -->
+        <div class="intg-card ${postPerfConn.enabled?'connected':''}" style="grid-column:span 2">
+          <div class="intg-hdr">
+            <div class="intg-logo" style="background:linear-gradient(135deg,#ec4899,#f472b6)">📊</div>
+            <div style="flex:1;min-width:0">
+              <div class="intg-name">Post Performance <span class="intg-status ${postPerfConn.enabled?'on':'off'}">${postPerfConn.enabled?'เปิดใช้งาน':'ปิดอยู่'}</span></div>
+              <p class="intg-desc">วิเคราะห์ Reach, Engagement, เวลาโพสต์ที่ดีที่สุด, ประเภทคอนเทนต์ที่ได้ผล (ใช้ FB Page ที่เชื่อมแล้ว)</p>
+            </div>
+          </div>
+          ${!fbConnected ? `
+            <p style="font-size:12px;color:var(--t2);line-height:1.6;background:var(--bg-soft);padding:11px;border-radius:9px;margin:14px 0">⚠ ต้องเชื่อม Facebook Page ก่อน (ด้านบน) แล้วค่อยกลับมาเปิดใช้งาน</p>
+          ` : postPerfConn.enabled ? `
+            <div class="intg-account">
+              <div class="intg-account-thumb" style="background:linear-gradient(135deg,#ec4899,#f472b6)">📊</div>
+              <div class="intg-account-info">
+                <div class="intg-account-name">เปิดใช้งานแล้ว</div>
+                <div class="intg-account-meta">เชื่อมเมื่อ ${postPerfConn.connectedAt?new Date(postPerfConn.connectedAt).toLocaleString('th-TH'):'-'} · ใช้ Page: ${escapeHtmlN(fbPostState.pageName||'')}</div>
+              </div>
+            </div>
+            <div class="intg-actions">
+              <button class="intg-btn-primary" style="background:linear-gradient(135deg,#ec4899,#f472b6)" onclick="navigateTo('postPerformance')">เปิดหน้า Post Performance →</button>
+              <button class="intg-btn-ghost danger" onclick="_intgDisablePostPerf()">ปิดการใช้งาน</button>
+            </div>
+          ` : `
+            <div class="intg-token-help" style="margin:12px 0">
+              <b style="color:var(--t1)">สิ่งที่จะได้:</b> KPI Reach/Impressions/Engagement Rate · จัดอันดับโพสต์ที่ผลดี/ไม่ดี · วิเคราะห์ประเภทคอนเทนต์ที่เวิร์ค · เวลาโพสต์ที่ดีที่สุด
+            </div>
+            <div class="intg-actions">
+              <button class="intg-btn-primary" style="background:linear-gradient(135deg,#ec4899,#f472b6)" onclick="_intgEnablePostPerf()">เปิดใช้งาน Post Performance</button>
+            </div>
+          `}
+        </div>
+
+        <!-- AD SPEND TRACKER -->
+        <div class="intg-card ${adSpendConn.enabled?'connected':''}" style="grid-column:span 2">
+          <div class="intg-hdr">
+            <div class="intg-logo" style="background:linear-gradient(135deg,#10b981,#059669)">💰</div>
+            <div style="flex:1;min-width:0">
+              <div class="intg-name">Ad Spend Tracker <span class="intg-status ${adSpendConn.enabled?'on':'off'}">${adSpendConn.enabled?'เปิดใช้งาน':'ปิดอยู่'}</span></div>
+              <p class="intg-desc">ติดตามงบโฆษณา ROAS CPC CPM · แยกตาม Campaign / Ad Set / Ad</p>
+            </div>
+          </div>
+          ${!fbConnected ? `
+            <p style="font-size:12px;color:var(--t2);line-height:1.6;background:var(--bg-soft);padding:11px;border-radius:9px;margin:14px 0">⚠ ต้องเชื่อม Facebook ก่อน (token ต้องมี ads_read + business_management)</p>
+          ` : adSpendConn.enabled ? `
+            <div class="intg-account">
+              <div class="intg-account-thumb" style="background:linear-gradient(135deg,#10b981,#059669)">💰</div>
+              <div class="intg-account-info">
+                <div class="intg-account-name">${escapeHtmlN(adSpendConn.adAccountName)}</div>
+                <div class="intg-account-meta">${escapeHtmlN(adSpendConn.adAccountId)} · ${escapeHtmlN(adSpendConn.currency)} · เชื่อมเมื่อ ${adSpendConn.connectedAt?new Date(adSpendConn.connectedAt).toLocaleString('th-TH'):'-'}</div>
+              </div>
+            </div>
+            <div class="intg-actions">
+              <button class="intg-btn-primary" style="background:linear-gradient(135deg,#10b981,#059669)" onclick="navigateTo('adSpend')">เปิดหน้า Ad Spend Tracker →</button>
+              <button class="intg-btn-ghost danger" onclick="_intgDisableAdSpend()">ปิดการใช้งาน</button>
+            </div>
+          ` : `
+            ${adSpendConn.accounts && adSpendConn.accounts.length ? `
+              <div style="margin:14px 0">
+                <label style="font-size:12px;font-weight:700;color:var(--t1);display:block;margin-bottom:6px">เลือกบัญชีโฆษณา</label>
+                <select id="intgAdAccSel" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:9px;background:var(--bg);color:var(--t1);font-size:13px">
+                  ${adSpendConn.accounts.map(a => `<option value="${escapeHtmlN(a.id)}">${escapeHtmlN(a.name)} · ${escapeHtmlN(a.account_id)} · ${escapeHtmlN(a.currency||'')}</option>`).join('')}
+                </select>
+              </div>
+              <div class="intg-actions">
+                <button class="intg-btn-primary" style="background:linear-gradient(135deg,#10b981,#059669)" onclick="_intgConnectAdSpend()">เชื่อมต่อบัญชีนี้</button>
+                <button class="intg-btn-ghost" onclick="_intgLoadAdAccounts()">โหลดใหม่</button>
+              </div>
+            ` : `
+              <div class="intg-token-help" style="margin:12px 0">
+                <b style="color:var(--t1)">สิ่งที่จะได้:</b> งบที่ใช้รวม + แยกตาม Campaign/Ad Set/Ad · CPC CPM CTR · จำนวน Leads & Purchases · ต้นทุน/Lead · ต้นทุน/Conversion
+              </div>
+              <div class="intg-actions">
+                <button class="intg-btn-primary" style="background:linear-gradient(135deg,#10b981,#059669)" onclick="_intgLoadAdAccounts()">โหลดบัญชีโฆษณา</button>
+              </div>
+            `}
           `}
         </div>
 
