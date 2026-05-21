@@ -26,9 +26,10 @@
 <!-- Facebook SDK for JavaScript — official OAuth flow -->
 <script>
   // === FB Apps list — admin can switch between them ===
+  // Default app shown in FB OAuth dialog
   window.FB_APPS = [
-    { id: '2353390555153769', label: 'TFL+ App #1', default: true },
-    { id: '1536913581343351', label: 'TFL+ App #2 (สำรอง)' },
+    { id: '1536913581343351', label: 'TFLPlusPage', default: true },
+    { id: '2353390555153769', label: 'Post Manager' },
   ];
   // Select active App ID from localStorage (fallback to default)
   (function pickFbApp(){
