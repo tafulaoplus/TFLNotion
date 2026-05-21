@@ -25,7 +25,20 @@
 <!-- (Firebase scripts removed — app uses Neon Postgres for sync; saves ~280KB) -->
 <!-- Facebook SDK for JavaScript — official OAuth flow -->
 <script>
-  window.FB_APP_ID = '2353390555153769';
+  // === FB Apps list — admin can switch between them ===
+  window.FB_APPS = [
+    { id: '2353390555153769', label: 'TFL+ App #1', default: true },
+    { id: '1536913581343351', label: 'TFL+ App #2 (สำรอง)' },
+  ];
+  // Select active App ID from localStorage (fallback to default)
+  (function pickFbApp(){
+    var saved = null;
+    try { saved = localStorage.getItem('tfl_fb_app_id'); } catch(_){}
+    var match = saved && window.FB_APPS.find(function(a){ return a.id === saved; });
+    var pick = match || window.FB_APPS.find(function(a){ return a.default; }) || window.FB_APPS[0];
+    window.FB_APP_ID = pick.id;
+    window.FB_APP_LABEL = pick.label;
+  })();
   window.fbAsyncInit = function() {
     if(!window.FB || !window.FB_APP_ID) return;
     try {
@@ -3790,6 +3803,34 @@ input:focus-visible{
   .fb-pc-thumb{width:46px;height:46px}
   .fb-pc-name{font-size:14px}
   .fb-pc-select-btn{padding:6px 10px;font-size:11px}
+}
+
+/* FB App Switcher */
+.intg2-fb-app-switcher{
+  margin-top:14px;padding:12px 14px;
+  border-radius:11px;
+  background:linear-gradient(135deg,rgba(24,119,242,.06),rgba(124,58,237,.04));
+  border:1px solid rgba(24,119,242,.15);
+}
+.intg2-fb-app-switcher label{
+  display:block;
+  font-size:11px;font-weight:700;color:var(--t2);
+  text-transform:uppercase;letter-spacing:.4px;
+  margin-bottom:6px;
+}
+.intg2-fb-app-current{
+  text-transform:none;letter-spacing:0;
+  color:#1877f2;font-weight:700;
+}
+.intg2-fb-app-switcher select{
+  width:100%;padding:9px 12px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:8px;color:var(--t1);
+  font-size:12.5px;font-weight:600;font-family:inherit;cursor:pointer;
+}
+.intg2-fb-app-switcher select:focus{
+  outline:none;border-color:#1877f2;
+  box-shadow:0 0 0 3px rgba(24,119,242,.15);
 }
 
 /* Permission test panel */
@@ -17939,11 +17980,22 @@ function _intg2RenderPanelContent(platform, ctx){
           <button class="btn-ghost" onclick="openConnectGuide('facebook')">${I.lightbulb} ${isLo?'ວິທີເຊື່ອມ':'วิธีเชื่อม'}</button>
           <button class="btn-ghost" style="color:#dc2626" onclick="_intgFbLogoutSDK()">${isLo?'ຕັດການເຊື່ອມຕໍ່':'ตัดการเชื่อมต่อ'}</button>
         </div>
+        ${(window.FB_APPS && window.FB_APPS.length > 1) ? `
+          <div class="intg2-fb-app-switcher">
+            <label>${isLo?'Facebook App ທີ່ໃຊ້':'Facebook App ที่ใช้'} <span class="intg2-fb-app-current">${escapeHtmlN(window.FB_APP_LABEL||'')}</span></label>
+            <select onchange="_intgFbSwitchApp(this.value)">
+              ${window.FB_APPS.map(a => `<option value="${escapeHtmlN(a.id)}" ${a.id===window.FB_APP_ID?'selected':''}>${escapeHtmlN(a.label)} · ${a.id.slice(-6)}</option>`).join('')}
+            </select>
+          </div>
+        ` : ''}
         ${testPanelHtml}`;
     }
     // Auto-detect FB login status via SDK
     const sdkReady = typeof window !== 'undefined' && window._fbSdkReady;
     const fbStatus = (typeof window !== 'undefined' ? window._fbLoginStatus : null) || 'pending';
+    const fbApps = window.FB_APPS || [];
+    const currentAppId = window.FB_APP_ID || '';
+    const currentAppLabel = window.FB_APP_LABEL || currentAppId;
     let statusBadge = '';
     let btnLabel;
     if(!sdkReady){
@@ -17990,6 +18042,14 @@ function _intg2RenderPanelContent(platform, ctx){
         ` : ''}
         ${sdkReady ? `<button class="intg2-secondary-link" onclick="_intgFbRecheckStatus()">${isLo?'ກວດສະຖານະໃໝ່':'ตรวจสถานะใหม่'}</button>` : ''}
         <button class="intg2-secondary-link" onclick="_intg2FbConnectFromPanel()">${isLo?'ຫຼື ໃສ່ Access Token ດ້ວຍຕົນເອງ':'หรือใส่ Access Token เอง'}</button>
+        ${fbApps.length > 1 ? `
+          <div class="intg2-fb-app-switcher">
+            <label>${isLo?'Facebook App ທີ່ໃຊ້':'Facebook App ที่ใช้'}</label>
+            <select onchange="_intgFbSwitchApp(this.value)">
+              ${fbApps.map(a => `<option value="${escapeHtmlN(a.id)}" ${a.id===currentAppId?'selected':''}>${escapeHtmlN(a.label)} · ${a.id.slice(-6)}</option>`).join('')}
+            </select>
+          </div>
+        ` : ''}
       </div>
       <div class="intg2-token-input-wrap" id="intg2FbInputWrap" style="display:none">
         <label>${isLo?'ໃສ່ Access Token':'ใส่ Access Token'}</label>
@@ -18308,6 +18368,27 @@ function _intgFbRecheckStatus(){
     window._fbLoginResponse = response;
     rerender();
   }, true /* force = bypass cache */);
+}
+
+// ===== FB App switcher (multiple apps support) =====
+function _intgFbSwitchApp(newAppId){
+  if(!newAppId || newAppId === window.FB_APP_ID) return;
+  if(!confirm('สลับ Facebook App? หน้าเว็บจะรีโหลด — token ปัจจุบันจะใช้ไม่ได้กับ App ใหม่')) return;
+  try { localStorage.setItem('tfl_fb_app_id', newAppId); } catch(_){}
+  // Disconnect current FB session first
+  try {
+    if(window.FB && window._fbSdkReady) FB.logout();
+  } catch(_){}
+  // Clear current FB connection (different app = different tokens)
+  try {
+    fbPostState = { pageId:'', pageName:'', pageToken:'', pages:[] };
+    localStorage.removeItem('tfl_fb_page_id');
+    localStorage.removeItem('tfl_fb_page_name');
+    localStorage.removeItem('tfl_fb_page_token');
+    localStorage.removeItem('tfl_fb_token');
+  } catch(_){}
+  // Reload page so FB SDK re-inits with new App ID
+  setTimeout(() => location.reload(), 300);
 }
 
 // ===== Page Chooser Modal (after FB OAuth — pick which Page to manage) =====
