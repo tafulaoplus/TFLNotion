@@ -3925,6 +3925,209 @@ input:focus-visible{
 .fbhub-video-title{font-size:12.5px;font-weight:700;color:var(--t1);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .fbhub-video-meta{font-size:11px;color:var(--t3);margin-top:4px}
 
+/* Action bar */
+.fbhub-action-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  padding:14px 18px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(24,119,242,.06),rgba(124,58,237,.04));
+  border:1px solid rgba(24,119,242,.15);
+}
+.fbhub-action-title{font-size:14.5px;font-weight:800;color:var(--t1)}
+.fbhub-action-sub{font-size:11.5px;color:var(--t3);margin-top:2px;font-family:monospace}
+
+/* Top performer card */
+.fbhub-top-perf{
+  position:relative;
+  border-radius:18px;overflow:hidden;
+  background:linear-gradient(135deg,#fef3c7 0%,#fbbf24 100%);
+  padding:2px;
+  box-shadow:0 12px 32px rgba(251,191,36,.3);
+}
+[data-theme="dark"] .fbhub-top-perf{
+  background:linear-gradient(135deg,#92400e,#d97706);
+  box-shadow:0 12px 32px rgba(251,191,36,.4);
+}
+.fbhub-top-perf-ribbon{
+  position:absolute;top:14px;left:14px;z-index:2;
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:50px;
+  background:#1f2937;color:#fbbf24;
+  font-size:11.5px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.5px;
+  box-shadow:0 4px 12px rgba(0,0,0,.3);
+}
+.fbhub-top-perf-body{
+  display:grid;grid-template-columns:240px 1fr;gap:0;
+  background:var(--card);border-radius:16px;overflow:hidden;
+  margin:0;
+}
+[data-theme="dark"] .fbhub-top-perf-body{
+  background:linear-gradient(135deg,rgba(28,33,72,.95),rgba(19,23,54,.95));
+}
+.fbhub-top-perf-body img{width:100%;height:100%;object-fit:cover;display:block;min-height:200px}
+.fbhub-top-perf-noimg{
+  width:100%;min-height:200px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#1e1b4b,#3b0764);color:rgba(255,255,255,.4);
+}
+.fbhub-top-perf-noimg svg{width:48px;height:48px}
+.fbhub-top-perf-info{padding:20px 24px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.fbhub-top-perf-msg{
+  font-size:14px;color:var(--t1);line-height:1.5;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
+}
+.fbhub-top-perf-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:10px;
+  padding:12px;border-radius:11px;background:var(--bg-soft);
+}
+.fbhub-top-perf-stats > div{text-align:center}
+.fbhub-top-perf-stats b{
+  display:block;font-size:18px;font-weight:800;color:var(--t1);
+  font-feature-settings:'tnum';
+}
+.fbhub-top-perf-stats span{font-size:10.5px;color:var(--t3);font-weight:600;text-transform:uppercase}
+.fbhub-top-perf-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  font-size:11.5px;color:var(--t3);
+}
+
+/* Post cards (engagement grid) */
+.fbhub-post-cards{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;
+}
+.fbhub-post-card{
+  position:relative;
+  border-radius:14px;overflow:hidden;
+  background:var(--card);border:1px solid var(--border);
+  display:flex;flex-direction:column;
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.fbhub-post-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.1)}
+[data-theme="dark"] .fbhub-post-card{
+  background:linear-gradient(135deg,rgba(28,33,72,.7),rgba(19,23,54,.7));
+  border-color:rgba(167,139,250,.12);
+}
+.fbhub-post-card.best{
+  border:2px solid #fbbf24;
+  box-shadow:0 8px 24px rgba(251,191,36,.25);
+}
+.fbhub-post-card-badge{
+  position:absolute;top:10px;right:10px;z-index:2;
+  background:linear-gradient(135deg,#fbbf24,#d97706);color:#fff;
+  padding:4px 10px;border-radius:50px;
+  font-size:10px;font-weight:800;letter-spacing:.5px;
+  box-shadow:0 4px 12px rgba(251,191,36,.5);
+}
+.fbhub-post-card-img{
+  position:relative;width:100%;aspect-ratio:16/9;
+  background:var(--bg-soft);overflow:hidden;
+}
+.fbhub-post-card-img img{width:100%;height:100%;object-fit:cover;display:block}
+.fbhub-post-card-img.noimg{
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--bg-soft),var(--bg-hover));
+}
+.fbhub-post-card-img.noimg span{
+  color:var(--t3);font-size:13px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.5px;
+}
+.fbhub-post-card-body{padding:14px;display:flex;flex-direction:column;gap:10px;flex:1}
+.fbhub-post-card-msg{
+  font-size:12.5px;color:var(--t1);line-height:1.4;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;flex:1;
+}
+.fbhub-post-card-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(50px,1fr));gap:6px;
+  padding:8px;border-radius:8px;background:var(--bg-soft);
+}
+.fbhub-post-card-stats > div{text-align:center}
+.fbhub-post-card-stats b{
+  display:block;font-size:13px;font-weight:800;color:var(--t1);
+  font-feature-settings:'tnum';
+}
+.fbhub-post-card-stats span{font-size:11px;color:var(--t3);margin-top:2px;display:block}
+.fbhub-post-card-er{
+  font-size:11.5px;color:var(--t2);text-align:center;font-weight:600;
+}
+.fbhub-post-card-er b{color:var(--p600)}
+.fbhub-post-card-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:6px;
+  font-size:10.5px;color:var(--t3);padding-top:8px;border-top:1px solid var(--border);
+}
+.fbhub-post-card-type{
+  background:var(--bg-hover);padding:2px 7px;border-radius:5px;
+  font-weight:700;color:var(--t2);text-transform:capitalize;
+}
+.fbhub-post-card-foot a{color:#1877f2;font-weight:700;text-decoration:none}
+
+/* Campaign cards (Ads tab) */
+.fbhub-camp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.fbhub-camp-card{
+  border-radius:14px;padding:16px;
+  background:var(--card);border:1px solid var(--border);
+  display:flex;flex-direction:column;gap:10px;
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.fbhub-camp-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08)}
+[data-theme="dark"] .fbhub-camp-card{
+  background:linear-gradient(135deg,rgba(28,33,72,.7),rgba(19,23,54,.7));
+  border-color:rgba(167,139,250,.12);
+}
+.fbhub-camp-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.fbhub-camp-name{
+  font-size:14px;font-weight:800;color:var(--t1);line-height:1.3;flex:1;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+}
+.fbhub-camp-status{
+  flex-shrink:0;font-size:10.5px;font-weight:800;
+  padding:3px 9px;border-radius:50px;border:1.5px solid;
+  letter-spacing:.4px;
+}
+.fbhub-camp-obj{font-size:11px;color:var(--t3);font-weight:600}
+.fbhub-camp-metrics{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
+}
+.fbhub-camp-metric{
+  text-align:center;padding:8px 4px;border-radius:8px;
+  background:var(--bg-soft);
+}
+.fbhub-camp-metric.primary{
+  background:linear-gradient(135deg,rgba(16,185,129,.12),rgba(5,150,105,.06));
+  grid-column:span 2;
+}
+.fbhub-camp-metric .l{font-size:9.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
+.fbhub-camp-metric .v{font-size:13px;font-weight:800;color:var(--t1);font-feature-settings:'tnum'}
+.fbhub-camp-metric.primary .v{font-size:16px;color:#10b981}
+.fbhub-camp-actions{display:flex;gap:6px;padding-top:8px;border-top:1px solid var(--border)}
+.fbhub-camp-actions button{flex:1;padding:8px 10px;font-size:11.5px}
+
+/* Video card stats */
+.fbhub-video-card.best{border:2px solid #fbbf24;box-shadow:0 8px 20px rgba(251,191,36,.2);position:relative}
+.fbhub-video-best-badge{
+  position:absolute;top:8px;left:8px;z-index:2;
+  background:linear-gradient(135deg,#fbbf24,#d97706);color:#fff;
+  padding:3px 8px;border-radius:50px;
+  font-size:10px;font-weight:800;letter-spacing:.4px;
+  box-shadow:0 4px 12px rgba(251,191,36,.5);
+}
+.fbhub-video-stats{
+  display:flex;gap:8px;flex-wrap:wrap;
+  padding:6px 0;
+}
+.fbhub-video-stats > div{
+  text-align:center;flex:1;min-width:50px;
+  padding:4px;background:var(--bg-soft);border-radius:6px;
+}
+.fbhub-video-stats b{display:block;font-size:12px;font-weight:800;color:var(--t1);font-feature-settings:'tnum'}
+.fbhub-video-stats span{font-size:9.5px;color:var(--t3);text-transform:uppercase;letter-spacing:.3px}
+
+@media (max-width:768px){
+  .fbhub-top-perf-body{grid-template-columns:1fr}
+  .fbhub-top-perf-body img,.fbhub-top-perf-noimg{aspect-ratio:16/9;min-height:0}
+  .fbhub-camp-metrics{grid-template-columns:repeat(2,1fr)}
+  .fbhub-camp-metric.primary{grid-column:span 2}
+}
+
 /* More grid */
 .fbhub-more-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
 
@@ -5963,6 +6166,49 @@ img,video,iframe,canvas{max-width:100%;height:auto}
 </div>
 
 <!-- LOTTERY DATE RANGE PICKER MODAL -->
+<!-- CREATE FB CAMPAIGN MODAL -->
+<div class="overlay" id="createCampaignModal">
+  <div class="modal" style="width:min(520px,calc(100vw - 32px))">
+    <div class="modal-hd">
+      <div class="modal-title" style="display:flex;align-items:center;gap:10px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877f2"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01z"/></svg>
+        สร้างแคมเปญโฆษณาใหม่
+      </div>
+      <button class="modal-close" onclick="closeModal('createCampaignModal')">×</button>
+    </div>
+    <div class="modal-bd">
+      <div class="lot-fld">
+        <label class="lot-fld-lbl">ชื่อแคมเปญ <span style="color:#ef4444">*</span></label>
+        <input type="text" id="fCampName" placeholder="เช่น Summer Sale 2026 - หวยพัฒนา" maxlength="100"/>
+        <div style="font-size:11px;color:var(--t2);margin-top:4px">สูงสุด 100 ตัวอักษร</div>
+      </div>
+      <div class="lot-fld">
+        <label class="lot-fld-lbl">วัตถุประสงค์</label>
+        <select id="fCampObjective" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:9px;background:var(--bg);color:var(--t1);font-size:13px;font-family:inherit">
+          <option value="OUTCOME_AWARENESS">Awareness · เพิ่มการรับรู้แบรนด์</option>
+          <option value="OUTCOME_TRAFFIC">Traffic · เพิ่มทราฟฟิกเข้าเว็บ</option>
+          <option value="OUTCOME_ENGAGEMENT" selected>Engagement · เพิ่ม engagement บนโพสต์</option>
+          <option value="OUTCOME_LEADS">Leads · เก็บข้อมูลลูกค้าเป้าหมาย</option>
+          <option value="OUTCOME_APP_PROMOTION">App Promotion · โปรโมตแอพ</option>
+          <option value="OUTCOME_SALES">Sales · เพิ่มยอดขาย/Conversions</option>
+        </select>
+      </div>
+      <div class="lot-fld">
+        <label class="lot-fld-lbl">งบประมาณรายวัน (THB) <span style="color:#ef4444">*</span></label>
+        <input type="number" id="fCampBudget" min="1" step="1" placeholder="100" value="100"/>
+        <div style="font-size:11px;color:var(--t2);margin-top:4px">FB จะใช้ไม่เกินจำนวนนี้ต่อวัน</div>
+      </div>
+      <div style="padding:12px 14px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:10px;font-size:12px;color:var(--t2);line-height:1.5">
+        <b style="color:#d97706">⚠ หมายเหตุ:</b> แคมเปญจะถูกสร้างในสถานะ <b>PAUSED (พัก)</b> เพื่อความปลอดภัย — คุณต้องสร้าง <b>Ad Set + Ad creative</b> แยกก่อน activate เพราะ FB ต้องการเป้าหมาย + creative ครบถึงจะเริ่ม serve ได้
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="sm-btn-cancel" onclick="closeModal('createCampaignModal')">ยกเลิก</button>
+      <button class="btn-primary" style="background:linear-gradient(135deg,#10b981,#047857)" onclick="submitCreateCampaign()">สร้างแคมเปญ</button>
+    </div>
+  </div>
+</div>
+
 <div class="overlay" id="lotDatePickerModal">
   <div class="modal" style="width:min(440px,calc(100vw - 32px))">
     <div class="modal-hd">
@@ -18683,10 +18929,12 @@ async function loadFbHubOverview(){
   const tok = encodeURIComponent(fbPostState.pageToken);
   const pid = fbPostState.pageId;
   const base = `https://graph.facebook.com/${FB_API_VERSION}`;
+  // Fetch up to 50 posts with insights for full analysis (not just 6)
+  const postFields = 'id,message,story,created_time,permalink_url,full_picture,attachments{media_type,type},shares,likes.summary(true).limit(0),comments.summary(true).limit(0),reactions.summary(true).limit(0)';
   const [info, insights, posts, ads, businesses] = await Promise.all([
     _fbHubCall('pageInfo', `${base}/${pid}?fields=id,name,about,category,website,fan_count,followers_count,picture,cover,phone,emails,location,verification_status&access_token=${tok}`),
     _fbHubCall('insights', `${base}/${pid}/insights?metric=page_impressions,page_engaged_users,page_fan_adds,page_views_total,page_post_engagements&period=day&access_token=${tok}`),
-    _fbHubCall('posts', `${base}/${pid}/posts?fields=id,message,created_time,permalink_url,full_picture,shares,likes.summary(true).limit(0),comments.summary(true).limit(0),reactions.summary(true).limit(0)&limit=6&access_token=${tok}`),
+    _fbHubCall('posts', `${base}/${pid}/posts?fields=${encodeURIComponent(postFields)}&limit=50&access_token=${tok}`),
     _fbHubCall('adAccounts', `${base}/me/adaccounts?fields=id,name,currency,account_status,balance,spend_cap&limit=5&access_token=${tok}`),
     _fbHubCall('businesses', `${base}/me/businesses?fields=id,name,verification_status&limit=5&access_token=${tok}`),
   ]);
@@ -18695,6 +18943,20 @@ async function loadFbHubOverview(){
   fbHubData.posts = posts;
   fbHubData.adAccounts = ads;
   fbHubData.businesses = businesses;
+  // Fetch insights for each post (impressions, reach) in parallel
+  if(posts?.data?.length){
+    const insArr = await Promise.allSettled(posts.data.map(p =>
+      fetch(`${base}/${p.id}/insights?metric=post_impressions,post_impressions_unique&access_token=${tok}`).then(r=>r.json())
+    ));
+    fbHubData.postInsights = {};
+    insArr.forEach((res, idx) => {
+      if(res.status==='fulfilled' && res.value && !res.value.error){
+        const ins = {};
+        (res.value.data||[]).forEach(m => { ins[m.name] = m.values?.[0]?.value || 0; });
+        fbHubData.postInsights[posts.data[idx].id] = ins;
+      }
+    });
+  }
   fbHubData.lastFetch = Date.now();
   rerender();
 }
@@ -18714,19 +18976,39 @@ async function loadFbHubTab(tab){
     if(!fbHubData.adAccounts) await loadFbHubOverview();
     const acct = fbHubData.adAccounts?.data?.[0];
     if(acct){
-      const j = await _fbHubCall('ads', `${base}/${acct.id}/campaigns?fields=id,name,status,objective,daily_budget,lifetime_budget,start_time,stop_time&limit=10&access_token=${tok}`);
-      fbHubData.ads = j;
+      // Fetch campaigns + insights in parallel
+      const [cmps, insights] = await Promise.all([
+        _fbHubCall('ads', `${base}/${acct.id}/campaigns?fields=id,name,status,objective,daily_budget,lifetime_budget,start_time,stop_time&limit=20&access_token=${tok}`),
+        _fbHubCall('adInsights', `${base}/${acct.id}/insights?level=campaign&fields=campaign_id,campaign_name,spend,impressions,reach,clicks,ctr,cpc,cpm,actions,date_start,date_stop&time_range=${encodeURIComponent("{'since':'2025-01-01','until':'2026-12-31'}")}&limit=50&access_token=${tok}`),
+      ]);
+      fbHubData.ads = cmps;
+      fbHubData.adInsights = insights;
+      fbHubData.adAccountActive = acct;
     }
   } else if(tab === 'commerce'){
     const j = await _fbHubCall('catalogs', `${base}/me/businesses?fields=owned_product_catalogs{id,name,product_count,vertical}&limit=5&access_token=${tok}`);
     fbHubData.catalogs = j;
   } else if(tab === 'videos'){
     const [vids, lives] = await Promise.all([
-      _fbHubCall('videos', `${base}/${pid}/videos?fields=id,title,description,length,created_time,thumbnails{uri},source,permalink_url&limit=8&access_token=${tok}`),
-      _fbHubCall('liveVideos', `${base}/${pid}/live_videos?fields=id,title,description,permalink_url,broadcast_start_time,broadcast_end_time,status,live_views&limit=5&access_token=${tok}`),
+      _fbHubCall('videos', `${base}/${pid}/videos?fields=id,title,description,length,created_time,thumbnails{uri},source,permalink_url&limit=30&access_token=${tok}`),
+      _fbHubCall('liveVideos', `${base}/${pid}/live_videos?fields=id,title,description,permalink_url,broadcast_start_time,broadcast_end_time,status,live_views&limit=10&access_token=${tok}`),
     ]);
     fbHubData.videos = vids;
     fbHubData.liveVideos = lives;
+    // Fetch video insights (views, reach) in parallel
+    if(vids?.data?.length){
+      const insArr = await Promise.allSettled(vids.data.map(v =>
+        fetch(`${base}/${v.id}/video_insights?metric=total_video_views,total_video_impressions,total_video_complete_views,total_video_avg_time_watched&access_token=${tok}`).then(r=>r.json())
+      ));
+      fbHubData.videoInsights = {};
+      insArr.forEach((res, idx) => {
+        if(res.status==='fulfilled' && res.value && !res.value.error){
+          const ins = {};
+          (res.value.data||[]).forEach(m => { ins[m.name] = m.values?.[0]?.value || 0; });
+          fbHubData.videoInsights[vids.data[idx].id] = ins;
+        }
+      });
+    }
   } else if(tab === 'engagement'){
     const j = await _fbHubCall('comments', `${base}/${pid}/posts?fields=id,message,created_time,comments.limit(5){id,message,from,created_time,like_count}&limit=5&access_token=${tok}`);
     fbHubData.comments = j;
@@ -18982,33 +19264,133 @@ function _renderFbHubOverview(isLo){
 }
 
 function _renderFbHubPosts(isLo){
-  const posts = fbHubData.posts?.data || [];
+  const posts = (fbHubData.posts?.data || []).map(p => {
+    const reactions = p.reactions?.summary?.total_count || 0;
+    const comments = p.comments?.summary?.total_count || 0;
+    const shares = p.shares?.count || 0;
+    const ins = (fbHubData.postInsights||{})[p.id] || {};
+    const impressions = ins.post_impressions || 0;
+    const reach = ins.post_impressions_unique || 0;
+    const engagement = reactions + comments + shares;
+    const engRate = reach > 0 ? (engagement / reach * 100) : 0;
+    const mediaType = p.attachments?.data?.[0]?.media_type || 'text';
+    return { ...p, reactions, comments, shares, impressions, reach, engagement, engRate, mediaType };
+  });
+
+  // Aggregate stats
+  const totalEng = posts.reduce((s,p)=>s+p.engagement, 0);
+  const totalReach = posts.reduce((s,p)=>s+p.reach, 0);
+  const totalImp = posts.reduce((s,p)=>s+p.impressions, 0);
+  const avgEng = posts.length ? Math.round(totalEng/posts.length) : 0;
+  const avgER = totalReach > 0 ? (totalEng/totalReach*100) : 0;
+
+  // Top performers
+  const topByEng = posts.slice().sort((a,b) => b.engagement - a.engagement)[0];
+  const topByReach = posts.slice().sort((a,b) => b.reach - a.reach)[0];
+  const topByER = posts.filter(p => p.reach >= 10).sort((a,b) => b.engRate - a.engRate)[0];
+
+  // Sort by engagement desc by default
+  const sorted = posts.slice().sort((a,b) => b.engagement - a.engagement);
+
+  // Media type breakdown
+  const typeBreak = {};
+  posts.forEach(p => { typeBreak[p.mediaType] = (typeBreak[p.mediaType]||0) + p.engagement; });
+  const topType = Object.entries(typeBreak).sort((a,b)=>b[1]-a[1])[0];
+
   return `
+    <!-- Summary KPIs -->
+    <div class="fbhub-kpi-grid">
+      <div class="fbhub-kpi" style="--c1:#3b82f6;--c2:#1d4ed8">
+        <div class="fbhub-kpi-ic">${I.document}</div>
+        <div class="fbhub-kpi-lbl">${isLo?'ໂພສທັງໝົດ':'โพสต์ทั้งหมด'}</div>
+        <div class="fbhub-kpi-val">${posts.length}</div>
+        <div class="fbhub-kpi-sub">${isLo?'ໃນຊ່ວງຫຼ້າສຸດ':'ในช่วงล่าสุด'}</div>
+      </div>
+      <div class="fbhub-kpi" style="--c1:#ec4899;--c2:#be185d">
+        <div class="fbhub-kpi-ic">${I.heart}</div>
+        <div class="fbhub-kpi-lbl">Engagement</div>
+        <div class="fbhub-kpi-val">${fmtNum(totalEng)}</div>
+        <div class="fbhub-kpi-sub">${avgEng} ${isLo?'ຕໍ່ໂພສ':'ต่อโพสต์'} · ${avgER.toFixed(1)}% ER</div>
+      </div>
+      <div class="fbhub-kpi" style="--c1:#10b981;--c2:#047857">
+        <div class="fbhub-kpi-ic">${I.eye}</div>
+        <div class="fbhub-kpi-lbl">Reach</div>
+        <div class="fbhub-kpi-val">${fmtNum(totalReach)}</div>
+        <div class="fbhub-kpi-sub">${fmtNum(totalImp)} impressions</div>
+      </div>
+      <div class="fbhub-kpi" style="--c1:#f59e0b;--c2:#d97706">
+        <div class="fbhub-kpi-ic">${I.trophy||I.star}</div>
+        <div class="fbhub-kpi-lbl">${isLo?'ປະເພດທີ່ດີສຸດ':'ประเภทที่เด่นสุด'}</div>
+        <div class="fbhub-kpi-val" style="font-size:18px;text-transform:capitalize">${topType?escapeHtmlN(topType[0]):'—'}</div>
+        <div class="fbhub-kpi-sub">${topType?fmtNum(topType[1])+' engagement':''}</div>
+      </div>
+    </div>
+
+    <!-- Top performer highlight -->
+    ${topByEng ? `
+      <div class="fbhub-top-perf">
+        <div class="fbhub-top-perf-ribbon">${I.trophy||I.star} ${isLo?'ໂພສທີ່ດີສຸດ':'โพสต์ที่เด่นที่สุด'}</div>
+        <div class="fbhub-top-perf-body">
+          ${topByEng.full_picture ? `<img src="${escapeHtmlN(topByEng.full_picture)}" alt=""/>` : `<div class="fbhub-top-perf-noimg">${I.document}</div>`}
+          <div class="fbhub-top-perf-info">
+            <div class="fbhub-top-perf-msg">${escapeHtmlN((topByEng.message||'(ไม่มีข้อความ)').slice(0,200))}</div>
+            <div class="fbhub-top-perf-stats">
+              <div><b>${fmtNum(topByEng.engagement)}</b><span>Engagement</span></div>
+              <div><b>${fmtNum(topByEng.reactions)}</b><span>Reactions</span></div>
+              <div><b>${fmtNum(topByEng.comments)}</b><span>Comments</span></div>
+              <div><b>${fmtNum(topByEng.shares)}</b><span>Shares</span></div>
+              ${topByEng.reach>0?`<div><b>${fmtNum(topByEng.reach)}</b><span>Reach</span></div>`:''}
+              ${topByEng.engRate>0?`<div><b>${topByEng.engRate.toFixed(2)}%</b><span>ER</span></div>`:''}
+            </div>
+            <div class="fbhub-top-perf-foot">
+              <span>${new Date(topByEng.created_time).toLocaleString('th-TH')}</span>
+              ${topByEng.permalink_url ? `<a href="${escapeHtmlN(topByEng.permalink_url)}" target="_blank" class="btn-primary" style="background:linear-gradient(135deg,#1877f2,#0d65d9);padding:8px 16px;font-size:12px">${I.externalLink} ${isLo?'ເບິ່ງ':'ดู'}</a>` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+    ` : ''}
+
+    <!-- Action toolbar -->
+    <div class="fbhub-action-bar">
+      <div>
+        <div class="fbhub-action-title">${isLo?'ຈັດການ & ສ້າງໂພສ':'จัดการ & สร้างโพสต์'}</div>
+        <div class="fbhub-action-sub">pages_manage_posts + publish_video</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-primary" onclick="navigateTo('fbPosts')">${I.plus} ${isLo?'ສ້າງໂພສໃໝ່':'สร้างโพสต์ใหม่'}</button>
+        <button class="btn-ghost" onclick="loadFbHubOverview()">${I.refresh} ${isLo?'ໂຫຼດໃໝ່':'รีโหลด'}</button>
+      </div>
+    </div>
+
+    <!-- All posts card grid -->
     <div class="dash2-card">
       <div class="dash2-card-hd">
         <div>
-          <div class="dash2-card-title">${isLo?'ໂພສຫຼ້າສຸດ':'โพสต์ล่าสุด'}</div>
-          <div class="dash2-card-sub">${posts.length} ${isLo?'ໂພສ':'โพสต์'} · pages_manage_posts + pages_read_engagement</div>
+          <div class="dash2-card-title">${isLo?'ໂພສທັງໝົດ':'โพสต์ทั้งหมด'} (${posts.length})</div>
+          <div class="dash2-card-sub">${isLo?'ຈັດລຽງຕາມ engagement':'เรียงตาม engagement สูง→ต่ำ'}</div>
         </div>
-        <button class="btn-primary" onclick="navigateTo('fbPosts')">${I.plus} ${isLo?'ສ້າງໂພສ':'สร้างโพสต์'}</button>
       </div>
       ${posts.length === 0 ? `<div class="empty-state">${isLo?'ບໍ່ມີໂພສ':'ไม่มีโพสต์'}</div>` :
-      `<div class="fbhub-post-list">
-        ${posts.map(p => {
-          const likes = p.likes?.summary?.total_count || 0;
-          const comments = p.comments?.summary?.total_count || 0;
-          const shares = p.shares?.count || 0;
-          const reactions = p.reactions?.summary?.total_count || 0;
-          return `<div class="fbhub-post-full">
-            ${p.full_picture ? `<img src="${escapeHtmlN(p.full_picture)}" alt=""/>` : ''}
-            <div class="fbhub-post-full-body">
-              <div class="fbhub-post-full-msg">${escapeHtmlN(p.message||'(ไม่มีข้อความ)')}</div>
-              <div class="fbhub-post-full-stats">
-                <span>❤ ${reactions}</span>
-                <span>💬 ${comments}</span>
-                <span>↗ ${shares}</span>
-                <span style="margin-left:auto">${new Date(p.created_time).toLocaleString('th-TH')}</span>
-                ${p.permalink_url ? `<a href="${escapeHtmlN(p.permalink_url)}" target="_blank" style="color:#1877f2;font-weight:700">${I.externalLink}</a>` : ''}
+      `<div class="fbhub-post-cards">
+        ${sorted.map((p, idx) => {
+          const isBest = idx === 0;
+          return `<div class="fbhub-post-card ${isBest?'best':''}">
+            ${isBest ? `<div class="fbhub-post-card-badge">${I.trophy||'★'} ${isLo?'ດີສຸດ':'TOP'}</div>` : ''}
+            ${p.full_picture ? `<div class="fbhub-post-card-img"><img src="${escapeHtmlN(p.full_picture)}" alt=""/></div>` : `<div class="fbhub-post-card-img noimg"><span>${escapeHtmlN(p.mediaType)}</span></div>`}
+            <div class="fbhub-post-card-body">
+              <div class="fbhub-post-card-msg">${escapeHtmlN((p.message||'(ไม่มีข้อความ)').slice(0,140))}</div>
+              <div class="fbhub-post-card-stats">
+                <div title="Reactions"><b>${fmtNum(p.reactions)}</b><span>❤</span></div>
+                <div title="Comments"><b>${fmtNum(p.comments)}</b><span>💬</span></div>
+                <div title="Shares"><b>${fmtNum(p.shares)}</b><span>↗</span></div>
+                ${p.reach>0?`<div title="Reach"><b>${fmtNum(p.reach)}</b><span>${isLo?'ເຂົ້າເຖິງ':'Reach'}</span></div>`:''}
+              </div>
+              ${p.engRate>0?`<div class="fbhub-post-card-er">ER: <b>${p.engRate.toFixed(2)}%</b></div>`:''}
+              <div class="fbhub-post-card-foot">
+                <span class="fbhub-post-card-type">${escapeHtmlN(p.mediaType)}</span>
+                <span>${new Date(p.created_time).toLocaleDateString('th-TH',{month:'short',day:'numeric',year:'2-digit'})}</span>
+                ${p.permalink_url ? `<a href="${escapeHtmlN(p.permalink_url)}" target="_blank">${I.externalLink}</a>` : ''}
               </div>
             </div>
           </div>`;
@@ -19099,66 +19481,334 @@ function _renderFbHubLeads(isLo){
 
 function _renderFbHubAds(isLo){
   const campaigns = fbHubData.ads?.data || [];
+  const insights = fbHubData.adInsights?.data || [];
+  const insMap = {};
+  insights.forEach(i => { insMap[i.campaign_id] = i; });
+  const acct = fbHubData.adAccountActive;
+  const currency = acct?.currency || 'THB';
+  const fmtMoney = n => Math.round(+n||0).toLocaleString() + ' ' + currency;
+
+  // Aggregate totals
+  const totalSpend = insights.reduce((s,i)=>s+(+i.spend||0), 0);
+  const totalImp = insights.reduce((s,i)=>s+(+i.impressions||0), 0);
+  const totalReach = insights.reduce((s,i)=>s+(+i.reach||0), 0);
+  const totalClicks = insights.reduce((s,i)=>s+(+i.clicks||0), 0);
+  const avgCtr = totalImp ? (totalClicks/totalImp*100) : 0;
+  const avgCpc = totalClicks ? (totalSpend/totalClicks) : 0;
+  const avgCpm = totalImp ? (totalSpend/totalImp*1000) : 0;
+
+  // Aggregate conversions across all campaigns
+  let totalPurchases = 0, totalLeads = 0;
+  insights.forEach(i => {
+    (i.actions||[]).forEach(a => {
+      if(a.action_type === 'purchase' || a.action_type === 'offsite_conversion.fb_pixel_purchase') totalPurchases += +a.value || 0;
+      if(a.action_type === 'lead' || a.action_type === 'onsite_conversion.lead_grouped') totalLeads += +a.value || 0;
+    });
+  });
+
+  // Sort campaigns by spend desc
+  const enriched = campaigns.map(c => ({
+    ...c,
+    insight: insMap[c.id] || null,
+  })).sort((a,b) => (+(b.insight?.spend||0)) - (+(a.insight?.spend||0)));
+
   return `
+    <!-- Overview KPIs -->
+    <div class="fbhub-kpi-grid">
+      <div class="fbhub-kpi" style="--c1:#10b981;--c2:#047857">
+        <div class="fbhub-kpi-ic">${I.dollarBig}</div>
+        <div class="fbhub-kpi-lbl">${isLo?'ໃຊ້ຈ່າຍລວມ':'ใช้จ่ายรวม'}</div>
+        <div class="fbhub-kpi-val">${fmtMoney(totalSpend)}</div>
+        <div class="fbhub-kpi-sub">${campaigns.length} ${isLo?'ແຄມເປນ':'แคมเปญ'}</div>
+      </div>
+      <div class="fbhub-kpi" style="--c1:#3b82f6;--c2:#1d4ed8">
+        <div class="fbhub-kpi-ic">${I.eye}</div>
+        <div class="fbhub-kpi-lbl">Impressions</div>
+        <div class="fbhub-kpi-val">${fmtNum(totalImp)}</div>
+        <div class="fbhub-kpi-sub">Reach ${fmtNum(totalReach)}</div>
+      </div>
+      <div class="fbhub-kpi" style="--c1:#a78bfa;--c2:#7c3aed">
+        <div class="fbhub-kpi-ic">${I.target}</div>
+        <div class="fbhub-kpi-lbl">Clicks · CTR</div>
+        <div class="fbhub-kpi-val">${fmtNum(totalClicks)}</div>
+        <div class="fbhub-kpi-sub">${avgCtr.toFixed(2)}% CTR · ${fmtMoney(avgCpc)} CPC</div>
+      </div>
+      <div class="fbhub-kpi" style="--c1:#ec4899;--c2:#be185d">
+        <div class="fbhub-kpi-ic">${I.gift}</div>
+        <div class="fbhub-kpi-lbl">${isLo?'Conversions':'Conversions'}</div>
+        <div class="fbhub-kpi-val">${totalPurchases + totalLeads}</div>
+        <div class="fbhub-kpi-sub">${totalPurchases} ${isLo?'ຊື້':'ซื้อ'} · ${totalLeads} leads</div>
+      </div>
+    </div>
+
+    <!-- Action toolbar -->
+    <div class="fbhub-action-bar">
+      <div>
+        <div class="fbhub-action-title">${isLo?'ສ້າງ & ຈັດການໂຄສະນາ':'สร้าง & จัดการโฆษณา'}</div>
+        <div class="fbhub-action-sub">Marketing API · ${acct?escapeHtmlN(acct.name):'ไม่มีบัญชี'}</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-primary" style="background:linear-gradient(135deg,#10b981,#047857)" onclick="openCreateCampaignModal()">${I.plus} ${isLo?'ສ້າງແຄມເປນໃໝ່':'สร้างแคมเปญใหม่'}</button>
+        <button class="btn-ghost" onclick="loadFbHubTab('ads')">${I.refresh} ${isLo?'ໂຫຼດໃໝ່':'รีโหลด'}</button>
+        <a class="btn-ghost" onclick="navigateTo('adSpend')">${isLo?'ໄປໜ້າ Ad Spend':'ไปหน้า Ad Spend'} →</a>
+      </div>
+    </div>
+
+    <!-- Campaign cards with metrics -->
     <div class="dash2-card">
       <div class="dash2-card-hd">
         <div>
-          <div class="dash2-card-title">${isLo?'ແຄມເປນໂຄສະນາ':'แคมเปญโฆษณา'}</div>
-          <div class="dash2-card-sub">ads_read + ads_management + pages_manage_ads</div>
+          <div class="dash2-card-title">${isLo?'ແຄມເປນທັງໝົດ':'แคมเปญทั้งหมด'}</div>
+          <div class="dash2-card-sub">${isLo?'ຈັດລຽງຕາມງົບໃຊ້ຈ່າຍ':'เรียงตามงบที่ใช้'}</div>
         </div>
-        <a class="btn-ghost" onclick="navigateTo('adSpend')">${isLo?'ໄປໜ້າ Ad Spend':'ไปหน้า Ad Spend'} →</a>
       </div>
       ${fbHubData.loading.ads ? `<div class="empty-state">${isLo?'ກຳລັງໂຫຼດ':'กำลังโหลด'}…</div>` :
-      campaigns.length === 0 ? `<div class="empty-state">${isLo?'ບໍ່ມີແຄມເປນ':'ไม่มีแคมเปญ'}</div>` :
-      `<div class="fbhub-list">
-        ${campaigns.map(c => `<div class="fbhub-list-row">
-          <div class="fbhub-list-ic" style="background:linear-gradient(135deg,#10b981,#047857)">${I.dollarBig}</div>
-          <div class="fbhub-list-body">
-            <div class="fbhub-list-name">${escapeHtmlN(c.name)}</div>
-            <div class="fbhub-list-meta">${escapeHtmlN(c.objective||'')} · ${c.status}${c.daily_budget?` · Daily ฿${(c.daily_budget/100).toFixed(2)}`:''}</div>
-          </div>
-        </div>`).join('')}
+      enriched.length === 0 ? `<div class="empty-state">${isLo?'ບໍ່ມີແຄມເປນ — ກົດປຸ່ມ "ສ້າງແຄມເປນໃໝ່"':'ไม่มีแคมเปญ — กดปุ่ม "สร้างแคมเปญใหม่"'}</div>` :
+      `<div class="fbhub-camp-grid">
+        ${enriched.map(c => {
+          const i = c.insight;
+          const spend = +(i?.spend)||0;
+          const imp = +(i?.impressions)||0;
+          const reach = +(i?.reach)||0;
+          const clicks = +(i?.clicks)||0;
+          const ctr = +(i?.ctr)||0;
+          const cpc = +(i?.cpc)||0;
+          const cpm = +(i?.cpm)||0;
+          const status = c.status;
+          const statusColor = status === 'ACTIVE' ? '#10b981' : status === 'PAUSED' ? '#f59e0b' : '#6b7280';
+          return `<div class="fbhub-camp-card">
+            <div class="fbhub-camp-hd">
+              <div class="fbhub-camp-name">${escapeHtmlN(c.name)}</div>
+              <span class="fbhub-camp-status" style="color:${statusColor};border-color:${statusColor}33">${status}</span>
+            </div>
+            <div class="fbhub-camp-obj">${escapeHtmlN(c.objective||'')}</div>
+            <div class="fbhub-camp-metrics">
+              <div class="fbhub-camp-metric primary">
+                <div class="l">${isLo?'ໃຊ້ຈ່າຍ':'Spend'}</div>
+                <div class="v">${fmtMoney(spend)}</div>
+              </div>
+              <div class="fbhub-camp-metric">
+                <div class="l">Reach</div>
+                <div class="v">${fmtNum(reach)}</div>
+              </div>
+              <div class="fbhub-camp-metric">
+                <div class="l">Imp.</div>
+                <div class="v">${fmtNum(imp)}</div>
+              </div>
+              <div class="fbhub-camp-metric">
+                <div class="l">Clicks</div>
+                <div class="v">${fmtNum(clicks)}</div>
+              </div>
+              <div class="fbhub-camp-metric">
+                <div class="l">CTR</div>
+                <div class="v">${ctr.toFixed(2)}%</div>
+              </div>
+              <div class="fbhub-camp-metric">
+                <div class="l">CPC</div>
+                <div class="v">${cpc>0?fmtMoney(cpc):'—'}</div>
+              </div>
+              <div class="fbhub-camp-metric">
+                <div class="l">CPM</div>
+                <div class="v">${cpm>0?fmtMoney(cpm):'—'}</div>
+              </div>
+              ${c.daily_budget?`<div class="fbhub-camp-metric">
+                <div class="l">${isLo?'ງົບ/ມື້':'งบ/วัน'}</div>
+                <div class="v">${fmtMoney(c.daily_budget/100)}</div>
+              </div>`:''}
+            </div>
+            <div class="fbhub-camp-actions">
+              ${status === 'ACTIVE' ?
+                `<button class="btn-ghost" onclick="_fbHubToggleCampaign('${escapeHtmlN(c.id)}','PAUSED')">${isLo?'⏸ ຢຸດຊົ່ວຄາວ':'⏸ พัก'}</button>` :
+                `<button class="btn-ghost" onclick="_fbHubToggleCampaign('${escapeHtmlN(c.id)}','ACTIVE')">${isLo?'▶ ເລີ່ມໃໝ່':'▶ เริ่มใหม่'}</button>`}
+              <button class="btn-ghost danger" onclick="_fbHubDeleteCampaign('${escapeHtmlN(c.id)}','${escapeHtmlN(c.name)}')">${isLo?'ລຶບ':'ลบ'}</button>
+            </div>
+          </div>`;
+        }).join('')}
       </div>`}
     </div>`;
 }
 
+async function _fbHubToggleCampaign(id, newStatus){
+  if(!fbPostState.pageToken){ alert('ต้องเชื่อม FB'); return; }
+  if(!confirm(`เปลี่ยนสถานะแคมเปญเป็น ${newStatus}?`)) return;
+  try {
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${id}?status=${newStatus}&access_token=${encodeURIComponent(fbPostState.pageToken)}`, { method:'POST' });
+    const j = await r.json();
+    if(j.error) throw new Error(j.error.message);
+    alert('สำเร็จ');
+    loadFbHubTab('ads');
+  } catch(e){ alert('ผิดพลาด: ' + e.message); }
+}
+async function _fbHubDeleteCampaign(id, name){
+  if(!confirm(`ลบแคมเปญ "${name}"? — การกระทำนี้ย้อนกลับไม่ได้`)) return;
+  try {
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${id}?access_token=${encodeURIComponent(fbPostState.pageToken)}`, { method:'DELETE' });
+    const j = await r.json();
+    if(j.error) throw new Error(j.error.message);
+    alert('ลบสำเร็จ');
+    loadFbHubTab('ads');
+  } catch(e){ alert('ผิดพลาด: ' + e.message); }
+}
+
+// Create Campaign modal
+function openCreateCampaignModal(){
+  const acct = fbHubData.adAccountActive;
+  if(!acct){ alert('ไม่พบบัญชีโฆษณา — กรุณาโหลด tab Ads อีกครั้ง'); return; }
+  document.getElementById('createCampaignModal').classList.add('show');
+}
+async function submitCreateCampaign(){
+  const name = document.getElementById('fCampName').value.trim();
+  const objective = document.getElementById('fCampObjective').value;
+  const dailyBudget = parseFloat(document.getElementById('fCampBudget').value);
+  if(!name){ alert('ระบุชื่อแคมเปญ'); return; }
+  if(!dailyBudget || dailyBudget < 1){ alert('ระบุงบรายวัน (ขั้นต่ำ 1)'); return; }
+  const acct = fbHubData.adAccountActive;
+  if(!acct){ alert('ไม่พบบัญชีโฆษณา'); return; }
+  try {
+    const body = new URLSearchParams({
+      name,
+      objective,
+      status: 'PAUSED', // safer default — admin can activate after
+      daily_budget: String(Math.round(dailyBudget * 100)), // FB API uses cents/smallest currency unit
+      special_ad_categories: '[]',
+      access_token: fbPostState.pageToken,
+    });
+    const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${acct.id}/campaigns`, {
+      method: 'POST',
+      body,
+    });
+    const j = await r.json();
+    if(j.error) throw new Error(j.error.message);
+    alert(`สร้างแคมเปญสำเร็จ! ID: ${j.id}\n\nสถานะ: PAUSED (พัก) — กดปุ่ม "▶ เริ่มใหม่" เพื่อ activate`);
+    closeModal('createCampaignModal');
+    document.getElementById('fCampName').value = '';
+    document.getElementById('fCampBudget').value = '';
+    loadFbHubTab('ads');
+  } catch(e){
+    alert('สร้างแคมเปญไม่สำเร็จ: ' + e.message);
+  }
+}
+
 function _renderFbHubVideos(isLo){
-  const vids = fbHubData.videos?.data || [];
+  const vids = (fbHubData.videos?.data || []).map(v => {
+    const ins = (fbHubData.videoInsights||{})[v.id] || {};
+    const views = ins.total_video_views || 0;
+    const impressions = ins.total_video_impressions || 0;
+    const completes = ins.total_video_complete_views || 0;
+    const avgTime = ins.total_video_avg_time_watched || 0;
+    const completionRate = views > 0 ? (completes/views*100) : 0;
+    return { ...v, views, impressions, completes, avgTime, completionRate };
+  });
   const lives = fbHubData.liveVideos?.data || [];
+
+  // Totals
+  const totalViews = vids.reduce((s,v)=>s+v.views, 0);
+  const totalImp = vids.reduce((s,v)=>s+v.impressions, 0);
+  const totalCompletes = vids.reduce((s,v)=>s+v.completes, 0);
+  const avgCompletion = totalViews ? (totalCompletes/totalViews*100) : 0;
+  // Top performer
+  const topVid = vids.slice().sort((a,b) => b.views - a.views)[0];
+  const totalLiveViews = lives.reduce((s,l)=>s+(+l.live_views||0), 0);
+  const topLive = lives.slice().sort((a,b)=>(+b.live_views||0)-(+a.live_views||0))[0];
+  // Sort vids by views
+  const sortedVids = vids.slice().sort((a,b) => b.views - a.views);
+
   return `
+    <!-- Summary KPIs -->
+    <div class="fbhub-kpi-grid">
+      <div class="fbhub-kpi" style="--c1:#0ea5e9;--c2:#0369a1">
+        <div class="fbhub-kpi-ic">${I.videoIc}</div>
+        <div class="fbhub-kpi-lbl">${isLo?'ວິດີໂອທັງໝົດ':'วิดีโอทั้งหมด'}</div>
+        <div class="fbhub-kpi-val">${vids.length}</div>
+        <div class="fbhub-kpi-sub">+ ${lives.length} Live</div>
+      </div>
+      <div class="fbhub-kpi" style="--c1:#3b82f6;--c2:#1d4ed8">
+        <div class="fbhub-kpi-ic">${I.eye}</div>
+        <div class="fbhub-kpi-lbl">${isLo?'ຍອດເບິ່ງລວມ':'ยอดวิวรวม'}</div>
+        <div class="fbhub-kpi-val">${fmtNum(totalViews + totalLiveViews)}</div>
+        <div class="fbhub-kpi-sub">${fmtNum(totalImp)} impressions</div>
+      </div>
+      <div class="fbhub-kpi" style="--c1:#10b981;--c2:#047857">
+        <div class="fbhub-kpi-ic">${I.check}</div>
+        <div class="fbhub-kpi-lbl">${isLo?'ເບິ່ງຈົບ':'ดูจบ'}</div>
+        <div class="fbhub-kpi-val">${avgCompletion.toFixed(1)}%</div>
+        <div class="fbhub-kpi-sub">${fmtNum(totalCompletes)} ${isLo?'ຄັ້ງ':'ครั้ง'}</div>
+      </div>
+      <div class="fbhub-kpi" style="--c1:#ef4444;--c2:#dc2626">
+        <div class="fbhub-kpi-ic">${I.live}</div>
+        <div class="fbhub-kpi-lbl">${isLo?'Live ສຸດຍອດ':'Live สุดยอด'}</div>
+        <div class="fbhub-kpi-val">${topLive?fmtNum(+topLive.live_views||0):'—'}</div>
+        <div class="fbhub-kpi-sub">${topLive?escapeHtmlN((topLive.title||'Live').slice(0,30)):'ไม่มี'}</div>
+      </div>
+    </div>
+
+    <!-- Top video performer -->
+    ${topVid ? `
+      <div class="fbhub-top-perf">
+        <div class="fbhub-top-perf-ribbon">${I.trophy||I.star} ${isLo?'ວິດີໂອທີ່ດີສຸດ':'วิดีโอที่เด่นที่สุด'}</div>
+        <div class="fbhub-top-perf-body">
+          ${topVid.thumbnails?.data?.[0]?.uri ? `<img src="${escapeHtmlN(topVid.thumbnails.data[0].uri)}" alt=""/>` : `<div class="fbhub-top-perf-noimg">${I.videoIc}</div>`}
+          <div class="fbhub-top-perf-info">
+            <div class="fbhub-top-perf-msg" style="font-size:16px;font-weight:800">${escapeHtmlN(topVid.title||topVid.description||'(ไม่มีชื่อ)')}</div>
+            <div class="fbhub-top-perf-stats">
+              <div><b>${fmtNum(topVid.views)}</b><span>Views</span></div>
+              <div><b>${fmtNum(topVid.impressions)}</b><span>Impressions</span></div>
+              <div><b>${fmtNum(topVid.completes)}</b><span>ดูจบ</span></div>
+              <div><b>${topVid.completionRate.toFixed(1)}%</b><span>Completion</span></div>
+              ${topVid.length?`<div><b>${Math.round(topVid.length)}s</b><span>ความยาว</span></div>`:''}
+              ${topVid.avgTime?`<div><b>${Math.round(topVid.avgTime/1000)}s</b><span>เฉลี่ยดู</span></div>`:''}
+            </div>
+            <div class="fbhub-top-perf-foot">
+              <span>${new Date(topVid.created_time).toLocaleString('th-TH')}</span>
+              ${topVid.permalink_url ? `<a href="${escapeHtmlN(topVid.permalink_url)}" target="_blank" class="btn-primary" style="background:linear-gradient(135deg,#0ea5e9,#0369a1);padding:8px 16px;font-size:12px">${I.externalLink} ${isLo?'ເບິ່ງ':'ดู'}</a>` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+    ` : ''}
+
+    <!-- Live videos -->
     <div class="dash2-card" style="margin-bottom:14px">
       <div class="dash2-card-hd">
         <div>
           <div class="dash2-card-title">${isLo?'ການຖ່າຍທອດສົດ':'ไลฟ์สดที่ผ่านมา'}</div>
-          <div class="dash2-card-sub">Live Video API</div>
+          <div class="dash2-card-sub">Live Video API · ${lives.length} ${isLo?'ຄັ້ງ':'ครั้ง'}</div>
         </div>
       </div>
       ${lives.length === 0 ? `<div class="empty-state">${isLo?'ບໍ່ມີ Live':'ไม่มี Live'}</div>` :
       `<div class="fbhub-list">
-        ${lives.map(l => `<div class="fbhub-list-row">
-          <div class="fbhub-list-ic" style="background:linear-gradient(135deg,#ef4444,#dc2626)">${I.live}</div>
+        ${lives.slice().sort((a,b)=>(+b.live_views||0)-(+a.live_views||0)).map((l, i) => `<div class="fbhub-list-row">
+          <div class="fbhub-list-ic" style="background:linear-gradient(135deg,#ef4444,#dc2626);position:relative">${I.live}${i===0?`<span style="position:absolute;top:-4px;right:-4px;background:#fbbf24;color:#000;font-size:10px;font-weight:800;padding:1px 5px;border-radius:5px">TOP</span>`:''}</div>
           <div class="fbhub-list-body">
             <div class="fbhub-list-name">${escapeHtmlN(l.title||'Live')}</div>
-            <div class="fbhub-list-meta">${l.status} · ${l.live_views||0} views · ${new Date(l.broadcast_start_time||0).toLocaleString('th-TH')}</div>
+            <div class="fbhub-list-meta">${l.status} · <b>${fmtNum(+l.live_views||0)} views</b> · ${new Date(l.broadcast_start_time||0).toLocaleString('th-TH')}</div>
           </div>
           ${l.permalink_url ? `<a href="${escapeHtmlN(l.permalink_url)}" target="_blank" class="btn-ghost">${I.externalLink}</a>` : ''}
         </div>`).join('')}
       </div>`}
     </div>
+
+    <!-- All videos card grid -->
     <div class="dash2-card">
       <div class="dash2-card-hd">
         <div>
-          <div class="dash2-card-title">${isLo?'ວິດີໂອທີ່ອັບໂຫຼດ':'วิดีโอที่อัพโหลด'}</div>
-          <div class="dash2-card-sub">publish_video</div>
+          <div class="dash2-card-title">${isLo?'ວິດີໂອທີ່ອັບໂຫຼດ':'วิดีโอที่อัพโหลด'} (${vids.length})</div>
+          <div class="dash2-card-sub">publish_video · ${isLo?'ຈັດລຽງຕາມຍອດເບິ່ງ':'เรียงตามยอดวิว'}</div>
         </div>
       </div>
       ${vids.length === 0 ? `<div class="empty-state">${isLo?'ບໍ່ມີວິດີໂອ':'ไม่มีวิดีโอ'}</div>` :
       `<div class="fbhub-video-grid">
-        ${vids.map(v => `<div class="fbhub-video-card">
+        ${sortedVids.map((v, idx) => `<div class="fbhub-video-card ${idx===0?'best':''}">
+          ${idx===0?`<div class="fbhub-video-best-badge">${I.trophy||'★'} TOP</div>`:''}
           ${v.thumbnails?.data?.[0]?.uri ? `<img src="${escapeHtmlN(v.thumbnails.data[0].uri)}" alt=""/>` : `<div class="fbhub-video-noimg">${I.videoIc}</div>`}
           <div class="fbhub-video-info">
-            <div class="fbhub-video-title">${escapeHtmlN(v.title||v.description||'(ไม่มีชื่อ)').slice(0,60)}</div>
-            <div class="fbhub-video-meta">${v.length?Math.round(v.length)+'s':''} · ${new Date(v.created_time).toLocaleDateString('th-TH')}</div>
+            <div class="fbhub-video-title">${escapeHtmlN(v.title||v.description||'(ไม่มีชื่อ)').slice(0,80)}</div>
+            <div class="fbhub-video-stats">
+              <div><b>${fmtNum(v.views)}</b><span>views</span></div>
+              ${v.completes>0?`<div><b>${v.completionRate.toFixed(0)}%</b><span>ดูจบ</span></div>`:''}
+              ${v.length?`<div><b>${Math.round(v.length)}s</b><span>ยาว</span></div>`:''}
+            </div>
+            <div class="fbhub-video-meta">${new Date(v.created_time).toLocaleDateString('th-TH',{month:'short',day:'numeric',year:'2-digit'})}${v.permalink_url ? ` · <a href="${escapeHtmlN(v.permalink_url)}" target="_blank">เปิด</a>` : ''}</div>
           </div>
         </div>`).join('')}
       </div>`}
