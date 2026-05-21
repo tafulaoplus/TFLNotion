@@ -18924,8 +18924,12 @@ async function _fbHubCall(key, url){
   }
 }
 
+let _fbHubLoadingOverview = false;
+let _fbHubLoadingTab = {};
 async function loadFbHubOverview(){
   if(!fbPostState.pageId || !fbPostState.pageToken) return;
+  if(_fbHubLoadingOverview) return; // dedup: prevent parallel calls
+  _fbHubLoadingOverview = true;
   const tok = encodeURIComponent(fbPostState.pageToken);
   const pid = fbPostState.pageId;
   const base = `https://graph.facebook.com/${FB_API_VERSION}`;
@@ -18958,10 +18962,14 @@ async function loadFbHubOverview(){
     });
   }
   fbHubData.lastFetch = Date.now();
-  rerender();
+  _fbHubLoadingOverview = false;
+  // Only rerender if user is still on facebookHub view (avoid flicker on other views)
+  if(currentView === 'facebookHub') rerender();
 }
 async function loadFbHubTab(tab){
   if(!fbPostState.pageId || !fbPostState.pageToken) return;
+  if(_fbHubLoadingTab[tab]) return; // dedup
+  _fbHubLoadingTab[tab] = true;
   const tok = encodeURIComponent(fbPostState.pageToken);
   const pid = fbPostState.pageId;
   const base = `https://graph.facebook.com/${FB_API_VERSION}`;
@@ -19013,10 +19021,16 @@ async function loadFbHubTab(tab){
     const j = await _fbHubCall('comments', `${base}/${pid}/posts?fields=id,message,created_time,comments.limit(5){id,message,from,created_time,like_count}&limit=5&access_token=${tok}`);
     fbHubData.comments = j;
   }
-  rerender();
+  _fbHubLoadingTab[tab] = false;
+  // Only rerender if user is still on facebookHub view
+  if(currentView === 'facebookHub') rerender();
 }
 function fbHubRefresh(){
-  fbHubData = { ...fbHubData, loading: {}, errors: {}, lastFetch: 0 };
+  // Reset dedup flags so loads can proceed
+  _fbHubLoadingOverview = false;
+  _fbHubLoadingTab = {};
+  fbHubData = { ...fbHubData, loading: {}, errors: {}, lastFetch: 0,
+    postInsights: {}, videoInsights: {} };
   loadFbHubOverview();
   if(fbHubTab !== 'overview') loadFbHubTab(fbHubTab);
 }
@@ -19037,8 +19051,8 @@ function renderFacebookHub(el){
     return;
   }
 
-  // Auto-load overview on first visit
-  if(!fbHubData.lastFetch && !fbHubData.loading.pageInfo){
+  // Auto-load overview on first visit (guard: dedup flag prevents parallel fetches)
+  if(!fbHubData.lastFetch && !_fbHubLoadingOverview){
     setTimeout(()=>loadFbHubOverview(), 50);
   }
 
@@ -19062,19 +19076,19 @@ function renderFacebookHub(el){
   } else if(fbHubTab === 'engagement'){
     body = _renderFbHubEngagement(isLo);
   } else if(fbHubTab === 'messages'){
-    if(!fbHubData.conversations && !fbHubData.loading.conversations) setTimeout(()=>loadFbHubTab('messages'),50);
+    if(!fbHubData.conversations && !_fbHubLoadingTab.messages) setTimeout(()=>loadFbHubTab('messages'),50);
     body = _renderFbHubMessages(isLo);
   } else if(fbHubTab === 'leads'){
-    if(!fbHubData.leads && !fbHubData.loading.leads) setTimeout(()=>loadFbHubTab('leads'),50);
+    if(!fbHubData.leads && !_fbHubLoadingTab.leads) setTimeout(()=>loadFbHubTab('leads'),50);
     body = _renderFbHubLeads(isLo);
   } else if(fbHubTab === 'ads'){
-    if(!fbHubData.ads && !fbHubData.loading.ads) setTimeout(()=>loadFbHubTab('ads'),50);
+    if(!fbHubData.ads && !_fbHubLoadingTab.ads) setTimeout(()=>loadFbHubTab('ads'),50);
     body = _renderFbHubAds(isLo);
   } else if(fbHubTab === 'videos'){
-    if(!fbHubData.videos && !fbHubData.loading.videos) setTimeout(()=>loadFbHubTab('videos'),50);
+    if(!fbHubData.videos && !_fbHubLoadingTab.videos) setTimeout(()=>loadFbHubTab('videos'),50);
     body = _renderFbHubVideos(isLo);
   } else if(fbHubTab === 'commerce'){
-    if(!fbHubData.catalogs && !fbHubData.loading.catalogs) setTimeout(()=>loadFbHubTab('commerce'),50);
+    if(!fbHubData.catalogs && !_fbHubLoadingTab.commerce) setTimeout(()=>loadFbHubTab('commerce'),50);
     body = _renderFbHubCommerce(isLo);
   } else if(fbHubTab === 'more'){
     body = _renderFbHubMore(isLo);
@@ -19223,44 +19237,7 @@ function _renderFbHubOverview(isLo){
       </div>
     </div>
 
-    <!-- Permissions in use -->
-    <div class="dash2-card">
-      <div class="dash2-card-hd">
-        <div class="dash2-card-title">🔑 Permissions ${isLo?'ທີ່ໃຊ້ງານ':'ที่ใช้งาน'}</div>
-      </div>
-      <div class="fbhub-perm-grid">
-        ${[
-          ['read_insights','📊',isLo?'ອ່ານ Insights':'อ่าน Insights ของเพจ','#1877f2'],
-          ['pages_show_list','📋',isLo?'ລາຍຊື່ Pages':'รายชื่อ Pages ที่จัดการ','#3b82f6'],
-          ['pages_read_engagement','💬',isLo?'ອ່ານ engagement':'อ่าน engagement','#ec4899'],
-          ['pages_manage_posts','📝',isLo?'ສ້າງ/ແກ້ໄຂໂພສ':'สร้าง/แก้ไขโพสต์','#a78bfa'],
-          ['pages_messaging','📨',isLo?'ສົ່ງ/ອ່ານຂໍ້ຄວາມ':'ส่ง/อ่านข้อความ','#10b981'],
-          ['leads_retrieval','🎯',isLo?'ດຶງຂໍ້ມູນ Lead':'ดึงข้อมูล Lead','#f59e0b'],
-          ['ads_management','💰',isLo?'ຈັດການໂຄສະນາ':'จัดการโฆษณา','#059669'],
-          ['ads_read','📈',isLo?'ອ່ານສະຖິຕິໂຄສະນາ':'อ่านสถิติโฆษณา','#0891b2'],
-          ['business_management','🏢',isLo?'ຈັດການທຸລະກິດ':'จัดการ Business','#7c3aed'],
-          ['catalog_management','🛍️',isLo?'ຈັດການແຄຕາລ໋ອກ':'จัดการ Catalog','#dc2626'],
-          ['publish_video','🎥',isLo?'ອັບໂຫຼດວິດີໂອ':'อัพโหลดวิดีโอ','#0ea5e9'],
-          ['pages_manage_engagement','💖',isLo?'ຈັດການ engagement':'จัดการ engagement','#db2777'],
-          ['pages_manage_ads','🎯',isLo?'ໂຄສະນາຂອງເພຈ':'โฆษณาของเพจ','#16a34a'],
-          ['pages_manage_metadata','⚙️',isLo?'ແກ້ໄຂຂໍ້ມູນເພຈ':'แก้ไขข้อมูลเพจ','#6366f1'],
-          ['pages_read_user_content','📄',isLo?'ອ່ານ comment ຂອງ user':'อ่าน comment ของ user','#8b5cf6'],
-          ['manage_fundraisers','❤️',isLo?'ຈັດການແຄມເປນລະດົມທຶນ':'จัดการแคมเปญระดมทุน','#e11d48'],
-          ['whatsapp_business_management','💚','WhatsApp Business','#25d366'],
-          ['whatsapp_business_messaging','💬','WhatsApp Messaging','#128c7e'],
-          ['facebook_creator_marketplace_discovery','🌟',isLo?'Creator Marketplace':'Creator Marketplace','#fbbf24'],
-          ['facebook_branded_content_ads_brand','🎨',isLo?'Branded Content':'Branded Content','#f97316'],
-        ].map(([key,emoji,label,color]) => `
-          <div class="fbhub-perm-card" style="border-left-color:${color}">
-            <span class="fbhub-perm-emoji">${emoji}</span>
-            <div>
-              <div class="fbhub-perm-key">${key}</div>
-              <div class="fbhub-perm-label">${escapeHtmlN(label)}</div>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </div>`;
+    `;
 }
 
 function _renderFbHubPosts(isLo){
