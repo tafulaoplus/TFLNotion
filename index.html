@@ -32,7 +32,7 @@
       FB.init({
         appId: window.FB_APP_ID,
         cookie: true,
-        xfbml: false,
+        xfbml: true,
         version: 'v19.0'
       });
       FB.AppEvents.logPageView();
@@ -3639,6 +3639,23 @@ input:focus-visible{
   transition:color .15s ease;
 }
 .intg2-secondary-link:hover{color:var(--p500)}
+
+/* Divider between custom button and official FB button */
+.intg2-fb-divider{
+  display:flex;align-items:center;gap:10px;
+  margin:14px 0 10px;
+  font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;font-weight:700;
+}
+.intg2-fb-divider::before,
+.intg2-fb-divider::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+.intg2-fb-official-btn-wrap{
+  display:flex;justify-content:center;
+  margin-bottom:10px;min-height:40px;
+}
+.intg2-fb-official-btn-wrap fb\\:login-button,
+.intg2-fb-official-btn-wrap .fb-login-button{display:block!important;width:100%}
 
 /* FB Login status badge */
 .intg2-fb-status{
@@ -17753,6 +17770,21 @@ function _intg2RenderPanelContent(platform, ctx){
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
           ${btnLabel}
         </button>
+        ${sdkReady ? `
+          <div class="intg2-fb-divider"><span>${isLo?'ຫຼື':'หรือ'}</span></div>
+          <div class="intg2-fb-official-btn-wrap">
+            <fb:login-button
+              scope="public_profile,pages_show_list,pages_read_engagement,pages_manage_posts,pages_manage_metadata,pages_read_user_content,read_insights"
+              onlogin="checkLoginState()"
+              data-size="large"
+              data-button-type="continue_with"
+              data-layout="default"
+              data-auto-logout-link="false"
+              data-use-continue-as="true"
+              data-width="">
+            </fb:login-button>
+          </div>
+        ` : ''}
         ${sdkReady ? `<button class="intg2-secondary-link" onclick="_intgFbRecheckStatus()">${isLo?'ກວດສະຖານະໃໝ່':'ตรวจสถานะใหม่'}</button>` : ''}
         <button class="intg2-secondary-link" onclick="_intg2FbConnectFromPanel()">${isLo?'ຫຼື ໃສ່ Access Token ດ້ວຍຕົນເອງ':'หรือใส่ Access Token เอง'}</button>
       </div>
@@ -18075,6 +18107,25 @@ function _intgFbRecheckStatus(){
   }, true /* force = bypass cache */);
 }
 
+// Global callback used by Facebook's <fb:login-button onlogin="checkLoginState()">
+// This runs every time the official FB button completes a login attempt
+window.checkLoginState = function checkLoginState(){
+  if(!window.FB || !window._fbSdkReady) return;
+  FB.getLoginStatus(function(response){
+    window._fbLoginStatus = response.status;
+    window._fbLoginResponse = response;
+    console.log('[FB] checkLoginState ->', response.status);
+    if(response.status === 'connected' && response.authResponse){
+      // User just logged in via official button — kick off our connection flow
+      _intgFbDoConnectWithToken(response.authResponse.accessToken);
+    } else if(response.status === 'not_authorized'){
+      alert('คุณ login Facebook อยู่แต่ยังไม่ได้ให้สิทธิ์แอพ TFL+ — กรุณากด "Continue" ใน popup');
+    }
+    // Refresh integrations page to reflect new status
+    try { if(currentView === 'socialIntegrations') rerender(); } catch(_){}
+  });
+};
+
 function _intgFbLogoutSDK(){
   if(!confirm('ตัดการเชื่อมต่อ Facebook? (ลบ token ในเครื่อง)')) return;
   if(window.FB && window._fbSdkReady){
@@ -18176,6 +18227,16 @@ function renderSocialIntegrations(el){
       </div>
 
     </div>`;
+  // Trigger Facebook XFBML parser to render <fb:login-button> elements
+  if(window.FB && window._fbSdkReady){
+    try { FB.XFBML.parse(el); } catch(e){ console.warn('[FB XFBML.parse] failed:', e); }
+  } else {
+    // SDK not ready yet — try once it loads
+    window.addEventListener('fbsdkready', function _onceReady(){
+      window.removeEventListener('fbsdkready', _onceReady);
+      try { if(window.FB) FB.XFBML.parse(el); } catch(_){}
+    }, { once:true });
+  }
 }
 
 // ============ SOCIAL ANALYTICS DASHBOARD ============
