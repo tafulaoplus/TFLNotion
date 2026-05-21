@@ -3433,6 +3433,253 @@ input:focus-visible{
 ::selection{background:rgba(124,58,237,.3);color:inherit}
 
 /* ╔═══════════════════════════════════════════════════════════╗
+   ║ INTEGRATIONS v2 (Mandala-style 2-panel)                   ║
+   ╚═══════════════════════════════════════════════════════════╝ */
+.intg2-layout{
+  display:grid;grid-template-columns:1fr 420px;gap:0;
+  min-height:calc(100vh - 80px);
+}
+.intg2-left{
+  padding:30px 36px;
+  border-right:1px solid var(--border);
+  background:var(--bg);
+}
+.intg2-right{
+  padding:30px 32px;
+  background:var(--bg-soft);
+  position:relative;
+}
+.intg2-section-title{
+  font-size:14px;font-weight:700;color:var(--t1);
+  margin:0 0 14px;letter-spacing:-.1px;
+}
+.intg2-tile-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
+  gap:14px;
+}
+.intg2-tile{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  padding:18px 14px;border-radius:14px;
+  background:var(--card);border:1.5px solid var(--border);
+  cursor:pointer;transition:all .2s cubic-bezier(.4,0,.2,1);
+  position:relative;text-align:center;
+  aspect-ratio:1;
+}
+.intg2-tile:hover{
+  border-color:var(--p400);
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(124,58,237,.12);
+}
+.intg2-tile.selected{
+  border-color:var(--p500);
+  background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(167,139,250,.04));
+  box-shadow:0 8px 24px rgba(124,58,237,.18);
+}
+[data-theme="dark"] .intg2-tile{
+  background:rgba(255,255,255,.02);
+  border-color:rgba(255,255,255,.08);
+}
+[data-theme="dark"] .intg2-tile:hover{
+  background:rgba(167,139,250,.08);
+  border-color:rgba(167,139,250,.4);
+}
+[data-theme="dark"] .intg2-tile.selected{
+  background:linear-gradient(135deg,rgba(167,139,250,.12),rgba(96,165,250,.08));
+  border-color:rgba(167,139,250,.6);
+}
+.intg2-tile.connected::after{
+  content:'';position:absolute;top:10px;right:10px;
+  width:10px;height:10px;border-radius:50%;
+  background:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.18);
+}
+.intg2-tile.soon{opacity:.55}
+.intg2-tile-icon{
+  width:36px;height:36px;
+  display:flex;align-items:center;justify-content:center;
+}
+.intg2-tile-icon svg{width:36px;height:36px}
+.intg2-tile-name{
+  font-size:13.5px;font-weight:700;color:var(--t1);line-height:1.2;
+}
+.intg2-tile-status{font-size:11px;font-weight:600}
+.intg2-tile-on{color:#10b981}
+.intg2-tile-off{color:var(--t3)}
+.intg2-tile-soon{color:#f59e0b;font-style:italic}
+
+/* RIGHT PANEL */
+.intg2-panel{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:24px;
+  box-shadow:0 4px 20px rgba(0,0,0,.05);
+}
+[data-theme="dark"] .intg2-panel{
+  background:linear-gradient(135deg,rgba(28,33,72,.7),rgba(19,23,54,.7));
+  border-color:rgba(167,139,250,.15);
+  backdrop-filter:blur(12px);
+}
+.intg2-panel-hd{
+  display:flex;align-items:center;gap:14px;
+  padding-bottom:18px;margin-bottom:18px;
+  border-bottom:1px solid var(--border);
+}
+.intg2-panel-icon{
+  width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.intg2-panel-icon svg{width:32px;height:32px}
+.intg2-panel-title{
+  font-size:18px;font-weight:800;color:var(--t1);
+  letter-spacing:-.2px;margin-bottom:2px;
+}
+.intg2-panel-sub{font-size:12px;color:var(--t3)}
+.intg2-panel-body{display:flex;flex-direction:column;gap:14px}
+
+/* CTA card inside panel (when not connected) */
+.intg2-cta-card{
+  text-align:center;padding:24px 18px;
+  border-radius:14px;
+  background:var(--bg-soft);
+  border:1px solid var(--border);
+}
+[data-theme="dark"] .intg2-cta-card{
+  background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.08);
+}
+.intg2-cta-logos{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px}
+.intg2-cta-logo{
+  width:48px;height:48px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:800;
+  box-shadow:0 6px 16px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.18);
+}
+.intg2-cta-logo svg{width:24px;height:24px}
+.intg2-cta-link{font-size:24px;color:var(--t4);font-weight:700}
+.intg2-cta-card h3{
+  margin:0 0 6px;font-size:14.5px;font-weight:800;color:var(--t1);
+}
+.intg2-cta-card p{
+  margin:0 0 14px;font-size:13px;color:var(--t2);line-height:1.55;
+}
+.intg2-add-btn{
+  width:100%;padding:12px 18px;
+  background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;
+  border:none;border-radius:10px;
+  font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;
+  transition:all .2s ease;
+  box-shadow:0 6px 16px rgba(124,58,237,.3);
+}
+.intg2-add-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 24px rgba(124,58,237,.45)}
+.intg2-add-btn:disabled{cursor:not-allowed}
+
+/* Account row (when connected) */
+.intg2-account-row{
+  display:flex;align-items:center;gap:12px;
+  padding:14px;border-radius:12px;
+  background:var(--bg-soft);
+}
+.intg2-account-thumb{
+  width:42px;height:42px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:800;font-size:18px;flex-shrink:0;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+}
+.intg2-account-thumb svg{width:22px;height:22px}
+.intg2-account-info{flex:1;min-width:0}
+.intg2-account-name{
+  font-size:14px;font-weight:800;color:var(--t1);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.intg2-account-meta{
+  font-size:11.5px;color:var(--t3);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;
+}
+.intg2-connected-badge{
+  background:rgba(16,185,129,.12);color:#059669;
+  padding:5px 10px;border-radius:7px;
+  font-size:10.5px;font-weight:800;
+  white-space:nowrap;flex-shrink:0;
+}
+
+.intg2-stat-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  padding:12px;background:var(--bg-soft);border-radius:11px;
+}
+.intg2-stat-item{text-align:center}
+.intg2-stat-item .v{font-size:18px;font-weight:800;color:var(--t1);font-feature-settings:'tnum'}
+.intg2-stat-item .l{font-size:10.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+
+.intg2-actions{
+  display:flex;gap:8px;flex-wrap:wrap;
+}
+.intg2-actions button{flex:0 0 auto}
+
+.intg2-token-input-wrap{
+  display:flex;flex-direction:column;gap:6px;
+  padding:14px;border-radius:12px;
+  background:var(--bg-soft);border:1px solid var(--border);
+}
+.intg2-token-input-wrap label{
+  font-size:11.5px;font-weight:700;color:var(--t2);
+  text-transform:uppercase;letter-spacing:.4px;
+}
+.intg2-token-input-wrap textarea,
+.intg2-token-input-wrap input{
+  width:100%;padding:10px 12px;border-radius:9px;
+  background:var(--card);border:1px solid var(--border);
+  color:var(--t1);font-family:inherit;font-size:12.5px;
+  resize:vertical;
+}
+.intg2-token-input-wrap select{
+  width:100%;padding:10px 12px;border-radius:9px;
+  background:var(--card);border:1px solid var(--border);color:var(--t1);
+  font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;
+}
+.intg2-token-hint{font-size:11px;color:var(--t3);line-height:1.5}
+.intg2-token-hint code{
+  background:var(--bg-hover);padding:1px 6px;border-radius:4px;
+  font-size:10.5px;color:var(--p600);font-weight:700;
+}
+.intg2-test-result{
+  padding:8px 12px;border-radius:8px;
+  font-size:12px;font-weight:600;
+}
+.intg2-test-result.ok{background:rgba(16,185,129,.12);color:#059669}
+.intg2-test-result.failed{background:rgba(239,68,68,.12);color:#dc2626}
+.intg2-test-result.testing{background:var(--bg-soft);color:var(--t1)}
+
+.intg2-quick-input{
+  width:100%;padding:11px 14px;margin:10px 0;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:10px;color:var(--t1);font-size:13px;font-family:inherit;
+}
+
+.intg2-security-note{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:14px;border-radius:11px;
+  background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.18);
+  font-size:12.5px;color:var(--t2);line-height:1.6;
+}
+.intg2-security-icon{
+  flex-shrink:0;width:24px;height:24px;border-radius:50%;
+  background:rgba(96,165,250,.2);color:#3b82f6;
+  display:flex;align-items:center;justify-content:center;
+}
+.intg2-security-icon svg{width:13px;height:13px}
+.intg2-security-note b{color:var(--t1);font-weight:800;display:block;margin-bottom:4px}
+.intg2-security-note p{margin:0;font-size:12px}
+.intg2-security-note a{color:#3b82f6;font-weight:700;text-decoration:none}
+
+/* Mobile: stack panels */
+@media (max-width:980px){
+  .intg2-layout{grid-template-columns:1fr;min-height:auto}
+  .intg2-left{padding:18px 14px;border-right:none;border-bottom:1px solid var(--border)}
+  .intg2-right{padding:18px 14px}
+  .intg2-tile-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+  .intg2-tile{padding:14px 10px}
+}
+
+/* ╔═══════════════════════════════════════════════════════════╗
    ║ AFFILIATE HUB page (OhMyCPL wrapper)                      ║
    ╚═══════════════════════════════════════════════════════════╝ */
 .affiliate-hub-page{display:flex;flex-direction:column;gap:18px}
@@ -17370,6 +17617,316 @@ function renderTrendScraper(el){
     </div>`;
 }
 
+let selectedIntgPlatform = 'facebook';
+function setSelectedIntgPlatform(p){ selectedIntgPlatform = p; rerender(); }
+
+function _intg2RenderPanelContent(platform, ctx){
+  const { fbConnected, igConnected } = ctx;
+  const isLo = CURRENT_LANG === 'lo';
+
+  if(platform === 'facebook'){
+    if(fbConnected){
+      return `
+        <div class="intg2-account-row">
+          <div class="intg2-account-thumb" style="background:#1877f2">${escapeHtmlN((fbPostState.pageName||'?')[0])}</div>
+          <div class="intg2-account-info">
+            <div class="intg2-account-name">${escapeHtmlN(fbPostState.pageName)}</div>
+            <div class="intg2-account-meta">Page ID: ${fbPostState.pageId}</div>
+          </div>
+          <span class="intg2-connected-badge">✓ ${isLo?'ເຊື່ອມຕໍ່ແລ້ວ':'เชื่อมต่อแล้ว'}</span>
+        </div>
+        <div class="intg2-actions">
+          <button class="btn-primary" onclick="navigateTo('fbPosts')">${isLo?'ໂພສ Manager':'โพสต์ Manager'} →</button>
+          <button class="btn-ghost" onclick="openConnectGuide('facebook')">${I.lightbulb} ${isLo?'ວິທີເຊື່ອມ':'วิธีเชื่อม'}</button>
+          <button class="btn-ghost" style="color:#dc2626" onclick="_intgDisconnectFb()">${isLo?'ຕັດການເຊື່ອມຕໍ່':'ตัดการเชื่อมต่อ'}</button>
+        </div>`;
+    }
+    return `
+      <div class="intg2-cta-card">
+        <div class="intg2-cta-logos">
+          <div class="intg2-cta-logo" style="background:#1877f2;color:#fff">f</div>
+          <div class="intg2-cta-link">∞</div>
+          <div class="intg2-cta-logo" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff">T+</div>
+        </div>
+        <h3>${isLo?'ທ່ານຍັງບໍ່ມີການເຊື່ອມຕໍ່ບັນຊີ Facebook':'คุณยังไม่มีการเชื่อมต่อบัญชี Facebook'}</h3>
+        <p>${isLo?'ໂປດເຊື່ອມຕໍ່ບັນຊີໂຊຊຽວມີເດຍຂອງທ່ານກັບ TFL+':'โปรดเชื่อมต่อบัญชีโซเชียลมีเดียของคุณกับ TFL+'}</p>
+        <button class="intg2-add-btn" onclick="_intg2FbConnectFromPanel()">+ ${isLo?'ເພີ່ມບັນຊີໃໝ່':'เพิ่มบัญชีใหม่'}</button>
+      </div>
+      <div class="intg2-token-input-wrap" id="intg2FbInputWrap" style="display:none">
+        <label>${isLo?'ໃສ່ Access Token':'ใส่ Access Token'}</label>
+        <textarea id="intgFbToken" rows="4" placeholder="EAA... (User Access Token)">${escapeHtmlN(DEFAULT_FB_TOKEN)}</textarea>
+        <div class="intg2-token-hint">${isLo?'ໄດ້ Token ຈາກ':'รับ token จาก'} <a href="https://developers.facebook.com/tools/explorer" target="_blank">Graph API Explorer</a></div>
+        <div class="intg2-actions">
+          <button class="btn-primary" onclick="_intgConnectFb()">${isLo?'ເຊື່ອມຕໍ່':'เชื่อมต่อ'}</button>
+          <button class="btn-ghost" onclick="document.getElementById('intg2FbInputWrap').style.display='none'">${isLo?'ຍົກເລີກ':'ยกเลิก'}</button>
+        </div>
+      </div>
+      ${_intg2SecurityNote(isLo)}`;
+  }
+
+  if(platform === 'instagram'){
+    if(igConnected){
+      return `
+        <div class="intg2-account-row">
+          <div class="intg2-account-thumb" style="background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af);overflow:hidden">${igAccountInfo.profile_picture_url?`<img src="${igAccountInfo.profile_picture_url}" style="width:100%;height:100%;object-fit:cover"/>`:'@'}</div>
+          <div class="intg2-account-info">
+            <div class="intg2-account-name">@${escapeHtmlN(igAccountInfo.username)}</div>
+            <div class="intg2-account-meta">${escapeHtmlN(igAccountInfo.name||'')} · ${(igAccountInfo.followers_count||0).toLocaleString()} followers</div>
+          </div>
+          <span class="intg2-connected-badge">✓ ${isLo?'ເຊື່ອມຕໍ່ແລ້ວ':'เชื่อมต่อแล้ว'}</span>
+        </div>
+        <div class="intg2-stat-row">
+          <div class="intg2-stat-item"><div class="v">${(igAccountInfo.followers_count||0).toLocaleString()}</div><div class="l">Followers</div></div>
+          <div class="intg2-stat-item"><div class="v">${(igAccountInfo.media_count||0).toLocaleString()}</div><div class="l">Posts</div></div>
+          <div class="intg2-stat-item"><div class="v">✓</div><div class="l">Business</div></div>
+        </div>
+        <div class="intg2-actions">
+          <button class="btn-primary" onclick="refreshIgInfo()">${I.refresh} ${isLo?'ໂຫຼດໃໝ່':'รีเฟรช'}</button>
+          <button class="btn-ghost" onclick="navigateTo('socialAnalytics')">${isLo?'ເບິ່ງ Analytics':'ดู Analytics'}</button>
+        </div>`;
+    }
+    return `
+      <div class="intg2-cta-card">
+        <div class="intg2-cta-logos">
+          <div class="intg2-cta-logo" style="background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af);color:#fff">IG</div>
+          <div class="intg2-cta-link">∞</div>
+          <div class="intg2-cta-logo" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff">T+</div>
+        </div>
+        <h3>${isLo?'ບໍ່ໄດ້ເຊື່ອມຕໍ່ Instagram':'ยังไม่ได้เชื่อมต่อ Instagram'}</h3>
+        <p>${isLo?'ຕ້ອງເຊື່ອມ Facebook Page ກ່ອນ ແລ້ວເຊື່ອມ IG ກັບ Page':'ต้องเชื่อม Facebook Page ก่อน แล้วเชื่อม IG กับ Page ใน Page Settings'}</p>
+        ${fbConnected ? `<button class="intg2-add-btn" onclick="refreshIgInfo()">${isLo?'ກວດສອບການເຊື່ອມ':'ตรวจสอบการเชื่อม'}</button>` : `<button class="intg2-add-btn" disabled style="opacity:.5">${isLo?'ເຊື່ອມ Facebook ກ່ອນ':'เชื่อม Facebook ก่อน'}</button>`}
+      </div>
+      ${_intg2SecurityNote(isLo)}`;
+  }
+
+  if(platform === 'tiktok'){
+    if(ttConnected){
+      return `
+        <div class="intg2-account-row">
+          <div class="intg2-account-thumb" style="background:linear-gradient(135deg,#25f4ee,#fe2c55);overflow:hidden">${tiktokSettings.avatar?`<img src="${tiktokSettings.avatar}" style="width:100%;height:100%;object-fit:cover"/>`:'T'}</div>
+          <div class="intg2-account-info">
+            <div class="intg2-account-name">${escapeHtmlN(tiktokSettings.displayName||tiktokSettings.username||'TikTok')}</div>
+            <div class="intg2-account-meta">@${escapeHtmlN(tiktokSettings.username||'')}</div>
+          </div>
+          <span class="intg2-connected-badge">✓ ${isLo?'ເຊື່ອມຕໍ່ແລ້ວ':'เชื่อมต่อแล้ว'}</span>
+        </div>
+        <div class="intg2-stat-row">
+          <div class="intg2-stat-item"><div class="v">${fmtNum(tiktokSettings.followerCount||0)}</div><div class="l">Followers</div></div>
+          <div class="intg2-stat-item"><div class="v">${fmtNum(tiktokSettings.videoCount||0)}</div><div class="l">Videos</div></div>
+          <div class="intg2-stat-item"><div class="v">${fmtNum(tiktokSettings.heartCount||0)}</div><div class="l">Likes</div></div>
+        </div>
+        <div class="intg2-actions">
+          <button class="btn-primary" onclick="_intgRefreshTikTok()">${I.refresh} ${isLo?'ດຶງໃໝ່':'ดึงใหม่'}</button>
+          <button class="btn-ghost" style="color:#dc2626" onclick="_intgDisconnectTikTok()">${isLo?'ຕັດການເຊື່ອມຕໍ່':'ตัดการเชื่อมต่อ'}</button>
+        </div>`;
+    }
+    return `
+      <div class="intg2-cta-card">
+        <div class="intg2-cta-logos">
+          <div class="intg2-cta-logo" style="background:linear-gradient(135deg,#25f4ee,#fe2c55);color:#fff">T</div>
+          <div class="intg2-cta-link">∞</div>
+          <div class="intg2-cta-logo" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff">T+</div>
+        </div>
+        <h3>${isLo?'ບໍ່ໄດ້ເຊື່ອມຕໍ່ TikTok':'ยังไม่ได้เชื่อมต่อ TikTok'}</h3>
+        <p>${isLo?'ວາງ URL ຊ່ອງ TikTok ຂອງທ່ານ — ບໍ່ຕ້ອງໃຊ້ Access Token!':'วาง URL ช่อง TikTok ของคุณ — ไม่ต้องใช้ Access Token!'}</p>
+        <input type="text" class="intg2-quick-input" id="intgTtLink" placeholder="https://www.tiktok.com/@username"/>
+        <button class="intg2-add-btn" onclick="_intgSaveTikTok()">+ ${isLo?'ເຊື່ອມຕໍ່':'เชื่อมต่อ'}</button>
+      </div>
+      ${_intg2SecurityNote(isLo)}`;
+  }
+
+  if(platform === 'youtube'){
+    if(ytConnected){
+      return `
+        <div class="intg2-account-row">
+          <div class="intg2-account-thumb" style="background:#ff0000;overflow:hidden">${youtubeSettings.avatar?`<img src="${youtubeSettings.avatar}" style="width:100%;height:100%;object-fit:cover"/>`:'▶'}</div>
+          <div class="intg2-account-info">
+            <div class="intg2-account-name">${escapeHtmlN(youtubeSettings.channelTitle||'YouTube')}</div>
+            <div class="intg2-account-meta">${escapeHtmlN(youtubeSettings.subscriberText||'')}</div>
+          </div>
+          <span class="intg2-connected-badge">✓ ${isLo?'ເຊື່ອມຕໍ່ແລ້ວ':'เชื่อมต่อแล้ว'}</span>
+        </div>
+        <div class="intg2-actions">
+          <button class="btn-primary" onclick="_intgRefreshYouTube()">${I.refresh} ${isLo?'ດຶງໃໝ່':'ดึงใหม่'}</button>
+          <button class="btn-ghost" style="color:#dc2626" onclick="_intgDisconnectYouTube()">${isLo?'ຕັດການເຊື່ອມຕໍ່':'ตัดการเชื่อมต่อ'}</button>
+        </div>`;
+    }
+    return `
+      <div class="intg2-cta-card">
+        <div class="intg2-cta-logos">
+          <div class="intg2-cta-logo" style="background:#ff0000;color:#fff">▶</div>
+          <div class="intg2-cta-link">∞</div>
+          <div class="intg2-cta-logo" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff">T+</div>
+        </div>
+        <h3>${isLo?'ບໍ່ໄດ້ເຊື່ອມຕໍ່ YouTube':'ยังไม่ได้เชื่อมต่อ YouTube'}</h3>
+        <p>${isLo?'ວາງ URL ຊ່ອງ YouTube':'วาง URL ช่อง YouTube — ดึง subscribers + วิดีโออัตโนมัติ'}</p>
+        <input type="text" class="intg2-quick-input" id="intgYtLink" placeholder="https://www.youtube.com/@channelname"/>
+        <button class="intg2-add-btn" onclick="_intgSaveYouTube()">+ ${isLo?'ເຊື່ອມຕໍ່':'เชื่อมต่อ'}</button>
+      </div>
+      ${_intg2SecurityNote(isLo)}`;
+  }
+
+  if(platform === 'twitter'){
+    return `
+      <div class="intg2-cta-card">
+        <div class="intg2-cta-logos">
+          <div class="intg2-cta-logo" style="background:#000;color:#fff">𝕏</div>
+        </div>
+        <h3>${isLo?'ມາໃນໄວໆນີ້':'มาเร็วๆ นี้'}</h3>
+        <p>${isLo?'X (Twitter) API ກຳລັງຢູ່ໃນຂັ້ນຕອນພັດທະນາ':'X (Twitter) API กำลังอยู่ในขั้นตอนพัฒนา · กำลังศึกษา X API v2'}</p>
+        <button class="intg2-add-btn" disabled style="opacity:.5">${isLo?'ຍັງບໍ່ສາມາດໃຊ້':'ยังไม่พร้อมใช้'}</button>
+      </div>`;
+  }
+
+  if(platform === 'postperf'){
+    if(postPerfConn.enabled){
+      return `
+        <div class="intg2-account-row">
+          <div class="intg2-account-thumb" style="background:linear-gradient(135deg,#ec4899,#f472b6)">${I.barChart}</div>
+          <div class="intg2-account-info">
+            <div class="intg2-account-name">${escapeHtmlN(postPerfConn.pageName)}</div>
+            <div class="intg2-account-meta">Page ID: ${escapeHtmlN(postPerfConn.pageId)}</div>
+          </div>
+          <span class="intg2-connected-badge">✓ ${isLo?'ເຊື່ອມຕໍ່ແລ້ວ':'เชื่อมต่อแล้ว'}</span>
+        </div>
+        <div class="intg2-actions">
+          <button class="btn-primary" style="background:linear-gradient(135deg,#ec4899,#f472b6)" onclick="navigateTo('postPerformance')">${isLo?'ເປີດໜ້າວິເຄາະ':'เปิดหน้าวิเคราะห์'} →</button>
+          <button class="btn-ghost" onclick="_intgTestPostPerfToken()">${I.refresh} ${isLo?'ທົດສອບ':'ทดสอบ'}</button>
+          <button class="btn-ghost" style="color:#dc2626" onclick="_intgDisablePostPerf()">${isLo?'ຕັດການເຊື່ອມຕໍ່':'ตัดการเชื่อมต่อ'}</button>
+        </div>`;
+    }
+    return `
+      <div class="intg2-cta-card">
+        <div class="intg2-cta-logos">
+          <div class="intg2-cta-logo" style="background:linear-gradient(135deg,#ec4899,#f472b6);color:#fff">${I.barChart}</div>
+        </div>
+        <h3>Post Performance Analytics</h3>
+        <p>${isLo?'ວິເຄາະ Reactions/Comments/Shares · Reach · ເວລາໂພສທີ່ດີສຸດ':'วิเคราะห์ Reactions/Comments/Shares · Reach · เวลาโพสต์ที่ดีที่สุด'}</p>
+      </div>
+      <div class="intg2-token-input-wrap" style="display:block">
+        <label>${isLo?'Access Token':'Access Token'}</label>
+        <textarea id="intgPostPerfToken" rows="4" placeholder="วาง Access Token">${escapeHtmlN(postPerfConn.token||'')}</textarea>
+        <div class="intg2-token-hint">Scope: <code>pages_read_engagement</code>, <code>pages_show_list</code></div>
+        ${postPerfConn.testStatus !== 'idle' && postPerfConn.testMessage ? `<div class="intg2-test-result ${postPerfConn.testStatus}">${escapeHtmlN(postPerfConn.testMessage)}</div>` : ''}
+        ${postPerfConn.testStatus === 'ok' && postPerfConn.pages.length ? `
+          <label style="margin-top:10px">${isLo?'ເລືອກ Page':'เลือก Page'}</label>
+          <select id="intgPostPerfPageSel">
+            ${postPerfConn.pages.map(p => `<option value="${escapeHtmlN(p.id)}">${escapeHtmlN(p.name)} · ${(p.fan_count||0).toLocaleString()} fans</option>`).join('')}
+          </select>
+        ` : ''}
+        <div class="intg2-actions">
+          <button class="btn-ghost" onclick="_intgTestPostPerfToken()">${I.lightbulb} ${isLo?'ທົດສອບ':'ทดสอบเชื่อมต่อ'}</button>
+          ${postPerfConn.testStatus === 'ok' ? `<button class="btn-primary" style="background:linear-gradient(135deg,#ec4899,#f472b6)" onclick="_intgEnablePostPerf()">${isLo?'ເຊື່ອມຕໍ່':'เชื่อมต่อ'} →</button>` : ''}
+        </div>
+      </div>
+      ${_intg2SecurityNote(isLo)}`;
+  }
+
+  if(platform === 'adspend'){
+    if(adSpendConn.enabled){
+      return `
+        <div class="intg2-account-row">
+          <div class="intg2-account-thumb" style="background:linear-gradient(135deg,#10b981,#059669)">${I.dollarBig}</div>
+          <div class="intg2-account-info">
+            <div class="intg2-account-name">${escapeHtmlN(adSpendConn.adAccountName)}</div>
+            <div class="intg2-account-meta">${escapeHtmlN(adSpendConn.adAccountId)} · ${escapeHtmlN(adSpendConn.currency)}</div>
+          </div>
+          <span class="intg2-connected-badge">✓ ${isLo?'ເຊື່ອມຕໍ່ແລ້ວ':'เชื่อมต่อแล้ว'}</span>
+        </div>
+        <div class="intg2-actions">
+          <button class="btn-primary" style="background:linear-gradient(135deg,#10b981,#059669)" onclick="navigateTo('adSpend')">${isLo?'ເປີດໜ້າ Ad Spend':'เปิดหน้า Ad Spend'} →</button>
+          <button class="btn-ghost" onclick="_intgTestAdSpendToken()">${I.refresh} ${isLo?'ທົດສອບ':'ทดสอบ'}</button>
+          <button class="btn-ghost" style="color:#dc2626" onclick="_intgDisableAdSpend()">${isLo?'ຕັດການເຊື່ອມຕໍ່':'ตัดการเชื่อมต่อ'}</button>
+        </div>`;
+    }
+    return `
+      <div class="intg2-cta-card">
+        <div class="intg2-cta-logos">
+          <div class="intg2-cta-logo" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff">${I.dollarBig}</div>
+        </div>
+        <h3>Ad Spend Tracker</h3>
+        <p>${isLo?'ຕິດຕາມງົບໂຄສະນາ CPC CPM CTR · Leads/Purchases':'ติดตามงบโฆษณา CPC CPM CTR · Leads/Purchases'}</p>
+      </div>
+      <div class="intg2-token-input-wrap" style="display:block">
+        <label>${isLo?'User Access Token':'User Access Token'}</label>
+        <textarea id="intgAdSpendToken" rows="4" placeholder="วาง User Token">${escapeHtmlN(adSpendConn.token||'')}</textarea>
+        <div class="intg2-token-hint">Scope: <code>ads_read</code>, <code>business_management</code></div>
+        ${adSpendConn.testStatus !== 'idle' && adSpendConn.testMessage ? `<div class="intg2-test-result ${adSpendConn.testStatus}">${escapeHtmlN(adSpendConn.testMessage)}</div>` : ''}
+        ${adSpendConn.testStatus === 'ok' && adSpendConn.accounts.length ? `
+          <label style="margin-top:10px">${isLo?'ເລືອກບັນຊີໂຄສະນາ':'เลือกบัญชีโฆษณา'}</label>
+          <select id="intgAdAccSel">
+            ${adSpendConn.accounts.map(a => `<option value="${escapeHtmlN(a.id)}">${escapeHtmlN(a.name)} · ${escapeHtmlN(a.currency||'')}</option>`).join('')}
+          </select>
+        ` : ''}
+        <div class="intg2-actions">
+          <button class="btn-ghost" onclick="_intgTestAdSpendToken()">${I.lightbulb} ${isLo?'ທົດສອບ':'ทดสอบเชื่อมต่อ'}</button>
+          ${adSpendConn.testStatus === 'ok' && adSpendConn.accounts.length ? `<button class="btn-primary" style="background:linear-gradient(135deg,#10b981,#059669)" onclick="_intgConnectAdSpend()">${isLo?'ເຊື່ອມຕໍ່':'เชื่อมต่อ'} →</button>` : ''}
+        </div>
+      </div>
+      ${_intg2SecurityNote(isLo)}`;
+  }
+
+  if(platform === 'drive'){
+    if(driveServerStatus.connected){
+      return `
+        <div class="intg2-account-row">
+          <div class="intg2-account-thumb" style="background:linear-gradient(135deg,#4285f4,#ea4335)">G</div>
+          <div class="intg2-account-info">
+            <div class="intg2-account-name">${escapeHtmlN(driveServerStatus.adminEmail||'Admin Account')}</div>
+            <div class="intg2-account-meta">${isLo?'ທີມໃຊ້ໄດ້ໝົດ':'ทีมทุกคนใช้งานได้แล้ว'}</div>
+          </div>
+          <span class="intg2-connected-badge">✓ ${isLo?'ເຊື່ອມຕໍ່ແລ້ວ':'เชื่อมต่อแล้ว'}</span>
+        </div>
+        <div class="intg2-actions">
+          <button class="btn-primary" style="background:linear-gradient(135deg,#4285f4,#34a853)" onclick="navigateTo('files')">${isLo?'ໄປໜ້າເອກະສານ':'ไปหน้าเอกสาร'} →</button>
+          <button class="btn-ghost" style="color:#dc2626" onclick="_intgDisconnectDrive()">${isLo?'ຕັດການເຊື່ອມຕໍ່':'ตัดการเชื่อมต่อ'}</button>
+        </div>`;
+    }
+    return `
+      <div class="intg2-cta-card">
+        <div class="intg2-cta-logos">
+          <div class="intg2-cta-logo" style="background:linear-gradient(135deg,#4285f4,#34a853,#fbbc05,#ea4335);color:#fff">D</div>
+        </div>
+        <h3>Google Drive</h3>
+        <p>${isLo?'Admin ເຊື່ອມຄັ້ງດຽວ — ທີມໃຊ້ໄດ້ໝົດ':'Admin เชื่อมต่อครั้งเดียว — ทีมทั้งหมด login แล้วใช้ได้เลย'}</p>
+      </div>
+      <div class="intg2-token-input-wrap" style="display:block">
+        <label>OAuth Client ID</label>
+        <input type="text" id="intgDriveCid" placeholder="xxx.apps.googleusercontent.com" value="${escapeHtmlN(googleDriveSettings.clientId||'')}"/>
+        <label style="margin-top:10px">OAuth Client Secret</label>
+        <input type="text" id="intgDriveSecret" placeholder="GOCSPX-..." value="${escapeHtmlN(googleDriveSettings.clientSecret||'')}"/>
+        <div class="intg2-token-hint">Redirect URI: <code style="user-select:all">${escapeHtmlN(location.origin)}/api/drive/oauth-callback</code></div>
+        <div class="intg2-actions">
+          <button class="btn-primary" style="background:linear-gradient(135deg,#4285f4,#34a853)" onclick="_intgStartDriveOAuth()">${isLo?'ເຊື່ອມຕໍ່ກັບ Google':'เชื่อมต่อกับ Google'} →</button>
+          <button class="btn-ghost" onclick="openConnectGuide('drive')">${I.lightbulb} ${isLo?'ວິທີຕັ້ງຄ່າ':'วิธีตั้งค่า'}</button>
+        </div>
+      </div>
+      ${_intg2SecurityNote(isLo)}`;
+  }
+
+  return `<div class="empty-state">${isLo?'ເລືອກແພລດຟອມເບື້ອງຊ້າຍ':'เลือกแพลตฟอร์มทางด้านซ้าย'}</div>`;
+}
+
+function _intg2SecurityNote(isLo){
+  return `<div class="intg2-security-note">
+    <div class="intg2-security-icon">${I.shield||I.lock}</div>
+    <div>
+      <b>${isLo?'ບໍ່ຕ້ອງກັງວົນ,':'ไม่ต้องกังวล,'}</b>
+      <p>${isLo
+        ?'ການເຊື່ອມຕໍ່ບັນຊີໂຊຊຽວຂອງທ່ານກັບ TFL+ ປອດໄພ — ເຮົາພຽງແຕ່ຕ້ອງການສິດການເຂົ້າເຖິງຂໍ້ມູນສາທາລະນະທີ່ໄດ້ຮັບການອະນຸມັດຈາກແພລດຟອມຕ່າງໆ ມາວິເຄາະໄດ້.'
+        :'การเชื่อมต่อบัญชีโซเชียลของคุณกับ TFL+ จะปลอดภัย เราเพียงต้องการสิทธิ์การเข้าถึงข้อมูลสาธารณะที่ได้รับการอนุมัติจากแพลตฟอร์มต่าง ๆ มาวิเคราะห์เท่านั้น'}</p>
+      <p style="margin-top:10px">${isLo
+        ?'ໝັ້ນໃຈໄດ້ວ່າ TFL+ ປະຕິບັດຕໍ່ຄວາມເປັນສ່ວນຕົວຂອງທ່ານດ້ວຍຄວາມເຄົາລົບສູງສຸດແລະເປັນຄວາມລັບ'
+        :'มั่นใจได้ว่า TFL+ ปฏิบัติต่อความเป็นส่วนตัวของคุณด้วยความเคารพสูงสุดและเป็นความลับ'}</p>
+    </div>
+  </div>`;
+}
+
+function _intg2FbConnectFromPanel(){
+  const w = document.getElementById('intg2FbInputWrap');
+  if(w) w.style.display = 'block';
+}
+
 function renderSocialIntegrations(el){
   const fbConnected = !!(fbPostState.pageId && fbPostState.pageToken);
   // Auto-fetch IG only ONCE per session when FB is connected
@@ -17384,330 +17941,81 @@ function renderSocialIntegrations(el){
   }
   const igConnected = !!(igAccountInfo && igAccountInfo.id);
   const connectedCount = (fbConnected?1:0) + (igConnected?1:0) + (ttConnected?1:0) + (ytConnected?1:0);
+  const isLo = CURRENT_LANG === 'lo';
 
-  el.innerHTML = topbarSimple('users', 'เชื่อมต่อแพลตฟอร์ม', 'จัดการการเชื่อมต่อ Social Media ทั้งหมดในที่เดียว') + `
-    <div class="page-content" style="max-width:1100px">
+  // Platform metadata for tiles
+  const tiles = [
+    { id:'facebook',  name:'Facebook',  desc:'Page Manager + Live + Insights', connected:fbConnected, color:'#1877f2', icon:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01z"/></svg>' },
+    { id:'instagram', name:'Instagram', desc:'Business Account Stats',         connected:igConnected, color:'#dd2a7b', icon:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2C4.243 2 2 4.243 2 7v10c0 2.757 2.243 5 5 5h10c2.757 0 5-2.243 5-5V7c0-2.757-2.243-5-5-5H7zm0 2h10c1.654 0 3 1.346 3 3v10c0 1.654-1.346 3-3 3H7c-1.654 0-3-1.346-3-3V7c0-1.654 1.346-3 3-3zm11 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-6 1.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm0 2a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z"/></svg>' },
+    { id:'youtube',   name:'YouTube',   desc:'Channel · Videos · Subs',        connected:ytConnected, color:'#ff0000', icon:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.582 6.186a2.506 2.506 0 0 0-1.768-1.768C18.254 4 12 4 12 4s-6.254 0-7.814.418a2.506 2.506 0 0 0-1.768 1.768C2 7.746 2 12 2 12s0 4.254.418 5.814a2.506 2.506 0 0 0 1.768 1.768C5.746 20 12 20 12 20s6.254 0 7.814-.418a2.506 2.506 0 0 0 1.768-1.768C22 16.254 22 12 22 12s0-4.254-.418-5.814zM10 15V9l5.196 3L10 15z"/></svg>' },
+    { id:'tiktok',    name:'TikTok',    desc:'Channel videos + views',         connected:ttConnected, color:'#000', icon:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.1z"/></svg>' },
+    { id:'twitter',   name:'X (Twitter)', desc:isLo?'ມາໃນໄວໆນີ້':'มาเร็วๆ นี้', connected:false, comingSoon:true, color:'#000', icon:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2H21.4l-7.005 8.01L22.5 22h-6.45l-5.062-6.612L5.196 22H2.04l7.495-8.572L1.5 2h6.612l4.575 6.044L18.244 2zm-1.11 18.15h1.747L7.067 3.75H5.193l11.94 16.4z"/></svg>' },
+    { id:'postperf',  name:'Post Performance', desc:'Analytics เชิงลึกของโพสต์', connected:postPerfConn.enabled, color:'#ec4899', icon:I.barChart, extra:true },
+    { id:'adspend',   name:'Ad Spend Tracker', desc:'งบโฆษณา + ROAS + CPC',     connected:adSpendConn.enabled, color:'#10b981', icon:I.dollarBig, extra:true },
+    { id:'drive',     name:'Google Drive', desc:'เก็บไฟล์ทีม', connected:driveServerStatus.connected, color:'#4285f4', icon:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.71 3.5L1.15 15l3.42 6h7.41l-3.36-6h5.51l-3.78-6.5L7.71 3.5zm5.79 0L9.71 10h13.14L18.42 3.5h-4.92zM11.5 17.5l3.34 5.5h2.42L21.5 17 18.65 12.5H12.7l-1.2 5z"/></svg>' },
+  ];
+  const currentTile = tiles.find(x => x.id === selectedIntgPlatform) || tiles[0];
 
-      <div class="intg-summary">
-        <div class="intg-summary-icon">${I.cloud || I.trending}</div>
-        <div class="intg-summary-info">
-          <h3 class="intg-summary-title">บัญชีที่เชื่อมต่อแล้ว</h3>
-          <p class="intg-summary-sub">${connectedCount} จาก 4 แพลตฟอร์ม · เชื่อมเพิ่มเพื่อ Insight ที่ครบถ้วน</p>
+  el.innerHTML = topbarSimple('users', isLo?'ເຊື່ອມຕໍ່ແພລດຟອມ':'เชื่อมต่อแพลตฟอร์ม', isLo?'ເລືອກແພລດຟອມທີ່ຕ້ອງການເຊື່ອມຕໍ່':'เลือกแพลตฟอร์มที่ต้องการเชื่อมต่อโปรไฟล์') + `
+    <div class="intg2-layout">
+      <!-- LEFT: Platform Grid -->
+      <div class="intg2-left">
+        <h2 class="intg2-section-title">${isLo?'ແພລດຟອມ':'แพลตฟอร์ม'}</h2>
+        <div class="intg2-tile-grid">
+          ${tiles.filter(t=>!t.extra).map(p=>`
+            <div class="intg2-tile ${selectedIntgPlatform===p.id?'selected':''} ${p.connected?'connected':''} ${p.comingSoon?'soon':''}" onclick="setSelectedIntgPlatform('${p.id}')">
+              <div class="intg2-tile-icon" style="color:${p.color}">${p.icon}</div>
+              <div class="intg2-tile-name">${escapeHtmlN(p.name)}</div>
+              <div class="intg2-tile-status">
+                ${p.comingSoon ? `<span class="intg2-tile-soon">${isLo?'ມາໃນໄວໆ':'มาเร็วๆ'}</span>` :
+                p.connected ? `<span class="intg2-tile-on">●&nbsp;${isLo?'ເຊື່ອມຕໍ່ແລ້ວ':'เชื่อมต่อแล้ว'}</span>` :
+                `<span class="intg2-tile-off">${isLo?'ບໍ່ໄດ້ເຊື່ອມຕໍ່':'ไม่ได้เชื่อมต่อ'}</span>`}
+              </div>
+            </div>
+          `).join('')}
         </div>
-        <div class="intg-counter">${connectedCount}/4</div>
+
+        <h2 class="intg2-section-title" style="margin-top:24px">${isLo?'ເຄື່ອງມືພິເສດ':'เครื่องมือเสริม'}</h2>
+        <div class="intg2-tile-grid">
+          ${tiles.filter(t=>t.extra).map(p=>`
+            <div class="intg2-tile ${selectedIntgPlatform===p.id?'selected':''} ${p.connected?'connected':''}" onclick="setSelectedIntgPlatform('${p.id}')">
+              <div class="intg2-tile-icon" style="color:${p.color}">${p.icon}</div>
+              <div class="intg2-tile-name">${escapeHtmlN(p.name)}</div>
+              <div class="intg2-tile-status">
+                ${p.connected ? `<span class="intg2-tile-on">●&nbsp;${isLo?'ເຊື່ອມຕໍ່ແລ້ວ':'เชื่อมต่อแล้ว'}</span>` :
+                `<span class="intg2-tile-off">${isLo?'ບໍ່ໄດ້ເຊື່ອມຕໍ່':'ไม่ได้เชื่อมต่อ'}</span>`}
+              </div>
+            </div>
+          `).join('')}
+          <div class="intg2-tile ${selectedIntgPlatform==='drive'?'selected':''} ${driveServerStatus.connected?'connected':''}" onclick="setSelectedIntgPlatform('drive')">
+            <div class="intg2-tile-icon" style="color:#4285f4">${tiles.find(t=>t.id==='drive').icon}</div>
+            <div class="intg2-tile-name">Google Drive</div>
+            <div class="intg2-tile-status">
+              ${driveServerStatus.connected ? `<span class="intg2-tile-on">●&nbsp;${isLo?'ເຊື່ອມຕໍ່ແລ້ວ':'เชื่อมต่อแล้ว'}</span>` :
+              `<span class="intg2-tile-off">${isLo?'ບໍ່ໄດ້ເຊື່ອມຕໍ່':'ไม่ได้เชื่อมต่อ'}</span>`}
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="intg-grid">
-
-        <!-- FACEBOOK -->
-        <div class="intg-card fb ${fbConnected?'connected':''}">
-          <div class="intg-hdr">
-            <div class="intg-logo fb">f</div>
+      <!-- RIGHT: Detail Panel -->
+      <div class="intg2-right">
+        <div class="intg2-panel">
+          <div class="intg2-panel-hd">
+            <div class="intg2-panel-icon" style="color:${currentTile.color}">${currentTile.icon}</div>
             <div style="flex:1;min-width:0">
-              <div class="intg-name">Facebook Page <span class="intg-status ${fbConnected?'on':'off'}">${fbConnected?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
-              <p class="intg-desc">เชื่อม Page เพื่อจัดการโพสต์ ดู Analytics และ Live Streaming</p>
-            </div>
-            <button class="intg-guide-btn" onclick="openConnectGuide('facebook')" title="วิธีเชื่อมต่อ">${I.lightbulb} วิธีเชื่อม</button>
-          </div>
-          ${fbConnected ? `
-            <div class="intg-account">
-              <div class="intg-account-thumb">${(fbPostState.pageName||'?')[0]}</div>
-              <div class="intg-account-info">
-                <div class="intg-account-name">${escapeHtmlN(fbPostState.pageName)}</div>
-                <div class="intg-account-meta">Page ID: ${fbPostState.pageId}</div>
-              </div>
-            </div>
-            <div class="intg-actions">
-              <button class="intg-btn-primary" onclick="navigateTo('fbPosts')">โพสต์ Manager →</button>
-              <button class="intg-btn-ghost danger" onclick="_intgDisconnectFb()">ตัดการเชื่อมต่อ</button>
-            </div>
-          ` : `
-            <div class="intg-token-row">
-              <textarea class="intg-token-input" id="intgFbToken" placeholder="วาง User Access Token (มี pages_show_list + pages_manage_posts)">${escapeHtmlN(DEFAULT_FB_TOKEN)}</textarea>
-              <div class="intg-token-help">มี default token พร้อมใช้แล้ว · กด "เชื่อมต่อ" เพื่อใช้งานทันที · หรือเปลี่ยน Token ใหม่จาก <a href="https://developers.facebook.com/tools/explorer" target="_blank">Graph API Explorer</a></div>
-            </div>
-            <div class="intg-actions">
-              <button class="intg-btn-primary" onclick="_intgConnectFb()">เชื่อมต่อ Facebook</button>
-            </div>
-          `}
-        </div>
-
-        <!-- INSTAGRAM -->
-        <div class="intg-card ig ${igConnected?'connected':''}">
-          <div class="intg-hdr">
-            <div class="intg-logo ig">IG</div>
-            <div style="flex:1;min-width:0">
-              <div class="intg-name">Instagram Business <span class="intg-status ${igConnected?'on':'off'}">${igConnected?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
-              <p class="intg-desc">เชื่อมผ่าน Facebook Page (ต้องเชื่อม IG กับ Page ใน FB ก่อน)</p>
-            </div>
-            <button class="intg-guide-btn" onclick="openConnectGuide('instagram')" title="วิธีเชื่อมต่อ">${I.lightbulb} วิธีเชื่อม</button>
-          </div>
-          ${igConnected ? `
-            <div class="intg-account">
-              <div class="intg-account-thumb">${igAccountInfo.profile_picture_url?`<img src="${igAccountInfo.profile_picture_url}"/>`:'@'}</div>
-              <div class="intg-account-info">
-                <div class="intg-account-name">@${escapeHtmlN(igAccountInfo.username)}</div>
-                <div class="intg-account-meta">${escapeHtmlN(igAccountInfo.name||'')}</div>
-              </div>
-            </div>
-            <div class="intg-stat-row">
-              <div class="intg-stat"><div class="intg-stat-val">${(igAccountInfo.followers_count||0).toLocaleString()}</div><div class="intg-stat-lbl">Followers</div></div>
-              <div class="intg-stat"><div class="intg-stat-val">${(igAccountInfo.media_count||0).toLocaleString()}</div><div class="intg-stat-lbl">Posts</div></div>
-              <div class="intg-stat"><div class="intg-stat-val">✓</div><div class="intg-stat-lbl">Business</div></div>
-            </div>
-            <div class="intg-actions">
-              <button class="intg-btn-primary ig" onclick="refreshIgInfo()">รีเฟรชข้อมูล</button>
-              <button class="intg-btn-ghost" onclick="navigateTo('socialAnalytics')">ดู Analytics</button>
-            </div>
-          ` : `
-            <p style="font-size:12px;color:var(--t2);line-height:1.6;background:var(--bg-soft);padding:11px;border-radius:9px;margin:14px 0">
-              <b style="color:var(--t1)">วิธีเชื่อม:</b><br>
-              1. เชื่อม Facebook Page ก่อน<br>
-              2. ใน Facebook Page Settings → Linked Accounts → connect IG Business Account<br>
-              3. กลับมาที่นี่ → กด "ตรวจสอบการเชื่อม"
-            </p>
-            <div class="intg-actions">
-              <button class="intg-btn-primary ig" onclick="refreshIgInfo()" ${!fbConnected?'disabled':''}>ตรวจสอบการเชื่อม</button>
-              ${!fbConnected ? '<span style="font-size:11.5px;color:var(--t2);align-self:center">⚠ เชื่อม Facebook ก่อน</span>' : ''}
-            </div>
-          `}
-        </div>
-
-        <!-- TIKTOK (link-only) -->
-        <div class="intg-card ${ttConnected?'connected':''} tt">
-          <div class="intg-hdr">
-            <div class="intg-logo tt">${tiktokSettings.avatar?`<img src="${tiktokSettings.avatar}" style="width:100%;height:100%;border-radius:inherit;object-fit:cover">`:'T'}</div>
-            <div style="flex:1;min-width:0">
-              <div class="intg-name">TikTok <span class="intg-status ${ttConnected?'on':'off'}">${ttConnected?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
-              <p class="intg-desc">วาง URL ช่อง TikTok → ดึงวิดีโอ + ยอด View อัตโนมัติ</p>
+              <div class="intg2-panel-title">${escapeHtmlN(currentTile.name)}</div>
+              <div class="intg2-panel-sub">${currentTile.connected ? (isLo?'1 ບັນຊີເຊື່ອມຕໍ່':'1 บัญชีเชื่อมต่อ') : (isLo?'0 ບັນຊີເຊື່ອມຕໍ່':'0 บัญชีเชื่อมต่อ')}</div>
             </div>
           </div>
-          ${ttConnected ? `
-            <div class="intg-account">
-              <div class="intg-account-thumb tt" style="overflow:hidden">${tiktokSettings.avatar?`<img src="${tiktokSettings.avatar}" style="width:100%;height:100%;object-fit:cover">`:'T'}</div>
-              <div class="intg-account-info">
-                <div class="intg-account-name">${escapeHtmlN(tiktokSettings.displayName||tiktokSettings.username||'TikTok')}</div>
-                <div class="intg-account-meta">@${escapeHtmlN(tiktokSettings.username||'')} · อัปเดต ${tiktokSettings.fetchedAt?new Date(tiktokSettings.fetchedAt).toLocaleString('th-TH'):'-'}</div>
-              </div>
-            </div>
-            <div class="intg-stat-row">
-              <div class="intg-stat"><div class="intg-stat-val">${fmtNum(tiktokSettings.followerCount||0)}</div><div class="intg-stat-lbl">Followers</div></div>
-              <div class="intg-stat"><div class="intg-stat-val">${fmtNum(tiktokSettings.videoCount||0)}</div><div class="intg-stat-lbl">Videos</div></div>
-              <div class="intg-stat"><div class="intg-stat-val">${fmtNum(tiktokSettings.heartCount||0)}</div><div class="intg-stat-lbl">❤ Likes</div></div>
-            </div>
-            ${Array.isArray(tiktokSettings.videos) && tiktokSettings.videos.length ? `
-              <div style="margin-top:14px">
-                <div style="font-size:12px;color:var(--t2);font-weight:700;margin-bottom:8px">📹 วิดีโอล่าสุด (${tiktokSettings.videos.length})</div>
-                <div class="intg-video-grid">
-                  ${tiktokSettings.videos.slice(0,6).map(v=>`
-                    <a href="${escapeHtmlN(v.url)}" target="_blank" rel="noopener" class="intg-video-card">
-                      ${v.thumbnail?`<img src="${v.thumbnail}" alt="">`:'<div style="aspect-ratio:9/16;background:var(--bg-soft)"></div>'}
-                      <div class="intg-video-meta">▶ ${fmtNum(v.viewCount||0)} · ❤ ${fmtNum(v.likeCount||0)}</div>
-                    </a>
-                  `).join('')}
-                </div>
-              </div>
-            ` : ''}
-            <div class="intg-actions" style="margin-top:14px">
-              <button class="intg-btn-primary tt" onclick="_intgRefreshTikTok()">↻ ดึงข้อมูลใหม่</button>
-              <button class="intg-btn-ghost danger" onclick="_intgDisconnectTikTok()">ตัดการเชื่อมต่อ</button>
-            </div>
-          ` : `
-            <div class="intg-token-row">
-              <input type="text" class="intg-token-input" id="intgTtLink" placeholder="https://www.tiktok.com/@username" style="min-height:auto;padding:11px 14px;font-family:inherit"/>
-              <div class="intg-token-help">วาง URL ช่อง TikTok ของคุณ (ไม่ต้องใช้ Access Token!) · ระบบจะดึงวิดีโอล่าสุด + ยอด View ให้อัตโนมัติ</div>
-            </div>
-            <div class="intg-actions">
-              <button class="intg-btn-primary tt" onclick="_intgSaveTikTok()">เชื่อมต่อ TikTok</button>
-            </div>
-          `}
-        </div>
-
-        <!-- YOUTUBE (link-only) -->
-        <div class="intg-card ${ytConnected?'connected':''} yt">
-          <div class="intg-hdr">
-            <div class="intg-logo yt">${youtubeSettings.avatar?`<img src="${youtubeSettings.avatar}" style="width:100%;height:100%;border-radius:inherit;object-fit:cover">`:'▶'}</div>
-            <div style="flex:1;min-width:0">
-              <div class="intg-name">YouTube <span class="intg-status ${ytConnected?'on':'off'}">${ytConnected?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
-              <p class="intg-desc">วาง URL ช่อง YouTube → ดึงวิดีโอ + Subscribers + views อัตโนมัติ</p>
-            </div>
+          <div class="intg2-panel-body" id="intg2PanelBody">
+            ${_intg2RenderPanelContent(currentTile.id, {fbConnected, igConnected})}
           </div>
-          ${ytConnected ? `
-            <div class="intg-account">
-              <div class="intg-account-thumb yt" style="overflow:hidden">${youtubeSettings.avatar?`<img src="${youtubeSettings.avatar}" style="width:100%;height:100%;object-fit:cover">`:'▶'}</div>
-              <div class="intg-account-info">
-                <div class="intg-account-name">${escapeHtmlN(youtubeSettings.channelTitle||'YouTube Channel')}</div>
-                <div class="intg-account-meta">${escapeHtmlN(youtubeSettings.subscriberText||'')} · อัปเดต ${youtubeSettings.fetchedAt?new Date(youtubeSettings.fetchedAt).toLocaleString('th-TH'):'-'}</div>
-              </div>
-            </div>
-            ${Array.isArray(youtubeSettings.videos) && youtubeSettings.videos.length ? `
-              <div style="margin-top:14px">
-                <div style="font-size:12px;color:var(--t2);font-weight:700;margin-bottom:8px">📹 วิดีโอล่าสุด (${youtubeSettings.videos.length})</div>
-                <div class="intg-video-grid yt">
-                  ${youtubeSettings.videos.slice(0,6).map(v=>`
-                    <a href="${escapeHtmlN(v.url)}" target="_blank" rel="noopener" class="intg-video-card yt">
-                      ${v.thumbnail?`<img src="${v.thumbnail}" alt="">`:''}
-                      <div class="intg-video-title" title="${escapeHtmlN(v.title)}">${escapeHtmlN(v.title)}</div>
-                      <div class="intg-video-meta">${escapeHtmlN(v.viewCount||'')}${v.publishedAt?' · '+escapeHtmlN(v.publishedAt):''}</div>
-                    </a>
-                  `).join('')}
-                </div>
-              </div>
-            ` : ''}
-            <div class="intg-actions" style="margin-top:14px">
-              <button class="intg-btn-primary yt" onclick="_intgRefreshYouTube()">↻ ดึงข้อมูลใหม่</button>
-              <button class="intg-btn-ghost danger" onclick="_intgDisconnectYouTube()">ตัดการเชื่อมต่อ</button>
-            </div>
-          ` : `
-            <div class="intg-token-row">
-              <input type="text" class="intg-token-input" id="intgYtLink" placeholder="https://www.youtube.com/@channelname หรือ /channel/UCxxx" style="min-height:auto;padding:11px 14px;font-family:inherit"/>
-              <div class="intg-token-help">วาง URL ช่อง YouTube ของคุณ (ไม่ต้องใช้ OAuth!) · ระบบจะดึงข้อมูล public ของช่องให้</div>
-            </div>
-            <div class="intg-actions">
-              <button class="intg-btn-primary yt" onclick="_intgSaveYouTube()">เชื่อมต่อ YouTube</button>
-            </div>
-          `}
         </div>
-
-        <!-- POST PERFORMANCE -->
-        <div class="intg-card ${postPerfConn.enabled?'connected':''}" style="grid-column:span 2">
-          <div class="intg-hdr">
-            <div class="intg-logo" style="background:linear-gradient(135deg,#ec4899,#f472b6)">📊</div>
-            <div style="flex:1;min-width:0">
-              <div class="intg-name">Post Performance <span class="intg-status ${postPerfConn.enabled?'on':'off'}">${postPerfConn.enabled?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
-              <p class="intg-desc">วิเคราะห์ Reactions/Comments/Shares · Reach · เวลาโพสต์ที่ดีที่สุด · ประเภทคอนเทนต์ที่ได้ผล</p>
-            </div>
-          </div>
-          ${postPerfConn.enabled ? `
-            <div class="intg-account">
-              <div class="intg-account-thumb" style="background:linear-gradient(135deg,#ec4899,#f472b6)">📊</div>
-              <div class="intg-account-info">
-                <div class="intg-account-name">${escapeHtmlN(postPerfConn.pageName)}</div>
-                <div class="intg-account-meta">Page ID: ${escapeHtmlN(postPerfConn.pageId)} · เชื่อมเมื่อ ${postPerfConn.connectedAt?new Date(postPerfConn.connectedAt).toLocaleString('th-TH'):'-'}</div>
-              </div>
-            </div>
-            <div class="intg-actions">
-              <button class="intg-btn-primary" style="background:linear-gradient(135deg,#ec4899,#f472b6)" onclick="navigateTo('postPerformance')">เปิดหน้า Post Performance →</button>
-              <button class="intg-btn-ghost" onclick="_intgTestPostPerfToken()">↻ ทดสอบเชื่อมต่อใหม่</button>
-              <button class="intg-btn-ghost" onclick="_intgReconnectPostPerf()">เปลี่ยน Token</button>
-              <button class="intg-btn-ghost danger" onclick="_intgDisablePostPerf()">ตัดการเชื่อมต่อ</button>
-            </div>
-            ${postPerfConn.testMessage ? `<div style="margin-top:10px;padding:8px 12px;background:${postPerfConn.testStatus==='ok'?'rgba(16,185,129,.12)':postPerfConn.testStatus==='failed'?'rgba(239,68,68,.12)':'var(--bg-soft)'};border-radius:8px;font-size:12px;color:${postPerfConn.testStatus==='ok'?'#059669':postPerfConn.testStatus==='failed'?'#dc2626':'var(--t1)'}">${escapeHtmlN(postPerfConn.testMessage)}</div>` : ''}
-          ` : `
-            <div class="intg-token-row">
-              <textarea class="intg-token-input" id="intgPostPerfToken" placeholder="วาง Access Token (User Token ที่มี pages_read_engagement + pages_show_list หรือ Page Token ก็ได้)">${escapeHtmlN(postPerfConn.token||'')}</textarea>
-              <div class="intg-token-help">Token ต้องมี scope: <code>pages_read_engagement</code>, <code>pages_show_list</code> · ขอที่ <a href="https://developers.facebook.com/tools/explorer" target="_blank">Graph API Explorer</a></div>
-            </div>
-            ${postPerfConn.testStatus !== 'idle' && postPerfConn.testMessage ? `
-              <div style="margin:10px 0;padding:10px 12px;background:${postPerfConn.testStatus==='ok'?'rgba(16,185,129,.12)':postPerfConn.testStatus==='failed'?'rgba(239,68,68,.12)':'var(--bg-soft)'};border-radius:8px;font-size:12.5px;color:${postPerfConn.testStatus==='ok'?'#059669':postPerfConn.testStatus==='failed'?'#dc2626':'var(--t1)'};font-weight:600">${escapeHtmlN(postPerfConn.testMessage)}</div>
-            ` : ''}
-            ${postPerfConn.testStatus === 'ok' && postPerfConn.pages.length ? `
-              <div style="margin:14px 0">
-                <label style="font-size:12px;font-weight:700;color:var(--t1);display:block;margin-bottom:6px">เลือก Page</label>
-                <select id="intgPostPerfPageSel" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:9px;background:var(--bg);color:var(--t1);font-size:13px">
-                  ${postPerfConn.pages.map(p => `<option value="${escapeHtmlN(p.id)}">${escapeHtmlN(p.name)} · ${(p.fan_count||0).toLocaleString()} fans</option>`).join('')}
-                </select>
-              </div>
-            ` : ''}
-            <div class="intg-actions">
-              <button class="intg-btn-ghost" onclick="_intgTestPostPerfToken()" ${postPerfConn.testStatus==='testing'?'disabled':''}>${postPerfConn.testStatus==='testing'?'กำลังทดสอบ…':'🧪 ทดสอบการเชื่อมต่อ'}</button>
-              <button class="intg-btn-ghost" onclick="_intgCheckPostPerfPerms()">🔍 ดู Permissions</button>
-              ${postPerfConn.testStatus === 'ok' ? `<button class="intg-btn-primary" style="background:linear-gradient(135deg,#ec4899,#f472b6)" onclick="_intgEnablePostPerf()">เชื่อมต่อ →</button>` : ''}
-            </div>
-          `}
-        </div>
-
-        <!-- AD SPEND TRACKER -->
-        <div class="intg-card ${adSpendConn.enabled?'connected':''}" style="grid-column:span 2">
-          <div class="intg-hdr">
-            <div class="intg-logo" style="background:linear-gradient(135deg,#10b981,#059669)">💰</div>
-            <div style="flex:1;min-width:0">
-              <div class="intg-name">Ad Spend Tracker <span class="intg-status ${adSpendConn.enabled?'on':'off'}">${adSpendConn.enabled?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
-              <p class="intg-desc">ติดตามงบโฆษณา CPC CPM CTR · Leads/Purchases · แยกตาม Campaign/Ad Set/Ad</p>
-            </div>
-          </div>
-          ${adSpendConn.enabled ? `
-            <div class="intg-account">
-              <div class="intg-account-thumb" style="background:linear-gradient(135deg,#10b981,#059669)">💰</div>
-              <div class="intg-account-info">
-                <div class="intg-account-name">${escapeHtmlN(adSpendConn.adAccountName)}</div>
-                <div class="intg-account-meta">${escapeHtmlN(adSpendConn.adAccountId)} · ${escapeHtmlN(adSpendConn.currency)} · เชื่อมเมื่อ ${adSpendConn.connectedAt?new Date(adSpendConn.connectedAt).toLocaleString('th-TH'):'-'}</div>
-              </div>
-            </div>
-            <div class="intg-actions">
-              <button class="intg-btn-primary" style="background:linear-gradient(135deg,#10b981,#059669)" onclick="navigateTo('adSpend')">เปิดหน้า Ad Spend Tracker →</button>
-              <button class="intg-btn-ghost" onclick="_intgTestAdSpendToken()">↻ ทดสอบเชื่อมต่อใหม่</button>
-              <button class="intg-btn-ghost" onclick="_intgReconnectAdSpend()">เปลี่ยน Token / บัญชี</button>
-              <button class="intg-btn-ghost danger" onclick="_intgDisableAdSpend()">ตัดการเชื่อมต่อ</button>
-            </div>
-            ${adSpendConn.testMessage ? `<div style="margin-top:10px;padding:8px 12px;background:${adSpendConn.testStatus==='ok'?'rgba(16,185,129,.12)':adSpendConn.testStatus==='failed'?'rgba(239,68,68,.12)':'var(--bg-soft)'};border-radius:8px;font-size:12px;color:${adSpendConn.testStatus==='ok'?'#059669':adSpendConn.testStatus==='failed'?'#dc2626':'var(--t1)'}">${escapeHtmlN(adSpendConn.testMessage)}</div>` : ''}
-          ` : `
-            <div class="intg-token-row">
-              <textarea class="intg-token-input" id="intgAdSpendToken" placeholder="วาง User Access Token ที่มี ads_read + business_management">${escapeHtmlN(adSpendConn.token||'')}</textarea>
-              <div class="intg-token-help">Token ต้องมี scope: <code>ads_read</code>, <code>ads_management</code>, <code>business_management</code> · ใช้ User Token เท่านั้น (Page Token ไม่ทำงาน)</div>
-            </div>
-            ${adSpendConn.testStatus !== 'idle' && adSpendConn.testMessage ? `
-              <div style="margin:10px 0;padding:10px 12px;background:${adSpendConn.testStatus==='ok'?'rgba(16,185,129,.12)':adSpendConn.testStatus==='failed'?'rgba(239,68,68,.12)':'var(--bg-soft)'};border-radius:8px;font-size:12.5px;color:${adSpendConn.testStatus==='ok'?'#059669':adSpendConn.testStatus==='failed'?'#dc2626':'var(--t1)'};font-weight:600">${escapeHtmlN(adSpendConn.testMessage)}</div>
-            ` : ''}
-            ${adSpendConn.testStatus === 'ok' && adSpendConn.accounts.length ? `
-              <div style="margin:14px 0">
-                <label style="font-size:12px;font-weight:700;color:var(--t1);display:block;margin-bottom:6px">เลือกบัญชีโฆษณา</label>
-                <select id="intgAdAccSel" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:9px;background:var(--bg);color:var(--t1);font-size:13px">
-                  ${adSpendConn.accounts.map(a => `<option value="${escapeHtmlN(a.id)}">${escapeHtmlN(a.name)} · ${escapeHtmlN(a.account_id)} · ${escapeHtmlN(a.currency||'')}</option>`).join('')}
-                </select>
-              </div>
-            ` : ''}
-            <div class="intg-actions">
-              <button class="intg-btn-ghost" onclick="_intgTestAdSpendToken()" ${adSpendConn.testStatus==='testing'?'disabled':''}>${adSpendConn.testStatus==='testing'?'กำลังทดสอบ…':'🧪 ทดสอบการเชื่อมต่อ'}</button>
-              <button class="intg-btn-ghost" onclick="_intgCheckAdSpendPerms()">🔍 ดู Permissions</button>
-              ${adSpendConn.testStatus === 'ok' && adSpendConn.accounts.length ? `<button class="intg-btn-primary" style="background:linear-gradient(135deg,#10b981,#059669)" onclick="_intgConnectAdSpend()">เชื่อมต่อ →</button>` : ''}
-            </div>
-          `}
-        </div>
-
-        <!-- GOOGLE DRIVE (server-side OAuth refresh-token flow — admin connects once, team uses without re-login) -->
-        <div class="intg-card ${driveServerStatus.connected?'connected':''}" style="grid-column:span 2">
-          <div class="intg-hdr">
-            <div class="intg-logo" style="background:linear-gradient(135deg,#4285f4,#34a853,#fbbc05,#ea4335)">D</div>
-            <div style="flex:1;min-width:0">
-              <div class="intg-name">Google Drive <span class="intg-status ${driveServerStatus.connected?'on':'off'}">${driveServerStatus.connected?'เชื่อมแล้ว':'ไม่เชื่อม'}</span></div>
-              <p class="intg-desc">Admin เชื่อมต่อครั้งเดียว — ทีมทั้งหมด login แล้วใช้ได้เลย ไม่ต้อง sign-in Google รายคน</p>
-            </div>
-            <button class="intg-guide-btn" onclick="openConnectGuide('drive')" title="วิธีเชื่อมต่อ">${I.lightbulb} วิธีเชื่อม</button>
-          </div>
-          ${driveServerStatus.connected ? `
-            <div class="intg-account">
-              <div class="intg-account-thumb" style="background:linear-gradient(135deg,#4285f4,#ea4335)">G</div>
-              <div class="intg-account-info">
-                <div class="intg-account-name">${escapeHtmlN(driveServerStatus.adminEmail||'Admin Account')}</div>
-                <div class="intg-account-meta">เชื่อมเมื่อ ${driveServerStatus.connectedAt?new Date(driveServerStatus.connectedAt).toLocaleString('th-TH'):'-'} · ทีมทุกคนใช้งานได้แล้ว</div>
-              </div>
-            </div>
-            <div class="intg-actions">
-              <button class="intg-btn-primary" style="background:linear-gradient(135deg,#4285f4,#34a853)" onclick="navigateTo('files')">ไปหน้าเอกสาร →</button>
-              <button class="intg-btn-ghost danger" onclick="_intgDisconnectDrive()">ตัดการเชื่อมต่อ</button>
-            </div>
-          ` : `
-            <div class="intg-token-row">
-              <input type="text" class="intg-token-input" id="intgDriveCid" placeholder="OAuth Client ID (xxx.apps.googleusercontent.com)" value="${escapeHtmlN(googleDriveSettings.clientId||'')}" style="min-height:auto;padding:11px 14px;font-family:inherit"/>
-              <input type="text" class="intg-token-input" id="intgDriveSecret" placeholder="OAuth Client Secret (GOCSPX-...)" value="${escapeHtmlN(googleDriveSettings.clientSecret||'')}" style="min-height:auto;padding:11px 14px;font-family:inherit"/>
-              <div class="intg-token-help" style="line-height:1.7">
-                <b>วิธีตั้งค่า (Admin ทำครั้งเดียว):</b><br>
-                1. ไปที่ <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:#7c3aed;font-weight:700">Google Cloud Console → Credentials</a><br>
-                2. สร้าง <b>OAuth 2.0 Client ID</b> (Application type: Web application)<br>
-                3. ใน "Authorized redirect URIs" ใส่: <code style="background:var(--bg-soft);padding:2px 6px;border-radius:4px;font-size:11.5px;user-select:all">${escapeHtmlN(location.origin)}/api/drive/oauth-callback</code><br>
-                4. ก็อป Client ID + Client Secret มาวางในช่องด้านบน → กด "เริ่มเชื่อมต่อ"
-              </div>
-            </div>
-            <div class="intg-actions">
-              <button class="intg-btn-primary" style="background:linear-gradient(135deg,#4285f4,#34a853)" onclick="_intgStartDriveOAuth()">${driveServerStatus.clientIdSet?'เชื่อมต่อกับ Google →':'บันทึก & เชื่อมต่อ Google →'}</button>
-            </div>
-          `}
-        </div>
-
       </div>
+    </div>
 
-      <div style="padding:18px;background:var(--bg-soft);border-radius:12px;font-size:12.5px;color:var(--t2);line-height:1.6">
+          <div style="padding:18px;background:var(--bg-soft);border-radius:12px;font-size:12.5px;color:var(--t2);line-height:1.6">
         <b style="color:var(--t1)">💡 เคล็ดลับ:</b> หลังเชื่อมแล้ว ไปดูที่หน้า <a onclick="navigateTo('socialAnalytics')" style="color:#7c3aed;font-weight:700;cursor:pointer">Social Analytics</a> เพื่อดูภาพรวมข้อมูลทุก platform · หรือใช้ <a onclick="navigateTo('fbPosts')" style="color:#7c3aed;font-weight:700;cursor:pointer">โพสต์ Manager</a> เพื่อสร้าง / ตั้งเวลาโพสต์
       </div>
 
