@@ -8244,7 +8244,7 @@ function renderSidebar(){
         <span class="nav-icon">${I.history}</span><span class="nav-label">${t('nav_activity')}</span>
       </div>
       <div class="nav-item ${currentView==='affiliateHub'?'active':''}" onclick="navigateTo('affiliateHub')">
-        <span class="nav-icon">${I.zap||I.dollarBig}</span><span class="nav-label">Affiliate Hub</span>
+        <span class="nav-icon">${I.shield||I.settings}</span><span class="nav-label">${CURRENT_LANG==='lo'?'ຫຼັງບ້ານ TFL+':'หลังบ้าน TFL+'}</span>
       </div>`;
   }
   document.getElementById('sidebarNav').innerHTML = html;
@@ -16952,7 +16952,9 @@ function affiliateOpenNew(){
 function renderAffiliateHub(el){
   const isLo = CURRENT_LANG === 'lo';
   const url = `https://ohmycpl.com/th?_=${affiliateRefreshKey}`;
-  el.innerHTML = topbarSimple('barChart', 'Affiliate Hub', isLo?'ຈັດການເຄືອຂ່າຍ Affiliate ແລະ ຫາ Lead':'จัดการเครือข่าย Affiliate · หา Lead · ติดตามคอมมิชชั่น') + `
+  const pageTitle = isLo ? 'ຫຼັງບ້ານ TFL+' : 'หลังบ้าน TFL+';
+  const pageSubtitle = isLo ? 'ຈັດການລູກຄ້າ · ສົ່ງແຈ້ງເຕືອນແອັບ · ຄຸ້ມຄອງລະບົບ TFL+' : 'จัดการลูกค้า · บรอดแคสแจ้งเตือนแอพ · ดูแลระบบ TFL+';
+  el.innerHTML = topbarSimple('users', pageTitle, pageSubtitle) + `
     <div class="page-content affiliate-hub-page" style="max-width:1600px;padding:18px clamp(12px,2vw,28px)">
 
       <!-- HERO -->
@@ -16961,35 +16963,35 @@ function renderAffiliateHub(el){
         <div class="affiliate-hero-content">
           <div class="affiliate-hero-badge">
             <span class="dot"></span>
-            ${isLo?'ການເຊື່ອມຕໍ່ປອດໄພ':'การเชื่อมต่อปลอดภัย'}
+            ${isLo?'Admin Console':'Admin Console · เฉพาะผู้ดูแล'}
           </div>
-          <h1 class="affiliate-hero-title">${isLo?'ສ້າງລາຍໄດ້ຈາກ CPL':'สร้างรายได้จากเครือข่าย CPL'}</h1>
-          <p class="affiliate-hero-sub">${isLo?'ຈັດການແຄມເປນ · ຕິດຕາມ Lead · ດຶງ Commission ໄດ້ໃນແຫ່ງດຽວ':'จัดการแคมเปญ · ติดตาม Lead · ดึง Commission ได้ในที่เดียว'}</p>
+          <h1 class="affiliate-hero-title">${pageTitle}</h1>
+          <p class="affiliate-hero-sub">${isLo?'ສູນກາງຄຸ້ມຄອງລະບົບ — ເບິ່ງລູກຄ້າ · ສົ່ງແຈ້ງເຕືອນ · ປັບແຕ່ງແອັບ TFL+':'ศูนย์กลางจัดการระบบ — ดูข้อมูลลูกค้า · ส่งแจ้งเตือนทั้งแอพ · ปรับแต่งฟีเจอร์ของ TFL+ App'}</p>
           <div class="affiliate-hero-actions">
             <button class="btn-primary" onclick="affiliateRefresh()">${I.refresh} ${isLo?'ໂຫຼດໃໝ່':'รีโหลด'}</button>
-            <button class="btn-ghost" onclick="affiliateOpenNew()">${I.externalLink} ${isLo?'ເປີດໃນແທັບໃໝ່':'เปิดในแท็บใหม่'}</button>
+            <button class="btn-ghost" onclick="affiliateOpenNew()">${I.externalLink} ${isLo?'ເປີດແທັບໃໝ່':'เปิดในแท็บใหม่'}</button>
           </div>
         </div>
         <div class="affiliate-hero-stats">
           <div class="affiliate-hstat">
-            <div class="affiliate-hstat-ic" style="background:linear-gradient(135deg,#10b981,#34d399)">${I.dollarBig}</div>
-            <div>
-              <div class="affiliate-hstat-lbl">${isLo?'ລາຍໄດ້':'รายได้สะสม'}</div>
-              <div class="affiliate-hstat-val">${isLo?'ເບິ່ງໃນກະດານ':'ดูในแดชบอร์ด'}</div>
-            </div>
-          </div>
-          <div class="affiliate-hstat">
-            <div class="affiliate-hstat-ic" style="background:linear-gradient(135deg,#a855f7,#7c3aed)">${I.target}</div>
-            <div>
-              <div class="affiliate-hstat-lbl">${isLo?'ແຄມເປນ Active':'แคมเปญ Active'}</div>
-              <div class="affiliate-hstat-val">${isLo?'ກວດສອບສະຖານະ':'ตรวจสอบสถานะ'}</div>
-            </div>
-          </div>
-          <div class="affiliate-hstat">
             <div class="affiliate-hstat-ic" style="background:linear-gradient(135deg,#3b82f6,#06b6d4)">${I.users}</div>
             <div>
-              <div class="affiliate-hstat-lbl">Lead ${isLo?'ມື້ນີ້':'วันนี้'}</div>
-              <div class="affiliate-hstat-val">${isLo?'Real-time tracking':'Real-time tracking'}</div>
+              <div class="affiliate-hstat-lbl">${isLo?'ລູກຄ້າທັງໝົດ':'ลูกค้าทั้งหมด'}</div>
+              <div class="affiliate-hstat-val">${isLo?'ເບິ່ງລາຍຊື່':'ดูรายชื่อ'}</div>
+            </div>
+          </div>
+          <div class="affiliate-hstat">
+            <div class="affiliate-hstat-ic" style="background:linear-gradient(135deg,#ec4899,#f472b6)">${I.bell}</div>
+            <div>
+              <div class="affiliate-hstat-lbl">${isLo?'ບຣອດແຄສ':'บรอดแคส'}</div>
+              <div class="affiliate-hstat-val">${isLo?'ສົ່ງແຈ້ງເຕືອນ':'ส่งแจ้งเตือน'}</div>
+            </div>
+          </div>
+          <div class="affiliate-hstat">
+            <div class="affiliate-hstat-ic" style="background:linear-gradient(135deg,#10b981,#34d399)">${I.settings}</div>
+            <div>
+              <div class="affiliate-hstat-lbl">${isLo?'ການຕັ້ງຄ່າ':'การตั้งค่า'}</div>
+              <div class="affiliate-hstat-val">${isLo?'ປັບແຕ່ງລະບົບ':'ปรับแต่งระบบ'}</div>
             </div>
           </div>
         </div>
@@ -17005,7 +17007,7 @@ function renderAffiliateHub(el){
           </div>
           <div class="affiliate-frame-url">
             <span class="affiliate-lock">${I.lock}</span>
-            <span>ohmycpl.com</span>
+            <span>TFL+ Admin Console</span>
           </div>
           <div class="affiliate-frame-actions">
             <button class="affiliate-frame-btn" onclick="affiliateRefresh()" title="${isLo?'ໂຫຼດໃໝ່':'รีโหลด'}">${I.refresh}</button>
@@ -17017,40 +17019,40 @@ function renderAffiliateHub(el){
           <div class="affiliate-iframe-fallback" id="affiliateFallback" style="display:none">
             <div class="affiliate-fallback-ic">${I.alertBig||I.alert}</div>
             <h3>${isLo?'ບໍ່ສາມາດໂຫຼດໄດ້':'ไม่สามารถโหลดได้'}</h3>
-            <p>${isLo?'ເວັບໄຊບໍ່ອະນຸຍາດໃຫ້ຝັງ — ກົດເພື່ອເປີດໃນແທັບໃໝ່':'เว็บไซต์ไม่อนุญาตให้ฝัง — กดปุ่มเพื่อเปิดในแท็บใหม่'}</p>
+            <p>${isLo?'ເວັບໄຊບໍ່ອະນຸຍາດໃຫ້ຝັງ — ກົດເພື່ອເປີດໃນແທັບໃໝ່':'ระบบไม่อนุญาตให้ฝัง — กดปุ่มเพื่อเปิดในแท็บใหม่'}</p>
             <button class="btn-primary" onclick="affiliateOpenNew()" style="margin-top:14px">${I.externalLink} ${isLo?'ເປີດແທັບໃໝ່':'เปิดในแท็บใหม่'}</button>
           </div>
         </div>
       </div>
 
-      <!-- TIPS row -->
+      <!-- ACTIONS row -->
       <div class="affiliate-tips-grid">
         <div class="affiliate-tip-card">
-          <div class="affiliate-tip-ic" style="background:linear-gradient(135deg,#10b981,#34d399)">${I.dollarBig}</div>
+          <div class="affiliate-tip-ic" style="background:linear-gradient(135deg,#3b82f6,#06b6d4)">${I.users}</div>
           <div>
-            <h4>${isLo?'ເຮັດເງິນຈາກ Lead':'ทำเงินจาก Lead'}</h4>
-            <p>${isLo?'ໄດ້ Commission ທຸກຄັ້ງທີ່ມີຄົນສະໝັກຜ່ານ link ຂອງທ່ານ':'ได้ Commission ทุกครั้งที่มีคนสมัครผ่าน link ของคุณ — ไม่ต้องขายสินค้า'}</p>
+            <h4>${isLo?'ຈັດການລູກຄ້າ':'จัดการลูกค้า'}</h4>
+            <p>${isLo?'ເບິ່ງລາຍຊື່ລູກຄ້າ · ປະຫວັດການໃຊ້ງານ · ສະຖານະບັນຊີ':'ดูรายชื่อลูกค้า · ประวัติการใช้งาน · สถานะบัญชี · ระงับ/เปิดใช้งาน'}</p>
           </div>
         </div>
         <div class="affiliate-tip-card">
-          <div class="affiliate-tip-ic" style="background:linear-gradient(135deg,#a855f7,#7c3aed)">${I.share}</div>
+          <div class="affiliate-tip-ic" style="background:linear-gradient(135deg,#ec4899,#f472b6)">${I.bell}</div>
           <div>
-            <h4>${isLo?'ແບ່ງປັນ Link':'แชร์ Link'}</h4>
-            <p>${isLo?'ໃຊ້ Social Media · Blog · YouTube ເພື່ອແບ່ງປັນ':'ใช้ Social Media · Blog · YouTube · LINE OA เพื่อแชร์ link'}</p>
+            <h4>${isLo?'ບຣອດແຄສຂໍ້ຄວາມ':'บรอดแคสแจ้งเตือน'}</h4>
+            <p>${isLo?'ສົ່ງ Push Notification ໄປຫາທຸກຄົນ · ປະກາດໂປຣໂມຊັນ · ປະກາດສຳຄັນ':'ส่ง Push Notification ไปทุกคนพร้อมกัน · ประกาศโปรโมชั่น · แจ้งข่าวสำคัญ'}</p>
           </div>
         </div>
         <div class="affiliate-tip-card">
-          <div class="affiliate-tip-ic" style="background:linear-gradient(135deg,#3b82f6,#06b6d4)">${I.barChart}</div>
+          <div class="affiliate-tip-ic" style="background:linear-gradient(135deg,#10b981,#34d399)">${I.barChart}</div>
           <div>
-            <h4>${isLo?'ຕິດຕາມຜົນ':'ติดตามผล'}</h4>
-            <p>${isLo?'ເບິ່ງສະຖິຕິ Real-time · ຄຣິກ · Lead · Commission':'ดูสถิติ Real-time · คลิก · Lead · Commission ในแดชบอร์ด'}</p>
+            <h4>${isLo?'ສະຖິຕິ App':'สถิติแอพ'}</h4>
+            <p>${isLo?'DAU · MAU · Retention · ບັນຊີໃໝ່ · Engagement':'DAU · MAU · Retention rate · ผู้ใช้ใหม่ · Engagement metrics'}</p>
           </div>
         </div>
         <div class="affiliate-tip-card">
-          <div class="affiliate-tip-ic" style="background:linear-gradient(135deg,#f59e0b,#fbbf24)">${I.zap}</div>
+          <div class="affiliate-tip-ic" style="background:linear-gradient(135deg,#f59e0b,#fbbf24)">${I.settings}</div>
           <div>
-            <h4>${isLo?'ດຶງເງິນສະດວກ':'ถอนเงินสะดวก'}</h4>
-            <p>${isLo?'ໂອນເຂົ້າບັນຊີທະນາຄານໂດຍກົງ':'โอนเข้าบัญชีธนาคารตรง · ขั้นต่ำตามที่กำหนด · เร็วภายใน 1-3 วัน'}</p>
+            <h4>${isLo?'ການຕັ້ງຄ່າລະບົບ':'ตั้งค่าระบบ'}</h4>
+            <p>${isLo?'ປັບແຕ່ງຟີເຈີ · ປຸ່ມ Feature Flag · ການກຳນົດຄ່າ App':'ปรับแต่งฟีเจอร์ · Feature Flag · กำหนดค่า App · App Config'}</p>
           </div>
         </div>
       </div>
