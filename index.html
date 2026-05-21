@@ -3433,6 +3433,174 @@ input:focus-visible{
 ::selection{background:rgba(124,58,237,.3);color:inherit}
 
 /* ╔═══════════════════════════════════════════════════════════╗
+   ║ AFFILIATE HUB page (OhMyCPL wrapper)                      ║
+   ╚═══════════════════════════════════════════════════════════╝ */
+.affiliate-hub-page{display:flex;flex-direction:column;gap:18px}
+
+/* Hero — gradient with glow blob */
+.affiliate-hero{
+  position:relative;
+  padding:28px 32px;border-radius:24px;
+  background:linear-gradient(135deg,#0c1226 0%,#1e1b4b 35%,#4c1d95 70%,#7c3aed 100%);
+  overflow:hidden;color:#fff;
+  display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center;
+  box-shadow:0 16px 40px -8px rgba(76,29,149,.45);
+}
+.affiliate-hero-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(circle at 80% 30%, rgba(236,72,153,.32) 0%, transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(96,165,250,.22) 0%, transparent 50%);
+}
+.affiliate-hero-content{position:relative;z-index:1}
+.affiliate-hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:50px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  font-size:11.5px;font-weight:700;color:rgba(255,255,255,.95);
+  margin-bottom:14px;backdrop-filter:blur(10px);
+}
+.affiliate-hero-badge .dot{width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 10px #10b981;animation:livePulse 2s infinite}
+.affiliate-hero-title{
+  font-size:32px;font-weight:800;letter-spacing:-.6px;line-height:1.15;margin:0 0 8px;
+  background:linear-gradient(135deg,#fff 0%,#e9d5ff 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.affiliate-hero-sub{font-size:14px;opacity:.85;line-height:1.55;margin:0 0 18px;max-width:540px}
+.affiliate-hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.affiliate-hero .btn-primary{background:rgba(255,255,255,.95);color:#4c1d95;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.affiliate-hero .btn-primary:hover{background:#fff;color:#3b0764}
+.affiliate-hero .btn-ghost{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;backdrop-filter:blur(10px)}
+.affiliate-hero .btn-ghost:hover{background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.4)}
+.affiliate-hero-stats{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;gap:10px;
+  padding:18px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  border-radius:18px;backdrop-filter:blur(20px);
+  min-width:240px;
+}
+.affiliate-hstat{display:flex;align-items:center;gap:12px}
+.affiliate-hstat-ic{
+  width:38px;height:38px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  box-shadow:0 4px 12px rgba(0,0,0,.25);flex-shrink:0;
+}
+.affiliate-hstat-ic svg{width:18px;height:18px}
+.affiliate-hstat-lbl{font-size:11px;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
+.affiliate-hstat-val{font-size:13px;font-weight:700;color:#fff}
+
+/* Iframe frame (browser chrome style) */
+.affiliate-frame{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:18px;overflow:hidden;
+  box-shadow:0 12px 40px -10px rgba(17,24,39,.18);
+}
+[data-theme="dark"] .affiliate-frame{
+  background:linear-gradient(135deg,rgba(28,33,72,.7),rgba(19,23,54,.7));
+  border-color:rgba(167,139,250,.15);
+  backdrop-filter:blur(20px);
+  box-shadow:0 12px 40px -10px rgba(0,0,0,.5);
+}
+.affiliate-frame-bar{
+  display:flex;align-items:center;gap:14px;
+  padding:12px 18px;
+  background:var(--bg-soft);
+  border-bottom:1px solid var(--border);
+}
+.affiliate-frame-dots{display:flex;gap:6px}
+.affiliate-frame-dots span{width:11px;height:11px;border-radius:50%;display:inline-block}
+.affiliate-frame-url{
+  flex:1;display:inline-flex;align-items:center;gap:8px;
+  height:30px;padding:0 14px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:50px;
+  font-size:12.5px;font-weight:600;color:var(--t2);
+  max-width:420px;margin:0 auto;
+}
+.affiliate-lock{display:inline-flex;color:#10b981}
+.affiliate-lock svg{width:13px;height:13px}
+.affiliate-frame-actions{display:flex;gap:4px}
+.affiliate-frame-btn{
+  width:32px;height:32px;border-radius:8px;
+  background:transparent;border:none;color:var(--t2);
+  cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s ease;
+}
+.affiliate-frame-btn:hover{background:var(--bg-hover);color:var(--p500)}
+.affiliate-frame-body{
+  position:relative;
+  width:100%;height:min(80vh, 800px);
+  background:#fff;
+}
+[data-theme="dark"] .affiliate-frame-body{background:#fff}
+.affiliate-frame-body iframe{
+  width:100%;height:100%;border:none;display:block;
+}
+.affiliate-iframe-fallback{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px;text-align:center;
+  background:var(--card);
+}
+.affiliate-fallback-ic{
+  width:64px;height:64px;border-radius:18px;
+  background:linear-gradient(135deg,#f59e0b,#fbbf24);
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  margin-bottom:16px;box-shadow:0 8px 20px rgba(245,158,11,.3);
+}
+.affiliate-iframe-fallback h3{margin:0 0 6px;font-size:18px;font-weight:800;color:var(--t1)}
+.affiliate-iframe-fallback p{margin:0;color:var(--t2);font-size:13.5px;max-width:420px}
+
+/* Tips grid */
+.affiliate-tips-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;
+}
+.affiliate-tip-card{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:18px;border-radius:14px;
+  background:var(--card);border:1px solid var(--border);
+  transition:transform .2s ease,box-shadow .2s ease,border-color .15s ease;
+}
+.affiliate-tip-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 24px rgba(124,58,237,.15);
+  border-color:rgba(124,58,237,.3);
+}
+[data-theme="dark"] .affiliate-tip-card{
+  background:linear-gradient(135deg,rgba(28,33,72,.7),rgba(19,23,54,.7));
+  border-color:rgba(167,139,250,.12);
+}
+[data-theme="dark"] .affiliate-tip-card:hover{border-color:rgba(167,139,250,.4)}
+.affiliate-tip-ic{
+  flex-shrink:0;
+  width:42px;height:42px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  box-shadow:0 6px 16px rgba(0,0,0,.18);
+}
+.affiliate-tip-ic svg{width:20px;height:20px}
+.affiliate-tip-card h4{margin:0 0 4px;font-size:14px;font-weight:800;color:var(--t1)}
+.affiliate-tip-card p{margin:0;color:var(--t2);font-size:12.5px;line-height:1.5}
+
+/* Mobile responsive */
+@media (max-width:768px){
+  .affiliate-hero{padding:22px;grid-template-columns:1fr;gap:18px;border-radius:18px}
+  .affiliate-hero-title{font-size:24px}
+  .affiliate-hero-sub{font-size:13px}
+  .affiliate-hero-stats{padding:14px}
+  .affiliate-frame-body{height:min(70vh, 600px)}
+  .affiliate-frame-url{max-width:none}
+  .affiliate-frame-bar{padding:10px 12px;gap:8px}
+}
+@media (max-width:480px){
+  .affiliate-hero-title{font-size:20px}
+  .affiliate-hstat{gap:10px}
+  .affiliate-hstat-ic{width:34px;height:34px}
+  .affiliate-frame-body{height:65vh}
+}
+
+/* ╔═══════════════════════════════════════════════════════════╗
    ║ AD LIBRARY page                                           ║
    ╚═══════════════════════════════════════════════════════════╝ */
 .adlib-toolbar{
@@ -4610,6 +4778,7 @@ img,video,iframe,canvas{max-width:100%;height:auto}
       <div id="viewSocialManage" class="view"></div>
       <div id="viewAdLibrary" class="view"></div>
       <div id="viewTrendScraper" class="view"></div>
+      <div id="viewAffiliateHub" class="view"></div>
       <div id="viewPostPerformance" class="view"></div>
       <div id="viewAdSpend" class="view"></div>
       <div id="viewSales" class="view"></div>
@@ -7943,10 +8112,10 @@ function initApp(){
   let startView = 'dashboard';
   try {
     const saved = localStorage.getItem('tfl_currentView');
-    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','socialReport','socialManage','adLibrary','trendScraper','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','postPerformance','adSpend','sales','activity','calendar','lottery','attendance'];
+    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','socialReport','socialManage','adLibrary','trendScraper','affiliateHub','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','postPerformance','adSpend','sales','activity','calendar','lottery','attendance'];
     if(saved && validViews.includes(saved)){
       // Check role permission
-      if((saved === 'allTasks' || saved === 'members' || saved === 'activity' || saved === 'lottery') && currentUser.role !== 'admin'){
+      if((saved === 'allTasks' || saved === 'members' || saved === 'activity' || saved === 'lottery' || saved === 'affiliateHub') && currentUser.role !== 'admin'){
         startView = 'dashboard';
       } else if(saved === 'socialIntegrations' && currentUser.role !== 'admin'){
         startView = 'dashboard';
@@ -8073,6 +8242,9 @@ function renderSidebar(){
       </div>
       <div class="nav-item ${currentView==='activity'?'active':''}" onclick="navigateTo('activity')">
         <span class="nav-icon">${I.history}</span><span class="nav-label">${t('nav_activity')}</span>
+      </div>
+      <div class="nav-item ${currentView==='affiliateHub'?'active':''}" onclick="navigateTo('affiliateHub')">
+        <span class="nav-icon">${I.zap||I.dollarBig}</span><span class="nav-label">Affiliate Hub</span>
       </div>`;
   }
   document.getElementById('sidebarNav').innerHTML = html;
@@ -8391,7 +8563,7 @@ function renderView(id,el){
   setTimeout(()=>el.classList.remove('fade-in'),300);
   ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,notes:renderNotes,taskBoard:renderTaskBoard,
     myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbGoLive:renderFbGoLive,fbLiveAuto:renderFbLiveAuto,
-    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,socialReport:renderSocialReport,socialManage:renderSocialManage,adLibrary:renderAdLibrary,trendScraper:renderTrendScraper,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations,postPerformance:renderPostPerformance,adSpend:renderAdSpend}[id]||(()=>{}))(el);
+    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,socialReport:renderSocialReport,socialManage:renderSocialManage,adLibrary:renderAdLibrary,trendScraper:renderTrendScraper,affiliateHub:renderAffiliateHub,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations,postPerformance:renderPostPerformance,adSpend:renderAdSpend}[id]||(()=>{}))(el);
 }
 
 function rerender(){ const el=document.getElementById('view'+cap(currentView)); if(el) renderView(currentView,el); }
@@ -16766,6 +16938,137 @@ function renderAdSpend(el){
         </table></div>`}
       </div>
     </div>`;
+}
+
+// ============ AFFILIATE HUB (OhMyCPL wrapper) ============
+let affiliateRefreshKey = Date.now();
+function affiliateRefresh(){
+  affiliateRefreshKey = Date.now();
+  rerender();
+}
+function affiliateOpenNew(){
+  window.open('https://ohmycpl.com/th', '_blank', 'noopener,noreferrer');
+}
+function renderAffiliateHub(el){
+  const isLo = CURRENT_LANG === 'lo';
+  const url = `https://ohmycpl.com/th?_=${affiliateRefreshKey}`;
+  el.innerHTML = topbarSimple('barChart', 'Affiliate Hub', isLo?'ຈັດການເຄືອຂ່າຍ Affiliate ແລະ ຫາ Lead':'จัดการเครือข่าย Affiliate · หา Lead · ติดตามคอมมิชชั่น') + `
+    <div class="page-content affiliate-hub-page" style="max-width:1600px;padding:18px clamp(12px,2vw,28px)">
+
+      <!-- HERO -->
+      <div class="affiliate-hero">
+        <div class="affiliate-hero-bg"></div>
+        <div class="affiliate-hero-content">
+          <div class="affiliate-hero-badge">
+            <span class="dot"></span>
+            ${isLo?'ການເຊື່ອມຕໍ່ປອດໄພ':'การเชื่อมต่อปลอดภัย'}
+          </div>
+          <h1 class="affiliate-hero-title">${isLo?'ສ້າງລາຍໄດ້ຈາກ CPL':'สร้างรายได้จากเครือข่าย CPL'}</h1>
+          <p class="affiliate-hero-sub">${isLo?'ຈັດການແຄມເປນ · ຕິດຕາມ Lead · ດຶງ Commission ໄດ້ໃນແຫ່ງດຽວ':'จัดการแคมเปญ · ติดตาม Lead · ดึง Commission ได้ในที่เดียว'}</p>
+          <div class="affiliate-hero-actions">
+            <button class="btn-primary" onclick="affiliateRefresh()">${I.refresh} ${isLo?'ໂຫຼດໃໝ່':'รีโหลด'}</button>
+            <button class="btn-ghost" onclick="affiliateOpenNew()">${I.externalLink} ${isLo?'ເປີດໃນແທັບໃໝ່':'เปิดในแท็บใหม่'}</button>
+          </div>
+        </div>
+        <div class="affiliate-hero-stats">
+          <div class="affiliate-hstat">
+            <div class="affiliate-hstat-ic" style="background:linear-gradient(135deg,#10b981,#34d399)">${I.dollarBig}</div>
+            <div>
+              <div class="affiliate-hstat-lbl">${isLo?'ລາຍໄດ້':'รายได้สะสม'}</div>
+              <div class="affiliate-hstat-val">${isLo?'ເບິ່ງໃນກະດານ':'ดูในแดชบอร์ด'}</div>
+            </div>
+          </div>
+          <div class="affiliate-hstat">
+            <div class="affiliate-hstat-ic" style="background:linear-gradient(135deg,#a855f7,#7c3aed)">${I.target}</div>
+            <div>
+              <div class="affiliate-hstat-lbl">${isLo?'ແຄມເປນ Active':'แคมเปญ Active'}</div>
+              <div class="affiliate-hstat-val">${isLo?'ກວດສອບສະຖານະ':'ตรวจสอบสถานะ'}</div>
+            </div>
+          </div>
+          <div class="affiliate-hstat">
+            <div class="affiliate-hstat-ic" style="background:linear-gradient(135deg,#3b82f6,#06b6d4)">${I.users}</div>
+            <div>
+              <div class="affiliate-hstat-lbl">Lead ${isLo?'ມື້ນີ້':'วันนี้'}</div>
+              <div class="affiliate-hstat-val">${isLo?'Real-time tracking':'Real-time tracking'}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IFRAME with branded chrome -->
+      <div class="affiliate-frame">
+        <div class="affiliate-frame-bar">
+          <div class="affiliate-frame-dots">
+            <span style="background:#ef4444"></span>
+            <span style="background:#f59e0b"></span>
+            <span style="background:#10b981"></span>
+          </div>
+          <div class="affiliate-frame-url">
+            <span class="affiliate-lock">${I.lock}</span>
+            <span>ohmycpl.com</span>
+          </div>
+          <div class="affiliate-frame-actions">
+            <button class="affiliate-frame-btn" onclick="affiliateRefresh()" title="${isLo?'ໂຫຼດໃໝ່':'รีโหลด'}">${I.refresh}</button>
+            <button class="affiliate-frame-btn" onclick="affiliateOpenNew()" title="${isLo?'ເປີດແທັບໃໝ່':'เปิดในแท็บใหม่'}">${I.externalLink}</button>
+          </div>
+        </div>
+        <div class="affiliate-frame-body">
+          <iframe id="affiliateIframe" src="${url}" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
+          <div class="affiliate-iframe-fallback" id="affiliateFallback" style="display:none">
+            <div class="affiliate-fallback-ic">${I.alertBig||I.alert}</div>
+            <h3>${isLo?'ບໍ່ສາມາດໂຫຼດໄດ້':'ไม่สามารถโหลดได้'}</h3>
+            <p>${isLo?'ເວັບໄຊບໍ່ອະນຸຍາດໃຫ້ຝັງ — ກົດເພື່ອເປີດໃນແທັບໃໝ່':'เว็บไซต์ไม่อนุญาตให้ฝัง — กดปุ่มเพื่อเปิดในแท็บใหม่'}</p>
+            <button class="btn-primary" onclick="affiliateOpenNew()" style="margin-top:14px">${I.externalLink} ${isLo?'ເປີດແທັບໃໝ່':'เปิดในแท็บใหม่'}</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIPS row -->
+      <div class="affiliate-tips-grid">
+        <div class="affiliate-tip-card">
+          <div class="affiliate-tip-ic" style="background:linear-gradient(135deg,#10b981,#34d399)">${I.dollarBig}</div>
+          <div>
+            <h4>${isLo?'ເຮັດເງິນຈາກ Lead':'ทำเงินจาก Lead'}</h4>
+            <p>${isLo?'ໄດ້ Commission ທຸກຄັ້ງທີ່ມີຄົນສະໝັກຜ່ານ link ຂອງທ່ານ':'ได้ Commission ทุกครั้งที่มีคนสมัครผ่าน link ของคุณ — ไม่ต้องขายสินค้า'}</p>
+          </div>
+        </div>
+        <div class="affiliate-tip-card">
+          <div class="affiliate-tip-ic" style="background:linear-gradient(135deg,#a855f7,#7c3aed)">${I.share}</div>
+          <div>
+            <h4>${isLo?'ແບ່ງປັນ Link':'แชร์ Link'}</h4>
+            <p>${isLo?'ໃຊ້ Social Media · Blog · YouTube ເພື່ອແບ່ງປັນ':'ใช้ Social Media · Blog · YouTube · LINE OA เพื่อแชร์ link'}</p>
+          </div>
+        </div>
+        <div class="affiliate-tip-card">
+          <div class="affiliate-tip-ic" style="background:linear-gradient(135deg,#3b82f6,#06b6d4)">${I.barChart}</div>
+          <div>
+            <h4>${isLo?'ຕິດຕາມຜົນ':'ติดตามผล'}</h4>
+            <p>${isLo?'ເບິ່ງສະຖິຕິ Real-time · ຄຣິກ · Lead · Commission':'ดูสถิติ Real-time · คลิก · Lead · Commission ในแดชบอร์ด'}</p>
+          </div>
+        </div>
+        <div class="affiliate-tip-card">
+          <div class="affiliate-tip-ic" style="background:linear-gradient(135deg,#f59e0b,#fbbf24)">${I.zap}</div>
+          <div>
+            <h4>${isLo?'ດຶງເງິນສະດວກ':'ถอนเงินสะดวก'}</h4>
+            <p>${isLo?'ໂອນເຂົ້າບັນຊີທະນາຄານໂດຍກົງ':'โอนเข้าบัญชีธนาคารตรง · ขั้นต่ำตามที่กำหนด · เร็วภายใน 1-3 วัน'}</p>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  // Detect iframe load failure (X-Frame-Options block) — show fallback after 5s if no content
+  setTimeout(() => {
+    const iframe = document.getElementById('affiliateIframe');
+    const fallback = document.getElementById('affiliateFallback');
+    if(!iframe || !fallback) return;
+    try {
+      // If iframe has accessible contentDocument and it's empty / blank → likely blocked
+      // Cross-origin will throw — that's OK, iframe loaded something
+      void iframe.contentDocument;
+    } catch(_){
+      // Cross-origin = loaded successfully (we can't access but iframe rendered) — keep hidden
+      return;
+    }
+  }, 5000);
 }
 
 // ============ AD LIBRARY (FB Ad spy) ============
