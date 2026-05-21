@@ -3657,6 +3657,141 @@ input:focus-visible{
 .intg2-fb-official-btn-wrap fb\\:login-button,
 .intg2-fb-official-btn-wrap .fb-login-button{display:block!important;width:100%}
 
+/* ╔═══════════════════════════════════════════════════════════╗
+   ║ FB Page Chooser Modal (after OAuth)                       ║
+   ╚═══════════════════════════════════════════════════════════╝ */
+.fb-pc-overlay{
+  position:fixed;inset:0;z-index:10000;
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  background:rgba(10,14,31,.65);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  animation:fbPcOverlayIn .2s ease;
+}
+@keyframes fbPcOverlayIn{from{opacity:0}to{opacity:1}}
+.fb-pc-modal{
+  width:100%;max-width:520px;max-height:85vh;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 24px 60px -12px rgba(0,0,0,.45),0 0 0 1px rgba(124,58,237,.1);
+  display:flex;flex-direction:column;
+  animation:fbPcModalIn .25s cubic-bezier(.4,0,.2,1);
+}
+@keyframes fbPcModalIn{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+[data-theme="dark"] .fb-pc-modal{
+  background:linear-gradient(135deg,rgba(28,33,72,.95),rgba(19,23,54,.95));
+  border-color:rgba(167,139,250,.2);
+  backdrop-filter:blur(20px);
+}
+.fb-pc-hd{
+  display:flex;align-items:center;gap:14px;
+  padding:20px 24px;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,rgba(24,119,242,.05),rgba(124,58,237,.04));
+}
+.fb-pc-hd-icon{
+  width:44px;height:44px;border-radius:12px;
+  background:rgba(24,119,242,.1);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.fb-pc-title{font-size:17px;font-weight:800;color:var(--t1);letter-spacing:-.2px}
+.fb-pc-sub{font-size:12.5px;color:var(--t3);margin-top:2px}
+.fb-pc-close{
+  width:34px;height:34px;border-radius:10px;
+  background:var(--bg-soft);border:none;color:var(--t2);
+  font-size:22px;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s ease;
+}
+.fb-pc-close:hover{background:var(--bg-hover);color:var(--t1);transform:rotate(90deg)}
+
+.fb-pc-list{
+  padding:14px;display:flex;flex-direction:column;gap:8px;
+  overflow-y:auto;flex:1;
+}
+.fb-pc-card{
+  display:flex;align-items:center;gap:14px;
+  padding:14px;border-radius:14px;
+  background:var(--bg-soft);border:2px solid transparent;
+  cursor:pointer;
+  transition:all .2s cubic-bezier(.4,0,.2,1);
+  outline:none;
+}
+.fb-pc-card:hover,.fb-pc-card:focus{
+  background:var(--card);
+  border-color:#1877f2;
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(24,119,242,.18);
+}
+.fb-pc-card:hover .fb-pc-select-btn,
+.fb-pc-card:focus .fb-pc-select-btn{
+  background:#1877f2;color:#fff;
+}
+.fb-pc-thumb{
+  width:54px;height:54px;border-radius:50%;
+  overflow:hidden;flex-shrink:0;
+  background:linear-gradient(135deg,#1877f2,#0d65d9);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(24,119,242,.3);
+  position:relative;
+}
+.fb-pc-thumb img{
+  width:100%;height:100%;object-fit:cover;display:block;
+}
+.fb-pc-thumb-fallback{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:800;font-size:22px;
+}
+.fb-pc-info{flex:1;min-width:0}
+.fb-pc-name{
+  font-size:15px;font-weight:800;color:var(--t1);
+  letter-spacing:-.1px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.fb-pc-meta{
+  display:flex;align-items:center;gap:10px;
+  margin-top:4px;font-size:11.5px;color:var(--t3);
+  flex-wrap:wrap;
+}
+.fb-pc-cat{
+  background:var(--bg-hover);padding:2px 8px;border-radius:6px;
+  font-weight:600;
+}
+.fb-pc-fans{
+  display:inline-flex;align-items:center;gap:4px;
+  font-weight:600;
+}
+.fb-pc-fans svg{width:11px;height:11px}
+.fb-pc-action{flex-shrink:0}
+.fb-pc-select-btn{
+  display:inline-block;
+  padding:7px 14px;border-radius:9px;
+  background:rgba(24,119,242,.1);color:#1877f2;
+  font-size:12px;font-weight:700;
+  transition:all .2s ease;white-space:nowrap;
+}
+
+.fb-pc-ft{
+  padding:14px 20px;
+  border-top:1px solid var(--border);
+  background:var(--bg-soft);
+  text-align:center;
+}
+.fb-pc-tip{font-size:11.5px;color:var(--t3)}
+
+@media (max-width:520px){
+  .fb-pc-overlay{padding:10px;align-items:flex-end}
+  .fb-pc-modal{max-height:90vh;border-radius:18px 18px 0 0}
+  .fb-pc-hd{padding:16px 18px;gap:10px}
+  .fb-pc-title{font-size:15px}
+  .fb-pc-card{padding:12px;gap:10px}
+  .fb-pc-thumb{width:46px;height:46px}
+  .fb-pc-name{font-size:14px}
+  .fb-pc-select-btn{padding:6px 10px;font-size:11px}
+}
+
 /* Permission test panel */
 .intg2-perm-test{
   margin-top:14px;padding:14px;border-radius:12px;
@@ -16085,14 +16220,14 @@ async function _intgConnectFb(){
     // Auto-select first if only 1
     if(pages.length === 1){
       fbpSelectPage(pages[0].id);
+      setTimeout(()=>refreshIgInfo(), 500);
     } else {
-      // Show dropdown to choose
-      const names = pages.map((p,i)=>`${i+1}. ${p.name}`).join('\n');
-      const choice = prompt(`เลือกเพจ (พิมพ์เลข 1-${pages.length}):\n\n${names}`);
-      const idx = parseInt(choice,10)-1;
-      if(idx >= 0 && idx < pages.length){ fbpSelectPage(pages[idx].id); }
+      // Show beautiful card-based page chooser modal
+      _intgFbShowPageChooser(pages, (pickedPage) => {
+        fbpSelectPage(pickedPage.id);
+        setTimeout(()=>refreshIgInfo(), 500);
+      });
     }
-    setTimeout(()=>refreshIgInfo(), 500);
   } catch(err){
     alert('เชื่อมต่อไม่สำเร็จ: ' + err.message);
   }
@@ -18173,6 +18308,78 @@ function _intgFbRecheckStatus(){
     window._fbLoginResponse = response;
     rerender();
   }, true /* force = bypass cache */);
+}
+
+// ===== Page Chooser Modal (after FB OAuth — pick which Page to manage) =====
+function _intgFbShowPageChooser(pages, onPick){
+  const isLo = CURRENT_LANG === 'lo';
+  // Remove old chooser if present
+  const old = document.getElementById('fbPageChooserOverlay');
+  if(old) old.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'fbPageChooserOverlay';
+  overlay.className = 'fb-pc-overlay';
+  overlay.innerHTML = `
+    <div class="fb-pc-modal">
+      <div class="fb-pc-hd">
+        <div class="fb-pc-hd-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877f2"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01z"/></svg>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div class="fb-pc-title">${isLo?'ເລືອກ Facebook Page':'เลือก Facebook Page'}</div>
+          <div class="fb-pc-sub">${isLo?'ພົບ':'พบ'} ${pages.length} ${isLo?'ເພຈໃນບັນຊີຂອງທ່ານ':'เพจในบัญชีของคุณ'}</div>
+        </div>
+        <button class="fb-pc-close" onclick="document.getElementById('fbPageChooserOverlay').remove()">×</button>
+      </div>
+      <div class="fb-pc-list">
+        ${pages.map((p,i) => {
+          const picUrl = p.picture && p.picture.data && p.picture.data.url ? p.picture.data.url : '';
+          const initial = (p.name||'?')[0].toUpperCase();
+          const fanCount = (p.fan_count||0).toLocaleString();
+          return `
+            <div class="fb-pc-card" data-page-id="${escapeHtmlN(p.id)}" data-page-idx="${i}">
+              <div class="fb-pc-thumb">
+                ${picUrl ? `<img src="${escapeHtmlN(picUrl)}" alt="${escapeHtmlN(p.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>` : ''}
+                <div class="fb-pc-thumb-fallback" style="${picUrl?'display:none':''}">${escapeHtmlN(initial)}</div>
+              </div>
+              <div class="fb-pc-info">
+                <div class="fb-pc-name">${escapeHtmlN(p.name)}</div>
+                <div class="fb-pc-meta">
+                  ${p.category ? `<span class="fb-pc-cat">${escapeHtmlN(p.category)}</span>` : ''}
+                  ${p.fan_count != null ? `<span class="fb-pc-fans">${I.users} ${fanCount} ${isLo?'ຄົນຕິດຕາມ':'ผู้ติดตาม'}</span>` : ''}
+                </div>
+              </div>
+              <div class="fb-pc-action">
+                <span class="fb-pc-select-btn">${isLo?'ເລືອກ':'เลือก'} →</span>
+              </div>
+            </div>`;
+        }).join('')}
+      </div>
+      <div class="fb-pc-ft">
+        <span class="fb-pc-tip">${isLo?'💡 ສາມາດປ່ຽນເພຈພາຍຫຼັງໄດ້ໂດຍກົດ "ຕັດການເຊື່ອມຕໍ່" ແລ້ວ login ໃໝ່':'💡 สามารถเปลี่ยนเพจภายหลังได้โดยกด "ตัดการเชื่อมต่อ" แล้ว login ใหม่'}</span>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  // Card click handler
+  overlay.querySelectorAll('.fb-pc-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const idx = parseInt(card.dataset.pageIdx, 10);
+      const page = pages[idx];
+      if(page){
+        overlay.remove();
+        if(typeof onPick === 'function') onPick(page);
+      }
+    });
+  });
+  // Click outside to close
+  overlay.addEventListener('click', e => {
+    if(e.target === overlay) overlay.remove();
+  });
+  // Focus trap — focus first card
+  setTimeout(() => {
+    const first = overlay.querySelector('.fb-pc-card');
+    if(first) first.focus();
+  }, 50);
 }
 
 // ===== Permission usage tester =====
