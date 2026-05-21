@@ -3657,6 +3657,44 @@ input:focus-visible{
 .intg2-fb-official-btn-wrap fb\\:login-button,
 .intg2-fb-official-btn-wrap .fb-login-button{display:block!important;width:100%}
 
+/* Permission test panel */
+.intg2-perm-test{
+  margin-top:14px;padding:14px;border-radius:12px;
+  background:var(--bg-soft);border:1px solid var(--border);
+}
+.intg2-perm-test-hd{
+  display:flex;align-items:center;gap:10px;margin-bottom:10px;
+  font-size:13px;
+}
+.intg2-perm-test-hd b{flex:1;color:var(--t1);font-weight:800}
+.intg2-perm-test-stat{font-size:11.5px;color:var(--t3);font-weight:700}
+.intg2-perm-test-list{display:flex;flex-direction:column;gap:6px;max-height:340px;overflow-y:auto}
+.intg2-perm-row{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:8px 10px;border-radius:9px;
+  background:var(--card);border:1px solid var(--border);
+  font-size:12.5px;
+}
+.intg2-perm-row.ok{border-left:3px solid #10b981}
+.intg2-perm-row.fail{border-left:3px solid #ef4444;background:rgba(239,68,68,.04)}
+.intg2-perm-row.running{border-left:3px solid #f59e0b;opacity:.7}
+.intg2-perm-icon{
+  flex-shrink:0;width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;margin-top:1px;
+}
+.intg2-perm-row.ok .intg2-perm-icon{background:rgba(16,185,129,.15);color:#059669}
+.intg2-perm-row.fail .intg2-perm-icon{background:rgba(239,68,68,.15);color:#dc2626}
+.intg2-perm-row.running .intg2-perm-icon{background:rgba(245,158,11,.15);color:#d97706}
+.intg2-perm-body{flex:1;min-width:0}
+.intg2-perm-name{font-weight:800;color:var(--t1);font-size:12.5px;line-height:1.2}
+.intg2-perm-desc{font-size:11px;color:var(--t3);margin-top:2px;line-height:1.4}
+.intg2-perm-msg{font-size:11px;color:var(--t2);margin-top:4px;line-height:1.4;font-family:monospace;background:var(--bg);padding:4px 8px;border-radius:5px}
+.intg2-perm-row.fail .intg2-perm-msg{color:#dc2626;background:rgba(239,68,68,.06)}
+.intg2-perm-test-running{
+  margin-top:10px;text-align:center;font-size:12px;color:var(--p600);font-weight:700;
+}
+
 /* FB Login status badge */
 .intg2-fb-status{
   display:inline-block;
@@ -17723,6 +17761,34 @@ function _intg2RenderPanelContent(platform, ctx){
 
   if(platform === 'facebook'){
     if(fbConnected){
+      const testRes = _fbTestResults;
+      let testPanelHtml = '';
+      if(testRes){
+        const okCount = testRes.items.filter(x => x.status==='ok').length;
+        const failCount = testRes.items.filter(x => x.status==='fail').length;
+        const total = testRes.items.length;
+        testPanelHtml = `
+          <div class="intg2-perm-test">
+            <div class="intg2-perm-test-hd">
+              <b>${isLo?'ຜົນການທົດສອບ Permissions':'ผลการทดสอบ Permissions'}</b>
+              <span class="intg2-perm-test-stat">${okCount}/${total} ${isLo?'ສຳເລັດ':'สำเร็จ'} ${failCount?`· ${failCount} ล้มเหลว`:''}</span>
+              ${!testRes.running?`<button class="intg2-secondary-link" style="width:auto" onclick="_intgFbClearTestResults()">${isLo?'ປິດ':'ปิด'}</button>`:''}
+            </div>
+            <div class="intg2-perm-test-list">
+              ${testRes.items.map(it => `
+                <div class="intg2-perm-row ${it.status}">
+                  <span class="intg2-perm-icon">${it.status==='ok'?'✓':it.status==='fail'?'✗':'⏳'}</span>
+                  <div class="intg2-perm-body">
+                    <div class="intg2-perm-name">${escapeHtmlN(it.name)}</div>
+                    <div class="intg2-perm-desc">${escapeHtmlN(it.desc)}</div>
+                    ${it.msg?`<div class="intg2-perm-msg">${escapeHtmlN(it.msg)}</div>`:''}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+            ${testRes.running ? `<div class="intg2-perm-test-running">${isLo?'⏳ ກຳລັງທົດສອບ':'⏳ กำลังทดสอบ'}…</div>` : ''}
+          </div>`;
+      }
       return `
         <div class="intg2-account-row">
           <div class="intg2-account-thumb" style="background:#1877f2">${escapeHtmlN((fbPostState.pageName||'?')[0])}</div>
@@ -17734,9 +17800,11 @@ function _intg2RenderPanelContent(platform, ctx){
         </div>
         <div class="intg2-actions">
           <button class="btn-primary" onclick="navigateTo('fbPosts')">${isLo?'ໂພສ Manager':'โพสต์ Manager'} →</button>
+          <button class="btn-ghost" onclick="_intgFbTestAllPermissions()" ${_fbTesting?'disabled':''}>${I.shield||I.check} ${isLo?'ທົດສອບ Permissions':'ทดสอบ Permissions ทั้งหมด'}</button>
           <button class="btn-ghost" onclick="openConnectGuide('facebook')">${I.lightbulb} ${isLo?'ວິທີເຊື່ອມ':'วิธีเชื่อม'}</button>
           <button class="btn-ghost" style="color:#dc2626" onclick="_intgFbLogoutSDK()">${isLo?'ຕັດການເຊື່ອມຕໍ່':'ตัดการเชื่อมต่อ'}</button>
-        </div>`;
+        </div>
+        ${testPanelHtml}`;
     }
     // Auto-detect FB login status via SDK
     const sdkReady = typeof window !== 'undefined' && window._fbSdkReady;
@@ -18105,6 +18173,134 @@ function _intgFbRecheckStatus(){
     window._fbLoginResponse = response;
     rerender();
   }, true /* force = bypass cache */);
+}
+
+// ===== Permission usage tester =====
+// Exercises every granted FB scope so they count toward Facebook App Review usage stats.
+// Each scope must be USED (via real API call) before Facebook will approve it for production.
+let _fbTestResults = null;
+let _fbTesting = false;
+async function _intgFbTestAllPermissions(){
+  if(_fbTesting){ alert('กำลังทดสอบอยู่ — กรุณารอ'); return; }
+  if(!fbPostState.pageToken || !fbPostState.pageId){
+    alert('ต้องเชื่อม Facebook Page ก่อน'); return;
+  }
+  _fbTesting = true;
+  _fbTestResults = { running: true, items: [] };
+  rerender();
+
+  const tok = encodeURIComponent(fbPostState.pageToken);
+  const pageId = fbPostState.pageId;
+  const apiBase = `https://graph.facebook.com/${FB_API_VERSION}`;
+
+  // Each test: { name: scope label, endpoint, scope, expect: how to detect success }
+  const tests = [
+    {
+      name: 'public_profile',
+      scope: 'public_profile',
+      desc: 'อ่านข้อมูลโปรไฟล์พื้นฐาน',
+      url: `${apiBase}/me?fields=id,name&access_token=${tok}`,
+    },
+    {
+      name: 'pages_show_list',
+      scope: 'pages_show_list',
+      desc: 'ดูรายชื่อ Page ที่จัดการ',
+      url: `${apiBase}/me/accounts?fields=id,name&limit=5&access_token=${tok}`,
+    },
+    {
+      name: 'pages_read_engagement',
+      scope: 'pages_read_engagement',
+      desc: 'อ่าน posts + engagement ของ Page',
+      url: `${apiBase}/${pageId}/posts?fields=id,message,created_time&limit=3&access_token=${tok}`,
+    },
+    {
+      name: 'pages_read_user_content',
+      scope: 'pages_read_user_content',
+      desc: 'อ่าน comments ของ user บนโพสต์',
+      url: `${apiBase}/${pageId}/posts?fields=id,comments.limit(2){id,message,from}&limit=2&access_token=${tok}`,
+    },
+    {
+      name: 'pages_manage_metadata',
+      scope: 'pages_manage_metadata',
+      desc: 'อ่าน metadata ของ Page (สำหรับจัดการ)',
+      url: `${apiBase}/${pageId}?fields=id,name,about,category,website&access_token=${tok}`,
+    },
+    {
+      name: 'pages_manage_posts',
+      scope: 'pages_manage_posts',
+      desc: 'จัดการโพสต์ของ Page',
+      url: `${apiBase}/${pageId}/feed?fields=id,message&limit=2&access_token=${tok}`,
+    },
+    {
+      name: 'pages_manage_engagement',
+      scope: 'pages_manage_engagement',
+      desc: 'จัดการ comments/likes ของ Page',
+      url: `${apiBase}/${pageId}/conversations?fields=id,updated_time&limit=2&access_token=${tok}`,
+    },
+    {
+      name: 'read_insights',
+      scope: 'read_insights',
+      desc: 'อ่าน insights ของ Page',
+      url: `${apiBase}/${pageId}/insights?metric=page_impressions,page_engaged_users&period=day&access_token=${tok}`,
+    },
+    {
+      name: 'Live Video API',
+      scope: 'Live Video API',
+      desc: 'ดู Live videos ของ Page',
+      url: `${apiBase}/${pageId}/live_videos?fields=id,title,status&limit=3&access_token=${tok}`,
+    },
+    {
+      name: 'business_management',
+      scope: 'business_management',
+      desc: 'ดูรายชื่อ Business / Ad Accounts',
+      url: `${apiBase}/me/businesses?fields=id,name&limit=3&access_token=${tok}`,
+    },
+    {
+      name: 'Business Asset User Profile Access',
+      scope: 'BAUP Access',
+      desc: 'อ่าน profile ของ user ที่อยู่ใน business',
+      url: `${apiBase}/me?fields=id,name,email&access_token=${tok}`,
+    },
+  ];
+
+  for(const t of tests){
+    _fbTestResults.items.push({ name: t.name, desc: t.desc, status: 'running', msg: '' });
+    rerender();
+    try {
+      const r = await fetch(t.url);
+      const j = await r.json();
+      const idx = _fbTestResults.items.length - 1;
+      if(j.error){
+        _fbTestResults.items[idx] = {
+          name: t.name, desc: t.desc, status: 'fail',
+          msg: `${j.error.message} (code ${j.error.code||'?'})`,
+        };
+      } else {
+        const count = Array.isArray(j.data) ? j.data.length : (j.id ? 1 : 0);
+        _fbTestResults.items[idx] = {
+          name: t.name, desc: t.desc, status: 'ok',
+          msg: count > 0 ? `✓ พบ ${count} item` : '✓ API ตอบกลับสำเร็จ',
+        };
+      }
+    } catch(err){
+      const idx = _fbTestResults.items.length - 1;
+      _fbTestResults.items[idx] = {
+        name: t.name, desc: t.desc, status: 'fail', msg: err.message,
+      };
+    }
+    rerender();
+    // Small delay to avoid rate limit
+    await new Promise(r => setTimeout(r, 250));
+  }
+
+  _fbTestResults.running = false;
+  _fbTesting = false;
+  rerender();
+}
+
+function _intgFbClearTestResults(){
+  _fbTestResults = null;
+  rerender();
 }
 
 // Global callback used by Facebook's <fb:login-button onlogin="checkLoginState()">
