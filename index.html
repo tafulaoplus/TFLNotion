@@ -5954,6 +5954,10 @@ img,video,iframe,canvas{max-width:100%;height:auto}
 .stock-item-noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--t3)}
 .stock-item-noimg svg{width:48px;height:48px}
 .stock-item-team{position:absolute;top:6px;right:6px;color:#fff;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:5px;letter-spacing:.3px}
+.stock-item-state{position:absolute;left:6px;bottom:6px;display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:999px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.stock-item-state svg{width:11px;height:11px}
+.stock-item-state.in{background:rgba(16,185,129,.92);color:#fff}
+.stock-item-state.out{background:rgba(245,158,11,.95);color:#fff}
 .stock-item-body{display:flex;flex-direction:column;gap:4px;padding-top:2px}
 .stock-item-meta{font-size:11.5px;color:var(--t3)}
 .stock-item-qty{display:flex;align-items:center;gap:6px;font-size:13px;margin-top:2px;flex-wrap:wrap}
@@ -19561,14 +19565,18 @@ function _stockStatusColor(s){
 function recalcStockAvailable(){
   const checkedOut = {};
   stockCheckouts.forEach(c => {
-    if(c.status === 'returned' || c.status === 'lost') return;
+    if(c.status === 'returned') return;
     (c.items||[]).forEach(it => {
-      const out = (+it.qtyOut||0) - (+it.qtyReturned||0);
+      // Support both new (qty/returnedQty) and old (qtyOut/qtyReturned) field names
+      const total = (+it.qty || +it.qtyOut || 0);
+      const back  = (+it.returnedQty || +it.qtyReturned || 0) + (+it.lostQty || 0) + (+it.damagedQty || 0);
+      const out = total - back;
       if(out > 0) checkedOut[it.itemId] = (checkedOut[it.itemId]||0) + out;
     });
   });
   stockItems.forEach(it => {
     it.availableQty = Math.max(0, (+it.totalQty||0) - (checkedOut[it.id]||0));
+    it.outQty = checkedOut[it.id] || 0;
   });
 }
 
@@ -19718,19 +19726,26 @@ function _renderStockItems(isLo){
     </div>` :
     `<div class="stock-grid">
       ${items.map(it => {
-        const isLow = (+it.availableQty||0) <= (+it.minQty||0) && (+it.minQty||0) > 0;
-        const isOut = (+it.availableQty||0) === 0;
+        const avail = (+it.availableQty||0);
+        const total = (+it.totalQty||0);
+        const out = (+it.outQty||0);
+        const isLow = avail <= (+it.minQty||0) && (+it.minQty||0) > 0;
+        const isOut = avail === 0;
+        const isPartiallyOut = out > 0;
         const teamColor = it.team === 'marketing' ? '#3b82f6' : it.team === 'creator' ? '#a855f7' : '#10b981';
         return `<div class="stock-item-card ${isOut?'out':isLow?'low':''}">
           <div class="stock-item-pic">
             ${(it.photoUrl||it.photo) ? `<img src="${escapeHtmlN(it.photoUrl||it.photo)}" alt="${escapeHtmlN(it.name)}"/>` : `<div class="stock-item-noimg">${I.folder}</div>`}
             <span class="stock-item-team" style="background:${teamColor}">${it.team==='marketing'?'MKT':it.team==='creator'?'CRT':'SHARED'}</span>
+            <span class="stock-item-state ${isPartiallyOut?'out':'in'}" title="${isPartiallyOut?`อยู่ข้างนอก ${out}/${total}`:'อยู่ในคลังครบ'}">
+              ${isPartiallyOut ? `${I.upload} ${isLo?'ຢູ່ນອກ':'อยู่ข้างนอก'} ${out}/${total}` : `${I.check} ${isLo?'ຢູ່ໃນຄັງ':'อยู่ในคลัง'}`}
+            </span>
           </div>
           <div class="stock-item-body">
             <div class="stock-item-name">${escapeHtmlN(it.name)}</div>
             <div class="stock-item-meta">${escapeHtmlN(it.category||'')}${it.serialNumber?` · SN:${escapeHtmlN(it.serialNumber)}`:''}</div>
             <div class="stock-item-qty">
-              <span class="stock-item-qty-val ${isOut?'out':isLow?'low':''}">${it.availableQty}/${it.totalQty}</span>
+              <span class="stock-item-qty-val ${isOut?'out':isLow?'low':''}">${avail}/${total}</span>
               <span class="stock-item-unit">${escapeHtmlN(it.unit||'ชิ้น')}</span>
               ${isOut?`<span class="stock-item-badge out">${isLo?'ໝົດ':'หมด'}</span>`:isLow?`<span class="stock-item-badge low">${isLo?'ໃກ້ໝົດ':'ใกล้หมด'}</span>`:''}
             </div>
@@ -19775,7 +19790,7 @@ function _stockCheckoutCard(c, isLo){
   const teamName = c.team === 'marketing' ? 'Marketing' : c.team === 'creator' ? 'Creator' : 'Shared';
   const today = new Date().toISOString().slice(0,10);
   const isOverdue = (c.expectedReturnDate||'') < today && c.status !== 'returned';
-  const totalQty = (c.items||[]).reduce((s,it)=>s+(+it.qtyOut||0), 0);
+  const totalQty = (c.items||[]).reduce((s,it)=>s+(+it.qty||+it.qtyOut||0), 0);
   const assignees = (c.assignees||[]).map(uid => USERS.find(u=>u.id===uid)).filter(Boolean);
   return `<div class="stock-ck-card ${isOverdue?'overdue':''}" style="border-left-color:${color}">
     <div class="stock-ck-hd">
@@ -19796,7 +19811,7 @@ function _stockCheckoutCard(c, isLo){
     <div class="stock-ck-items">
       ${(c.items||[]).slice(0,3).map(it => {
         const item = stockItems.find(x => x.id === it.itemId);
-        return `<span class="stock-ck-item-chip">${escapeHtmlN(item?.name||'?')} × ${it.qtyOut}</span>`;
+        return `<span class="stock-ck-item-chip">${escapeHtmlN(item?.name||'?')} × ${it.qty||it.qtyOut||0}</span>`;
       }).join('')}
       ${(c.items||[]).length > 3 ? `<span class="stock-ck-item-chip more">+${(c.items||[]).length-3}</span>` : ''}
     </div>
@@ -19939,7 +19954,7 @@ function _renderStockHistory(isLo){
               <td>${team}</td>
               <td>${escapeHtmlN(c.eventDate||'—')}</td>
               <td>${escapeHtmlN(c.expectedReturnDate||'—')}</td>
-              <td class="num">${(c.items||[]).reduce((s,it)=>s+(+it.qtyOut||0),0)}</td>
+              <td class="num">${(c.items||[]).reduce((s,it)=>s+(+it.qty||+it.qtyOut||0),0)}</td>
               <td><span class="stock-row-status" style="background:${color}20;color:${color}">${_stockStatusLabel(status)}</span></td>
               <td>
                 <button class="btn-ghost" onclick="openCheckoutDetail('${c.id}')" title="${isLo?'ເບິ່ງ':'ดู'}">${I.eye}</button>
@@ -20256,6 +20271,17 @@ function submitCheckout(){
   const isLo = CURRENT_LANG==='lo';
   const d = stockWizardData;
   if(!d.officerUserId){ alert(isLo?'ກະລຸນາເລືອກ Officer':'กรุณาเลือก Officer ตรวจสอบ'); return; }
+  // Re-validate availability against latest state — prevent double-checkout
+  recalcStockAvailable();
+  for(const x of d.items){
+    const it = stockItems.find(s => s.id === x.itemId);
+    if(!it){ alert(isLo?'ບໍ່ພົບຂອງ':'ไม่พบของในระบบ'); return; }
+    const avail = +it.availableQty || 0;
+    if(x.qty > avail){
+      alert((isLo?'ຂອງບໍ່ພໍ: ':'ของไม่พอ: ')+it.name+' '+(isLo?'ເຫຼືອ':'เหลือ')+' '+avail+' '+(isLo?'ຊິ້ນ ແຕ່ເບີກ ':'ชิ้น แต่เบิก ')+x.qty);
+      return;
+    }
+  }
   const ck = {
     id: stockNextCkId(),
     team: d.team,
