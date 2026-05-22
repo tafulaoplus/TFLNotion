@@ -4756,6 +4756,99 @@ input:focus-visible{
 }
 .adlib-info b{display:block;color:var(--t1);font-weight:800;font-size:14px;margin-bottom:4px}
 .adlib-info p{margin:0;color:var(--t2);font-size:13px;line-height:1.55}
+.adlib-empty{
+  text-align:center;padding:60px 20px;
+  border-radius:16px;background:var(--bg-soft);
+  border:2px dashed var(--border);
+  color:var(--t2);
+}
+.adlib-empty-ic{
+  width:64px;height:64px;border-radius:16px;
+  background:linear-gradient(135deg,#a78bfa,#7c3aed);
+  color:#fff;margin:0 auto 16px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 20px rgba(124,58,237,.3);
+}
+.adlib-empty-ic svg{width:32px;height:32px}
+.adlib-empty h3{margin:0 0 6px;font-size:16px;font-weight:800;color:var(--t1)}
+.adlib-empty p{margin:0;font-size:13px;color:var(--t2)}
+
+.adlib-comp-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;
+  margin-bottom:24px;
+}
+.adlib-comp-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:18px 14px;
+  text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  transition:transform .2s ease,box-shadow .2s ease,border-color .15s ease;
+  position:relative;
+}
+.adlib-comp-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 28px rgba(24,119,242,.18);
+  border-color:#1877f2;
+}
+[data-theme="dark"] .adlib-comp-card{
+  background:linear-gradient(135deg,rgba(28,33,72,.7),rgba(19,23,54,.7));
+  border-color:rgba(167,139,250,.12);
+}
+.adlib-comp-pic{
+  width:74px;height:74px;border-radius:50%;
+  overflow:hidden;
+  background:linear-gradient(135deg,#1877f2,#0d65d9);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 16px rgba(24,119,242,.3);
+  flex-shrink:0;
+}
+.adlib-comp-pic img{width:100%;height:100%;object-fit:cover;display:block}
+.adlib-comp-pic-fallback{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;font-weight:800;color:#fff;
+}
+.adlib-comp-name{
+  font-size:14.5px;font-weight:800;color:var(--t1);
+  line-height:1.2;
+  overflow:hidden;text-overflow:ellipsis;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  max-width:100%;
+}
+.adlib-comp-handle{
+  font-size:11px;color:var(--t3);font-weight:600;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;
+}
+.adlib-comp-note{
+  font-size:11px;color:var(--t2);
+  padding:6px 10px;background:var(--bg-soft);border-radius:8px;
+  max-width:100%;line-height:1.4;
+}
+.adlib-comp-actions{
+  display:flex;gap:6px;width:100%;margin-top:auto;
+  padding-top:8px;
+}
+.adlib-comp-btn-primary{
+  flex:1;padding:10px 12px;
+  background:linear-gradient(135deg,#1877f2,#0d65d9);color:#fff;border:none;
+  border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;
+  display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  transition:all .15s ease;box-shadow:0 4px 12px rgba(24,119,242,.25);
+}
+.adlib-comp-btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(24,119,242,.4)}
+.adlib-comp-btn-primary svg{width:14px;height:14px}
+.adlib-comp-btn-ghost{
+  width:34px;height:34px;border-radius:9px;
+  background:var(--bg-soft);border:1px solid var(--border);
+  color:var(--t2);cursor:pointer;font-family:inherit;
+  display:inline-flex;align-items:center;justify-content:center;
+  text-decoration:none;
+  transition:all .15s ease;
+}
+.adlib-comp-btn-ghost:hover{background:var(--bg-hover);color:var(--t1);border-color:var(--p400)}
+.adlib-comp-btn-ghost.danger:hover{background:rgba(239,68,68,.1);color:#dc2626;border-color:#dc2626}
+.adlib-comp-btn-ghost svg{width:13px;height:13px}
+
 .adlib-iframe-wrap{
   position:relative;
   width:100%;height:600px;
@@ -6238,6 +6331,46 @@ img,video,iframe,canvas{max-width:100%;height:auto}
 </div>
 
 <!-- LOTTERY DATE RANGE PICKER MODAL -->
+<!-- AD LIBRARY: Add/Edit Competitor Modal -->
+<div class="overlay" id="adLibCompetitorModal">
+  <div class="modal" style="width:min(560px,calc(100vw - 32px))">
+    <div class="modal-hd">
+      <div class="modal-title" id="adLibCompetitorModalTitle">เพิ่มคู่แข่ง</div>
+      <button class="modal-close" onclick="closeModal('adLibCompetitorModal')">×</button>
+    </div>
+    <div class="modal-bd">
+      <div class="lot-fld">
+        <label class="lot-fld-lbl">URL เพจ Facebook <span style="color:#ef4444">*</span></label>
+        <input type="text" id="fAdLibUrl" placeholder="https://www.facebook.com/somePage"/>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+          <button class="btn-primary" style="background:linear-gradient(135deg,#10b981,#047857);padding:8px 14px;font-size:12px" onclick="adLibAutoFetch()">⚡ ดึงข้อมูลอัตโนมัติ</button>
+          <span id="adLibAutoFetchStatus" style="font-size:12px;color:var(--t3);flex:1"></span>
+        </div>
+      </div>
+      <div class="lot-fld">
+        <label class="lot-fld-lbl">ชื่อเพจ <span style="color:#ef4444">*</span></label>
+        <input type="text" id="fAdLibName" placeholder="เช่น คู่แข่ง XYZ"/>
+      </div>
+      <div class="lot-fld">
+        <label class="lot-fld-lbl">URL รูปเพจ <span style="font-size:11px;color:var(--t3);font-weight:500">(auto-fill เมื่อกด "ดึงข้อมูลอัตโนมัติ")</span></label>
+        <input type="text" id="fAdLibPic" placeholder="https://..."/>
+      </div>
+      <div class="lot-fld">
+        <label class="lot-fld-lbl">URL Ad Library ของคู่แข่ง <span style="font-size:11px;color:var(--t3);font-weight:500">(auto-generate ถ้าเว้นว่าง)</span></label>
+        <input type="text" id="fAdLibAdUrl" placeholder="https://www.facebook.com/ads/library/?..."/>
+      </div>
+      <div class="lot-fld">
+        <label class="lot-fld-lbl">โน้ต <span style="font-size:11px;color:var(--t3);font-weight:500">(ไม่บังคับ)</span></label>
+        <input type="text" id="fAdLibNote" placeholder="เช่น เน้นไลฟ์ขายเครื่องสำอาง"/>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="sm-btn-cancel" onclick="closeModal('adLibCompetitorModal')">ยกเลิก</button>
+      <button class="btn-primary" onclick="saveAdLibCompetitor()">บันทึก</button>
+    </div>
+  </div>
+</div>
+
 <!-- CREATE FB CAMPAIGN MODAL -->
 <div class="overlay" id="createCampaignModal">
   <div class="modal" style="width:min(520px,calc(100vw - 32px))">
@@ -7573,6 +7706,8 @@ let socialReportData = { lives: [], posts: [], ads: null, prevAds: null, loading
 // Live Analytics — stored Live records with manual fields + auto data
 let liveAnalytics = [];
 let currentLiveDetailId = null;
+// Ad Library competitors — track competitor FB pages
+let adLibCompetitors = [];
 let socialManageTab = localStorage.getItem('tfl_manage_tab') || 'posts'; // posts | live
 // Ad Spend Tracker state
 let adSpendConn = { enabled: false, adAccountId: '', adAccountName: '', currency: 'THB', accounts: [], connectedAt: null, token: '', testStatus: 'idle', testMessage: '' };
@@ -7870,6 +8005,9 @@ function applyRemoteWorkspace(data){
   if(Array.isArray(data.liveAnalytics)){
     liveAnalytics = data.liveAnalytics;
   }
+  if(Array.isArray(data.adLibCompetitors)){
+    adLibCompetitors = data.adLibCompetitors;
+  }
   if(data.postPerfConn && typeof data.postPerfConn === 'object'){
     postPerfConn.enabled = !!data.postPerfConn.enabled;
     postPerfConn.connectedAt = data.postPerfConn.connectedAt || null;
@@ -7978,6 +8116,7 @@ function syncToNeon(){
         postPerfConn: { enabled: postPerfConn.enabled, connectedAt: postPerfConn.connectedAt, token: postPerfConn.token, pageId: postPerfConn.pageId, pageName: postPerfConn.pageName },
         adSpendConn: { enabled: adSpendConn.enabled, adAccountId: adSpendConn.adAccountId, adAccountName: adSpendConn.adAccountName, currency: adSpendConn.currency, connectedAt: adSpendConn.connectedAt, token: adSpendConn.token },
         liveAnalytics: liveAnalytics,
+        adLibCompetitors: adLibCompetitors,
         googleDriveSettings: googleDriveSettings,
         tiktokSettings: tiktokSettings,
         youtubeSettings: youtubeSettings,
@@ -17289,24 +17428,62 @@ function printSocialReport(){ window.print(); }
 async function loadSocialReport(){
   socialReportData.loading = true; socialReportData.error = ''; rerender();
   const tasks = [];
-  // Live videos via main FB page connection
-  if(fbPostState.pageId && fbPostState.pageToken){
-    tasks.push((async()=>{
-      try {
-        const tok = encodeURIComponent(fbPostState.pageToken);
-        const sinceMs = new Date(socialReportRange.since).getTime();
-        const untilMs = new Date(socialReportRange.until + 'T23:59:59').getTime();
-        const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}/live_videos?fields=id,title,description,permalink_url,broadcast_start_time,broadcast_end_time,status,creation_time,live_views,thumbnails{uri}&limit=100&access_token=${tok}`);
-        const j = await r.json();
-        if(j.error) throw new Error(j.error.message);
-        socialReportData.lives = (j.data||[]).filter(l => {
-          const t = new Date(l.broadcast_start_time || l.creation_time).getTime();
-          return t >= sinceMs && t <= untilMs;
-        });
-      } catch(e){ console.warn('Live fetch failed:', e); socialReportData.lives = []; }
-    })());
-  } else {
-    socialReportData.lives = [];
+  // Live videos: merge from FB API + saved liveAnalytics (manual data has priority)
+  {
+    const sinceMs = new Date(socialReportRange.since).getTime();
+    const untilMs = new Date(socialReportRange.until + 'T23:59:59').getTime();
+    // Always include manual liveAnalytics records (with full data filled by user)
+    const manualLives = (typeof liveAnalytics !== 'undefined' ? liveAnalytics : [])
+      .filter(l => {
+        if(!l.date) return false;
+        const t = new Date(l.date).getTime();
+        return t >= sinceMs && t <= untilMs;
+      })
+      .map(l => ({
+        // Normalize to Social Report expected format
+        id: l.videoId || l.id,
+        title: l.title,
+        permalink_url: l.permalink,
+        broadcast_start_time: l.date + 'T00:00:00',
+        broadcast_end_time: l.duration ? (l.date + 'T' + String(Math.floor(l.duration/60)).padStart(2,'0') + ':' + String(l.duration%60).padStart(2,'0') + ':00') : null,
+        status: 'VOD',
+        live_views: l.views?.total_views || 0,
+        _manual: true,
+        _engagement: l.engagement || 0,
+        _net_followers: l.net_followers || 0,
+        _giveaway: l.giveaway?.has,
+        _giveaway_items: l.giveaway?.items,
+        _live_record_id: l.id,
+        thumbnails: l.thumbnail ? { data: [{ uri: l.thumbnail }] } : null,
+      }));
+    // Also fetch from FB API to include lives that weren't saved manually
+    if(fbPostState.pageId && fbPostState.pageToken){
+      tasks.push((async()=>{
+        try {
+          const tok = encodeURIComponent(fbPostState.pageToken);
+          const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${fbPostState.pageId}/live_videos?fields=id,title,description,permalink_url,broadcast_start_time,broadcast_end_time,status,creation_time,live_views,thumbnails{uri}&limit=100&access_token=${tok}`);
+          const j = await r.json();
+          if(j.error) throw new Error(j.error.message);
+          const apiLives = (j.data||[]).filter(l => {
+            const t = new Date(l.broadcast_start_time || l.creation_time).getTime();
+            return t >= sinceMs && t <= untilMs;
+          });
+          // Merge: manual records first; add API-only lives (not yet saved)
+          const merged = [...manualLives];
+          apiLives.forEach(api => {
+            if(!merged.find(m => m.id === api.id)){
+              merged.push(api);
+            }
+          });
+          socialReportData.lives = merged;
+        } catch(e){
+          console.warn('Live fetch failed:', e);
+          socialReportData.lives = manualLives; // fall back to manual only
+        }
+      })());
+    } else {
+      socialReportData.lives = manualLives;
+    }
   }
   // Posts via postPerfConn
   if(postPerfConn.enabled && postPerfConn.pageId && postPerfConn.token){
@@ -17407,6 +17584,9 @@ function renderSocialReport(el){
     return s;
   }, 0);
   const livePeakViews = lives.reduce((m,l)=>Math.max(m,+l.live_views||0), 0);
+  const liveEngTotal = lives.reduce((s,l)=>s+(+l._engagement||0), 0);
+  const liveNewFollowers = lives.reduce((s,l)=>s+(+l._net_followers||0), 0);
+  const livesWithGiveaway = lives.filter(l => l._giveaway).length;
   // Post stats
   const postReach = posts.reduce((s,p)=>s+p.reactions+p.comments+p.shares, 0);
   const postEng = posts.reduce((s,p)=>s+p.reactions+p.comments+p.shares, 0);
@@ -17480,19 +17660,20 @@ function renderSocialReport(el){
 
       <section class="sr-section">
         <h2 class="sr-section-title"><span class="sr-sec-ic" style="color:#ef4444">${I.live}</span> ไลฟ์สด</h2>
-        ${!fbPostState.pageToken ? `<div class="sr-not-connected">${I.alert} ยังไม่เชื่อม Facebook Page — ไปที่หน้า "เชื่อมต่อแพลตฟอร์ม"</div>` :
-        lives.length === 0 ? `<div class="sr-empty">ไม่มีการไลฟ์สดในช่วงนี้</div>` :
+        ${lives.length === 0 ? `<div class="sr-empty">ไม่มีการไลฟ์สดในช่วงนี้ — กดปุ่ม "ดึง Live" จากหน้า Facebook Hub เพื่อบันทึก Live</div>` :
         `<div class="sr-stat-row">
           <div class="sr-stat"><div class="sr-stat-lbl">จำนวน Live</div><div class="sr-stat-val">${lives.length}</div></div>
           <div class="sr-stat"><div class="sr-stat-lbl">เวลารวม</div><div class="sr-stat-val">${Math.round(liveTotalMins)} <span class="sr-unit">นาที</span></div></div>
-          <div class="sr-stat"><div class="sr-stat-lbl">Peak Viewers</div><div class="sr-stat-val">${fmtNum(livePeakViews)}</div></div>
-          <div class="sr-stat"><div class="sr-stat-lbl">เฉลี่ย/Live</div><div class="sr-stat-val">${lives.length?Math.round(liveTotalMins/lives.length):0} <span class="sr-unit">นาที</span></div></div>
+          <div class="sr-stat"><div class="sr-stat-lbl">Peak Views</div><div class="sr-stat-val">${fmtNum(livePeakViews)}</div></div>
+          <div class="sr-stat"><div class="sr-stat-lbl">Engagement</div><div class="sr-stat-val">${fmtNum(liveEngTotal)}</div></div>
+          ${liveNewFollowers>0?`<div class="sr-stat"><div class="sr-stat-lbl">Followers ใหม่</div><div class="sr-stat-val">+${liveNewFollowers}</div></div>`:''}
+          ${livesWithGiveaway>0?`<div class="sr-stat"><div class="sr-stat-lbl">มีของแจก</div><div class="sr-stat-val">${livesWithGiveaway} <span class="sr-unit">ครั้ง</span></div></div>`:''}
         </div>
-        <h3 class="sr-subtitle">Top Live</h3>
-        <table class="sr-table"><thead><tr><th>วันที่</th><th>หัวข้อ</th><th class="num">ความยาว (นาที)</th><th class="num">Peak Views</th></tr></thead><tbody>
-          ${lives.slice().sort((a,b)=>(+b.live_views||0)-(+a.live_views||0)).slice(0,5).map(l=>{
+        <h3 class="sr-subtitle">Top Live (เรียงตาม Views)</h3>
+        <table class="sr-table"><thead><tr><th>วันที่</th><th>หัวข้อ</th><th class="num">ความยาว (นาที)</th><th class="num">Views</th><th class="num">Engagement</th></tr></thead><tbody>
+          ${lives.slice().sort((a,b)=>(+b.live_views||0)-(+a.live_views||0)).slice(0,10).map(l=>{
             const mins = (l.broadcast_start_time && l.broadcast_end_time) ? Math.round((new Date(l.broadcast_end_time)-new Date(l.broadcast_start_time))/60000) : 0;
-            return `<tr><td>${new Date(l.broadcast_start_time||l.creation_time).toLocaleDateString('th-TH')}</td><td>${escapeHtmlN((l.title||l.description||'(ไม่มีหัวข้อ)').slice(0,60))}</td><td class="num">${mins}</td><td class="num">${fmtNum(+l.live_views||0)}</td></tr>`;
+            return `<tr><td>${new Date(l.broadcast_start_time||l.creation_time||l.date).toLocaleDateString('th-TH')}${l._manual?' <span style="display:inline-block;padding:1px 6px;background:rgba(16,185,129,.15);color:#059669;border-radius:5px;font-size:10px;font-weight:700">บันทึกแล้ว</span>':''}</td><td>${escapeHtmlN((l.title||l.description||'(ไม่มีหัวข้อ)').slice(0,60))}${l._giveaway?` 🎁`:''}</td><td class="num">${mins||'—'}</td><td class="num">${fmtNum(+l.live_views||0)}</td><td class="num">${l._engagement?fmtNum(l._engagement):'—'}</td></tr>`;
           }).join('')}
         </tbody></table>`}
       </section>
@@ -18237,101 +18418,214 @@ function renderAffiliateHub(el){
   }, 5000);
 }
 
-// ============ AD LIBRARY (FB Ad spy) ============
-let adLibState = { country:'TH', q:'', adType:'all', preset:'cosmetics' };
-const AD_LIBRARY_PRESETS = {
-  cosmetics: { label:'เครื่องสำอาง', q:'ครีม' },
-  lottery: { label:'หวย', q:'หวย' },
-  food: { label:'อาหาร', q:'อาหารเดลิเวอรี' },
-  tech: { label:'เทค', q:'gadget' },
-  finance: { label:'การเงิน', q:'สินเชื่อ' },
-};
-function setAdLibPreset(key){
-  const p = AD_LIBRARY_PRESETS[key];
-  if(!p) return;
-  adLibState.preset = key;
-  adLibState.q = p.q;
+// ============ AD LIBRARY (FB Ad spy) — Competitor cards ============
+let adLibCountry = localStorage.getItem('tfl_adlib_country') || 'TH';
+function setAdLibCountry(c){
+  adLibCountry = c;
+  try { localStorage.setItem('tfl_adlib_country', c); } catch(_){}
   rerender();
 }
-function setAdLibCountry(c){ adLibState.country = c; rerender(); }
-function openAdLibrary(){
-  const q = adLibState.q || '';
-  const url = `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=${adLibState.country}&q=${encodeURIComponent(q)}&search_type=keyword_unordered&media_type=all`;
-  window.open(url, '_blank', 'noopener,noreferrer');
+
+// Parse FB page identifier from URL: "https://facebook.com/somePage" -> "somePage"
+function _parseFbPageHandle(url){
+  if(!url) return '';
+  let cleaned = url.trim().replace(/^https?:\/\//, '').replace(/^www\./, '');
+  if(cleaned.startsWith('facebook.com/') || cleaned.startsWith('m.facebook.com/') || cleaned.startsWith('fb.com/')){
+    cleaned = cleaned.split('/')[1] || '';
+  }
+  cleaned = cleaned.split('?')[0].split('/')[0];
+  return cleaned;
 }
+
+// Generate Ad Library URL from page identifier
+function _generateAdLibUrl(pageHandle, country){
+  return `https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=${country||'TH'}&q=${encodeURIComponent(pageHandle)}&search_type=keyword_unordered&media_type=all`;
+}
+
+// Auto-fetch page info from FB Graph API
+async function _adLibFetchPageInfo(pageUrl){
+  const handle = _parseFbPageHandle(pageUrl);
+  if(!handle) throw new Error('ไม่สามารถดึง page handle จาก URL ได้');
+  if(!fbPostState.pageToken) throw new Error('ต้องเชื่อม Facebook ก่อนถึงจะดึงข้อมูลได้');
+  const tok = encodeURIComponent(fbPostState.pageToken);
+  const r = await fetch(`https://graph.facebook.com/${FB_API_VERSION}/${encodeURIComponent(handle)}?fields=id,name,username,picture.width(300).height(300),fan_count,verification_status,category&access_token=${tok}`);
+  const j = await r.json();
+  if(j.error) throw new Error(j.error.message);
+  return {
+    pageId: j.id,
+    name: j.name,
+    username: j.username || handle,
+    picture: j.picture?.data?.url || '',
+    fanCount: j.fan_count || 0,
+    verified: j.verification_status === 'blue_verified' || j.verification_status === 'gray_verified',
+    category: j.category || '',
+  };
+}
+
+let _adLibEditId = null;
+function openAddCompetitorModal(id){
+  _adLibEditId = id || null;
+  const existing = id ? adLibCompetitors.find(c => c.id === id) : null;
+  document.getElementById('fAdLibUrl').value = existing?.pageUrl || '';
+  document.getElementById('fAdLibName').value = existing?.name || '';
+  document.getElementById('fAdLibPic').value = existing?.picture || '';
+  document.getElementById('fAdLibAdUrl').value = existing?.adLibUrl || '';
+  document.getElementById('fAdLibNote').value = existing?.note || '';
+  document.getElementById('adLibCompetitorModalTitle').textContent = id ? 'แก้ไขคู่แข่ง' : 'เพิ่มคู่แข่งใหม่';
+  document.getElementById('adLibAutoFetchStatus').textContent = '';
+  document.getElementById('adLibCompetitorModal').classList.add('show');
+}
+
+async function adLibAutoFetch(){
+  const url = document.getElementById('fAdLibUrl').value.trim();
+  if(!url){ alert('กรอก URL เพจก่อน'); return; }
+  const statusEl = document.getElementById('adLibAutoFetchStatus');
+  statusEl.textContent = '⏳ กำลังดึงข้อมูล…';
+  statusEl.style.color = 'var(--t2)';
+  try {
+    const info = await _adLibFetchPageInfo(url);
+    document.getElementById('fAdLibName').value = info.name;
+    document.getElementById('fAdLibPic').value = info.picture;
+    document.getElementById('fAdLibAdUrl').value = _generateAdLibUrl(info.username || info.pageId, adLibCountry);
+    statusEl.textContent = `✓ ดึงสำเร็จ: ${info.name} · ${info.fanCount.toLocaleString()} ผู้ติดตาม${info.verified?' ✓':''}`;
+    statusEl.style.color = '#059669';
+  } catch(e){
+    statusEl.textContent = '✗ ' + e.message;
+    statusEl.style.color = '#dc2626';
+  }
+}
+
+function saveAdLibCompetitor(){
+  const pageUrl = document.getElementById('fAdLibUrl').value.trim();
+  const name = document.getElementById('fAdLibName').value.trim();
+  const picture = document.getElementById('fAdLibPic').value.trim();
+  const adLibUrl = document.getElementById('fAdLibAdUrl').value.trim();
+  const note = document.getElementById('fAdLibNote').value.trim();
+  if(!pageUrl){ alert('กรอก URL เพจ'); return; }
+  if(!name){ alert('กรอกชื่อเพจ'); return; }
+  const finalAdUrl = adLibUrl || _generateAdLibUrl(_parseFbPageHandle(pageUrl), adLibCountry);
+  if(_adLibEditId){
+    const c = adLibCompetitors.find(x => x.id === _adLibEditId);
+    if(c){
+      c.pageUrl = pageUrl;
+      c.name = name;
+      c.picture = picture;
+      c.adLibUrl = finalAdUrl;
+      c.note = note;
+      c.updatedAt = Date.now();
+    }
+  } else {
+    adLibCompetitors.push({
+      id: 'comp_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
+      pageUrl, name, picture, adLibUrl: finalAdUrl, note,
+      createdAt: Date.now(), updatedAt: Date.now(),
+    });
+  }
+  saveAll();
+  closeModal('adLibCompetitorModal');
+  rerender();
+}
+
+function deleteAdLibCompetitor(id){
+  if(!confirm('ลบคู่แข่งนี้?')) return;
+  adLibCompetitors = adLibCompetitors.filter(c => c.id !== id);
+  saveAll();
+  rerender();
+}
+
+function openCompetitorAdLib(c){
+  window.open(c.adLibUrl, '_blank', 'noopener,noreferrer');
+}
+
 function renderAdLibrary(el){
   const isLo = CURRENT_LANG === 'lo';
-  const subtitle = isLo ? 'ສອດແນມໂຄສະນາຄູ່ແຂ່ງໃນ Facebook Ad Library' : 'สอดส่องโฆษณาคู่แข่งใน Facebook Ad Library — รวมข้อมูลสาธารณะที่ Meta เปิดให้ใช้';
-  const presets = Object.entries(AD_LIBRARY_PRESETS).map(([k,v]) =>
-    `<button class="adlib-preset ${adLibState.preset===k?'active':''}" onclick="setAdLibPreset('${k}')">${v.label}</button>`
-  ).join('');
-  const url = `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=${adLibState.country}&q=${encodeURIComponent(adLibState.q||'')}&search_type=keyword_unordered&media_type=all`;
+  const subtitle = isLo ? 'ສອດແນມໂຄສະນາຄູ່ແຂ່ງ — ບັນທຶກລາຍຊື່ເພຈຄູ່ແຂ່ງເພື່ອເຂົ້າເບິ່ງ Ad Library ໄດ້ໄວ' : 'สอดส่องโฆษณาคู่แข่ง — บันทึกรายชื่อเพจคู่แข่งเพื่อเข้าดู Ad Library ได้ไว';
   el.innerHTML = topbarSimple('barChart', isLo?'ສອດແນມໂຄສະນາ':'Ads Library คู่แข่ง', subtitle) + `
     <div class="page-content" style="max-width:1400px">
+
+      <!-- Top toolbar -->
       <div class="adlib-toolbar">
-        <div class="adlib-search-wrap">
-          ${I.search}
-          <input type="text" class="adlib-search" id="adLibSearchInp" placeholder="${isLo?'ຄົ້ນຫາແບຣນ / ຄຳສຳຄັນ':'ค้นหาแบรนด์ / คำสำคัญ'}" value="${escapeHtmlN(adLibState.q||'')}" onchange="adLibState.q=this.value;rerender()" onkeydown="if(event.key==='Enter'){adLibState.q=this.value;rerender()}"/>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:800;color:var(--t1)">${isLo?'ເພຈຄູ່ແຂ່ງ':'เพจคู่แข่ง'} (${adLibCompetitors.length})</div>
+          <div style="font-size:12px;color:var(--t3);margin-top:2px">${isLo?'ບັນທຶກລາຍຊື່ເພຈເພື່ອເຂົ້າເບິ່ງ Ads ໃນ Facebook Ad Library ໄດ້ໄວ':'บันทึก link เพจคู่แข่งเพื่อเปิด Ads ของเขาใน Facebook Ad Library ได้คลิกเดียว'}</div>
         </div>
         <select class="adlib-country" onchange="setAdLibCountry(this.value)">
-          <option value="TH" ${adLibState.country==='TH'?'selected':''}>🇹🇭 ไทย</option>
-          <option value="LA" ${adLibState.country==='LA'?'selected':''}>🇱🇦 ลาว</option>
-          <option value="VN" ${adLibState.country==='VN'?'selected':''}>🇻🇳 เวียดนาม</option>
-          <option value="MY" ${adLibState.country==='MY'?'selected':''}>🇲🇾 มาเลเซีย</option>
-          <option value="ID" ${adLibState.country==='ID'?'selected':''}>🇮🇩 อินโดนีเซีย</option>
-          <option value="PH" ${adLibState.country==='PH'?'selected':''}>🇵🇭 ฟิลิปปินส์</option>
-          <option value="US" ${adLibState.country==='US'?'selected':''}>🇺🇸 สหรัฐฯ</option>
+          <option value="TH" ${adLibCountry==='TH'?'selected':''}>🇹🇭 ไทย</option>
+          <option value="LA" ${adLibCountry==='LA'?'selected':''}>🇱🇦 ลาว</option>
+          <option value="VN" ${adLibCountry==='VN'?'selected':''}>🇻🇳 เวียดนาม</option>
+          <option value="MY" ${adLibCountry==='MY'?'selected':''}>🇲🇾 มาเลเซีย</option>
+          <option value="ID" ${adLibCountry==='ID'?'selected':''}>🇮🇩 อินโดนีเซีย</option>
+          <option value="PH" ${adLibCountry==='PH'?'selected':''}>🇵🇭 ฟิลิปปินส์</option>
+          <option value="US" ${adLibCountry==='US'?'selected':''}>🇺🇸 สหรัฐฯ</option>
+          <option value="ALL" ${adLibCountry==='ALL'?'selected':''}>🌐 ทุกประเทศ</option>
         </select>
-        <button class="btn-primary" onclick="openAdLibrary()">${I.externalLink} ${isLo?'ເປີດແທັບໃໝ່':'เปิดใน Tab ใหม่'}</button>
+        <button class="btn-primary" onclick="openAddCompetitorModal()">${I.plus} ${isLo?'ເພີ່ມຄູ່ແຂ່ງ':'เพิ่มคู่แข่ง'}</button>
       </div>
 
-      <div class="adlib-presets">
-        <span class="adlib-presets-lbl">${isLo?'ໝວດແນະນຳ':'หมวดแนะนำ'}:</span>
-        ${presets}
-      </div>
-
+      <!-- Info banner -->
       <div class="adlib-info">
         <div class="adlib-info-ic">${I.lightbulb}</div>
         <div>
-          <b>${isLo?'ກ່ຽວກັບ Ad Library':'เกี่ยวกับ Ad Library'}</b>
+          <b>${isLo?'ວິທີໃຊ້':'วิธีใช้'}</b>
           <p>${isLo
-            ? 'Facebook Ad Library ເປັນເຄື່ອງມືສາທາລະນະຂອງ Meta ທີ່ໃຫ້ເບິ່ງໂຄສະນາທີ່ກຳລັງເຮັດງານຢູ່. ບໍ່ສາມາດຝັງ (embed) ໃນເວັບໄຊອື່ນໄດ້ ດັ່ງນັ້ນຈຶ່ງເປີດໃນແທັບໃໝ່ແທນ.'
-            : 'Facebook Ad Library เป็นเครื่องมือสาธารณะของ Meta ที่ให้ดูโฆษณาที่กำลังทำงานอยู่ของทุกเพจ Facebook & Instagram — มี Meta ไม่อนุญาตให้ฝัง (embed) ในเว็บอื่น (X-Frame-Options: DENY) จึงต้องเปิดในแท็บใหม่แทน'}</p>
+            ?'1) ກົດ "ເພີ່ມຄູ່ແຂ່ງ" 2) ວາງ URL ເພຈ Facebook ຂອງຄູ່ແຂ່ງ 3) ກົດ "ດຶງຂໍ້ມູນອັດຕະໂນມັດ" 4) ບັນທຶກ → ກົດການ໌ດເພື່ອເບິ່ງ Ads'
+            :'1) กดปุ่ม "เพิ่มคู่แข่ง" 2) วาง URL เพจ Facebook ของคู่แข่ง 3) กดปุ่ม "ดึงข้อมูลอัตโนมัติ" ระบบจะดึงชื่อ + รูปให้ 4) บันทึก → คลิกการ์ดเพื่อเปิด Ads ของคู่แข่ง'}</p>
         </div>
       </div>
 
-      <div class="adlib-iframe-wrap">
-        <iframe src="${escapeHtmlN(url)}" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
-        <div class="adlib-iframe-fallback">
-          <div class="adlib-fallback-ic">${I.alertBig||I.alert}</div>
-          <h3>${isLo?'ບໍ່ສາມາດສະແດງໃນໜ້ານີ້':'ไม่สามารถแสดงในหน้านี้ได้'}</h3>
-          <p>${isLo?'Facebook ບໍ່ອະນຸຍາດໃຫ້ຝັງ iframe — ກົດປຸ່ມຂ້າງລຸ່ມເພື່ອເປີດໃນແທັບໃໝ່':'Facebook ไม่อนุญาตให้ฝัง iframe — กดปุ่มด้านล่างเพื่อเปิดในแท็บใหม่'}</p>
-          <button class="btn-primary" onclick="openAdLibrary()" style="margin-top:14px">${I.externalLink} ${isLo?'ເປີດແທັບໃໝ່':'เปิด Ad Library ในแท็บใหม่'}</button>
+      <!-- Competitor cards grid -->
+      ${adLibCompetitors.length === 0 ? `
+        <div class="adlib-empty">
+          <div class="adlib-empty-ic">${I.users}</div>
+          <h3>${isLo?'ຍັງບໍ່ມີຄູ່ແຂ່ງ':'ยังไม่มีคู่แข่ง'}</h3>
+          <p>${isLo?'ກົດປຸ່ມຂ້າງເທິງເພື່ອເພີ່ມເພຈຄູ່ແຂ່ງ':'กดปุ่ม "+ เพิ่มคู่แข่ง" ด้านบนเพื่อเริ่มต้น'}</p>
         </div>
-      </div>
+      ` : `
+        <div class="adlib-comp-grid">
+          ${adLibCompetitors.map(c => {
+            const handle = _parseFbPageHandle(c.pageUrl);
+            return `<div class="adlib-comp-card">
+              <div class="adlib-comp-pic">
+                ${c.picture ? `<img src="${escapeHtmlN(c.picture)}" alt="${escapeHtmlN(c.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>` : ''}
+                <div class="adlib-comp-pic-fallback" style="${c.picture?'display:none':'display:flex'}">${escapeHtmlN((c.name||'?')[0].toUpperCase())}</div>
+              </div>
+              <div class="adlib-comp-name">${escapeHtmlN(c.name)}</div>
+              <div class="adlib-comp-handle">@${escapeHtmlN(handle||'')}</div>
+              ${c.note ? `<div class="adlib-comp-note">${escapeHtmlN(c.note.slice(0,80))}</div>` : ''}
+              <div class="adlib-comp-actions">
+                <button class="adlib-comp-btn-primary" onclick="openCompetitorAdLib(${JSON.stringify(c).replace(/"/g,'&quot;')})">${I.eye} ${isLo?'ເບິ່ງ Ads':'ดู Ads'}</button>
+                <a class="adlib-comp-btn-ghost" href="${escapeHtmlN(c.pageUrl)}" target="_blank" rel="noopener" title="${isLo?'ເບິ່ງເພຈ':'ดูเพจ'}">${I.externalLink}</a>
+                <button class="adlib-comp-btn-ghost" onclick="openAddCompetitorModal('${escapeHtmlN(c.id)}')" title="${isLo?'ແກ້ໄຂ':'แก้ไข'}">${I.edit}</button>
+                <button class="adlib-comp-btn-ghost danger" onclick="deleteAdLibCompetitor('${escapeHtmlN(c.id)}')" title="${isLo?'ລຶບ':'ลบ'}">${I.trash}</button>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      `}
 
+      <!-- Tips -->
       <div class="adlib-tips">
-        <h3>${isLo?'ເຄັດລັບການໃຊ້ງານ':'เคล็ดลับการใช้งาน'}</h3>
+        <h3>${isLo?'ເຄັດລັບການໃຊ້ງານ':'เคล็ดลับการใช้ Ad Library'}</h3>
         <div class="adlib-tip-grid">
           <div class="adlib-tip">
             <div class="adlib-tip-ic" style="background:linear-gradient(135deg,#3b82f6,#06b6d4)">${I.target}</div>
             <h4>${isLo?'ຫາແບຣນຄູ່ແຂ່ງ':'หาแบรนด์คู่แข่ง'}</h4>
-            <p>${isLo?'ພິມຊື່ Page ຫຼື ຄຳສຳຄັນ':'พิมพ์ชื่อ Page หรือคำสำคัญ เช่น "กิจการเดียวกัน"'}</p>
+            <p>${isLo?'ບັນທຶກເພຈຄູ່ແຂ່ງ → ກົດດູ Ads ໄດ້ໄວ':'บันทึกเพจคู่แข่ง → คลิกเปิด Ads ที่กำลังรันได้ทันที'}</p>
           </div>
           <div class="adlib-tip">
             <div class="adlib-tip-ic" style="background:linear-gradient(135deg,#ec4899,#f472b6)">${I.eye}</div>
-            <h4>${isLo?'ເບິ່ງ Creative ທີ່ໃຊ້':'ดู Creative ที่ใช้'}</h4>
-            <p>${isLo?'ເບິ່ງ video, ຮູບ, copy ທີ່ໃຊ້ໃນໂຄສະນາ':'เห็นวิดีโอ ภาพ และข้อความที่ใช้ ดูว่าอันไหนทำงานนาน'}</p>
+            <h4>${isLo?'ເບິ່ງ Creative':'ดู Creative ที่ใช้'}</h4>
+            <p>${isLo?'video, ຮູບ, copy ໃນໂຄສະນາ':'เห็นวิดีโอ ภาพ และข้อความที่ใช้ — เอามาเป็นไอเดีย'}</p>
           </div>
           <div class="adlib-tip">
             <div class="adlib-tip-ic" style="background:linear-gradient(135deg,#10b981,#34d399)">${I.clock}</div>
-            <h4>${isLo?'ໂຄສະນາທີ່ໃຊ້ດົນ':'โฆษณาที่ใช้นาน = ดี'}</h4>
-            <p>${isLo?'Ads ທີ່ run ດົນສະແດງວ່າມັນ work':'Ads ที่ run มา 30+ วัน = แสดงว่าทำกำไรได้จึงคงไว้'}</p>
+            <h4>${isLo?'Ads ດົນ = ດີ':'Ads รันนาน = ดี'}</h4>
+            <p>${isLo?'run 30+ ມື້ສະແດງວ່າ work':'รันมา 30+ วัน = แสดงว่าทำกำไรได้จึงคงไว้'}</p>
           </div>
           <div class="adlib-tip">
             <div class="adlib-tip-ic" style="background:linear-gradient(135deg,#f59e0b,#fbbf24)">${I.zap}</div>
             <h4>${isLo?'ໄອເດຍ Content':'ไอเดียคอนเทนต์'}</h4>
-            <p>${isLo?'ໃຊ້ເປັນແຮງບັນດານໃຈ ບໍ່ໄດ້ກ໋ອບແບບ':'ใช้เป็นแรงบันดาลใจ — ห้าม copy ตรงๆ'}</p>
+            <p>${isLo?'ໃຊ້ເປັນແຮງບັນດານໃຈ ບໍ່ກ໋ອບ':'ใช้เป็นแรงบันดาลใจ — ห้าม copy ตรงๆ'}</p>
           </div>
         </div>
       </div>
