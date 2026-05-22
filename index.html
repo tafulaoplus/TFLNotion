@@ -3672,6 +3672,76 @@ input:focus-visible{
 .intg2-fb-official-btn-wrap .fb-login-button{display:block!important;width:100%}
 
 /* ╔═══════════════════════════════════════════════════════════╗
+   ║ LIVE ANALYTICS                                            ║
+   ╚═══════════════════════════════════════════════════════════╝ */
+.live-tabs{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:8px;background:var(--bg-soft);border-radius:12px;margin-bottom:18px}
+.live-tab{padding:9px 16px;border-radius:9px;background:transparent;border:none;color:var(--t2);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:7px;transition:all .15s ease}
+.live-tab svg{width:15px;height:15px}
+.live-tab:hover{background:var(--bg-hover);color:var(--t1)}
+.live-tab.active{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;box-shadow:0 4px 12px rgba(239,68,68,.35)}
+
+.live-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.live-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease}
+.live-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(239,68,68,.18)}
+[data-theme="dark"] .live-card{background:linear-gradient(135deg,rgba(28,33,72,.7),rgba(19,23,54,.7));border-color:rgba(167,139,250,.12)}
+.live-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block}
+.live-card-noimg{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e1b4b,#3b0764);color:rgba(255,255,255,.4)}
+.live-card-noimg svg{width:42px;height:42px}
+.live-card-body{padding:14px;display:flex;flex-direction:column;gap:8px}
+.live-card-title{font-size:13.5px;font-weight:800;color:var(--t1);line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.live-card-meta{font-size:11.5px;color:var(--t3)}
+.live-card-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:8px;border-radius:9px;background:var(--bg-soft)}
+.live-card-stats > div{text-align:center}
+.live-card-stats b{display:block;font-size:13px;font-weight:800;color:var(--t1);font-feature-settings:'tnum'}
+.live-card-stats span{font-size:10px;color:var(--t3);font-weight:600;text-transform:uppercase}
+
+.live-insights{display:flex;flex-direction:column;gap:8px}
+.live-insight{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:10px;background:var(--bg-soft);font-size:13px;color:var(--t1);line-height:1.5;border-left:3px solid #6b7280}
+.live-insight.good{border-left-color:#10b981}
+.live-insight.warn{border-left-color:#f59e0b;background:rgba(245,158,11,.06)}
+.live-insight-ic{flex-shrink:0;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;margin-top:1px}
+.live-insight.good .live-insight-ic{background:rgba(16,185,129,.15);color:#059669}
+.live-insight.warn .live-insight-ic{background:rgba(245,158,11,.15);color:#d97706}
+
+/* Live detail form */
+.live-detail-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px;padding:12px 14px;background:var(--bg-soft);border-radius:11px}
+.live-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}
+[data-theme="dark"] .live-section{background:linear-gradient(135deg,rgba(28,33,72,.7),rgba(19,23,54,.7));border-color:rgba(167,139,250,.12)}
+.live-section-title{margin:0 0 14px;font-size:14px;font-weight:800;color:var(--t1)}
+.live-section h4{margin:0 0 10px;font-size:12.5px;font-weight:700;color:var(--t2)}
+.live-form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.live-form-grid.live-grid-3{grid-template-columns:repeat(3,1fr)}
+.live-form-grid.live-grid-4{grid-template-columns:repeat(4,1fr)}
+@media (max-width:768px){
+  .live-form-grid,.live-form-grid.live-grid-3,.live-form-grid.live-grid-4{grid-template-columns:repeat(2,1fr)}
+}
+.live-fld{display:flex;flex-direction:column;gap:5px}
+.live-fld label{font-size:11.5px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.3px}
+.live-fld input{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--card);color:var(--t1);font-family:inherit;font-size:13px}
+[data-theme="dark"] .live-fld input{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)}
+.live-fld input:focus{outline:none;border-color:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.15)}
+
+/* Post filter tabs (Facebook Hub) */
+.fbhub-post-filter{display:flex;gap:6px;padding:6px;background:var(--bg-soft);border-radius:11px;margin-bottom:14px;flex-wrap:wrap}
+.fbhub-pfilter{padding:8px 14px;border-radius:8px;background:transparent;border:none;color:var(--t2);font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:all .15s ease}
+.fbhub-pfilter:hover{background:var(--bg-hover);color:var(--t1)}
+.fbhub-pfilter.active{background:linear-gradient(135deg,#1877f2,#0d65d9);color:#fff;box-shadow:0 4px 10px rgba(24,119,242,.3)}
+.fbhub-pfilter-cnt{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:18px;padding:0 5px;border-radius:9px;background:rgba(0,0,0,.1);font-size:10.5px;font-weight:800;font-feature-settings:'tnum'}
+.fbhub-pfilter.active .fbhub-pfilter-cnt{background:rgba(255,255,255,.25);color:#fff}
+
+/* "ดึง Live" button on post/video cards */
+.fbhub-pull-live-btn{
+  margin-top:8px;width:100%;padding:8px 12px;
+  background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;border:none;
+  border-radius:8px;font-size:11.5px;font-weight:800;cursor:pointer;font-family:inherit;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  transition:all .15s ease;box-shadow:0 4px 10px rgba(239,68,68,.25);
+}
+.fbhub-pull-live-btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(239,68,68,.4)}
+.fbhub-pull-live-btn:disabled{opacity:.6;cursor:wait}
+.fbhub-pull-live-btn svg{width:13px;height:13px}
+
+/* ╔═══════════════════════════════════════════════════════════╗
    ║ FACEBOOK HUB                                              ║
    ╚═══════════════════════════════════════════════════════════╝ */
 .fb-hub-page{display:flex;flex-direction:column;gap:18px}
@@ -5813,6 +5883,7 @@ img,video,iframe,canvas{max-width:100%;height:auto}
       <div id="viewTrendScraper" class="view"></div>
       <div id="viewAffiliateHub" class="view"></div>
       <div id="viewFacebookHub" class="view"></div>
+      <div id="viewLiveAnalytics" class="view"></div>
       <div id="viewPostPerformance" class="view"></div>
       <div id="viewAdSpend" class="view"></div>
       <div id="viewSales" class="view"></div>
@@ -7499,6 +7570,9 @@ let postPerfShowAll = false;
 let socialReportRange = (()=>{const e=new Date();const s=new Date();s.setDate(s.getDate()-29);return {since:s.toISOString().slice(0,10),until:e.toISOString().slice(0,10)};})();
 let socialReportCompare = true; // compare with previous equal-length period
 let socialReportData = { lives: [], posts: [], ads: null, prevAds: null, loading: false, error: '', fetchedAt: null };
+// Live Analytics — stored Live records with manual fields + auto data
+let liveAnalytics = [];
+let currentLiveDetailId = null;
 let socialManageTab = localStorage.getItem('tfl_manage_tab') || 'posts'; // posts | live
 // Ad Spend Tracker state
 let adSpendConn = { enabled: false, adAccountId: '', adAccountName: '', currency: 'THB', accounts: [], connectedAt: null, token: '', testStatus: 'idle', testMessage: '' };
@@ -7793,6 +7867,9 @@ function applyRemoteWorkspace(data){
     const maxDr = fbDrafts.reduce((m,d)=>Math.max(m, d.id||0), 0);
     nextFbDraftId = Math.max(nextFbDraftId, maxDr + 1);
   }
+  if(Array.isArray(data.liveAnalytics)){
+    liveAnalytics = data.liveAnalytics;
+  }
   if(data.postPerfConn && typeof data.postPerfConn === 'object'){
     postPerfConn.enabled = !!data.postPerfConn.enabled;
     postPerfConn.connectedAt = data.postPerfConn.connectedAt || null;
@@ -7900,6 +7977,7 @@ function syncToNeon(){
         },
         postPerfConn: { enabled: postPerfConn.enabled, connectedAt: postPerfConn.connectedAt, token: postPerfConn.token, pageId: postPerfConn.pageId, pageName: postPerfConn.pageName },
         adSpendConn: { enabled: adSpendConn.enabled, adAccountId: adSpendConn.adAccountId, adAccountName: adSpendConn.adAccountName, currency: adSpendConn.currency, connectedAt: adSpendConn.connectedAt, token: adSpendConn.token },
+        liveAnalytics: liveAnalytics,
         googleDriveSettings: googleDriveSettings,
         tiktokSettings: tiktokSettings,
         youtubeSettings: youtubeSettings,
@@ -9189,14 +9267,14 @@ function initApp(){
   let startView = 'dashboard';
   try {
     const saved = localStorage.getItem('tfl_currentView');
-    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','socialReport','socialManage','adLibrary','trendScraper','affiliateHub','facebookHub','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','postPerformance','adSpend','sales','activity','calendar','lottery','attendance'];
+    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','socialReport','socialManage','adLibrary','trendScraper','affiliateHub','facebookHub','liveAnalytics','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','postPerformance','adSpend','sales','activity','calendar','lottery','attendance'];
     if(saved && validViews.includes(saved)){
       // Check role permission
       if((saved === 'allTasks' || saved === 'members' || saved === 'activity' || saved === 'lottery' || saved === 'affiliateHub') && currentUser.role !== 'admin'){
         startView = 'dashboard';
       } else if(saved === 'socialIntegrations' && currentUser.role !== 'admin'){
         startView = 'dashboard';
-      } else if((saved === 'socialReport' || saved === 'socialManage' || saved === 'adLibrary' || saved === 'trendScraper' || saved === 'facebookHub' || saved === 'fbLive' || saved === 'fbGoLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics' || saved === 'postPerformance' || saved === 'adSpend') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
+      } else if((saved === 'socialReport' || saved === 'socialManage' || saved === 'adLibrary' || saved === 'trendScraper' || saved === 'facebookHub' || saved === 'liveAnalytics' || saved === 'fbLive' || saved === 'fbGoLive' || saved === 'fbLiveAuto' || saved === 'fbPosts' || saved === 'socialAnalytics' || saved === 'postPerformance' || saved === 'adSpend') && currentUser.role !== 'admin' && currentUser.role !== 'social'){
         startView = 'dashboard';
       } else {
         startView = saved;
@@ -9295,6 +9373,11 @@ function renderSidebar(){
       <div class="nav-item ${currentView==='facebookHub'?'active':''}" onclick="navigateTo('facebookHub')">
         <span class="nav-icon">${I.facebook}</span>
         <span class="nav-label">Facebook Hub</span>
+      </div>
+      <div class="nav-item ${currentView==='liveAnalytics'?'active':''}" onclick="navigateTo('liveAnalytics')">
+        <span class="nav-icon" style="color:#ef4444">${I.live}</span>
+        <span class="nav-label">Live</span>
+        ${liveAnalytics.length ? `<span class="nav-badge" style="background:linear-gradient(135deg,#ef4444,#dc2626)">${liveAnalytics.length}</span>` : ''}
       </div>
       <div class="nav-item ${currentView==='adLibrary'?'active':''}" onclick="navigateTo('adLibrary')">
         <span class="nav-icon">${I.search}</span>
@@ -9644,7 +9727,7 @@ function renderView(id,el){
   setTimeout(()=>el.classList.remove('fade-in'),300);
   ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,notes:renderNotes,taskBoard:renderTaskBoard,
     myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbGoLive:renderFbGoLive,fbLiveAuto:renderFbLiveAuto,
-    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,socialReport:renderSocialReport,socialManage:renderSocialManage,adLibrary:renderAdLibrary,trendScraper:renderTrendScraper,affiliateHub:renderAffiliateHub,facebookHub:renderFacebookHub,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations,postPerformance:renderPostPerformance,adSpend:renderAdSpend}[id]||(()=>{}))(el);
+    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,socialReport:renderSocialReport,socialManage:renderSocialManage,adLibrary:renderAdLibrary,trendScraper:renderTrendScraper,affiliateHub:renderAffiliateHub,facebookHub:renderFacebookHub,liveAnalytics:renderLiveAnalytics,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations,postPerformance:renderPostPerformance,adSpend:renderAdSpend}[id]||(()=>{}))(el);
 }
 
 function rerender(){ const el=document.getElementById('view'+cap(currentView)); if(el) renderView(currentView,el); }
@@ -18893,9 +18976,398 @@ function _intgFbRecheckStatus(){
   }, true /* force = bypass cache */);
 }
 
+// ============ LIVE ANALYTICS ============
+let liveAnalyticsTab = 'overview'; // overview | list
+function setLiveAnalyticsTab(t){ liveAnalyticsTab = t; rerender(); }
+function openLiveDetail(id){ currentLiveDetailId = id; rerender(); }
+function closeLiveDetail(){ currentLiveDetailId = null; rerender(); }
+function deleteLiveRecord(id){
+  if(!confirm('ลบ Live record นี้?')) return;
+  liveAnalytics = liveAnalytics.filter(l => l.id !== id);
+  if(currentLiveDetailId === id) currentLiveDetailId = null;
+  saveAll();
+  rerender();
+}
+
+function _liveAIInsights(lives){
+  const insights = [];
+  if(lives.length === 0) return insights;
+  // Best time
+  const hourMap = {};
+  lives.forEach(l => {
+    if(l.date && l.duration){
+      // Use middle of duration if we had start_time; skip for now
+    }
+  });
+  // Lives with giveaway
+  const withGive = lives.filter(l => l.giveaway?.has);
+  const withoutGive = lives.filter(l => !l.giveaway?.has);
+  if(withGive.length && withoutGive.length){
+    const avgGive = withGive.reduce((s,l)=>s+(l.engagement||0),0)/withGive.length;
+    const avgNo = withoutGive.reduce((s,l)=>s+(l.engagement||0),0)/withoutGive.length;
+    if(avgGive > avgNo){
+      const pct = ((avgGive - avgNo)/avgNo*100).toFixed(0);
+      insights.push({ type: 'good', text: `ไลฟ์ที่มีของแจก engagement สูงกว่า ${pct}%` });
+    }
+  }
+  // Long lives
+  const longLives = lives.filter(l => l.duration >= 90);
+  if(longLives.length >= 2){
+    insights.push({ type: 'warn', text: `ไลฟ์เกิน 90 นาที (${longLives.length} ครั้ง) — ตรวจสอบ retention rate` });
+  }
+  // Top performer
+  if(lives.length >= 2){
+    const top = lives.slice().sort((a,b)=>(b.engagement||0)-(a.engagement||0))[0];
+    if(top.engagement > 0){
+      insights.push({ type: 'good', text: `ไลฟ์ "${(top.title||'').slice(0,40)}" engagement สูงสุด (${top.engagement})` });
+    }
+  }
+  // Follower growth trend
+  const totalNewFollowers = lives.reduce((s,l)=>s+(l.net_followers||0), 0);
+  if(totalNewFollowers > 0){
+    insights.push({ type: 'good', text: `ได้ผู้ติดตามใหม่จากไลฟ์รวม ${totalNewFollowers} คน` });
+  }
+  // Avg view duration
+  const viewsTotal = lives.reduce((s,l)=>s+(l.views?.total_views||0), 0);
+  if(viewsTotal > 1000){
+    insights.push({ type: 'good', text: `ยอดดูรวมจากไลฟ์ทั้งหมด ${viewsTotal.toLocaleString()} ครั้ง` });
+  }
+  return insights;
+}
+
+function renderLiveAnalytics(el){
+  // Show detail modal if id selected
+  if(currentLiveDetailId){
+    return _renderLiveDetail(el);
+  }
+  const lives = liveAnalytics.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  const totalLives = lives.length;
+  const totalViews = lives.reduce((s,l)=>s+(l.views?.total_views||0), 0);
+  const totalEng = lives.reduce((s,l)=>s+(l.engagement||0), 0);
+  const totalShares = lives.reduce((s,l)=>s+(l.shares||0), 0);
+  const totalFollowers = lives.reduce((s,l)=>s+(l.net_followers||0), 0);
+  const avgEng = totalLives ? Math.round(totalEng/totalLives) : 0;
+  const avgDuration = totalLives ? Math.round(lives.reduce((s,l)=>s+(l.duration||0),0)/totalLives) : 0;
+  const insights = _liveAIInsights(lives);
+
+  el.innerHTML = topbarSimple('barChart', 'Live Analytics', `${totalLives} ${totalLives===1?'live':'lives'} · วิเคราะห์ไลฟ์สดของเพจ`) + `
+    <div class="page-content" style="max-width:1500px;padding:18px clamp(12px,2vw,28px)">
+
+      <!-- Tabs -->
+      <div class="live-tabs">
+        <button class="live-tab ${liveAnalyticsTab==='overview'?'active':''}" onclick="setLiveAnalyticsTab('overview')">${I.barChart} ภาพรวม</button>
+        <button class="live-tab ${liveAnalyticsTab==='list'?'active':''}" onclick="setLiveAnalyticsTab('list')">${I.list||I.layers} รายการ Live (${totalLives})</button>
+        <div style="margin-left:auto">
+          <button class="btn-primary" onclick="_liveCreateBlank()">${I.plus} เพิ่ม Live ใหม่</button>
+        </div>
+      </div>
+
+      ${liveAnalyticsTab === 'overview' ? `
+        <!-- KPI cards -->
+        <div class="fbhub-kpi-grid">
+          <div class="fbhub-kpi" style="--c1:#ef4444;--c2:#dc2626">
+            <div class="fbhub-kpi-ic">${I.live}</div>
+            <div class="fbhub-kpi-lbl">Total Lives</div>
+            <div class="fbhub-kpi-val">${totalLives}</div>
+            <div class="fbhub-kpi-sub">เฉลี่ย ${avgDuration} นาที</div>
+          </div>
+          <div class="fbhub-kpi" style="--c1:#3b82f6;--c2:#1d4ed8">
+            <div class="fbhub-kpi-ic">${I.eye}</div>
+            <div class="fbhub-kpi-lbl">Total Views</div>
+            <div class="fbhub-kpi-val">${fmtNum(totalViews)}</div>
+            <div class="fbhub-kpi-sub">รวมทุกไลฟ์</div>
+          </div>
+          <div class="fbhub-kpi" style="--c1:#a78bfa;--c2:#7c3aed">
+            <div class="fbhub-kpi-ic">${I.heart}</div>
+            <div class="fbhub-kpi-lbl">Avg Engagement</div>
+            <div class="fbhub-kpi-val">${fmtNum(avgEng)}</div>
+            <div class="fbhub-kpi-sub">${fmtNum(totalEng)} รวม</div>
+          </div>
+          <div class="fbhub-kpi" style="--c1:#10b981;--c2:#047857">
+            <div class="fbhub-kpi-ic">${I.users}</div>
+            <div class="fbhub-kpi-lbl">Followers ใหม่</div>
+            <div class="fbhub-kpi-val">${totalFollowers}</div>
+            <div class="fbhub-kpi-sub">${totalShares} shares รวม</div>
+          </div>
+        </div>
+
+        ${insights.length ? `
+          <div class="dash2-card">
+            <div class="dash2-card-hd">
+              <div class="dash2-card-title">${I.lightbulb} AI Insights</div>
+              <div class="dash2-card-sub">วิเคราะห์อัตโนมัติจากข้อมูล Live ทั้งหมด</div>
+            </div>
+            <div class="live-insights">
+              ${insights.map(ins => `<div class="live-insight ${ins.type}">
+                <span class="live-insight-ic">${ins.type==='good'?'✓':'⚠'}</span>
+                ${escapeHtmlN(ins.text)}
+              </div>`).join('')}
+            </div>
+          </div>
+        ` : `
+          <div class="empty-state">
+            <p style="font-size:14px">ยังไม่มีข้อมูล Live สำหรับวิเคราะห์</p>
+            <p style="font-size:12px;color:var(--t3);margin-top:6px">ไปดึงข้อมูลจาก Facebook Hub → tab Posts/Videos → กดปุ่ม "ดึง Live"</p>
+            <button class="btn-primary" style="margin-top:14px" onclick="navigateTo('facebookHub');setFbHubTab('videos')">ไปดึงข้อมูล Live →</button>
+          </div>
+        `}
+
+        ${totalLives ? `
+          <div class="dash2-card">
+            <div class="dash2-card-hd">
+              <div class="dash2-card-title">Live ล่าสุด</div>
+            </div>
+            <div class="live-grid">
+              ${lives.slice(0,6).map(l => _renderLiveCard(l)).join('')}
+            </div>
+            ${totalLives > 6 ? `<div style="text-align:center;margin-top:14px"><button class="btn-ghost" onclick="setLiveAnalyticsTab('list')">ดูทั้งหมด ${totalLives} ไลฟ์ →</button></div>` : ''}
+          </div>
+        ` : ''}
+      ` : `
+        <!-- List tab -->
+        <div class="dash2-card">
+          <div class="dash2-card-hd">
+            <div>
+              <div class="dash2-card-title">รายการ Live ทั้งหมด (${totalLives})</div>
+              <div class="dash2-card-sub">เรียงตามวันที่ใหม่→เก่า</div>
+            </div>
+          </div>
+          ${lives.length === 0 ? `<div class="empty-state">ยังไม่มี Live</div>` :
+          `<div class="live-grid">${lives.map(l => _renderLiveCard(l)).join('')}</div>`}
+        </div>
+      `}
+    </div>`;
+}
+
+function _renderLiveCard(l){
+  const eng = l.engagement || 0;
+  const views = l.views?.total_views || 0;
+  return `<div class="live-card" onclick="openLiveDetail('${l.id}')">
+    ${l.thumbnail ? `<img src="${escapeHtmlN(l.thumbnail)}" alt=""/>` : `<div class="live-card-noimg">${I.live}</div>`}
+    <div class="live-card-body">
+      <div class="live-card-title">${escapeHtmlN((l.title||'(Live)').slice(0,80))}</div>
+      <div class="live-card-meta">${l.date}${l.duration?` · ${l.duration} นาที`:''}</div>
+      <div class="live-card-stats">
+        <div><b>${fmtNum(views)}</b><span>Views</span></div>
+        <div><b>${fmtNum(eng)}</b><span>Engagement</span></div>
+        <div><b>${l.net_followers||0}</b><span>Followers+</span></div>
+        ${l.giveaway?.has?`<div style="color:#f59e0b"><b>🎁</b><span>Giveaway</span></div>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function _liveCreateBlank(){
+  const newLive = {
+    id: 'live_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
+    videoId: '',
+    title: '',
+    date: new Date().toISOString().slice(0,10),
+    duration: 0,
+    thumbnail: '',
+    permalink: '',
+    engagement: 0, reactions: 0, comments: 0, shares: 0,
+    views: { total_views: 0, total_viewers: 0, followers_pct: 0, non_followers_pct: 0 },
+    net_followers: 0,
+    retention: { avg_watch_time: '', views_3sec: 0, views_1min: 0, total_watch_time: '' },
+    discovery_views: { unknown: 0, feed: 0, groups: 0, reels: 0, page: 0, stories: 0 },
+    discovery_sources: { search: 0, recommended: 0, unknown: 0, followers_feed: 0, shared_link: 0 },
+    audience: { '13-17': 0, '18-24': 0, '25-34': 0, '35-44': 0, '45-54': 0, '55-64': 0, '65+': 0 },
+    giveaway: { has: false, items: '' },
+    link_clicks: 0,
+    createdAt: Date.now(), updatedAt: Date.now(),
+  };
+  liveAnalytics.push(newLive);
+  saveAll();
+  openLiveDetail(newLive.id);
+}
+
+function _renderLiveDetail(el){
+  const l = liveAnalytics.find(x => x.id === currentLiveDetailId);
+  if(!l){ el.innerHTML = `<div class="page-content"><div class="empty-state">ไม่พบ Live record</div></div>`; return; }
+  const totalDiscoveryV = Object.values(l.discovery_views||{}).reduce((s,v)=>s+(+v||0),0);
+  const totalDiscoveryS = Object.values(l.discovery_sources||{}).reduce((s,v)=>s+(+v||0),0);
+  const totalAge = Object.values(l.audience||{}).reduce((s,v)=>s+(+v||0),0);
+
+  el.innerHTML = topbarSimple('barChart', l.title||'(Live)', `Live · ${l.date}`) + `
+    <div class="page-content" style="max-width:1200px;padding:18px clamp(12px,2vw,28px)">
+      <div class="live-detail-actions">
+        <button class="btn-ghost" onclick="closeLiveDetail()">← กลับ</button>
+        <button class="btn-primary" onclick="_liveSaveDetail()">💾 บันทึก</button>
+        ${l.permalink?`<a class="btn-ghost" href="${escapeHtmlN(l.permalink)}" target="_blank">${I.externalLink} เปิดใน Facebook</a>`:''}
+        <button class="btn-ghost" style="color:#dc2626;margin-left:auto" onclick="deleteLiveRecord('${l.id}')">🗑 ลบ</button>
+      </div>
+
+      <!-- 0. Basic info -->
+      <div class="live-section">
+        <h3 class="live-section-title">ข้อมูลพื้นฐาน</h3>
+        <div class="live-form-grid">
+          <div class="live-fld" style="grid-column:span 2"><label>หัวข้อ Live</label><input type="text" id="liveTitle" value="${escapeHtmlN(l.title||'')}"/></div>
+          <div class="live-fld"><label>วันที่</label><input type="date" id="liveDate" value="${l.date}"/></div>
+          <div class="live-fld"><label>ความยาว (นาที)</label><input type="number" min="0" id="liveDuration" value="${l.duration||0}"/></div>
+        </div>
+      </div>
+
+      <!-- 1. ยอดดู -->
+      <div class="live-section">
+        <h3 class="live-section-title">1. ยอดดู</h3>
+        <div class="live-form-grid">
+          <div class="live-fld"><label>ยอดดูทั้งหมด</label><input type="number" min="0" id="liveV_total" value="${l.views?.total_views||0}"/></div>
+          <div class="live-fld"><label>ผู้ชมทั้งหมด</label><input type="number" min="0" id="liveV_viewers" value="${l.views?.total_viewers||0}"/></div>
+          <div class="live-fld"><label>ผู้ติดตาม (%)</label><input type="number" min="0" max="100" step="0.1" id="liveV_fol" value="${l.views?.followers_pct||0}"/></div>
+          <div class="live-fld"><label>ไม่ใช่ผู้ติดตาม (%)</label><input type="number" min="0" max="100" step="0.1" id="liveV_nonfol" value="${l.views?.non_followers_pct||0}"/></div>
+        </div>
+      </div>
+
+      <!-- 2. Followers -->
+      <div class="live-section">
+        <h3 class="live-section-title">2. จำนวนผู้ติดตามสุทธิ</h3>
+        <div class="live-form-grid">
+          <div class="live-fld"><label>ได้ผู้ติดตามใหม่ (คน)</label><input type="number" id="liveNetFol" value="${l.net_followers||0}"/></div>
+        </div>
+      </div>
+
+      <!-- 3. Retention -->
+      <div class="live-section">
+        <h3 class="live-section-title">3. อัตราการใช้งานต่อเนื่อง</h3>
+        <div class="live-form-grid">
+          <div class="live-fld"><label>เวลาในการรับชมโดยเฉลี่ย</label><input type="text" id="liveR_avg" placeholder="00:03:45" value="${escapeHtmlN(l.retention?.avg_watch_time||'')}"/></div>
+          <div class="live-fld"><label>รับชม 3 วินาที</label><input type="number" min="0" id="liveR_3sec" value="${l.retention?.views_3sec||0}"/></div>
+          <div class="live-fld"><label>รับชม 1 นาที</label><input type="number" min="0" id="liveR_1min" value="${l.retention?.views_1min||0}"/></div>
+          <div class="live-fld"><label>เวลาในการรับชมรวม</label><input type="text" id="liveR_total" placeholder="hh:mm:ss" value="${escapeHtmlN(l.retention?.total_watch_time||'')}"/></div>
+        </div>
+      </div>
+
+      <!-- 4. Interactions -->
+      <div class="live-section">
+        <h3 class="live-section-title">4. การโต้ตอบ</h3>
+        <div class="live-form-grid">
+          <div class="live-fld"><label>จำนวน Engagement</label><input type="number" min="0" id="liveEng" value="${l.engagement||0}"/></div>
+          <div class="live-fld"><label>ความรู้สึก (Reactions)</label><input type="number" min="0" id="liveReac" value="${l.reactions||0}"/></div>
+          <div class="live-fld"><label>ความคิดเห็น <span style="font-size:10px;color:var(--p500)">(auto)</span></label><input type="number" min="0" id="liveCom" value="${l.comments||0}"/></div>
+          <div class="live-fld"><label>แชร์ <span style="font-size:10px;color:var(--p500)">(auto)</span></label><input type="number" min="0" id="liveSh" value="${l.shares||0}"/></div>
+        </div>
+      </div>
+
+      <!-- 5. Discovery -->
+      <div class="live-section">
+        <h3 class="live-section-title">5. วิธีที่ผู้คนค้นพบเนื้อหา (%)</h3>
+        <div class="live-discovery">
+          <div>
+            <h4>จำนวนการเข้าชม ${totalDiscoveryV>0?`<span style="font-size:11px;color:${Math.abs(totalDiscoveryV-100)>0.1?'#ef4444':'#10b981'}">(รวม ${totalDiscoveryV.toFixed(1)}%)</span>`:''}</h4>
+            <div class="live-form-grid live-grid-3">
+              <div class="live-fld"><label>ไม่ระบุ</label><input type="number" min="0" max="100" step="0.1" id="liveDV_unknown" value="${l.discovery_views?.unknown||0}"/></div>
+              <div class="live-fld"><label>ฟีด</label><input type="number" min="0" max="100" step="0.1" id="liveDV_feed" value="${l.discovery_views?.feed||0}"/></div>
+              <div class="live-fld"><label>กลุ่ม</label><input type="number" min="0" max="100" step="0.1" id="liveDV_groups" value="${l.discovery_views?.groups||0}"/></div>
+              <div class="live-fld"><label>Reels</label><input type="number" min="0" max="100" step="0.1" id="liveDV_reels" value="${l.discovery_views?.reels||0}"/></div>
+              <div class="live-fld"><label>เพจของคุณ</label><input type="number" min="0" max="100" step="0.1" id="liveDV_page" value="${l.discovery_views?.page||0}"/></div>
+              <div class="live-fld"><label>สตอรี่</label><input type="number" min="0" max="100" step="0.1" id="liveDV_stories" value="${l.discovery_views?.stories||0}"/></div>
+            </div>
+          </div>
+          <div style="margin-top:18px">
+            <h4>แหล่งที่มา ${totalDiscoveryS>0?`<span style="font-size:11px;color:${Math.abs(totalDiscoveryS-100)>0.1?'#ef4444':'#10b981'}">(รวม ${totalDiscoveryS.toFixed(1)}%)</span>`:''}</h4>
+            <div class="live-form-grid live-grid-3">
+              <div class="live-fld"><label>การค้นหา</label><input type="number" min="0" max="100" step="0.1" id="liveDS_search" value="${l.discovery_sources?.search||0}"/></div>
+              <div class="live-fld"><label>ที่แนะนำ</label><input type="number" min="0" max="100" step="0.1" id="liveDS_rec" value="${l.discovery_sources?.recommended||0}"/></div>
+              <div class="live-fld"><label>ไม่ระบุ</label><input type="number" min="0" max="100" step="0.1" id="liveDS_unknown" value="${l.discovery_sources?.unknown||0}"/></div>
+              <div class="live-fld"><label>ฟีดผู้ติดตาม</label><input type="number" min="0" max="100" step="0.1" id="liveDS_feed" value="${l.discovery_sources?.followers_feed||0}"/></div>
+              <div class="live-fld"><label>การแชร์ลิงก์</label><input type="number" min="0" max="100" step="0.1" id="liveDS_share" value="${l.discovery_sources?.shared_link||0}"/></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Audience -->
+      <div class="live-section">
+        <h3 class="live-section-title">6. ใครบ้างที่ดูเนื้อหา ${totalAge>0?`<span style="font-size:12px;color:${Math.abs(totalAge-100)>0.1?'#ef4444':'#10b981'}">(รวม ${totalAge.toFixed(1)}%)</span>`:''}</h3>
+        <div class="live-form-grid live-grid-4">
+          ${['13-17','18-24','25-34','35-44','45-54','55-64','65+'].map(age => `
+            <div class="live-fld"><label>${age}</label><input type="number" min="0" max="100" step="0.1" id="liveAge_${age}" value="${l.audience?.[age]||0}"/></div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- 7. Giveaway -->
+      <div class="live-section">
+        <h3 class="live-section-title">7. ของแจก</h3>
+        <div class="live-form-grid">
+          <div class="live-fld">
+            <label><input type="checkbox" id="liveGiveHas" ${l.giveaway?.has?'checked':''} style="width:auto;margin-right:8px"/>มีของแจกในไลฟ์นี้</label>
+          </div>
+          <div class="live-fld" style="grid-column:span 2"><label>รายการของแจก</label><input type="text" id="liveGiveItems" placeholder="iPhone 15, Samsung Galaxy, Voucher..." value="${escapeHtmlN(l.giveaway?.items||'')}"/></div>
+        </div>
+      </div>
+
+      <!-- 8. Link clicks -->
+      <div class="live-section">
+        <h3 class="live-section-title">8. จำนวนการคลิกลิงก์</h3>
+        <div class="live-form-grid">
+          <div class="live-fld"><label>คลิกทั้งหมด</label><input type="number" min="0" id="liveLinkClicks" value="${l.link_clicks||0}"/></div>
+        </div>
+      </div>
+
+      <div class="live-detail-actions" style="margin-top:24px">
+        <button class="btn-primary" onclick="_liveSaveDetail()" style="flex:1">💾 บันทึกการเปลี่ยนแปลง</button>
+        <button class="btn-ghost" onclick="closeLiveDetail()">ปิด</button>
+      </div>
+    </div>`;
+}
+
+function _liveSaveDetail(){
+  const l = liveAnalytics.find(x => x.id === currentLiveDetailId);
+  if(!l) return;
+  const g = (id) => document.getElementById(id);
+  const num = (id) => parseFloat(g(id)?.value || 0) || 0;
+  const str = (id) => g(id)?.value || '';
+
+  l.title = str('liveTitle');
+  l.date = str('liveDate');
+  l.duration = num('liveDuration');
+  l.views = {
+    total_views: num('liveV_total'),
+    total_viewers: num('liveV_viewers'),
+    followers_pct: num('liveV_fol'),
+    non_followers_pct: num('liveV_nonfol'),
+  };
+  l.net_followers = num('liveNetFol');
+  l.retention = {
+    avg_watch_time: str('liveR_avg'),
+    views_3sec: num('liveR_3sec'),
+    views_1min: num('liveR_1min'),
+    total_watch_time: str('liveR_total'),
+  };
+  l.engagement = num('liveEng');
+  l.reactions = num('liveReac');
+  l.comments = num('liveCom');
+  l.shares = num('liveSh');
+  l.discovery_views = {
+    unknown: num('liveDV_unknown'), feed: num('liveDV_feed'), groups: num('liveDV_groups'),
+    reels: num('liveDV_reels'), page: num('liveDV_page'), stories: num('liveDV_stories'),
+  };
+  l.discovery_sources = {
+    search: num('liveDS_search'), recommended: num('liveDS_rec'), unknown: num('liveDS_unknown'),
+    followers_feed: num('liveDS_feed'), shared_link: num('liveDS_share'),
+  };
+  l.audience = {};
+  ['13-17','18-24','25-34','35-44','45-54','55-64','65+'].forEach(age => {
+    l.audience[age] = num('liveAge_' + age);
+  });
+  l.giveaway = {
+    has: g('liveGiveHas')?.checked || false,
+    items: str('liveGiveItems'),
+  };
+  l.link_clicks = num('liveLinkClicks');
+  l.updatedAt = Date.now();
+  saveAll();
+  alert('บันทึกแล้ว ✓');
+  rerender();
+}
+
 // ============ FACEBOOK HUB ============
 // Comprehensive dashboard exercising ALL granted Facebook permissions
 let fbHubTab = localStorage.getItem('tfl_fb_hub_tab') || 'overview';
+let fbHubPostFilter = 'all'; // all | text | photo | video
+function setFbHubPostFilter(f){ fbHubPostFilter = f; rerender(); }
 let fbHubData = {
   pageInfo: null, insights: null, posts: null, comments: null,
   conversations: null, leads: null, ads: null, adAccounts: null,
@@ -19267,8 +19739,24 @@ function _renderFbHubPosts(isLo){
   const topByReach = posts.slice().sort((a,b) => b.reach - a.reach)[0];
   const topByER = posts.filter(p => p.reach >= 10).sort((a,b) => b.engRate - a.engRate)[0];
 
-  // Sort by engagement desc by default
-  const sorted = posts.slice().sort((a,b) => b.engagement - a.engagement);
+  // Filter by media type
+  const filterMap = { all: null, text: 'text', photo: ['photo','album'], video: ['video'] };
+  const isMatch = (t) => {
+    if(fbHubPostFilter === 'all') return true;
+    const want = filterMap[fbHubPostFilter];
+    if(Array.isArray(want)) return want.includes(t);
+    return t === want;
+  };
+  const filteredPosts = posts.filter(p => isMatch(p.mediaType));
+  // Sort by engagement desc
+  const sorted = filteredPosts.slice().sort((a,b) => b.engagement - a.engagement);
+  // Type counts for tabs
+  const cnt = { all: posts.length, text: 0, photo: 0, video: 0 };
+  posts.forEach(p => {
+    if(p.mediaType === 'video') cnt.video++;
+    else if(p.mediaType === 'photo' || p.mediaType === 'album') cnt.photo++;
+    else cnt.text++;
+  });
 
   // Media type breakdown
   const typeBreak = {};
@@ -19341,18 +19829,35 @@ function _renderFbHubPosts(isLo){
       </div>
     </div>
 
-    <!-- All posts card grid -->
+    <!-- Filter tabs -->
+    <div class="fbhub-post-filter">
+      <button class="fbhub-pfilter ${fbHubPostFilter==='all'?'active':''}" onclick="setFbHubPostFilter('all')">
+        ${isLo?'ທັງໝົດ':'ทั้งหมด'} <span class="fbhub-pfilter-cnt">${cnt.all}</span>
+      </button>
+      <button class="fbhub-pfilter ${fbHubPostFilter==='text'?'active':''}" onclick="setFbHubPostFilter('text')">
+        📝 Post <span class="fbhub-pfilter-cnt">${cnt.text}</span>
+      </button>
+      <button class="fbhub-pfilter ${fbHubPostFilter==='photo'?'active':''}" onclick="setFbHubPostFilter('photo')">
+        🖼 Photo <span class="fbhub-pfilter-cnt">${cnt.photo}</span>
+      </button>
+      <button class="fbhub-pfilter ${fbHubPostFilter==='video'?'active':''}" onclick="setFbHubPostFilter('video')">
+        🎥 Video <span class="fbhub-pfilter-cnt">${cnt.video}</span>
+      </button>
+    </div>
+
+    <!-- Filtered posts card grid -->
     <div class="dash2-card">
       <div class="dash2-card-hd">
         <div>
-          <div class="dash2-card-title">${isLo?'ໂພສທັງໝົດ':'โพสต์ทั้งหมด'} (${posts.length})</div>
+          <div class="dash2-card-title">${isLo?'ໂພສ':'โพสต์'} (${sorted.length}${fbHubPostFilter!=='all'?` ${isLo?'ຈາກ':'จาก'} ${posts.length}`:''})</div>
           <div class="dash2-card-sub">${isLo?'ຈັດລຽງຕາມ engagement':'เรียงตาม engagement สูง→ต่ำ'}</div>
         </div>
       </div>
-      ${posts.length === 0 ? `<div class="empty-state">${isLo?'ບໍ່ມີໂພສ':'ไม่มีโพสต์'}</div>` :
+      ${sorted.length === 0 ? `<div class="empty-state">${isLo?'ບໍ່ມີໂພສ':'ไม่มีโพสต์ในประเภทนี้'}</div>` :
       `<div class="fbhub-post-cards">
         ${sorted.map((p, idx) => {
           const isBest = idx === 0;
+          const isVideo = p.mediaType === 'video';
           return `<div class="fbhub-post-card ${isBest?'best':''}">
             ${isBest ? `<div class="fbhub-post-card-badge">${I.trophy||'★'} ${isLo?'ດີສຸດ':'TOP'}</div>` : ''}
             ${p.full_picture ? `<div class="fbhub-post-card-img"><img src="${escapeHtmlN(p.full_picture)}" alt=""/></div>` : `<div class="fbhub-post-card-img noimg"><span>${escapeHtmlN(p.mediaType)}</span></div>`}
@@ -19370,11 +19875,128 @@ function _renderFbHubPosts(isLo){
                 <span>${new Date(p.created_time).toLocaleDateString('th-TH',{month:'short',day:'numeric',year:'2-digit'})}</span>
                 ${p.permalink_url ? `<a href="${escapeHtmlN(p.permalink_url)}" target="_blank">${I.externalLink}</a>` : ''}
               </div>
+              ${isVideo ? `<button class="fbhub-pull-live-btn" onclick="_fbHubPullLive('${escapeHtmlN(p.id)}', this)">${I.live} ${isLo?'ດຶງ Live':'ดึง Live'}</button>` : ''}
             </div>
           </div>`;
         }).join('')}
       </div>`}
     </div>`;
+}
+
+// Pull a video's data from Videos tab (data lives in fbHubData.videos + videoInsights)
+function _fbHubPullLiveFromVideo(videoId, btn){
+  const v = (fbHubData.videos?.data || []).find(x => x.id === videoId);
+  if(!v){ alert('ไม่พบข้อมูลวิดีโอ'); return; }
+  if(btn){ btn.disabled = true; btn.textContent = 'กำลังดึง…'; }
+  const ins = (fbHubData.videoInsights||{})[videoId] || {};
+  const views = ins.total_video_views || 0;
+  const completes = ins.total_video_complete_views || 0;
+  // Engagement approximated (FB Graph doesn't expose all from video endpoint)
+  const engagement = 0; // user can fill manually
+  const existing = liveAnalytics.find(l => l.videoId === videoId);
+  if(existing){
+    if(!confirm('Live นี้เคยดึงแล้ว ต้องการอัปเดต?')){
+      navigateTo('liveAnalytics'); openLiveDetail(existing.id); return;
+    }
+    existing.title = v.title || v.description || '(Live)';
+    existing.date = v.created_time.slice(0,10);
+    existing.duration = v.length ? Math.round(v.length/60) : 0;
+    existing.thumbnail = v.thumbnails?.data?.[0]?.uri || '';
+    existing.permalink = v.permalink_url || '';
+    existing.views.total_views = views;
+    existing.retention.views_3sec = views; // approx
+    existing.retention.views_1min = completes;
+    existing.updatedAt = Date.now();
+    saveAll();
+    navigateTo('liveAnalytics'); openLiveDetail(existing.id);
+    return;
+  }
+  const newLive = {
+    id: 'live_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
+    videoId,
+    title: v.title || v.description || '(Live)',
+    date: v.created_time.slice(0,10),
+    duration: v.length ? Math.round(v.length/60) : 0,
+    thumbnail: v.thumbnails?.data?.[0]?.uri || '',
+    permalink: v.permalink_url || '',
+    engagement: 0, reactions: 0, comments: 0, shares: 0,
+    views: { total_views: views, total_viewers: 0, followers_pct: 0, non_followers_pct: 0 },
+    net_followers: 0,
+    retention: { avg_watch_time: '', views_3sec: views, views_1min: completes, total_watch_time: '' },
+    discovery_views: { unknown: 0, feed: 0, groups: 0, reels: 0, page: 0, stories: 0 },
+    discovery_sources: { search: 0, recommended: 0, unknown: 0, followers_feed: 0, shared_link: 0 },
+    audience: { '13-17': 0, '18-24': 0, '25-34': 0, '35-44': 0, '45-54': 0, '55-64': 0, '65+': 0 },
+    giveaway: { has: false, items: '' },
+    link_clicks: 0,
+    createdAt: Date.now(), updatedAt: Date.now(),
+  };
+  liveAnalytics.push(newLive);
+  saveAll();
+  if(btn){ btn.disabled = false; btn.textContent = 'ดึงแล้ว ✓'; }
+  setTimeout(() => { navigateTo('liveAnalytics'); openLiveDetail(newLive.id); }, 200);
+}
+
+// Pull a video's data and create a Live record in localStorage, then navigate to Live page
+function _fbHubPullLive(videoId, btn){
+  const post = (fbHubData.posts?.data || []).find(p => p.id === videoId);
+  if(!post){ alert('ไม่พบข้อมูลโพสต์'); return; }
+  if(btn){ btn.disabled = true; btn.textContent = 'กำลังดึง…'; }
+  // Pre-fill a Live record from post data
+  const reactions = post.reactions?.summary?.total_count || 0;
+  const comments = post.comments?.summary?.total_count || 0;
+  const shares = post.shares?.count || 0;
+  const engagement = reactions + comments + shares;
+  // Check if already pulled
+  const existing = liveAnalytics.find(l => l.videoId === videoId);
+  if(existing){
+    if(!confirm('Live นี้เคยดึงข้อมูลแล้ว ต้องการอัปเดตข้อมูลใหม่หรือเปิดดูเลย?\n[OK = อัปเดต] [Cancel = เปิดดู]')){
+      navigateTo('liveAnalytics');
+      openLiveDetail(existing.id);
+      return;
+    }
+    existing.title = post.message ? post.message.slice(0,100) : '(Live)';
+    existing.date = post.created_time.slice(0,10);
+    existing.engagement = engagement;
+    existing.reactions = reactions;
+    existing.comments = comments;
+    existing.shares = shares;
+    existing.thumbnail = post.full_picture || '';
+    existing.permalink = post.permalink_url || '';
+    existing.updatedAt = Date.now();
+    saveAll();
+    alert('อัปเดตข้อมูล Live เรียบร้อย');
+    navigateTo('liveAnalytics');
+    openLiveDetail(existing.id);
+    return;
+  }
+  // Create new live record
+  const newLive = {
+    id: 'live_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
+    videoId,
+    title: post.message ? post.message.slice(0,100) : '(Live)',
+    date: post.created_time.slice(0,10),
+    duration: 0,
+    thumbnail: post.full_picture || '',
+    permalink: post.permalink_url || '',
+    engagement, reactions, comments, shares,
+    views: { total_views: 0, total_viewers: 0, followers_pct: 0, non_followers_pct: 0 },
+    net_followers: 0,
+    retention: { avg_watch_time: '', views_3sec: 0, views_1min: 0, total_watch_time: '' },
+    discovery_views: { unknown: 0, feed: 0, groups: 0, reels: 0, page: 0, stories: 0 },
+    discovery_sources: { search: 0, recommended: 0, unknown: 0, followers_feed: 0, shared_link: 0 },
+    audience: { '13-17': 0, '18-24': 0, '25-34': 0, '35-44': 0, '45-54': 0, '55-64': 0, '65+': 0 },
+    giveaway: { has: false, items: '' },
+    link_clicks: 0,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  };
+  liveAnalytics.push(newLive);
+  saveAll();
+  if(btn){ btn.disabled = false; btn.textContent = 'ดึงแล้ว ✓'; }
+  setTimeout(() => {
+    navigateTo('liveAnalytics');
+    openLiveDetail(newLive.id);
+  }, 200);
 }
 
 function _renderFbHubEngagement(isLo){
@@ -19787,6 +20409,7 @@ function _renderFbHubVideos(isLo){
               ${v.length?`<div><b>${Math.round(v.length)}s</b><span>ยาว</span></div>`:''}
             </div>
             <div class="fbhub-video-meta">${new Date(v.created_time).toLocaleDateString('th-TH',{month:'short',day:'numeric',year:'2-digit'})}${v.permalink_url ? ` · <a href="${escapeHtmlN(v.permalink_url)}" target="_blank">เปิด</a>` : ''}</div>
+            <button class="fbhub-pull-live-btn" onclick="_fbHubPullLiveFromVideo('${escapeHtmlN(v.id)}', this)">${I.live} ${isLo?'ດຶງ Live':'ดึง Live ไปวิเคราะห์'}</button>
           </div>
         </div>`).join('')}
       </div>`}
