@@ -19807,6 +19807,7 @@ function _stockCheckoutCard(c, isLo){
       <button class="btn-primary" onclick="openCheckoutDetail('${c.id}')">${I.eye} ${isLo?'ລາຍລະອຽດ':'รายละเอียด'}</button>
       <button class="btn-ghost" onclick="printCheckoutSlip('${c.id}','checkout')">${I.printer} ${isLo?'ໃບເບີກ':'ใบเบิก'}</button>
       ${c.status !== 'returned' ? `<button class="btn-ghost" style="color:#059669" onclick="openCheckinFlow('${c.id}')">${I.refresh} ${isLo?'ບັນທຶກການຄືນ':'บันทึกการคืน'}</button>` : ''}
+      ${currentUser.role==='admin' ? `<button class="btn-ghost danger" onclick="deleteCheckout('${c.id}')" title="${isLo?'ລຶບ':'ลบ'}">${I.trash}</button>` : ''}
     </div>
   </div>`;
 }
@@ -19944,6 +19945,7 @@ function _renderStockHistory(isLo){
                 <button class="btn-ghost" onclick="openCheckoutDetail('${c.id}')" title="${isLo?'ເບິ່ງ':'ดู'}">${I.eye}</button>
                 <button class="btn-ghost" onclick="printCheckoutSlip('${c.id}','checkout')" title="${isLo?'ໃບເບີກ':'ใบเบิก'}">${I.printer}</button>
                 ${c.status === 'returned' ? `<button class="btn-ghost" onclick="printCheckoutSlip('${c.id}','return')" title="${isLo?'ໃບຄືນ':'ใบคืน'}">${I.refresh}</button>` : ''}
+                ${currentUser.role==='admin' ? `<button class="btn-ghost danger" onclick="deleteCheckout('${c.id}')" title="${isLo?'ລຶບ':'ลบ'}">${I.trash}</button>` : ''}
               </td>
             </tr>`;
           }).join('')}
@@ -20335,6 +20337,7 @@ function openCheckoutDetail(id){
       </div>
       <div class="modal-ft">
         <button class="sm-btn-cancel" onclick="closeStockModal()">${isLo?'ປິດ':'ปิด'}</button>
+        ${currentUser.role==='admin' ? `<button class="btn-ghost danger" onclick="deleteCheckout('${c.id}')">${I.trash} ${isLo?'ລຶບ':'ลบ'}</button>` : ''}
         <button class="btn-ghost" onclick="printCheckoutSlip('${c.id}','checkout')">${I.printer} ${isLo?'ໃບເບີກ':'ใบเบิก'}</button>
         ${c.status==='returned'
           ? `<button class="btn-ghost" onclick="printCheckoutSlip('${c.id}','return')">${I.printer} ${isLo?'ໃບຄືນ':'ใบคืน'}</button>`
@@ -20343,6 +20346,19 @@ function openCheckoutDetail(id){
       </div>
     </div>
   `);
+}
+
+function deleteCheckout(id){
+  if(currentUser.role!=='admin'){ alert('Admin เท่านั้น'); return; }
+  const isLo = CURRENT_LANG==='lo';
+  const c = stockCheckouts.find(x=>x.id===id);
+  if(!c) return;
+  if(!confirm((isLo?'ລຶບໃບເບີກ ':'ลบใบเบิก ')+c.id+' "'+(c.eventName||'')+'" ?\n'+(isLo?'ການກະທຳນີ້ບໍ່ສາມາດຍ້ອນກັບໄດ້':'การกระทำนี้ย้อนกลับไม่ได้'))) return;
+  stockCheckouts = stockCheckouts.filter(x=>x.id!==id);
+  recalcStockAvailable();
+  saveAll();
+  closeStockModal();
+  rerender();
 }
 
 // ============ CHECK-IN FLOW ============
