@@ -5912,8 +5912,10 @@ img,video,iframe,canvas{max-width:100%;height:auto}
 .stock-assignee-pick{display:flex;align-items:center;gap:8px;padding:6px 9px;border-radius:8px;cursor:pointer;background:var(--bg);border:1px solid transparent}
 .stock-assignee-pick:hover{border-color:var(--p400)}
 .stock-assignee-pick.active{border-color:var(--p600);background:var(--p50)}
-.stock-photo-drop{border:2px dashed var(--border);border-radius:12px;padding:18px;text-align:center;color:var(--t3);cursor:pointer;background:var(--bg-soft)}
-.stock-photo-drop:hover{border-color:var(--p400);color:var(--p600)}
+.stock-photo-drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:2px dashed var(--border);border-radius:12px;padding:20px 16px;text-align:center;color:var(--t3);cursor:pointer;background:var(--bg-soft);min-height:88px;transition:all .15s}
+.stock-photo-drop:hover{border-color:var(--p400);color:var(--p600);background:var(--p50)}
+.stock-photo-drop svg{width:28px;height:28px}
+.stock-photo-drop-txt{font-size:12.5px;font-weight:600}
 .stock-photo-prev{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .stock-photo-prev img{width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border)}
 
@@ -20118,10 +20120,10 @@ function _wizStep2(isLo){
       <input id="wizLocation" value="${escapeHtmlN(d.location||'')}" placeholder="${isLo?'ເຊັ່ນ: ສະຕູດິໂອ A':'เช่น: สตูดิโอ A'}"/>
     </div>
     <div class="lot-fld">
-      <label class="stock-wiz-lbl">${isLo?'ຜູ້ຮັບຜິດຊອບ':'ผู้รับผิดชอบ'} (${d.assignees.length})</label>
+      <label class="stock-wiz-lbl">${isLo?'ຜູ້ຮັບຜິດຊອບ':'ผู้รับผิดชอบ'} (<span id="wizAssigneeCount">${d.assignees.length}</span>)</label>
       <div class="stock-assignee-grid">
         ${users.map(u=>`
-          <div class="stock-assignee-pick ${d.assignees.includes(u.id)?'active':''}" onclick="wizToggleAssignee('${u.id}')">
+          <div class="stock-assignee-pick ${d.assignees.includes(u.id)?'active':''}" data-uid="${escapeHtmlN(u.id)}" onclick="wizToggleAssignee(this)">
             <span class="stock-officer-av" style="background:${u.color||'#888'}">${escapeHtmlN(u.init||u.name[0])}</span>
             <span style="font-size:12.5px">${escapeHtmlN(u.name)}</span>
           </div>
@@ -20130,11 +20132,15 @@ function _wizStep2(isLo){
     </div>
   `;
 }
-function wizToggleAssignee(uid){
+function wizToggleAssignee(el){
+  const uid = el.dataset.uid;
+  if(!uid) return;
   const d = stockWizardData;
   if(d.assignees.includes(uid)) d.assignees = d.assignees.filter(x=>x!==uid);
   else d.assignees.push(uid);
-  _renderCheckoutWizard();
+  el.classList.toggle('active');
+  const cnt = document.getElementById('wizAssigneeCount');
+  if(cnt) cnt.textContent = d.assignees.length;
 }
 function _wizStep3(isLo){
   const d = stockWizardData;
@@ -20208,7 +20214,8 @@ function _wizStep4(isLo){
     <div class="lot-fld">
       <label class="stock-wiz-lbl">${isLo?'ຮູບຖ່າຍສະພາບກ່ອນເບີກ':'รูปถ่ายสภาพก่อนเบิก'}</label>
       <label class="stock-photo-drop" for="wizPhotoInput">
-        ${I.camera}<br><span style="font-size:12.5px;margin-top:6px;display:block">${isLo?'ກົດເພື່ອຖ່າຍ/ອັບໂຫລດ':'กดเพื่อถ่าย/อัปโหลด'}</span>
+        ${I.camera}
+        <span class="stock-photo-drop-txt">${isLo?'ກົດເພື່ອຖ່າຍ/ອັບໂຫລດ':'กดเพื่อถ่าย / อัปโหลดรูป'}</span>
       </label>
       <input id="wizPhotoInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="wizUploadPhoto(this.files[0])"/>
       ${d.checkoutPhoto ? `<div class="stock-photo-prev"><img src="${d.checkoutPhoto}"></div>` : ''}
@@ -20391,7 +20398,10 @@ function _renderCheckinModal(){
         </div>
         <div class="lot-fld">
           <label class="stock-wiz-lbl">${isLo?'ຮູບສະພາບເສຍຫາຍ (ຖ້າມີ)':'รูปสภาพ/ความเสียหาย (ถ้ามี)'}</label>
-          <label class="stock-photo-drop" for="checkinPhotoInput">${I.camera}<br><span style="font-size:12.5px;margin-top:6px;display:block">${isLo?'ກົດເພື່ອເພີ່ມ':'กดเพื่อเพิ่ม'}</span></label>
+          <label class="stock-photo-drop" for="checkinPhotoInput">
+            ${I.camera}
+            <span class="stock-photo-drop-txt">${isLo?'ກົດເພື່ອເພີ່ມຮູບ':'กดเพื่อเพิ่มรูป'}</span>
+          </label>
           <input id="checkinPhotoInput" type="file" accept="image/*" capture="environment" multiple style="display:none" onchange="checkinAddPhotos(this.files)"/>
           ${d.photos.length ? `<div class="stock-photo-prev">${d.photos.map((p,i)=>`<img src="${p}" onclick="if(confirm('ลบรูปนี้?')){_checkinDraft.photos.splice(${i},1);_renderCheckinModal()}">`).join('')}</div>` : ''}
         </div>
