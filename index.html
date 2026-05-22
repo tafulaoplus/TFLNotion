@@ -19674,7 +19674,7 @@ function _renderStockOverview(isLo){
         <div class="stock-low-grid">
           ${lowStock.map(it => `
             <div class="stock-low-item">
-              ${it.photoUrl ? `<img src="${escapeHtmlN(it.photoUrl)}" alt=""/>` : `<div class="stock-low-noimg">${I.folder}</div>`}
+              ${(it.photoUrl||it.photo) ? `<img src="${escapeHtmlN(it.photoUrl||it.photo)}" alt=""/>` : `<div class="stock-low-noimg">${I.folder}</div>`}
               <div class="stock-low-info">
                 <div class="stock-low-name">${escapeHtmlN(it.name)}</div>
                 <div class="stock-low-qty">${it.availableQty}/${it.totalQty} ${escapeHtmlN(it.unit||'')}</div>
@@ -19723,7 +19723,7 @@ function _renderStockItems(isLo){
         const teamColor = it.team === 'marketing' ? '#3b82f6' : it.team === 'creator' ? '#a855f7' : '#10b981';
         return `<div class="stock-item-card ${isOut?'out':isLow?'low':''}">
           <div class="stock-item-pic">
-            ${it.photoUrl ? `<img src="${escapeHtmlN(it.photoUrl)}" alt="${escapeHtmlN(it.name)}"/>` : `<div class="stock-item-noimg">${I.folder}</div>`}
+            ${(it.photoUrl||it.photo) ? `<img src="${escapeHtmlN(it.photoUrl||it.photo)}" alt="${escapeHtmlN(it.name)}"/>` : `<div class="stock-item-noimg">${I.folder}</div>`}
             <span class="stock-item-team" style="background:${teamColor}">${it.team==='marketing'?'MKT':it.team==='creator'?'CRT':'SHARED'}</span>
           </div>
           <div class="stock-item-body">
@@ -20157,7 +20157,7 @@ function _wizStep3(isLo){
         const avail = it.availableQty != null ? it.availableQty : it.totalQty;
         return `
           <div class="stock-pick-item-row">
-            <span class="stock-item-thumb" style="width:38px;height:38px;flex:0 0 38px;aspect-ratio:1">${it.photo?`<img src="${it.photo}">`:I.folder}</span>
+            <span class="stock-item-thumb" style="width:38px;height:38px;flex:0 0 38px;aspect-ratio:1">${(it.photoUrl||it.photo)?`<img src="${it.photoUrl||it.photo}">`:I.folder}</span>
             <div style="flex:1;min-width:0">
               <div style="font-size:13px;font-weight:700;color:var(--t1)">${escapeHtmlN(it.name)}</div>
               <div style="font-size:11px;color:var(--t3)">${isLo?'ມີ':'มี'} ${avail}/${it.totalQty} · ${escapeHtmlN(it.unit||'ชิ้น')}</div>
@@ -20460,7 +20460,7 @@ function openItemEditor(id){
   const isLo = CURRENT_LANG==='lo';
   const item = id ? stockItems.find(x=>x.id===id) : null;
   const isEdit = !!item;
-  const draft = item ? {...item} : { name:'', team:'shared', unit:'ชิ้น', totalQty:1, photo:'', note:'' };
+  const draft = item ? {...item, photo: item.photo || item.photoUrl || ''} : { name:'', team:'shared', unit:'ชิ้น', totalQty:1, photo:'', note:'' };
   _stockOpen(`
     <div class="modal" style="width:min(520px,calc(100vw - 32px))">
       <div class="modal-hd">
@@ -20521,12 +20521,14 @@ function saveStockItem(id){
   const isLo = CURRENT_LANG==='lo';
   const name = document.getElementById('itemName').value.trim();
   if(!name){ alert(isLo?'ກະລຸນາໃສ່ຊື່':'กรุณาใส่ชื่อ'); return; }
+  const photo = window._itemDraftPhoto || '';
   const data = {
     name,
     team: document.getElementById('itemTeam').value,
     unit: document.getElementById('itemUnit').value.trim() || 'ชิ้น',
     totalQty: Math.max(1, Number(document.getElementById('itemQty').value)||1),
-    photo: window._itemDraftPhoto || '',
+    photo,
+    photoUrl: photo,
     note: document.getElementById('itemNote').value.trim(),
   };
   if(id){
