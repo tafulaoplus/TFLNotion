@@ -5935,6 +5935,83 @@ img,video,iframe,canvas{max-width:100%;height:auto}
 .stock-slip-sign{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:30px}
 .stock-slip-sign-box{text-align:center}
 .stock-slip-sign-line{border-top:1px solid #444;margin:50px 20px 6px;font-size:12px}
+
+/* ===== STOCK FILTER TABS (Items + Active) ===== */
+.stock-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.stock-team-tabs{display:inline-flex;gap:4px;background:var(--bg-soft);padding:4px;border-radius:10px;border:1px solid var(--border);flex-wrap:wrap}
+.stock-team-tab{padding:7px 14px;font-size:12.5px;font-weight:600;color:var(--t2);border:none;background:transparent;border-radius:7px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;transition:all .15s}
+.stock-team-tab:hover{color:var(--t1);background:rgba(124,58,237,.05)}
+.stock-team-tab.active{background:var(--bg);color:var(--p600);box-shadow:0 1px 3px rgba(0,0,0,.06);font-weight:700}
+
+/* Items grid */
+.stock-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.stock-item-card.out{opacity:.55}
+.stock-item-card.low{border-color:rgba(245,158,11,.4)}
+.stock-item-pic{position:relative;width:100%;aspect-ratio:1;background:var(--bg-soft);border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.stock-item-pic img{width:100%;height:100%;object-fit:cover}
+.stock-item-noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--t3)}
+.stock-item-noimg svg{width:48px;height:48px}
+.stock-item-team{position:absolute;top:6px;right:6px;color:#fff;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:5px;letter-spacing:.3px}
+.stock-item-body{display:flex;flex-direction:column;gap:4px;padding-top:2px}
+.stock-item-meta{font-size:11.5px;color:var(--t3)}
+.stock-item-qty{display:flex;align-items:center;gap:6px;font-size:13px;margin-top:2px;flex-wrap:wrap}
+.stock-item-qty-val{font-weight:800;color:#059669}
+.stock-item-qty-val.low{color:#d97706}
+.stock-item-qty-val.out{color:#dc2626}
+.stock-item-unit{color:var(--t3);font-size:11.5px}
+.stock-item-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;text-transform:uppercase;letter-spacing:.3px}
+.stock-item-badge.low{background:rgba(245,158,11,.15);color:#d97706}
+.stock-item-badge.out{background:rgba(239,68,68,.15);color:#dc2626}
+
+/* Row mini */
+.stock-row-team{width:4px;align-self:stretch;border-radius:3px;flex:0 0 4px}
+.stock-row-body{flex:1;min-width:0}
+.stock-row-title{font-size:13px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stock-row-meta{font-size:11.5px;color:var(--t3);margin-top:2px}
+.stock-row-status{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.3px;white-space:nowrap}
+
+/* Low stock grid */
+.stock-low-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.stock-low-item{display:flex;gap:10px;align-items:center;padding:8px;background:var(--bg-soft);border-radius:10px;border:1px solid var(--border)}
+.stock-low-item img{width:44px;height:44px;border-radius:8px;object-fit:cover;flex:0 0 44px}
+.stock-low-noimg{width:44px;height:44px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--t3);flex:0 0 44px}
+.stock-low-info{min-width:0;flex:1}
+.stock-low-name{font-size:12.5px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stock-low-qty{font-size:11px;color:#dc2626;font-weight:600}
+
+/* Active list */
+.stock-active-list{display:flex;flex-direction:column;gap:0}
+
+/* ===== CALENDAR (real classnames used by _renderStockCalendar) ===== */
+.stock-cal-wrap{display:grid;grid-template-columns:1fr 340px;gap:16px}
+@media (max-width:900px){.stock-cal-wrap{grid-template-columns:1fr}}
+.stock-cal-main{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:14px}
+.stock-cal-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.stock-cal-nav .btn-ghost{padding:4px 10px;font-size:16px;font-weight:700;min-width:32px}
+.stock-cal-title{font-size:17px;font-weight:800;color:var(--t1);text-align:center;flex:1}
+.stock-cal-dows{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px}
+.stock-cal-dows > div{text-align:center;font-size:11px;font-weight:700;color:var(--t3);padding:6px 0;text-transform:uppercase;letter-spacing:.3px}
+.stock-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.stock-cal-cell{aspect-ratio:1;border:1px solid var(--border);border-radius:8px;padding:5px 6px;cursor:pointer;background:var(--bg);display:flex;flex-direction:column;justify-content:space-between;transition:all .12s;min-height:55px;font-size:11.5px}
+.stock-cal-cell:hover{border-color:var(--p400);background:var(--p50)}
+.stock-cal-cell.empty{cursor:default;background:transparent;border-color:transparent}
+.stock-cal-cell.empty:hover{border-color:transparent;background:transparent}
+.stock-cal-cell.today{border-color:var(--p600);background:var(--p50);font-weight:800}
+.stock-cal-cell.selected{background:var(--p100);border-color:var(--p600);box-shadow:0 0 0 2px rgba(124,58,237,.25)}
+.stock-cal-cell .stock-cal-day{font-weight:700;color:var(--t1);font-size:12.5px;line-height:1}
+.stock-cal-dots{display:flex;gap:3px;flex-wrap:wrap}
+.stock-cal-dot{width:auto;height:14px;min-width:14px;padding:0 4px;border-radius:7px;font-size:9.5px;font-weight:700;color:#fff;display:inline-flex;align-items:center;justify-content:center}
+.stock-cal-dot.out{background:#f59e0b}
+.stock-cal-dot.due{background:#f97316}
+.stock-cal-dot.in{background:#10b981}
+.stock-cal-legend{display:flex;gap:14px;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:11.5px;color:var(--t2);flex-wrap:wrap}
+.stock-cal-legend > span{display:inline-flex;align-items:center;gap:5px}
+.stock-cal-legend .stock-cal-dot{height:10px;min-width:10px;padding:0}
+.stock-cal-panel{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:14px}
+.stock-cal-panel-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.stock-cal-panel-hd h3{margin:0;font-size:14px;font-weight:800;color:var(--t1)}
+.stock-cal-section{margin-bottom:14px}
+.stock-cal-section h4{font-size:12px;font-weight:700;margin:8px 0 6px;text-transform:uppercase;letter-spacing:.3px;display:flex;align-items:center;gap:5px}
 </style>
 </head>
 <body>
