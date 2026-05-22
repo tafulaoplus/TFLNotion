@@ -2080,9 +2080,11 @@ svg{display:block;flex-shrink:0}
 .uemail{font-size:11.5px;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px}
 .rbadge{padding:3px 10px;border-radius:8px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;flex-shrink:0}
 .rbadge.r-admin{background:#fef3c7;color:#b45309}
+.rbadge.r-supervisor{background:#ede9fe;color:#6d28d9}
 .rbadge.r-member{background:#dbeafe;color:#1d4ed8}
 .rbadge.role-social{background:#fce7f3;color:#be185d}
 [data-theme="dark"] .rbadge.r-admin{background:rgba(251,191,36,.2);color:#fbbf24}
+[data-theme="dark"] .rbadge.r-supervisor{background:rgba(167,139,250,.2);color:#c4b5fd}
 [data-theme="dark"] .rbadge.r-member{background:rgba(96,165,250,.2);color:#60a5fa}
 [data-theme="dark"] .rbadge.role-social{background:rgba(244,114,182,.2);color:#f472b6}
 .user-card .check{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;display:none;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 10px rgba(124,58,237,.4)}
@@ -5809,6 +5811,130 @@ img,video,iframe,canvas{max-width:100%;height:auto}
     transform:none;
   }
 }
+
+/* ===== STOCK INVENTORY SYSTEM ===== */
+.stock-page{display:flex;flex-direction:column;gap:16px}
+.stock-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.stock-hd-title{font-size:22px;font-weight:800;color:var(--t1);display:flex;align-items:center;gap:10px}
+.stock-hd-title svg{color:var(--p600)}
+.stock-tabs{display:flex;gap:4px;background:var(--bg-soft);padding:5px;border-radius:12px;overflow-x:auto;border:1px solid var(--border)}
+.stock-tab{flex:0 0 auto;padding:9px 16px;font-size:13px;font-weight:600;color:var(--t2);border:none;background:transparent;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:all .15s}
+.stock-tab:hover{color:var(--t1);background:rgba(124,58,237,.05)}
+.stock-tab.active{background:var(--bg);color:var(--p600);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.stock-kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.stock-kpi{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px}
+.stock-kpi-lbl{font-size:11.5px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.3px;display:flex;align-items:center;gap:5px}
+.stock-kpi-val{font-size:22px;font-weight:800;color:var(--t1);margin-top:6px}
+.stock-kpi.warn{background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(245,158,11,.02));border-color:rgba(245,158,11,.25)}
+.stock-kpi.warn .stock-kpi-val{color:#d97706}
+.stock-kpi.danger{background:linear-gradient(135deg,rgba(239,68,68,.08),rgba(239,68,68,.02));border-color:rgba(239,68,68,.25)}
+.stock-kpi.danger .stock-kpi-val{color:#dc2626}
+
+.stock-row-mini{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-soft);border-radius:10px;cursor:pointer;border:1px solid transparent;transition:all .15s}
+.stock-row-mini:hover{border-color:var(--border);background:var(--bg)}
+.stock-row-mini-name{flex:1;font-size:13px;font-weight:600;color:var(--t1)}
+.stock-row-mini-meta{font-size:11.5px;color:var(--t3)}
+
+.stock-item-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.stock-item-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;transition:all .15s}
+.stock-item-card:hover{border-color:var(--p400);box-shadow:0 4px 12px rgba(124,58,237,.08)}
+.stock-item-thumb{width:100%;aspect-ratio:1;background:var(--bg-soft);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--t3);overflow:hidden;border:1px solid var(--border)}
+.stock-item-thumb img{width:100%;height:100%;object-fit:cover}
+.stock-item-name{font-size:14px;font-weight:700;color:var(--t1);line-height:1.3}
+.stock-item-meta{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--t3)}
+.stock-item-qty{font-weight:700;color:var(--t1);font-size:13px}
+.stock-item-qty .avail{color:#059669}
+.stock-item-qty .low{color:#dc2626}
+.stock-item-actions{display:flex;gap:4px;border-top:1px solid var(--border);padding-top:8px;margin-top:auto}
+.stock-team-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;font-size:10.5px;font-weight:700}
+.stock-team-marketing{background:rgba(59,130,246,.12);color:#2563eb}
+.stock-team-creator{background:rgba(168,85,247,.12);color:#9333ea}
+.stock-team-shared{background:rgba(16,185,129,.12);color:#059669}
+
+.stock-ck-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;margin-bottom:12px}
+.stock-ck-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.stock-ck-id{font-size:12px;color:var(--t3);font-weight:700;letter-spacing:.3px}
+.stock-ck-event{font-size:16px;font-weight:800;color:var(--t1);margin-top:2px}
+.stock-ck-meta{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--t2)}
+.stock-ck-meta-item{display:inline-flex;align-items:center;gap:5px}
+.stock-ck-meta-item svg{color:var(--t3)}
+.stock-ck-items{background:var(--bg-soft);border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--t2)}
+.stock-ck-items b{color:var(--t1)}
+.stock-ck-actions{display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:10px}
+
+.stock-status-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.stock-status-checked_out{background:rgba(59,130,246,.12);color:#2563eb}
+.stock-status-due_today{background:rgba(245,158,11,.15);color:#d97706}
+.stock-status-overdue{background:rgba(239,68,68,.15);color:#dc2626}
+.stock-status-returned{background:rgba(16,185,129,.12);color:#059669}
+.stock-status-partial{background:rgba(217,119,6,.15);color:#b45309}
+.stock-status-lost{background:rgba(75,85,99,.18);color:#374151}
+
+.stock-cal-wrap{display:grid;grid-template-columns:1fr 320px;gap:16px}
+@media (max-width:900px){.stock-cal-wrap{grid-template-columns:1fr}}
+.stock-cal{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:14px}
+.stock-cal-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.stock-cal-title{font-size:16px;font-weight:800;color:var(--t1)}
+.stock-cal-nav{display:flex;gap:4px}
+.stock-cal-nav button{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--bg-soft);color:var(--t1);cursor:pointer;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
+.stock-cal-nav button:hover{background:var(--p100);color:var(--p600);border-color:var(--p400)}
+.stock-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.stock-cal-dow{text-align:center;font-size:11px;font-weight:700;color:var(--t3);padding:4px 0}
+.stock-cal-day{aspect-ratio:1;border:1px solid var(--border);border-radius:8px;padding:4px 5px;cursor:pointer;background:var(--bg);position:relative;display:flex;flex-direction:column;font-size:11.5px;transition:all .12s;min-height:55px}
+.stock-cal-day.other{opacity:.35}
+.stock-cal-day.today{border-color:var(--p400);background:var(--p50);font-weight:800}
+.stock-cal-day.selected{background:var(--p100);border-color:var(--p600);box-shadow:0 0 0 2px rgba(124,58,237,.2)}
+.stock-cal-day:hover{border-color:var(--p400)}
+.stock-cal-daynum{font-weight:700;color:var(--t1);font-size:12px}
+.stock-cal-dots{display:flex;flex-wrap:wrap;gap:2px;margin-top:auto}
+.stock-cal-dot{width:6px;height:6px;border-radius:50%}
+.stock-cal-side{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:14px}
+.stock-cal-side-title{font-size:14px;font-weight:800;color:var(--t1);margin-bottom:10px}
+
+.stock-officer-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:12px;font-weight:600}
+.stock-officer-av{width:22px;height:22px;border-radius:50%;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+
+/* Stock wizard / modal helpers */
+.stock-wiz-steps{display:flex;gap:6px;margin-bottom:16px;padding:0 4px}
+.stock-wiz-step{flex:1;height:6px;border-radius:999px;background:var(--bg-soft)}
+.stock-wiz-step.active{background:linear-gradient(90deg,var(--p400),var(--p600))}
+.stock-wiz-step.done{background:#10b981}
+.stock-wiz-lbl{display:block;font-size:12.5px;font-weight:700;color:var(--t1);margin-bottom:6px}
+.stock-team-pick{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.stock-team-pick-card{padding:18px 12px;border:2px solid var(--border);border-radius:12px;cursor:pointer;text-align:center;background:var(--bg);transition:all .15s}
+.stock-team-pick-card:hover{border-color:var(--p400)}
+.stock-team-pick-card.active{border-color:var(--p600);background:var(--p50)}
+.stock-team-pick-icon{font-size:28px;margin-bottom:6px}
+.stock-team-pick-name{font-size:13px;font-weight:700;color:var(--t1)}
+.stock-pick-item-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:var(--bg);margin-bottom:6px}
+.stock-pick-item-row input[type="number"]{width:70px;padding:6px 8px;border:1px solid var(--border);border-radius:7px;background:var(--bg);color:var(--t1);text-align:center}
+.stock-assignee-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px;max-height:200px;overflow:auto;padding:4px;border:1px solid var(--border);border-radius:10px;background:var(--bg-soft)}
+.stock-assignee-pick{display:flex;align-items:center;gap:8px;padding:6px 9px;border-radius:8px;cursor:pointer;background:var(--bg);border:1px solid transparent}
+.stock-assignee-pick:hover{border-color:var(--p400)}
+.stock-assignee-pick.active{border-color:var(--p600);background:var(--p50)}
+.stock-photo-drop{border:2px dashed var(--border);border-radius:12px;padding:18px;text-align:center;color:var(--t3);cursor:pointer;background:var(--bg-soft)}
+.stock-photo-drop:hover{border-color:var(--p400);color:var(--p600)}
+.stock-photo-prev{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.stock-photo-prev img{width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border)}
+
+/* Print slip */
+@media print{
+  body * {visibility:hidden}
+  #stockPrintSlip, #stockPrintSlip * {visibility:visible}
+  #stockPrintSlip {position:fixed;left:0;top:0;width:100%;padding:20px}
+}
+.stock-slip{font-family:'Sarabun',sans-serif;color:#111;max-width:780px;margin:0 auto;padding:30px;background:#fff}
+.stock-slip h1{font-size:22px;margin:8px 0;font-weight:800;text-align:center}
+.stock-slip h2{font-size:15px;margin:14px 0 6px;font-weight:700;border-bottom:1px solid #ddd;padding-bottom:4px}
+.stock-slip-logo{display:block;margin:0 auto 6px;height:60px}
+.stock-slip-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;font-size:13px;margin-bottom:12px}
+.stock-slip-meta b{color:#555;font-weight:600}
+.stock-slip table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:14px}
+.stock-slip th, .stock-slip td{border:1px solid #ccc;padding:6px 8px;text-align:left}
+.stock-slip th{background:#f4f4f5;font-weight:700}
+.stock-slip-sign{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:30px}
+.stock-slip-sign-box{text-align:center}
+.stock-slip-sign-line{border-top:1px solid #444;margin:50px 20px 6px;font-size:12px}
 </style>
 </head>
 <body>
@@ -5977,6 +6103,7 @@ img,video,iframe,canvas{max-width:100%;height:auto}
       <div id="viewAffiliateHub" class="view"></div>
       <div id="viewFacebookHub" class="view"></div>
       <div id="viewLiveAnalytics" class="view"></div>
+      <div id="viewStock" class="view"></div>
       <div id="viewPostPerformance" class="view"></div>
       <div id="viewAdSpend" class="view"></div>
       <div id="viewSales" class="view"></div>
@@ -7161,6 +7288,7 @@ img,video,iframe,canvas{max-width:100%;height:auto}
         <select class="fsel" id="fMemberRole">
           <option value="member">Member</option>
           <option value="social">Social (Member + Social Menu)</option>
+          <option value="supervisor">Supervisor (ทุกอย่าง ยกเว้น Admin)</option>
           <option value="admin">Admin</option>
         </select>
       </div>
@@ -7708,6 +7836,21 @@ let liveAnalytics = [];
 let currentLiveDetailId = null;
 // Ad Library competitors — track competitor FB pages
 let adLibCompetitors = [];
+// ===== Stock Inventory System =====
+let stockItems = []; // [{id,name,team,category,totalQty,availableQty,unit,minQty,serialNumber,photoUrl,replacementCost,notes,createdAt,updatedAt}]
+let stockCheckouts = []; // [{id,team,eventName,eventDate,location,expectedReturnDate,actualReturnDate,status,requesterId,assignees:[],officerCheckoutId,officerCheckinId,checkoutPhoto,checkinPhoto,items:[{itemId,qtyOut,qtyReturned,condition,damageNote,damagePhoto}],notes,createdAt,updatedAt}]
+let stockSettings = { officerIds: [] }; // who can verify checkouts
+let stockTab = localStorage.getItem('tfl_stock_tab') || 'overview'; // overview|items|active|calendar|history|manage
+let stockCalView = { y: new Date().getFullYear(), m: new Date().getMonth() };
+let stockCalSelectedDate = null;
+let _stockNextCkSeq = 1;
+let currentCheckoutEditId = null; // for editing existing checkout
+let currentCheckinId = null; // for check-in flow
+let currentItemEditId = null;
+// Checkout wizard state
+let stockWizardStep = 1;
+let stockWizardData = { team:'marketing', eventName:'', eventDate:'', location:'', assignees:[], expectedReturnDate:'', items:[], notes:'', checkoutPhoto:'' };
+function setStockTab(t){ stockTab = t; try { localStorage.setItem('tfl_stock_tab', t); } catch(_){} rerender(); }
 let socialManageTab = localStorage.getItem('tfl_manage_tab') || 'posts'; // posts | live
 // Ad Spend Tracker state
 let adSpendConn = { enabled: false, adAccountId: '', adAccountName: '', currency: 'THB', accounts: [], connectedAt: null, token: '', testStatus: 'idle', testMessage: '' };
@@ -8008,6 +8151,19 @@ function applyRemoteWorkspace(data){
   if(Array.isArray(data.adLibCompetitors)){
     adLibCompetitors = data.adLibCompetitors;
   }
+  if(Array.isArray(data.stockItems)) stockItems = data.stockItems;
+  if(Array.isArray(data.stockCheckouts)){
+    stockCheckouts = data.stockCheckouts;
+    // Compute next sequence number
+    const maxSeq = stockCheckouts.reduce((mx, c) => {
+      const m = (c.id||'').match(/CK-\d{4}-(\d+)/);
+      return m ? Math.max(mx, parseInt(m[1], 10)) : mx;
+    }, 0);
+    _stockNextCkSeq = maxSeq + 1;
+  }
+  if(data.stockSettings && typeof data.stockSettings === 'object'){
+    stockSettings = Object.assign({ officerIds: [] }, data.stockSettings);
+  }
   if(data.postPerfConn && typeof data.postPerfConn === 'object'){
     postPerfConn.enabled = !!data.postPerfConn.enabled;
     postPerfConn.connectedAt = data.postPerfConn.connectedAt || null;
@@ -8117,6 +8273,9 @@ function syncToNeon(){
         adSpendConn: { enabled: adSpendConn.enabled, adAccountId: adSpendConn.adAccountId, adAccountName: adSpendConn.adAccountName, currency: adSpendConn.currency, connectedAt: adSpendConn.connectedAt, token: adSpendConn.token },
         liveAnalytics: liveAnalytics,
         adLibCompetitors: adLibCompetitors,
+        stockItems: stockItems,
+        stockCheckouts: stockCheckouts,
+        stockSettings: stockSettings,
         googleDriveSettings: googleDriveSettings,
         tiktokSettings: tiktokSettings,
         youtubeSettings: youtubeSettings,
@@ -9213,7 +9372,7 @@ function renderLoginUsers(){
         <div class="uname">${escapeHtml(u.name)}</div>
         <div class="uemail">${escapeHtml(u.email||'')}</div>
       </div>
-      <span class="rbadge ${u.role==='admin'?'r-admin':u.role==='social'?'role-social':'r-member'}">${u.role==='admin'?'Admin':u.role==='social'?'Social':'Member'}</span>
+      <span class="rbadge ${u.role==='admin'?'r-admin':u.role==='supervisor'?'r-supervisor':u.role==='social'?'role-social':'r-member'}">${u.role==='admin'?'Admin':u.role==='supervisor'?'Supervisor':u.role==='social'?'Social':'Member'}</span>
       <div class="check">${I.check}</div>
     </div>`;
   }).join('');
@@ -9406,7 +9565,7 @@ function initApp(){
   let startView = 'dashboard';
   try {
     const saved = localStorage.getItem('tfl_currentView');
-    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','socialReport','socialManage','adLibrary','trendScraper','affiliateHub','facebookHub','liveAnalytics','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','postPerformance','adSpend','sales','activity','calendar','lottery','attendance'];
+    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','socialReport','socialManage','adLibrary','trendScraper','affiliateHub','facebookHub','liveAnalytics','stock','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','postPerformance','adSpend','sales','activity','calendar','lottery','attendance'];
     if(saved && validViews.includes(saved)){
       // Check role permission
       if((saved === 'allTasks' || saved === 'members' || saved === 'activity' || saved === 'lottery' || saved === 'affiliateHub') && currentUser.role !== 'admin'){
@@ -9462,7 +9621,8 @@ function _navDragEnd(e){
 
 function renderSidebar(){
   const isAdmin = currentUser.role==='admin';
-  const isSocial = currentUser.role==='social' || isAdmin;
+  const isSupervisor = currentUser.role==='supervisor' || isAdmin;
+  const isSocial = currentUser.role==='social' || isSupervisor;
   const defaultItems = [
     {id:'attendance', icon:I.clock, label:t('nav_attendance')},
     {id:'dashboard', icon:I.home, label:t('nav_dashboard')},
@@ -9473,6 +9633,7 @@ function renderSidebar(){
     {id:'sales', icon:I.mapPin, label:t('nav_sales')},
     {id:'calendar', icon:I.calendar, label:t('nav_calendar')},
     {id:'lottery', icon:I.trending, label:t('nav_lottery')},
+    {id:'stock', icon:I.layers||I.folder, label: CURRENT_LANG==='lo' ? 'ສະຕັອກຂອງ' : 'สต๊อกของ'},
   ];
   // Apply saved order if any
   let items = defaultItems;
@@ -9577,7 +9738,7 @@ function renderUserProfile(){
     ${avatarHTML(currentUser, 36, 13)}
     <div class="up-info">
       <div class="up-name">${escapeHtml(currentUser.name)}</div>
-      <div class="up-role">${currentUser.role==='admin'?'Admin':currentUser.role==='social'?'Social':'Member'}</div>
+      <div class="up-role">${currentUser.role==='admin'?'Admin':currentUser.role==='supervisor'?'Supervisor':currentUser.role==='social'?'Social':'Member'}</div>
     </div>
     <span style="color:var(--t3);transform:rotate(0deg);transition:transform .15s" id="userChev">${I.chevronDown}</span>`;
   renderUserDropdown();
@@ -9866,7 +10027,7 @@ function renderView(id,el){
   setTimeout(()=>el.classList.remove('fade-in'),300);
   ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,notes:renderNotes,taskBoard:renderTaskBoard,
     myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbGoLive:renderFbGoLive,fbLiveAuto:renderFbLiveAuto,
-    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,socialReport:renderSocialReport,socialManage:renderSocialManage,adLibrary:renderAdLibrary,trendScraper:renderTrendScraper,affiliateHub:renderAffiliateHub,facebookHub:renderFacebookHub,liveAnalytics:renderLiveAnalytics,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations,postPerformance:renderPostPerformance,adSpend:renderAdSpend}[id]||(()=>{}))(el);
+    sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,socialReport:renderSocialReport,socialManage:renderSocialManage,adLibrary:renderAdLibrary,trendScraper:renderTrendScraper,affiliateHub:renderAffiliateHub,facebookHub:renderFacebookHub,liveAnalytics:renderLiveAnalytics,stock:renderStock,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations,postPerformance:renderPostPerformance,adSpend:renderAdSpend}[id]||(()=>{}))(el);
 }
 
 function rerender(){ const el=document.getElementById('view'+cap(currentView)); if(el) renderView(currentView,el); }
@@ -19270,6 +19431,1170 @@ function _intgFbRecheckStatus(){
   }, true /* force = bypass cache */);
 }
 
+// ============ STOCK INVENTORY ============
+const STOCK_DRIVE_FOLDER_ID = '14N79Ya8MNq6nv8fSmSLwhbDYd2GJqN5Z';
+const STOCK_LOGO_URL = 'https://tflao.com/logo/Logotop.png';
+
+function stockNextCkId(){
+  const yr = new Date().getFullYear();
+  const seq = String(_stockNextCkSeq).padStart(3,'0');
+  _stockNextCkSeq++;
+  return `CK-${yr}-${seq}`;
+}
+function isStockOfficer(userId){
+  if(!currentUser) return false;
+  if(currentUser.role === 'admin') return true;
+  return (stockSettings.officerIds||[]).includes(userId || currentUser.id);
+}
+function canManageStock(){
+  return currentUser && (currentUser.role === 'admin' || currentUser.role === 'supervisor');
+}
+function _stockStatus(c){
+  if(!c) return '';
+  if(c.status === 'returned') return 'returned';
+  if(c.status === 'partial') return 'partial';
+  if(c.status === 'lost') return 'lost';
+  // Active: check overdue
+  const today = new Date().toISOString().slice(0,10);
+  if(c.expectedReturnDate && c.expectedReturnDate < today) return 'overdue';
+  if(c.expectedReturnDate === today) return 'due_today';
+  return 'checked_out';
+}
+function _stockStatusLabel(status){
+  const isLo = CURRENT_LANG === 'lo';
+  return ({
+    checked_out: isLo?'ຢູ່ນອກ':'อยู่ข้างนอก',
+    due_today: isLo?'ຄືນວັນນີ້':'ครบกำหนดวันนี้',
+    overdue: isLo?'ເກີນກຳນົດ':'เกินกำหนด',
+    returned: isLo?'ຄືນແລ້ວ':'คืนแล้ว',
+    partial: isLo?'ຄືນບໍ່ຄົບ':'คืนไม่ครบ',
+    lost: isLo?'ສູນຫາຍ':'สูญหาย',
+  })[status] || status;
+}
+function _stockStatusColor(s){
+  return ({
+    checked_out:'#f59e0b', due_today:'#f97316', overdue:'#ef4444',
+    returned:'#10b981', partial:'#a855f7', lost:'#7f1d1d',
+  })[s] || '#6b7280';
+}
+
+// Recalculate availableQty based on active checkouts
+function recalcStockAvailable(){
+  const checkedOut = {};
+  stockCheckouts.forEach(c => {
+    if(c.status === 'returned' || c.status === 'lost') return;
+    (c.items||[]).forEach(it => {
+      const out = (+it.qtyOut||0) - (+it.qtyReturned||0);
+      if(out > 0) checkedOut[it.itemId] = (checkedOut[it.itemId]||0) + out;
+    });
+  });
+  stockItems.forEach(it => {
+    it.availableQty = Math.max(0, (+it.totalQty||0) - (checkedOut[it.id]||0));
+  });
+}
+
+function renderStock(el){
+  recalcStockAvailable();
+  const isLo = CURRENT_LANG === 'lo';
+  const tabs = [
+    { id:'overview',  label: isLo?'ພາບລວມ':'ภาพรวม',         icon: I.barChart },
+    { id:'items',     label: isLo?'ສະຕັອກ':'สต๊อก',            icon: I.layers||I.folder },
+    { id:'active',    label: isLo?'ຢູ່ນອກ':'อยู่ข้างนอก',        icon: I.upload },
+    { id:'calendar',  label: isLo?'ປະຕິທິນ':'ปฏิทิน',          icon: I.calendar },
+    { id:'history',   label: isLo?'ປະຫວັດ':'ประวัติ',          icon: I.history },
+  ];
+  if(canManageStock()){
+    tabs.push({ id:'manage', label: isLo?'ຈັດການ':'จัดการ', icon: I.settings });
+  }
+  let body = '';
+  if(stockTab === 'overview') body = _renderStockOverview(isLo);
+  else if(stockTab === 'items') body = _renderStockItems(isLo);
+  else if(stockTab === 'active') body = _renderStockActive(isLo);
+  else if(stockTab === 'calendar') body = _renderStockCalendar(isLo);
+  else if(stockTab === 'history') body = _renderStockHistory(isLo);
+  else if(stockTab === 'manage' && canManageStock()) body = _renderStockManage(isLo);
+  else body = _renderStockOverview(isLo);
+
+  const totalItems = stockItems.length;
+  const activeCount = stockCheckouts.filter(c => c.status !== 'returned' && c.status !== 'lost').length;
+  el.innerHTML = topbarSimple('layers', isLo?'ສະຕັອກຂອງ':'สต๊อกของ', isLo?'ບໍລິຫານສະຕັອກ ເບີກ-ຄືນຂອງ':'จัดการสต๊อก · เบิก-คืนของ · ตรวจสอบโดย Officer') + `
+    <div class="page-content stock-page" style="max-width:1500px;padding:18px clamp(12px,2vw,28px)">
+      <div class="stock-tabs">
+        ${tabs.map(tab => `<button class="stock-tab ${stockTab===tab.id?'active':''}" onclick="setStockTab('${tab.id}')">${tab.icon} ${tab.label}</button>`).join('')}
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <button class="btn-primary" onclick="openStockCheckoutWizard()">${I.upload} ${isLo?'ເບີກອອກ':'เบิกออก'}</button>
+          ${activeCount?`<button class="btn-ghost" onclick="setStockTab('active')">${activeCount} ${isLo?'ຢູ່ນອກ':'อยู่นอก'}</button>`:''}
+        </div>
+      </div>
+      <div class="stock-body">${body}</div>
+    </div>`;
+}
+
+function _renderStockOverview(isLo){
+  const total = stockItems.length;
+  const totalUnits = stockItems.reduce((s,i)=>s+(+i.totalQty||0), 0);
+  const available = stockItems.reduce((s,i)=>s+(+i.availableQty||0), 0);
+  const outActive = totalUnits - available;
+  const lowStock = stockItems.filter(i => (+i.availableQty||0) <= (+i.minQty||0) && (+i.minQty||0) > 0);
+  const today = new Date().toISOString().slice(0,10);
+  const dueToday = stockCheckouts.filter(c => c.expectedReturnDate === today && c.status !== 'returned');
+  const overdue = stockCheckouts.filter(c => c.expectedReturnDate < today && c.status !== 'returned' && c.status !== 'lost');
+  const recentCks = stockCheckouts.slice().sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,5);
+  return `
+    <div class="fbhub-kpi-grid">
+      <div class="fbhub-kpi" style="--c1:#3b82f6;--c2:#1d4ed8">
+        <div class="fbhub-kpi-ic">${I.layers||I.folder}</div>
+        <div class="fbhub-kpi-lbl">${isLo?'ລາຍການທັງໝົດ':'ของในระบบ'}</div>
+        <div class="fbhub-kpi-val">${total}</div>
+        <div class="fbhub-kpi-sub">${fmtNum(totalUnits)} ${isLo?'ຊິ້ນ':'ชิ้น'}</div>
+      </div>
+      <div class="fbhub-kpi" style="--c1:#f59e0b;--c2:#d97706">
+        <div class="fbhub-kpi-ic">${I.upload}</div>
+        <div class="fbhub-kpi-lbl">${isLo?'ຢູ່ນອກ':'อยู่นอก'}</div>
+        <div class="fbhub-kpi-val">${fmtNum(outActive)}</div>
+        <div class="fbhub-kpi-sub">${stockCheckouts.filter(c=>c.status!=='returned'&&c.status!=='lost').length} ${isLo?'ໃບເບີກ':'ใบเบิก'}</div>
+      </div>
+      <div class="fbhub-kpi" style="--c1:#f97316;--c2:#c2410c">
+        <div class="fbhub-kpi-ic">${I.clock}</div>
+        <div class="fbhub-kpi-lbl">${isLo?'ຄືນວັນນີ້':'ครบกำหนดวันนี้'}</div>
+        <div class="fbhub-kpi-val">${dueToday.length}</div>
+        <div class="fbhub-kpi-sub">${overdue.length} ${isLo?'ເກີນກຳນົດ':'เกินกำหนด'}</div>
+      </div>
+      <div class="fbhub-kpi" style="--c1:#ef4444;--c2:#dc2626">
+        <div class="fbhub-kpi-ic">${I.alert}</div>
+        <div class="fbhub-kpi-lbl">${isLo?'ຕ່ຳກວ່າຈຸດສັ່ງ':'ต่ำกว่าจุดสั่ง'}</div>
+        <div class="fbhub-kpi-val">${lowStock.length}</div>
+        <div class="fbhub-kpi-sub">${isLo?'ຄວນສັ່ງເພີ່ມ':'ควรสั่งซื้อเพิ่ม'}</div>
+      </div>
+    </div>
+
+    ${overdue.length ? `
+      <div class="dash2-card" style="border-left:4px solid #ef4444">
+        <div class="dash2-card-hd">
+          <div class="dash2-card-title" style="color:#ef4444">${I.alert} ${isLo?'ເກີນກຳນົດຄືນ':'เกินกำหนดคืน'} (${overdue.length})</div>
+          <a class="dash2-card-link" onclick="setStockTab('active')">${isLo?'ເບິ່ງທັງໝົດ':'ดูทั้งหมด'} →</a>
+        </div>
+        ${overdue.slice(0,5).map(c => _stockRowMini(c, isLo)).join('')}
+      </div>
+    ` : ''}
+
+    <div class="dash2-card">
+      <div class="dash2-card-hd">
+        <div class="dash2-card-title">${isLo?'ການເບີກຫຼ້າສຸດ':'การเบิกล่าสุด'}</div>
+        <a class="dash2-card-link" onclick="setStockTab('history')">${isLo?'ປະຫວັດ':'ประวัติ'} →</a>
+      </div>
+      ${recentCks.length === 0 ? `<div class="empty-state">${isLo?'ຍັງບໍ່ມີການເບີກ':'ยังไม่มีการเบิก'}</div>` :
+      recentCks.map(c => _stockRowMini(c, isLo)).join('')}
+    </div>
+
+    ${lowStock.length ? `
+      <div class="dash2-card">
+        <div class="dash2-card-hd">
+          <div class="dash2-card-title">${isLo?'ຂອງທີ່ຕ່ຳກວ່າຈຸດສັ່ງ':'ของที่ต่ำกว่าจุดสั่ง'}</div>
+        </div>
+        <div class="stock-low-grid">
+          ${lowStock.map(it => `
+            <div class="stock-low-item">
+              ${it.photoUrl ? `<img src="${escapeHtmlN(it.photoUrl)}" alt=""/>` : `<div class="stock-low-noimg">${I.folder}</div>`}
+              <div class="stock-low-info">
+                <div class="stock-low-name">${escapeHtmlN(it.name)}</div>
+                <div class="stock-low-qty">${it.availableQty}/${it.totalQty} ${escapeHtmlN(it.unit||'')}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : ''}`;
+}
+
+function _stockRowMini(c, isLo){
+  const status = _stockStatus(c);
+  const color = _stockStatusColor(status);
+  const team = c.team === 'marketing' ? (isLo?'ການຕະຫຼາດ':'Marketing') : c.team === 'creator' ? 'Creator' : (isLo?'ໃຊ້ຮ່ວມ':'Shared');
+  const teamColor = c.team === 'marketing' ? '#3b82f6' : c.team === 'creator' ? '#a855f7' : '#10b981';
+  return `<div class="stock-row-mini" onclick="openCheckoutDetail('${c.id}')">
+    <div class="stock-row-team" style="background:${teamColor}"></div>
+    <div class="stock-row-body">
+      <div class="stock-row-title">${escapeHtmlN(c.id)} · ${escapeHtmlN(c.eventName||'')}</div>
+      <div class="stock-row-meta">${escapeHtmlN(team)} · ${(c.items||[]).length} ${isLo?'ລາຍການ':'รายการ'} · ${isLo?'ຄືນ':'คืน'} ${c.expectedReturnDate||'—'}</div>
+    </div>
+    <span class="stock-row-status" style="background:${color}20;color:${color}">${_stockStatusLabel(status)}</span>
+  </div>`;
+}
+
+function _renderStockItems(isLo){
+  const filters = ['all','marketing','creator','shared'];
+  const curFilter = window._stockItemFilter || 'all';
+  const items = curFilter === 'all' ? stockItems : stockItems.filter(it => it.team === curFilter);
+  return `
+    <div class="stock-toolbar">
+      <div class="stock-team-tabs">
+        ${filters.map(f => `<button class="stock-team-tab ${curFilter===f?'active':''}" onclick="window._stockItemFilter='${f}';rerender()">${f==='all'?(isLo?'ທັງໝົດ':'ทั้งหมด'):f==='marketing'?'Marketing':f==='creator'?'Creator':'Shared'} (${f==='all'?stockItems.length:stockItems.filter(it=>it.team===f).length})</button>`).join('')}
+      </div>
+      ${canManageStock() ? `<button class="btn-primary" onclick="openItemEditor()">${I.plus} ${isLo?'ເພີ່ມຂອງ':'เพิ่มของ'}</button>` : ''}
+    </div>
+    ${items.length === 0 ? `<div class="empty-state" style="margin-top:14px">
+      <p>${isLo?'ຍັງບໍ່ມີຂອງໃນສະຕັອກ':'ยังไม่มีของในสต๊อก'}</p>
+      ${canManageStock() ? `<button class="btn-primary" style="margin-top:14px" onclick="openItemEditor()">${I.plus} ${isLo?'ເພີ່ມຂອງ':'เพิ่มของชิ้นแรก'}</button>` : ''}
+    </div>` :
+    `<div class="stock-grid">
+      ${items.map(it => {
+        const isLow = (+it.availableQty||0) <= (+it.minQty||0) && (+it.minQty||0) > 0;
+        const isOut = (+it.availableQty||0) === 0;
+        const teamColor = it.team === 'marketing' ? '#3b82f6' : it.team === 'creator' ? '#a855f7' : '#10b981';
+        return `<div class="stock-item-card ${isOut?'out':isLow?'low':''}">
+          <div class="stock-item-pic">
+            ${it.photoUrl ? `<img src="${escapeHtmlN(it.photoUrl)}" alt="${escapeHtmlN(it.name)}"/>` : `<div class="stock-item-noimg">${I.folder}</div>`}
+            <span class="stock-item-team" style="background:${teamColor}">${it.team==='marketing'?'MKT':it.team==='creator'?'CRT':'SHARED'}</span>
+          </div>
+          <div class="stock-item-body">
+            <div class="stock-item-name">${escapeHtmlN(it.name)}</div>
+            <div class="stock-item-meta">${escapeHtmlN(it.category||'')}${it.serialNumber?` · SN:${escapeHtmlN(it.serialNumber)}`:''}</div>
+            <div class="stock-item-qty">
+              <span class="stock-item-qty-val ${isOut?'out':isLow?'low':''}">${it.availableQty}/${it.totalQty}</span>
+              <span class="stock-item-unit">${escapeHtmlN(it.unit||'ชิ้น')}</span>
+              ${isOut?`<span class="stock-item-badge out">${isLo?'ໝົດ':'หมด'}</span>`:isLow?`<span class="stock-item-badge low">${isLo?'ໃກ້ໝົດ':'ใกล้หมด'}</span>`:''}
+            </div>
+            ${canManageStock() ? `<div class="stock-item-actions">
+              <button class="btn-ghost" onclick="openItemEditor('${it.id}')">${I.edit}</button>
+              <button class="btn-ghost danger" onclick="deleteStockItem('${it.id}')">${I.trash}</button>
+            </div>` : ''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`}`;
+}
+
+function _renderStockActive(isLo){
+  const today = new Date().toISOString().slice(0,10);
+  const active = stockCheckouts.filter(c => c.status !== 'returned' && c.status !== 'lost').sort((a,b)=>(a.expectedReturnDate||'').localeCompare(b.expectedReturnDate||''));
+  const overdue = active.filter(c => (c.expectedReturnDate||'') < today);
+  const dueToday = active.filter(c => c.expectedReturnDate === today);
+  const future = active.filter(c => (c.expectedReturnDate||'') > today);
+  const filter = window._stockActiveFilter || 'all';
+  let list = active;
+  if(filter === 'overdue') list = overdue;
+  else if(filter === 'today') list = dueToday;
+  else if(filter === 'future') list = future;
+  return `
+    <div class="stock-team-tabs" style="margin-bottom:14px">
+      <button class="stock-team-tab ${filter==='all'?'active':''}" onclick="window._stockActiveFilter='all';rerender()">${isLo?'ທັງໝົດ':'ทั้งหมด'} (${active.length})</button>
+      <button class="stock-team-tab ${filter==='overdue'?'active':''}" onclick="window._stockActiveFilter='overdue';rerender()" style="color:${overdue.length?'#ef4444':''}">${I.alert} ${isLo?'ເກີນກຳນົດ':'เกินกำหนด'} (${overdue.length})</button>
+      <button class="stock-team-tab ${filter==='today'?'active':''}" onclick="window._stockActiveFilter='today';rerender()">${I.clock} ${isLo?'ວັນນີ້':'วันนี้'} (${dueToday.length})</button>
+      <button class="stock-team-tab ${filter==='future'?'active':''}" onclick="window._stockActiveFilter='future';rerender()">${isLo?'ໃນອະນາຄົດ':'ในอนาคต'} (${future.length})</button>
+    </div>
+    ${list.length === 0 ? `<div class="empty-state">${isLo?'ບໍ່ມີຂອງຢູ່ນອກ':'ไม่มีของอยู่ข้างนอก'}</div>` :
+    `<div class="stock-active-list">
+      ${list.map(c => _stockCheckoutCard(c, isLo)).join('')}
+    </div>`}`;
+}
+
+function _stockCheckoutCard(c, isLo){
+  const status = _stockStatus(c);
+  const color = _stockStatusColor(status);
+  const teamColor = c.team === 'marketing' ? '#3b82f6' : c.team === 'creator' ? '#a855f7' : '#10b981';
+  const teamName = c.team === 'marketing' ? 'Marketing' : c.team === 'creator' ? 'Creator' : 'Shared';
+  const today = new Date().toISOString().slice(0,10);
+  const isOverdue = (c.expectedReturnDate||'') < today && c.status !== 'returned';
+  const totalQty = (c.items||[]).reduce((s,it)=>s+(+it.qtyOut||0), 0);
+  const assignees = (c.assignees||[]).map(uid => USERS.find(u=>u.id===uid)).filter(Boolean);
+  return `<div class="stock-ck-card ${isOverdue?'overdue':''}" style="border-left-color:${color}">
+    <div class="stock-ck-hd">
+      <div>
+        <div class="stock-ck-id">${escapeHtmlN(c.id)}</div>
+        <div class="stock-ck-event">${escapeHtmlN(c.eventName||'(no name)')}</div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <span class="stock-ck-team" style="background:${teamColor}20;color:${teamColor}">${teamName}</span>
+        <span class="stock-ck-status" style="background:${color}20;color:${color}">${_stockStatusLabel(status)}</span>
+      </div>
+    </div>
+    <div class="stock-ck-meta">
+      ${c.eventDate ? `<span>${I.calendar} ${escapeHtmlN(c.eventDate)}</span>` : ''}
+      ${c.location ? `<span>${I.mapPin||I.target} ${escapeHtmlN(c.location.slice(0,40))}</span>` : ''}
+      ${c.expectedReturnDate ? `<span>${I.clock} ${isLo?'ຄືນ':'คืน'} ${escapeHtmlN(c.expectedReturnDate)}</span>` : ''}
+    </div>
+    <div class="stock-ck-items">
+      ${(c.items||[]).slice(0,3).map(it => {
+        const item = stockItems.find(x => x.id === it.itemId);
+        return `<span class="stock-ck-item-chip">${escapeHtmlN(item?.name||'?')} × ${it.qtyOut}</span>`;
+      }).join('')}
+      ${(c.items||[]).length > 3 ? `<span class="stock-ck-item-chip more">+${(c.items||[]).length-3}</span>` : ''}
+    </div>
+    ${assignees.length ? `<div class="stock-ck-assignees">
+      ${isLo?'ຜູ້ຮັບ':'ผู้รับมอบ'}: ${assignees.map(u => `<span class="stock-ck-av" style="background:${u.color||'#888'}">${escapeHtmlN(u.init||u.name[0])}</span>${escapeHtmlN(u.name)}`).join(', ')}
+    </div>` : ''}
+    <div class="stock-ck-actions">
+      <button class="btn-primary" onclick="openCheckoutDetail('${c.id}')">${I.eye} ${isLo?'ລາຍລະອຽດ':'รายละเอียด'}</button>
+      <button class="btn-ghost" onclick="printCheckoutSlip('${c.id}','checkout')">${I.printer} ${isLo?'ໃບເບີກ':'ใบเบิก'}</button>
+      ${c.status !== 'returned' ? `<button class="btn-ghost" style="color:#059669" onclick="openCheckinFlow('${c.id}')">${I.refresh} ${isLo?'ບັນທຶກການຄືນ':'บันทึกการคืน'}</button>` : ''}
+    </div>
+  </div>`;
+}
+
+function _renderStockCalendar(isLo){
+  const { y, m } = stockCalView;
+  const monthNames = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  const monthNamesLo = ['ມັງກອນ','ກຸມພາ','ມີນາ','ເມສາ','ພຶດສະພາ','ມິຖຸນາ','ກໍລະກົດ','ສິງຫາ','ກັນຍາ','ຕຸລາ','ພະຈິກ','ທັນວາ'];
+  const monthName = (isLo?monthNamesLo:monthNames)[m];
+  const yearLabel = isLo ? y : (y + 543);
+  const first = new Date(y, m, 1);
+  const startDow = first.getDay();
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const today = new Date().toISOString().slice(0,10);
+  const _ymdLocal = (cy,cm,cd) => `${cy}-${String(cm+1).padStart(2,'0')}-${String(cd).padStart(2,'0')}`;
+  // Build event map: date -> [{type:'out'|'in', ck}]
+  const evMap = {};
+  stockCheckouts.forEach(c => {
+    if(c.createdAt){
+      const d = new Date(c.createdAt).toISOString().slice(0,10);
+      if(d.startsWith(`${y}-${String(m+1).padStart(2,'0')}`)){
+        if(!evMap[d]) evMap[d] = [];
+        evMap[d].push({type:'out', ck:c});
+      }
+    }
+    if(c.actualReturnDate){
+      if(c.actualReturnDate.startsWith(`${y}-${String(m+1).padStart(2,'0')}`)){
+        if(!evMap[c.actualReturnDate]) evMap[c.actualReturnDate] = [];
+        evMap[c.actualReturnDate].push({type:'in', ck:c});
+      }
+    }
+    if(c.expectedReturnDate && c.status !== 'returned'){
+      if(c.expectedReturnDate.startsWith(`${y}-${String(m+1).padStart(2,'0')}`)){
+        if(!evMap[c.expectedReturnDate]) evMap[c.expectedReturnDate] = [];
+        evMap[c.expectedReturnDate].push({type:'due', ck:c});
+      }
+    }
+  });
+  let cellsHtml = '';
+  for(let i=0; i<startDow; i++) cellsHtml += `<div class="stock-cal-cell empty"></div>`;
+  for(let d=1; d<=daysInMonth; d++){
+    const ds = _ymdLocal(y, m, d);
+    const isToday = ds === today;
+    const isSelected = stockCalSelectedDate === ds;
+    const events = evMap[ds] || [];
+    const outCount = events.filter(e=>e.type==='out').length;
+    const dueCount = events.filter(e=>e.type==='due').length;
+    const inCount = events.filter(e=>e.type==='in').length;
+    cellsHtml += `<div class="stock-cal-cell ${isToday?'today':''} ${isSelected?'selected':''}" onclick="stockCalSelectDate('${ds}')">
+      <div class="stock-cal-day">${d}</div>
+      <div class="stock-cal-dots">
+        ${outCount?`<span class="stock-cal-dot out" title="เบิกออก ${outCount}">${outCount}</span>`:''}
+        ${dueCount?`<span class="stock-cal-dot due" title="ครบกำหนด ${dueCount}">${dueCount}</span>`:''}
+        ${inCount?`<span class="stock-cal-dot in" title="คืน ${inCount}">${inCount}</span>`:''}
+      </div>
+    </div>`;
+  }
+  // Side panel for selected date
+  let panel = '';
+  if(stockCalSelectedDate){
+    const ev = evMap[stockCalSelectedDate] || [];
+    if(ev.length){
+      const outs = ev.filter(e=>e.type==='out');
+      const ins = ev.filter(e=>e.type==='in');
+      const dues = ev.filter(e=>e.type==='due');
+      panel = `<div class="stock-cal-panel">
+        <div class="stock-cal-panel-hd">
+          <h3>${escapeHtmlN(stockCalSelectedDate)}</h3>
+          <button class="btn-ghost" onclick="stockCalSelectedDate=null;rerender()">${isLo?'ປິດ':'ปิด'}</button>
+        </div>
+        ${outs.length ? `<div class="stock-cal-section"><h4 style="color:#f59e0b">${I.upload} ${isLo?'ເບີກອອກ':'เบิกออก'} (${outs.length})</h4>${outs.map(o => _stockRowMini(o.ck, isLo)).join('')}</div>` : ''}
+        ${dues.length ? `<div class="stock-cal-section"><h4 style="color:#f97316">${I.clock} ${isLo?'ຄບກຳນົດຄືນ':'ครบกำหนดคืน'} (${dues.length})</h4>${dues.map(o => _stockRowMini(o.ck, isLo)).join('')}</div>` : ''}
+        ${ins.length ? `<div class="stock-cal-section"><h4 style="color:#10b981">${I.refresh} ${isLo?'ຄືນ':'คืน'} (${ins.length})</h4>${ins.map(o => _stockRowMini(o.ck, isLo)).join('')}</div>` : ''}
+      </div>`;
+    } else {
+      panel = `<div class="stock-cal-panel"><div class="empty-state">${isLo?'ບໍ່ມີຮາຍການໃນວັນນີ້':'ไม่มีรายการในวันนี้'}</div></div>`;
+    }
+  }
+  return `
+    <div class="stock-cal-wrap">
+      <div class="stock-cal-main">
+        <div class="stock-cal-nav">
+          <button class="btn-ghost" onclick="stockCalView.m--;if(stockCalView.m<0){stockCalView.m=11;stockCalView.y--}rerender()">‹</button>
+          <div class="stock-cal-title">${monthName} ${yearLabel}</div>
+          <button class="btn-ghost" onclick="stockCalView.m++;if(stockCalView.m>11){stockCalView.m=0;stockCalView.y++}rerender()">›</button>
+        </div>
+        <div class="stock-cal-dows">
+          <div>${isLo?'ອາ':'อา'}</div><div>${isLo?'ຈ':'จ'}</div><div>${isLo?'ອ':'อ'}</div><div>${isLo?'ພ':'พ'}</div><div>${isLo?'ພຫ':'พฤ'}</div><div>${isLo?'ສ':'ศ'}</div><div>${isLo?'ສ':'ส'}</div>
+        </div>
+        <div class="stock-cal-grid">${cellsHtml}</div>
+        <div class="stock-cal-legend">
+          <span><span class="stock-cal-dot out"></span> ${isLo?'ເບີກອອກ':'เบิกออก'}</span>
+          <span><span class="stock-cal-dot due"></span> ${isLo?'ຄບກຳນົດ':'ครบกำหนด'}</span>
+          <span><span class="stock-cal-dot in"></span> ${isLo?'ຄືນ':'คืน'}</span>
+        </div>
+      </div>
+      ${panel}
+    </div>`;
+}
+function stockCalSelectDate(ds){ stockCalSelectedDate = (stockCalSelectedDate === ds ? null : ds); rerender(); }
+
+function _renderStockHistory(isLo){
+  const all = stockCheckouts.slice().sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  return `
+    <div class="dash2-card">
+      <div class="dash2-card-hd">
+        <div class="dash2-card-title">${isLo?'ປະຫວັດການເບີກ-ຄືນ':'ประวัติการเบิก-คืน'} (${all.length})</div>
+      </div>
+      ${all.length === 0 ? `<div class="empty-state">${isLo?'ບໍ່ມີຮາຍການ':'ไม่มีรายการ'}</div>` :
+      `<table class="lot-table" style="width:100%">
+        <thead><tr>
+          <th>${isLo?'ລະຫັດ':'รหัส'}</th>
+          <th>${isLo?'ກິດຈະກຳ':'กิจกรรม'}</th>
+          <th>${isLo?'ທີມ':'ทีม'}</th>
+          <th>${isLo?'ວັນເບີກ':'วันเบิก'}</th>
+          <th>${isLo?'ກຳນົດຄືນ':'กำหนดคืน'}</th>
+          <th class="num">${isLo?'ຈຳນວນ':'จำนวน'}</th>
+          <th>${isLo?'ສະຖານະ':'สถานะ'}</th>
+          <th></th>
+        </tr></thead>
+        <tbody>
+          ${all.map(c => {
+            const status = _stockStatus(c);
+            const color = _stockStatusColor(status);
+            const team = c.team==='marketing'?'Marketing':c.team==='creator'?'Creator':'Shared';
+            return `<tr>
+              <td><b>${escapeHtmlN(c.id)}</b></td>
+              <td>${escapeHtmlN(c.eventName||'—')}</td>
+              <td>${team}</td>
+              <td>${escapeHtmlN(c.eventDate||'—')}</td>
+              <td>${escapeHtmlN(c.expectedReturnDate||'—')}</td>
+              <td class="num">${(c.items||[]).reduce((s,it)=>s+(+it.qtyOut||0),0)}</td>
+              <td><span class="stock-row-status" style="background:${color}20;color:${color}">${_stockStatusLabel(status)}</span></td>
+              <td>
+                <button class="btn-ghost" onclick="openCheckoutDetail('${c.id}')" title="${isLo?'ເບິ່ງ':'ดู'}">${I.eye}</button>
+                <button class="btn-ghost" onclick="printCheckoutSlip('${c.id}','checkout')" title="${isLo?'ໃບເບີກ':'ใบเบิก'}">${I.printer}</button>
+                ${c.status === 'returned' ? `<button class="btn-ghost" onclick="printCheckoutSlip('${c.id}','return')" title="${isLo?'ໃບຄືນ':'ใบคืน'}">${I.refresh}</button>` : ''}
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>`}
+    </div>`;
+}
+
+function _renderStockManage(isLo){
+  if(!canManageStock()) return `<div class="empty-state">${isLo?'ບໍ່ມີສິດ':'ไม่มีสิทธิ์เข้าถึง'}</div>`;
+  const officers = USERS.filter(u => (stockSettings.officerIds||[]).includes(u.id));
+  return `
+    <div class="dash2-card">
+      <div class="dash2-card-hd">
+        <div class="dash2-card-title">${isLo?'ຈັດການຂອງ':'จัดการของในระบบ'}</div>
+        <button class="btn-primary" onclick="openItemEditor()">${I.plus} ${isLo?'ເພີ່ມຂອງ':'เพิ่มของ'}</button>
+      </div>
+      <p style="color:var(--t2);font-size:13px">${isLo?'ສ້າງ/ແກ້ໄຂ/ລຶບຂອງໃນສະຕັອກ ໄປທີ່ແທັບ "ສະຕັອກ" ເພື່ອເບິ່ງລາຍຊື່':'สร้าง / แก้ไข / ลบของในระบบ — ไปที่แท็บ "สต๊อก" เพื่อดูรายการของทั้งหมด'}</p>
+    </div>
+
+    ${currentUser.role === 'admin' ? `
+      <div class="dash2-card">
+        <div class="dash2-card-hd">
+          <div class="dash2-card-title">${isLo?'Stock Officer (ຜູ້ກວດເບີກ-ຄືນ)':'Stock Officer (ผู้ตรวจเบิก-คืน)'}</div>
+          <button class="btn-primary" onclick="openOfficerPicker()">${I.users} ${isLo?'ຕັ້ງຄ່າ':'ตั้งค่า Officer'}</button>
+        </div>
+        ${officers.length === 0 ? `<div class="empty-state">${isLo?'ຍັງບໍ່ມີ Officer':'ยังไม่มี Officer — ตอนนี้มีแค่ admin ตรวจได้'}</div>` :
+        `<div style="display:flex;flex-wrap:wrap;gap:8px">
+          ${officers.map(u => `<span class="stock-officer-chip" style="background:${u.color||'#888'}20;color:${u.color||'#666'}">
+            <span class="stock-officer-av" style="background:${u.color||'#888'}">${escapeHtmlN(u.init||u.name[0])}</span>
+            ${escapeHtmlN(u.name)}
+          </span>`).join('')}
+        </div>`}
+        <p style="color:var(--t3);font-size:11.5px;margin-top:12px">${isLo?'Officer ສາມາດເຊັນຢຸ້ນຢັນເບີກ-ຄືນຂອງໄດ້':'Officer สามารถเซ็นยืนยันเบิก-คืนของได้ (นอกจาก admin)'}</p>
+      </div>
+    ` : ''}`;
+}
+
+// ============ STOCK MODAL HELPERS ============
+function _stockModalRoot(){
+  let r = document.getElementById('stockModalRoot');
+  if(!r){ r = document.createElement('div'); r.id='stockModalRoot'; document.body.appendChild(r); }
+  return r;
+}
+function closeStockModal(){ _stockModalRoot().innerHTML = ''; }
+function _stockOpen(html){
+  const r = _stockModalRoot();
+  r.innerHTML = `<div class="overlay show" style="display:flex" onclick="if(event.target===this)closeStockModal()">${html}</div>`;
+}
+function _stockTeamLabel(t,isLo){ return t==='marketing'?(isLo?'ການຕະຫຼາດ':'การตลาด') : t==='creator'?(isLo?'ຄຣີເອເຕີ':'ครีเอเตอร์') : (isLo?'ໃຊ້ຮ່ວມ':'ใช้ร่วม'); }
+function _stockItemName(itemId){ const it = stockItems.find(i=>i.id===itemId); return it ? it.name : '(unknown)'; }
+function _userName(uid){ const u = USERS.find(x=>x.id===uid); return u ? u.name : '?'; }
+function _userInit(uid){ const u = USERS.find(x=>x.id===uid); return u ? (u.init||u.name[0]) : '?'; }
+function _userColor(uid){ const u = USERS.find(x=>x.id===uid); return u ? (u.color||'#888') : '#888'; }
+
+async function _stockReadFileAsDataURL(file){
+  return new Promise((res, rej)=>{
+    const r = new FileReader();
+    r.onload = ()=> res(r.result);
+    r.onerror = ()=> rej(r.error);
+    r.readAsDataURL(file);
+  });
+}
+
+async function _stockUploadPhoto(file){
+  // Try drive upload first; fall back to base64 inline
+  try {
+    if(typeof driveServerStatus !== 'undefined' && driveServerStatus.connected){
+      const form = new FormData();
+      form.append('file', file, file.name);
+      // proxy uploads to env DRIVE_FOLDER_ID; not the stock folder yet — still useful for backup
+      const r = await fetch('/api/drive/proxy?op=upload', { method:'POST', body: form });
+      const j = await r.json();
+      if(j.ok && j.file && j.file.webViewLink) return { url: j.file.webViewLink, driveId: j.file.id, inline: false };
+    }
+  } catch(_){}
+  const dataUrl = await _stockReadFileAsDataURL(file);
+  return { url: dataUrl, inline: true };
+}
+
+// ============ CHECKOUT WIZARD ============
+function openStockCheckoutWizard(){
+  stockWizardStep = 1;
+  stockWizardData = {
+    team:'marketing', eventName:'', eventDate: new Date().toISOString().slice(0,10),
+    location:'', assignees:[], expectedReturnDate:'', items:[], notes:'', checkoutPhoto:''
+  };
+  _renderCheckoutWizard();
+}
+function _renderCheckoutWizard(){
+  const isLo = CURRENT_LANG==='lo';
+  const d = stockWizardData;
+  const stepHtml = stockWizardStep===1 ? _wizStep1(isLo) :
+                   stockWizardStep===2 ? _wizStep2(isLo) :
+                   stockWizardStep===3 ? _wizStep3(isLo) :
+                                         _wizStep4(isLo);
+  const stepsDots = [1,2,3,4].map(n => `<div class="stock-wiz-step ${n<stockWizardStep?'done':n===stockWizardStep?'active':''}"></div>`).join('');
+  const titles = isLo
+    ? ['ເລືອກທີມ','ຂໍ້ມູນກິດຈະກຳ','ເລືອກຂອງ','ຢືນຢັນ + ເຊັນ']
+    : ['เลือกทีม','ข้อมูลกิจกรรม','เลือกของ','ยืนยัน + เซ็น'];
+  _stockOpen(`
+    <div class="modal" style="width:min(640px,calc(100vw - 32px));max-height:90vh;display:flex;flex-direction:column">
+      <div class="modal-hd">
+        <div class="modal-title">${I.upload} ${isLo?'ເບີກຂອງອອກ':'เบิกของออก'} · ${isLo?'ຂັ້ນຕອນ':'ขั้นตอน'} ${stockWizardStep}/4 — ${titles[stockWizardStep-1]}</div>
+        <button class="modal-close" onclick="closeStockModal()">×</button>
+      </div>
+      <div class="modal-bd" style="overflow:auto;flex:1">
+        <div class="stock-wiz-steps">${stepsDots}</div>
+        ${stepHtml}
+      </div>
+      <div class="modal-ft">
+        ${stockWizardStep>1 ? `<button class="sm-btn-cancel" onclick="wizPrevStep()">← ${isLo?'ກັບ':'ย้อนกลับ'}</button>` : `<button class="sm-btn-cancel" onclick="closeStockModal()">${isLo?'ຍົກເລີກ':'ยกเลิก'}</button>`}
+        ${stockWizardStep<4
+          ? `<button class="btn-primary" onclick="wizNextStep()">${isLo?'ຕໍ່ໄປ':'ถัดไป'} →</button>`
+          : `<button class="btn-primary" style="background:linear-gradient(135deg,#10b981,#047857)" onclick="submitCheckout()">${I.check} ${isLo?'ຢືນຢັນເບີກ':'ยืนยันเบิก'}</button>`
+        }
+      </div>
+    </div>
+  `);
+  // bind wizard inputs
+  setTimeout(_bindWizardInputs, 30);
+}
+function _bindWizardInputs(){
+  ['wizEventName','wizEventDate','wizLocation','wizExpReturn','wizNotes'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.oninput = () => {
+      if(id==='wizEventName') stockWizardData.eventName = el.value;
+      if(id==='wizEventDate') stockWizardData.eventDate = el.value;
+      if(id==='wizLocation') stockWizardData.location = el.value;
+      if(id==='wizExpReturn') stockWizardData.expectedReturnDate = el.value;
+      if(id==='wizNotes') stockWizardData.notes = el.value;
+    };
+  });
+}
+function _wizStep1(isLo){
+  const d = stockWizardData;
+  const teams = [
+    {id:'marketing', icon:'📢', name: isLo?'ການຕະຫຼາດ':'การตลาด'},
+    {id:'creator',   icon:'🎬', name: isLo?'ຄຣີເອເຕີ':'ครีเอเตอร์'},
+    {id:'shared',    icon:'🤝', name: isLo?'ໃຊ້ຮ່ວມ':'ใช้ร่วม'},
+  ];
+  return `
+    <div class="stock-wiz-lbl">${isLo?'ທີມໃດກຳລັງເບີກ?':'ทีมไหนกำลังเบิก?'}</div>
+    <div class="stock-team-pick">
+      ${teams.map(t=>`
+        <div class="stock-team-pick-card ${d.team===t.id?'active':''}" onclick="stockWizardData.team='${t.id}'; _renderCheckoutWizard()">
+          <div class="stock-team-pick-icon">${t.icon}</div>
+          <div class="stock-team-pick-name">${t.name}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+function _wizStep2(isLo){
+  const d = stockWizardData;
+  const users = USERS.filter(u=>u.status!=='deleted');
+  return `
+    <div class="lot-fld">
+      <label class="stock-wiz-lbl">${isLo?'ຊື່ກິດຈະກຳ/ງານ':'ชื่อกิจกรรม/งาน'} <span style="color:#ef4444">*</span></label>
+      <input id="wizEventName" value="${escapeHtmlN(d.eventName||'')}" placeholder="${isLo?'ເຊັ່ນ: Live ຂາຍວັນທີ 5':'เช่น: Live ขายวันที่ 5'}"/>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="lot-fld">
+        <label class="stock-wiz-lbl">${isLo?'ວັນທີໃຊ້':'วันที่ใช้งาน'} <span style="color:#ef4444">*</span></label>
+        <input id="wizEventDate" type="date" value="${d.eventDate||''}"/>
+      </div>
+      <div class="lot-fld">
+        <label class="stock-wiz-lbl">${isLo?'ກຳນົດຄືນ':'กำหนดคืน'}</label>
+        <input id="wizExpReturn" type="date" value="${d.expectedReturnDate||''}"/>
+      </div>
+    </div>
+    <div class="lot-fld">
+      <label class="stock-wiz-lbl">${isLo?'ສະຖານທີ່':'สถานที่'}</label>
+      <input id="wizLocation" value="${escapeHtmlN(d.location||'')}" placeholder="${isLo?'ເຊັ່ນ: ສະຕູດິໂອ A':'เช่น: สตูดิโอ A'}"/>
+    </div>
+    <div class="lot-fld">
+      <label class="stock-wiz-lbl">${isLo?'ຜູ້ຮັບຜິດຊອບ':'ผู้รับผิดชอบ'} (${d.assignees.length})</label>
+      <div class="stock-assignee-grid">
+        ${users.map(u=>`
+          <div class="stock-assignee-pick ${d.assignees.includes(u.id)?'active':''}" onclick="wizToggleAssignee('${u.id}')">
+            <span class="stock-officer-av" style="background:${u.color||'#888'}">${escapeHtmlN(u.init||u.name[0])}</span>
+            <span style="font-size:12.5px">${escapeHtmlN(u.name)}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+function wizToggleAssignee(uid){
+  const d = stockWizardData;
+  if(d.assignees.includes(uid)) d.assignees = d.assignees.filter(x=>x!==uid);
+  else d.assignees.push(uid);
+  _renderCheckoutWizard();
+}
+function _wizStep3(isLo){
+  const d = stockWizardData;
+  const team = d.team;
+  recalcStockAvailable();
+  const available = stockItems.filter(it => !it.deleted && (it.team===team || it.team==='shared' || team==='shared'));
+  return `
+    <div class="stock-wiz-lbl">${isLo?'ເລືອກຂອງທີ່ຈະເບີກ':'เลือกของที่จะเบิก'} <span style="color:var(--t3);font-weight:500">(${available.length} ${isLo?'ລາຍການ':'รายการ'})</span></div>
+    ${available.length===0 ? `<div class="empty-state">${isLo?'ບໍ່ມີຂອງໃນທີມນີ້':'ไม่มีของในทีมนี้ — ไปที่แท็บ "จัดการ" เพื่อเพิ่ม'}</div>` :
+    `<div style="max-height:340px;overflow:auto;padding-right:4px">
+      ${available.map(it=>{
+        const picked = d.items.find(x=>x.itemId===it.id);
+        const qty = picked ? picked.qty : 0;
+        const avail = it.availableQty != null ? it.availableQty : it.totalQty;
+        return `
+          <div class="stock-pick-item-row">
+            <span class="stock-item-thumb" style="width:38px;height:38px;flex:0 0 38px;aspect-ratio:1">${it.photo?`<img src="${it.photo}">`:I.folder}</span>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:700;color:var(--t1)">${escapeHtmlN(it.name)}</div>
+              <div style="font-size:11px;color:var(--t3)">${isLo?'ມີ':'มี'} ${avail}/${it.totalQty} · ${escapeHtmlN(it.unit||'ชิ้น')}</div>
+            </div>
+            <input type="number" min="0" max="${avail}" value="${qty}" onchange="wizSetItemQty('${it.id}', this.value, ${avail})"/>
+          </div>
+        `;
+      }).join('')}
+    </div>`}
+    <div style="margin-top:12px;padding:10px 12px;background:var(--p50);border-radius:10px;font-size:13px;color:var(--t1)">
+      <b>${isLo?'ເລືອກແລ້ວ':'เลือกแล้ว'}:</b> ${d.items.reduce((s,i)=>s+i.qty,0)} ${isLo?'ຊິ້ນ':'ชิ้น'}
+      (${d.items.length} ${isLo?'ປະເພດ':'รายการ'})
+    </div>
+  `;
+}
+function wizSetItemQty(itemId, qty, max){
+  qty = Math.max(0, Math.min(Number(qty)||0, max));
+  const d = stockWizardData;
+  d.items = d.items.filter(x=>x.itemId!==itemId);
+  if(qty>0) d.items.push({ itemId, qty, returnedQty:0, damagedQty:0, lostQty:0, conditionAtCheckout:'good' });
+  // don't re-render on every keystroke, just update summary
+  const sumDiv = document.querySelector('.modal-bd .stock-wiz-lbl + div + div');
+  // safer: just rerender
+  _renderCheckoutWizard();
+}
+function _wizStep4(isLo){
+  const d = stockWizardData;
+  const officers = USERS.filter(u => (stockSettings.officerIds||[]).includes(u.id) || u.role==='admin');
+  return `
+    <div style="background:var(--bg-soft);border-radius:12px;padding:14px;margin-bottom:14px">
+      <div style="font-size:14px;font-weight:800;color:var(--t1);margin-bottom:8px">${escapeHtmlN(d.eventName||'(ไม่ระบุชื่อ)')}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:12.5px;color:var(--t2)">
+        <div><b style="color:var(--t1)">${isLo?'ທີມ':'ทีม'}:</b> ${_stockTeamLabel(d.team,isLo)}</div>
+        <div><b style="color:var(--t1)">${isLo?'ວັນທີ':'วันที่'}:</b> ${d.eventDate||'-'}</div>
+        <div><b style="color:var(--t1)">${isLo?'ສະຖານທີ່':'สถานที่'}:</b> ${escapeHtmlN(d.location||'-')}</div>
+        <div><b style="color:var(--t1)">${isLo?'ກຳນົດຄືນ':'กำหนดคืน'}:</b> ${d.expectedReturnDate||'-'}</div>
+        <div style="grid-column:1/-1"><b style="color:var(--t1)">${isLo?'ຜູ້ຮັບຜິດຊອບ':'ผู้รับผิดชอบ'}:</b> ${d.assignees.map(_userName).join(', ')||'-'}</div>
+      </div>
+    </div>
+    <div class="stock-wiz-lbl">${isLo?'ລາຍການຂອງ':'รายการของ'} (${d.items.length})</div>
+    ${d.items.length===0 ? `<div class="empty-state">${isLo?'ຍັງບໍ່ໄດ້ເລືອກຂອງ':'ยังไม่ได้เลือกของ'}</div>` :
+    `<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px">
+      ${d.items.map((x,i)=>`
+        <div style="display:flex;justify-content:space-between;padding:8px 12px;border-bottom:${i===d.items.length-1?'none':'1px solid var(--border)'};font-size:13px">
+          <span>${escapeHtmlN(_stockItemName(x.itemId))}</span>
+          <b>×${x.qty}</b>
+        </div>
+      `).join('')}
+    </div>`}
+    <div class="lot-fld">
+      <label class="stock-wiz-lbl">${isLo?'ໝາຍເຫດ':'หมายเหตุ'}</label>
+      <textarea id="wizNotes" rows="2" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--t1);font-family:inherit;font-size:13px;resize:vertical">${escapeHtmlN(d.notes||'')}</textarea>
+    </div>
+    <div class="lot-fld">
+      <label class="stock-wiz-lbl">${isLo?'ຮູບຖ່າຍສະພາບກ່ອນເບີກ':'รูปถ่ายสภาพก่อนเบิก'}</label>
+      <label class="stock-photo-drop" for="wizPhotoInput">
+        ${I.camera}<br><span style="font-size:12.5px;margin-top:6px;display:block">${isLo?'ກົດເພື່ອຖ່າຍ/ອັບໂຫລດ':'กดเพื่อถ่าย/อัปโหลด'}</span>
+      </label>
+      <input id="wizPhotoInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="wizUploadPhoto(this.files[0])"/>
+      ${d.checkoutPhoto ? `<div class="stock-photo-prev"><img src="${d.checkoutPhoto}"></div>` : ''}
+    </div>
+    <div class="lot-fld">
+      <label class="stock-wiz-lbl">${isLo?'Officer ກວດສອບ':'Officer ตรวจสอบ'}</label>
+      <select id="wizOfficer" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:9px;background:var(--bg);color:var(--t1);font-size:13px" onchange="stockWizardData.officerUserId=this.value">
+        <option value="">— ${isLo?'ເລືອກ':'เลือก'} —</option>
+        ${officers.map(u=>`<option value="${u.id}" ${d.officerUserId===u.id?'selected':''}>${escapeHtmlN(u.name)} ${u.role==='admin'?'(Admin)':''}</option>`).join('')}
+      </select>
+    </div>
+  `;
+}
+async function wizUploadPhoto(file){
+  if(!file) return;
+  const res = await _stockUploadPhoto(file);
+  stockWizardData.checkoutPhoto = res.url;
+  _renderCheckoutWizard();
+}
+function wizPrevStep(){ if(stockWizardStep>1){ stockWizardStep--; _renderCheckoutWizard(); } }
+function wizNextStep(){
+  const isLo = CURRENT_LANG==='lo';
+  const d = stockWizardData;
+  if(stockWizardStep===2){
+    if(!d.eventName?.trim()){ alert(isLo?'ກະລຸນາໃສ່ຊື່ກິດຈະກຳ':'กรุณาใส่ชื่อกิจกรรม'); return; }
+    if(!d.eventDate){ alert(isLo?'ກະລຸນາເລືອກວັນທີ':'กรุณาเลือกวันที่'); return; }
+  }
+  if(stockWizardStep===3){
+    if(d.items.length===0){ alert(isLo?'ກະລຸນາເລືອກຂອງຢ່າງໜ້ອຍ 1':'กรุณาเลือกของอย่างน้อย 1 ชิ้น'); return; }
+  }
+  if(stockWizardStep<4){ stockWizardStep++; _renderCheckoutWizard(); }
+}
+function submitCheckout(){
+  const isLo = CURRENT_LANG==='lo';
+  const d = stockWizardData;
+  if(!d.officerUserId){ alert(isLo?'ກະລຸນາເລືອກ Officer':'กรุณาเลือก Officer ตรวจสอบ'); return; }
+  const ck = {
+    id: stockNextCkId(),
+    team: d.team,
+    eventName: d.eventName,
+    eventDate: d.eventDate,
+    location: d.location,
+    assignees: d.assignees.slice(),
+    expectedReturnDate: d.expectedReturnDate,
+    items: d.items.map(x => ({...x})),
+    notes: d.notes,
+    checkoutPhoto: d.checkoutPhoto,
+    checkoutOfficerId: d.officerUserId,
+    checkoutAt: new Date().toISOString(),
+    checkoutBy: currentUser.id,
+    returnedAt: null,
+    checkinNotes: '',
+    checkinPhotos: [],
+    checkinOfficerId: null,
+    status: 'checked_out',
+  };
+  stockCheckouts.push(ck);
+  recalcStockAvailable();
+  saveAll();
+  closeStockModal();
+  rerender();
+  setTimeout(()=> {
+    if(confirm(isLo?'ສຳເລັດ! ພິມໃບເບີກບໍ?':'เบิกสำเร็จ! พิมพ์ใบเบิกเลยไหม?')) printCheckoutSlip(ck.id, 'checkout');
+  }, 100);
+}
+
+// ============ CHECKOUT DETAIL ============
+function openCheckoutDetail(id){
+  const c = stockCheckouts.find(x=>x.id===id);
+  if(!c) return;
+  const isLo = CURRENT_LANG==='lo';
+  const status = _stockStatus(c);
+  _stockOpen(`
+    <div class="modal" style="width:min(680px,calc(100vw - 32px));max-height:90vh;display:flex;flex-direction:column">
+      <div class="modal-hd">
+        <div class="modal-title">${c.id} · ${escapeHtmlN(c.eventName||'')}</div>
+        <button class="modal-close" onclick="closeStockModal()">×</button>
+      </div>
+      <div class="modal-bd" style="overflow:auto;flex:1">
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px">
+          <span class="stock-status-pill stock-status-${status}">${_stockStatusLabel(status)}</span>
+          <span class="stock-team-chip stock-team-${c.team}">${_stockTeamLabel(c.team,isLo)}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:13px;color:var(--t2);margin-bottom:16px">
+          <div><b style="color:var(--t1)">${isLo?'ວັນທີໃຊ້':'วันที่ใช้งาน'}:</b> ${c.eventDate||'-'}</div>
+          <div><b style="color:var(--t1)">${isLo?'ກຳນົດຄືນ':'กำหนดคืน'}:</b> ${c.expectedReturnDate||'-'}</div>
+          <div><b style="color:var(--t1)">${isLo?'ສະຖານທີ່':'สถานที่'}:</b> ${escapeHtmlN(c.location||'-')}</div>
+          <div><b style="color:var(--t1)">${isLo?'ເບີກໂດຍ':'เบิกโดย'}:</b> ${escapeHtmlN(_userName(c.checkoutBy))}</div>
+          <div style="grid-column:1/-1"><b style="color:var(--t1)">${isLo?'ຜູ້ຮັບຜິດຊອບ':'ผู้รับผิดชอบ'}:</b> ${(c.assignees||[]).map(_userName).join(', ')||'-'}</div>
+          <div><b style="color:var(--t1)">Officer ${isLo?'ເບີກ':'เบิก'}:</b> ${escapeHtmlN(_userName(c.checkoutOfficerId))}</div>
+          ${c.returnedAt ? `<div><b style="color:var(--t1)">Officer ${isLo?'ຄືນ':'คืน'}:</b> ${escapeHtmlN(_userName(c.checkinOfficerId))}</div>` : ''}
+        </div>
+        <div style="font-size:14px;font-weight:800;color:var(--t1);margin-bottom:8px">${isLo?'ລາຍການ':'รายการของ'}</div>
+        <table style="width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:14px">
+          <thead><tr style="background:var(--bg-soft)">
+            <th style="padding:8px;text-align:left;border:1px solid var(--border)">${isLo?'ຂອງ':'ของ'}</th>
+            <th style="padding:8px;border:1px solid var(--border)">${isLo?'ເບີກ':'เบิก'}</th>
+            <th style="padding:8px;border:1px solid var(--border)">${isLo?'ຄືນ':'คืน'}</th>
+            <th style="padding:8px;border:1px solid var(--border)">${isLo?'ເສຍ':'เสียหาย'}</th>
+            <th style="padding:8px;border:1px solid var(--border)">${isLo?'ຫາຍ':'หาย'}</th>
+          </tr></thead>
+          <tbody>
+            ${c.items.map(x=>`
+              <tr>
+                <td style="padding:6px 8px;border:1px solid var(--border)">${escapeHtmlN(_stockItemName(x.itemId))}</td>
+                <td style="padding:6px 8px;border:1px solid var(--border);text-align:center"><b>${x.qty}</b></td>
+                <td style="padding:6px 8px;border:1px solid var(--border);text-align:center">${x.returnedQty||0}</td>
+                <td style="padding:6px 8px;border:1px solid var(--border);text-align:center;color:#d97706">${x.damagedQty||0}</td>
+                <td style="padding:6px 8px;border:1px solid var(--border);text-align:center;color:#dc2626">${x.lostQty||0}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        ${c.notes ? `<div style="font-size:12.5px;color:var(--t2);background:var(--bg-soft);padding:10px;border-radius:8px;margin-bottom:10px"><b>${isLo?'ໝາຍເຫດ':'หมายเหตุ'}:</b> ${escapeHtmlN(c.notes)}</div>` : ''}
+        ${c.checkoutPhoto ? `<div style="margin-bottom:10px"><div style="font-size:12.5px;font-weight:700;margin-bottom:5px">${isLo?'ຮູບກ່ອນເບີກ':'รูปก่อนเบิก'}:</div><img src="${c.checkoutPhoto}" style="max-width:240px;border-radius:8px;border:1px solid var(--border)"></div>` : ''}
+        ${(c.checkinPhotos||[]).length ? `<div><div style="font-size:12.5px;font-weight:700;margin-bottom:5px">${isLo?'ຮູບຕອນຄືນ':'รูปตอนคืน'}:</div><div style="display:flex;flex-wrap:wrap;gap:6px">${c.checkinPhotos.map(p=>`<img src="${p}" style="width:120px;height:120px;object-fit:cover;border-radius:8px;border:1px solid var(--border)">`).join('')}</div></div>` : ''}
+      </div>
+      <div class="modal-ft">
+        <button class="sm-btn-cancel" onclick="closeStockModal()">${isLo?'ປິດ':'ปิด'}</button>
+        <button class="btn-ghost" onclick="printCheckoutSlip('${c.id}','checkout')">${I.printer} ${isLo?'ໃບເບີກ':'ใบเบิก'}</button>
+        ${c.status==='returned'
+          ? `<button class="btn-ghost" onclick="printCheckoutSlip('${c.id}','return')">${I.printer} ${isLo?'ໃບຄືນ':'ใบคืน'}</button>`
+          : `<button class="btn-primary" style="background:linear-gradient(135deg,#10b981,#047857)" onclick="closeStockModal();openCheckinFlow('${c.id}')">${I.refresh} ${isLo?'ບັນທຶກການຄືນ':'บันทึกการคืน'}</button>`
+        }
+      </div>
+    </div>
+  `);
+}
+
+// ============ CHECK-IN FLOW ============
+let _checkinDraft = null;
+function openCheckinFlow(id){
+  const c = stockCheckouts.find(x=>x.id===id);
+  if(!c) return;
+  const isLo = CURRENT_LANG==='lo';
+  _checkinDraft = {
+    items: c.items.map(x => ({
+      itemId: x.itemId,
+      qty: x.qty,
+      returnedQty: x.returnedQty || x.qty,
+      damagedQty: x.damagedQty || 0,
+      lostQty: x.lostQty || 0,
+    })),
+    notes: c.checkinNotes || '',
+    photos: (c.checkinPhotos||[]).slice(),
+    officerUserId: '',
+    checkoutId: id,
+  };
+  _renderCheckinModal();
+}
+function _renderCheckinModal(){
+  const isLo = CURRENT_LANG==='lo';
+  const d = _checkinDraft;
+  if(!d) return;
+  const officers = USERS.filter(u => (stockSettings.officerIds||[]).includes(u.id) || u.role==='admin');
+  _stockOpen(`
+    <div class="modal" style="width:min(680px,calc(100vw - 32px));max-height:90vh;display:flex;flex-direction:column">
+      <div class="modal-hd">
+        <div class="modal-title">${I.refresh} ${isLo?'ບັນທຶກການຄືນ':'บันทึกการคืน'} · ${d.checkoutId}</div>
+        <button class="modal-close" onclick="closeStockModal()">×</button>
+      </div>
+      <div class="modal-bd" style="overflow:auto;flex:1">
+        <div style="font-size:12.5px;color:var(--t2);background:var(--p50);padding:10px 12px;border-radius:8px;margin-bottom:14px">
+          ${isLo?'ກວດສອບແຕ່ລະຊິ້ນ ໃສ່ຈຳນວນຄືນ/ເສຍ/ຫາຍ':'ตรวจสอบของแต่ละชิ้น ใส่จำนวนที่คืน/เสียหาย/หาย'}
+        </div>
+        ${d.items.map(x=>`
+          <div style="border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px">
+            <div style="font-size:13px;font-weight:700;margin-bottom:8px">${escapeHtmlN(_stockItemName(x.itemId))} <span style="color:var(--t3);font-weight:500;font-size:11.5px">${isLo?'ເບີກ':'เบิก'} ${x.qty}</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px">
+              <label>${isLo?'ຄືນດີ':'คืนสภาพดี'}<input type="number" min="0" max="${x.qty}" value="${x.returnedQty}" onchange="_checkinDraft.items[${d.items.indexOf(x)}].returnedQty=Math.max(0,Math.min(${x.qty},Number(this.value)||0));_renderCheckinModal()" style="width:100%;margin-top:3px;padding:5px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--t1);text-align:center"/></label>
+              <label style="color:#d97706">${isLo?'ເສຍ':'เสียหาย'}<input type="number" min="0" max="${x.qty}" value="${x.damagedQty}" onchange="_checkinDraft.items[${d.items.indexOf(x)}].damagedQty=Math.max(0,Math.min(${x.qty},Number(this.value)||0));_renderCheckinModal()" style="width:100%;margin-top:3px;padding:5px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--t1);text-align:center"/></label>
+              <label style="color:#dc2626">${isLo?'ຫາຍ':'หาย'}<input type="number" min="0" max="${x.qty}" value="${x.lostQty}" onchange="_checkinDraft.items[${d.items.indexOf(x)}].lostQty=Math.max(0,Math.min(${x.qty},Number(this.value)||0));_renderCheckinModal()" style="width:100%;margin-top:3px;padding:5px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--t1);text-align:center"/></label>
+            </div>
+            ${(x.returnedQty + x.damagedQty + x.lostQty) !== x.qty ? `<div style="font-size:11px;color:#dc2626;margin-top:5px">⚠ ${isLo?'ຈຳນວນບໍ່ຄົບ':'จำนวนไม่ครบ'} (${x.returnedQty + x.damagedQty + x.lostQty}/${x.qty})</div>` : ''}
+          </div>
+        `).join('')}
+        <div class="lot-fld">
+          <label class="stock-wiz-lbl">${isLo?'ໝາຍເຫດ':'หมายเหตุ'}</label>
+          <textarea rows="2" oninput="_checkinDraft.notes=this.value" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--t1);font-family:inherit;font-size:13px;resize:vertical">${escapeHtmlN(d.notes)}</textarea>
+        </div>
+        <div class="lot-fld">
+          <label class="stock-wiz-lbl">${isLo?'ຮູບສະພາບເສຍຫາຍ (ຖ້າມີ)':'รูปสภาพ/ความเสียหาย (ถ้ามี)'}</label>
+          <label class="stock-photo-drop" for="checkinPhotoInput">${I.camera}<br><span style="font-size:12.5px;margin-top:6px;display:block">${isLo?'ກົດເພື່ອເພີ່ມ':'กดเพื่อเพิ่ม'}</span></label>
+          <input id="checkinPhotoInput" type="file" accept="image/*" capture="environment" multiple style="display:none" onchange="checkinAddPhotos(this.files)"/>
+          ${d.photos.length ? `<div class="stock-photo-prev">${d.photos.map((p,i)=>`<img src="${p}" onclick="if(confirm('ลบรูปนี้?')){_checkinDraft.photos.splice(${i},1);_renderCheckinModal()}">`).join('')}</div>` : ''}
+        </div>
+        <div class="lot-fld">
+          <label class="stock-wiz-lbl">Officer ${isLo?'ກວດສອບ':'ตรวจสอบ'}</label>
+          <select onchange="_checkinDraft.officerUserId=this.value" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:9px;background:var(--bg);color:var(--t1);font-size:13px">
+            <option value="">— ${isLo?'ເລືອກ':'เลือก'} —</option>
+            ${officers.map(u=>`<option value="${u.id}" ${d.officerUserId===u.id?'selected':''}>${escapeHtmlN(u.name)} ${u.role==='admin'?'(Admin)':''}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="modal-ft">
+        <button class="sm-btn-cancel" onclick="closeStockModal()">${isLo?'ຍົກເລີກ':'ยกเลิก'}</button>
+        <button class="btn-primary" style="background:linear-gradient(135deg,#10b981,#047857)" onclick="submitCheckin()">${I.check} ${isLo?'ຢືນຢັນຄືນ':'ยืนยันคืน'}</button>
+      </div>
+    </div>
+  `);
+}
+async function checkinAddPhotos(files){
+  for(const f of Array.from(files)){
+    const res = await _stockUploadPhoto(f);
+    _checkinDraft.photos.push(res.url);
+  }
+  _renderCheckinModal();
+}
+function submitCheckin(){
+  const isLo = CURRENT_LANG==='lo';
+  const d = _checkinDraft;
+  if(!d.officerUserId){ alert(isLo?'ກະລຸນາເລືອກ Officer':'กรุณาเลือก Officer'); return; }
+  const c = stockCheckouts.find(x=>x.id===d.checkoutId);
+  if(!c) return;
+  c.items = c.items.map(orig => {
+    const upd = d.items.find(x=>x.itemId===orig.itemId);
+    return upd ? {...orig, returnedQty: upd.returnedQty, damagedQty: upd.damagedQty, lostQty: upd.lostQty} : orig;
+  });
+  c.checkinNotes = d.notes;
+  c.checkinPhotos = d.photos.slice();
+  c.checkinOfficerId = d.officerUserId;
+  c.returnedAt = new Date().toISOString();
+  const allReturned = c.items.every(x => (x.returnedQty||0) + (x.damagedQty||0) + (x.lostQty||0) >= x.qty);
+  const anyLost = c.items.some(x => (x.lostQty||0) > 0);
+  c.status = anyLost && !allReturned ? 'lost' : (!allReturned ? 'partial' : 'returned');
+  recalcStockAvailable();
+  _checkinDraft = null;
+  saveAll();
+  closeStockModal();
+  rerender();
+  setTimeout(()=> {
+    if(confirm(isLo?'ບັນທຶກສຳເລັດ! ພິມໃບຄືນບໍ?':'บันทึกสำเร็จ! พิมพ์ใบคืนเลยไหม?')) printCheckoutSlip(c.id, 'return');
+  }, 100);
+}
+
+// ============ ITEM EDITOR ============
+function openItemEditor(id){
+  if(!canManageStock()) return;
+  const isLo = CURRENT_LANG==='lo';
+  const item = id ? stockItems.find(x=>x.id===id) : null;
+  const isEdit = !!item;
+  const draft = item ? {...item} : { name:'', team:'shared', unit:'ชิ้น', totalQty:1, photo:'', note:'' };
+  _stockOpen(`
+    <div class="modal" style="width:min(520px,calc(100vw - 32px))">
+      <div class="modal-hd">
+        <div class="modal-title">${isEdit?(isLo?'ແກ້ໄຂຂອງ':'แก้ไขของ'):(isLo?'ເພີ່ມຂອງໃໝ່':'เพิ่มของใหม่')}</div>
+        <button class="modal-close" onclick="closeStockModal()">×</button>
+      </div>
+      <div class="modal-bd">
+        <div class="lot-fld">
+          <label class="stock-wiz-lbl">${isLo?'ຊື່ຂອງ':'ชื่อของ'} <span style="color:#ef4444">*</span></label>
+          <input id="itemName" value="${escapeHtmlN(draft.name)}"/>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+          <div class="lot-fld">
+            <label class="stock-wiz-lbl">${isLo?'ທີມ':'ทีม'}</label>
+            <select id="itemTeam" style="width:100%;padding:9px 11px;border:1px solid var(--border);border-radius:9px;background:var(--bg);color:var(--t1);font-size:13px">
+              <option value="marketing" ${draft.team==='marketing'?'selected':''}>${isLo?'ການຕະຫຼາດ':'การตลาด'}</option>
+              <option value="creator" ${draft.team==='creator'?'selected':''}>${isLo?'ຄຣີເອເຕີ':'ครีเอเตอร์'}</option>
+              <option value="shared" ${draft.team==='shared'?'selected':''}>${isLo?'ໃຊ້ຮ່ວມ':'ใช้ร่วม'}</option>
+            </select>
+          </div>
+          <div class="lot-fld">
+            <label class="stock-wiz-lbl">${isLo?'ໜ່ວຍ':'หน่วย'}</label>
+            <input id="itemUnit" value="${escapeHtmlN(draft.unit||'ชิ้น')}"/>
+          </div>
+          <div class="lot-fld">
+            <label class="stock-wiz-lbl">${isLo?'ຈຳນວນ':'จำนวน'} <span style="color:#ef4444">*</span></label>
+            <input id="itemQty" type="number" min="1" value="${draft.totalQty||1}"/>
+          </div>
+        </div>
+        <div class="lot-fld">
+          <label class="stock-wiz-lbl">${isLo?'ຮູບ':'รูปภาพ'}</label>
+          <div style="display:flex;gap:10px;align-items:center">
+            <div class="stock-item-thumb" id="itemPhotoPrev" style="width:72px;height:72px;flex:0 0 72px;aspect-ratio:1">${draft.photo?`<img src="${draft.photo}">`:I.folder}</div>
+            <label class="btn-ghost" style="cursor:pointer">${I.upload} ${isLo?'ອັບໂຫລດ':'อัปโหลด'}<input type="file" accept="image/*" style="display:none" onchange="itemEditorUploadPhoto(this.files[0])"/></label>
+          </div>
+        </div>
+        <div class="lot-fld">
+          <label class="stock-wiz-lbl">${isLo?'ໝາຍເຫດ':'หมายเหตุ'}</label>
+          <input id="itemNote" value="${escapeHtmlN(draft.note||'')}"/>
+        </div>
+      </div>
+      <div class="modal-ft">
+        <button class="sm-btn-cancel" onclick="closeStockModal()">${isLo?'ຍົກເລີກ':'ยกเลิก'}</button>
+        <button class="btn-primary" onclick="saveStockItem('${id||''}')">${isLo?'ບັນທຶກ':'บันทึก'}</button>
+      </div>
+    </div>
+  `);
+  window._itemDraftPhoto = draft.photo || '';
+}
+async function itemEditorUploadPhoto(file){
+  if(!file) return;
+  const res = await _stockUploadPhoto(file);
+  window._itemDraftPhoto = res.url;
+  const prev = document.getElementById('itemPhotoPrev');
+  if(prev) prev.innerHTML = `<img src="${res.url}">`;
+}
+function saveStockItem(id){
+  const isLo = CURRENT_LANG==='lo';
+  const name = document.getElementById('itemName').value.trim();
+  if(!name){ alert(isLo?'ກະລຸນາໃສ່ຊື່':'กรุณาใส่ชื่อ'); return; }
+  const data = {
+    name,
+    team: document.getElementById('itemTeam').value,
+    unit: document.getElementById('itemUnit').value.trim() || 'ชิ้น',
+    totalQty: Math.max(1, Number(document.getElementById('itemQty').value)||1),
+    photo: window._itemDraftPhoto || '',
+    note: document.getElementById('itemNote').value.trim(),
+  };
+  if(id){
+    const it = stockItems.find(x=>x.id===id);
+    if(it) Object.assign(it, data);
+  } else {
+    stockItems.push({ id: 'item-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5), ...data, availableQty: data.totalQty, createdAt: new Date().toISOString() });
+  }
+  recalcStockAvailable();
+  saveAll();
+  closeStockModal();
+  rerender();
+}
+function deleteStockItem(id){
+  const isLo = CURRENT_LANG==='lo';
+  if(!canManageStock()) return;
+  const it = stockItems.find(x=>x.id===id);
+  if(!it) return;
+  const inUse = stockCheckouts.some(c => c.status !== 'returned' && c.items.some(x=>x.itemId===id));
+  if(inUse){ alert(isLo?'ມີການເບີກຄ້າງຢູ່ ບໍ່ສາມາດລຶບໄດ້':'ของชิ้นนี้ยังถูกเบิกอยู่ ลบไม่ได้'); return; }
+  if(!confirm((isLo?'ລຶບ ':'ลบ ')+'"'+it.name+'" ?')) return;
+  stockItems = stockItems.filter(x=>x.id!==id);
+  saveAll();
+  rerender();
+}
+
+// ============ OFFICER PICKER ============
+function openOfficerPicker(){
+  if(currentUser.role !== 'admin') return;
+  const isLo = CURRENT_LANG==='lo';
+  const cur = stockSettings.officerIds || [];
+  const users = USERS.filter(u=>u.status!=='deleted' && u.role!=='admin');
+  _stockOpen(`
+    <div class="modal" style="width:min(440px,calc(100vw - 32px))">
+      <div class="modal-hd">
+        <div class="modal-title">${I.users} ${isLo?'ຕັ້ງຄ່າ Officer':'ตั้งค่า Officer'}</div>
+        <button class="modal-close" onclick="closeStockModal()">×</button>
+      </div>
+      <div class="modal-bd">
+        <p style="font-size:12.5px;color:var(--t2);margin-bottom:12px">${isLo?'ເລືອກຜູ້ໃຊ້ທີ່ສາມາດກວດເບີກ-ຄືນຂອງໄດ້':'เลือกผู้ใช้ที่สามารถตรวจเบิก-คืนของได้ (Admin ตรวจได้เสมอ)'}</p>
+        <div class="stock-assignee-grid" style="max-height:300px">
+          ${users.map(u=>`
+            <div class="stock-assignee-pick ${cur.includes(u.id)?'active':''}" onclick="this.classList.toggle('active');this.dataset.uid='${u.id}'">
+              <span class="stock-officer-av" style="background:${u.color||'#888'}">${escapeHtmlN(u.init||u.name[0])}</span>
+              <span style="font-size:12.5px">${escapeHtmlN(u.name)}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="modal-ft">
+        <button class="sm-btn-cancel" onclick="closeStockModal()">${isLo?'ຍົກເລີກ':'ยกเลิก'}</button>
+        <button class="btn-primary" onclick="saveOfficerPicker()">${isLo?'ບັນທຶກ':'บันทึก'}</button>
+      </div>
+    </div>
+  `);
+}
+function saveOfficerPicker(){
+  const picks = Array.from(document.querySelectorAll('.stock-assignee-pick.active')).map(el=>el.dataset.uid).filter(Boolean);
+  // For currently-active ones whose uid wasn't set (already active on open), keep them from DOM data attr or fall back to USERS by index
+  // Simpler: use checked state from DOM - we already set dataset.uid above. For pre-active ones with no toggle, dataset.uid may be undefined; gather from text matches:
+  const all = Array.from(document.querySelectorAll('.stock-assignee-pick'));
+  const result = [];
+  all.forEach((el, idx) => {
+    if(!el.classList.contains('active')) return;
+    if(el.dataset.uid){ result.push(el.dataset.uid); return; }
+    // pre-active without dataset — find by USER name in the span
+    const nameSpan = el.querySelector('span:last-child');
+    const nm = nameSpan ? nameSpan.textContent.trim() : '';
+    const u = USERS.find(x=>x.name===nm);
+    if(u) result.push(u.id);
+  });
+  stockSettings.officerIds = Array.from(new Set(result));
+  saveAll();
+  closeStockModal();
+  rerender();
+}
+
+// ============ PDF SLIP ============
+function printCheckoutSlip(id, type){
+  const c = stockCheckouts.find(x=>x.id===id);
+  if(!c) return;
+  const isReturn = type==='return';
+  const dateNow = new Date().toLocaleDateString('th-TH', { year:'numeric', month:'long', day:'numeric' });
+  const html = `
+    <!DOCTYPE html><html><head><meta charset="utf-8"><title>${isReturn?'ใบคืนของ':'ใบเบิกของ'} ${c.id}</title>
+    <style>
+      body{font-family:'Sarabun','Tahoma',sans-serif;color:#111;margin:0;padding:30px;background:#fff}
+      .slip{max-width:780px;margin:0 auto}
+      .slip-logo{display:block;margin:0 auto 6px;height:60px}
+      h1{font-size:22px;margin:8px 0;font-weight:800;text-align:center}
+      .sub{text-align:center;color:#555;font-size:13px;margin-bottom:18px}
+      h2{font-size:14px;margin:18px 0 6px;font-weight:700;border-bottom:1px solid #ddd;padding-bottom:4px}
+      .meta{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;font-size:13px;margin-bottom:12px}
+      .meta b{color:#555;font-weight:600}
+      table{width:100%;border-collapse:collapse;font-size:12.5px}
+      th,td{border:1px solid #ccc;padding:6px 8px;text-align:left}
+      th{background:#f4f4f5;font-weight:700;font-size:12px}
+      .num{text-align:center}
+      .sign{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:40px}
+      .sign-line{border-top:1px solid #444;margin:60px 20px 6px}
+      .sign-box{text-align:center;font-size:12.5px}
+      .photo{max-width:200px;margin-top:8px;border:1px solid #ddd;border-radius:6px}
+    </style></head><body><div class="slip">
+      <img class="slip-logo" src="${STOCK_LOGO_URL}" onerror="this.style.display='none'">
+      <h1>${isReturn?'ใบคืนของ / Return Slip':'ใบเบิกของ / Checkout Slip'}</h1>
+      <div class="sub">เลขที่: <b>${c.id}</b> · พิมพ์เมื่อ ${dateNow}</div>
+      <h2>ข้อมูลกิจกรรม</h2>
+      <div class="meta">
+        <div><b>ทีม:</b> ${_stockTeamLabel(c.team,false)}</div>
+        <div><b>วันที่ใช้งาน:</b> ${c.eventDate||'-'}</div>
+        <div><b>ชื่อกิจกรรม:</b> ${escapeHtmlN(c.eventName||'-')}</div>
+        <div><b>กำหนดคืน:</b> ${c.expectedReturnDate||'-'}</div>
+        <div><b>สถานที่:</b> ${escapeHtmlN(c.location||'-')}</div>
+        <div><b>${isReturn?'วันที่คืน':'วันที่เบิก'}:</b> ${(isReturn?c.returnedAt:c.checkoutAt||'').slice(0,10)||'-'}</div>
+        <div style="grid-column:1/-1"><b>ผู้รับผิดชอบ:</b> ${(c.assignees||[]).map(_userName).join(', ')||'-'}</div>
+      </div>
+      <h2>รายการของ</h2>
+      <table><thead><tr>
+        <th>#</th><th>ชื่อของ</th><th class="num">หน่วย</th><th class="num">เบิก</th>
+        ${isReturn?'<th class="num">คืน</th><th class="num">เสียหาย</th><th class="num">หาย</th>':''}
+      </tr></thead><tbody>
+        ${c.items.map((x,i)=>{
+          const it = stockItems.find(s=>s.id===x.itemId);
+          return `<tr>
+            <td class="num">${i+1}</td>
+            <td>${escapeHtmlN(_stockItemName(x.itemId))}</td>
+            <td class="num">${escapeHtmlN(it?.unit||'ชิ้น')}</td>
+            <td class="num"><b>${x.qty}</b></td>
+            ${isReturn?`<td class="num">${x.returnedQty||0}</td><td class="num">${x.damagedQty||0}</td><td class="num">${x.lostQty||0}</td>`:''}
+          </tr>`;
+        }).join('')}
+      </tbody></table>
+      ${c.notes?`<h2>หมายเหตุ</h2><div style="font-size:12.5px">${escapeHtmlN(c.notes)}</div>`:''}
+      ${isReturn && c.checkinNotes?`<h2>หมายเหตุการคืน</h2><div style="font-size:12.5px">${escapeHtmlN(c.checkinNotes)}</div>`:''}
+      ${!isReturn && c.checkoutPhoto?`<h2>รูปสภาพก่อนเบิก</h2><img class="photo" src="${c.checkoutPhoto}">`:''}
+      ${isReturn && (c.checkinPhotos||[]).length?`<h2>รูปสภาพตอนคืน</h2><div>${c.checkinPhotos.map(p=>`<img class="photo" src="${p}">`).join('')}</div>`:''}
+      <div class="sign">
+        <div class="sign-box">
+          <div class="sign-line"></div>
+          ผู้${isReturn?'คืน':'เบิก'}<br>(${escapeHtmlN(_userName(c.checkoutBy))})
+        </div>
+        <div class="sign-box">
+          <div class="sign-line"></div>
+          Officer ${isReturn?'รับคืน':'ตรวจเบิก'}<br>(${escapeHtmlN(_userName(isReturn?c.checkinOfficerId:c.checkoutOfficerId))})
+        </div>
+      </div>
+    </div>
+    <script>window.onload=()=>{setTimeout(()=>window.print(),300)}<\/script>
+    </body></html>`;
+  const w = window.open('', '_blank', 'width=900,height=700');
+  if(!w){ alert('โปรดอนุญาต popup'); return; }
+  w.document.write(html);
+  w.document.close();
+}
+
 // ============ LIVE ANALYTICS ============
 let liveAnalyticsTab = 'overview'; // overview | list
 function setLiveAnalyticsTab(t){ liveAnalyticsTab = t; rerender(); }
@@ -25290,6 +26615,7 @@ function renderMembers(el){
             <select class="role-select" onchange="setMemberRole(${u.id}, this.value)" title="เปลี่ยน Role">
               <option value="member" ${u.role==='member'?'selected':''}>Member</option>
               <option value="social" ${u.role==='social'?'selected':''}>Social</option>
+              <option value="supervisor" ${u.role==='supervisor'?'selected':''}>Supervisor</option>
               <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
             </select>
             <div style="display:flex;gap:5px;justify-content:center">
