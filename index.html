@@ -20587,7 +20587,7 @@ function openOfficerPicker(){
         <p style="font-size:12.5px;color:var(--t2);margin-bottom:12px">${isLo?'ເລືອກຜູ້ໃຊ້ທີ່ສາມາດກວດເບີກ-ຄືນຂອງໄດ້':'เลือกผู้ใช้ที่สามารถตรวจเบิก-คืนของได้ (Admin ตรวจได้เสมอ)'}</p>
         <div class="stock-assignee-grid" style="max-height:300px">
           ${users.map(u=>`
-            <div class="stock-assignee-pick ${cur.includes(u.id)?'active':''}" onclick="this.classList.toggle('active');this.dataset.uid='${u.id}'">
+            <div class="stock-assignee-pick ${cur.includes(u.id)?'active':''}" data-uid="${escapeHtmlN(u.id)}" onclick="this.classList.toggle('active')">
               <span class="stock-officer-av" style="background:${u.color||'#888'}">${escapeHtmlN(u.init||u.name[0])}</span>
               <span style="font-size:12.5px">${escapeHtmlN(u.name)}</span>
             </div>
@@ -20602,21 +20602,10 @@ function openOfficerPicker(){
   `);
 }
 function saveOfficerPicker(){
-  const picks = Array.from(document.querySelectorAll('.stock-assignee-pick.active')).map(el=>el.dataset.uid).filter(Boolean);
-  // For currently-active ones whose uid wasn't set (already active on open), keep them from DOM data attr or fall back to USERS by index
-  // Simpler: use checked state from DOM - we already set dataset.uid above. For pre-active ones with no toggle, dataset.uid may be undefined; gather from text matches:
-  const all = Array.from(document.querySelectorAll('.stock-assignee-pick'));
-  const result = [];
-  all.forEach((el, idx) => {
-    if(!el.classList.contains('active')) return;
-    if(el.dataset.uid){ result.push(el.dataset.uid); return; }
-    // pre-active without dataset — find by USER name in the span
-    const nameSpan = el.querySelector('span:last-child');
-    const nm = nameSpan ? nameSpan.textContent.trim() : '';
-    const u = USERS.find(x=>x.name===nm);
-    if(u) result.push(u.id);
-  });
-  stockSettings.officerIds = Array.from(new Set(result));
+  const picks = Array.from(document.querySelectorAll('.stock-assignee-pick.active'))
+    .map(el => el.dataset.uid)
+    .filter(Boolean);
+  stockSettings.officerIds = Array.from(new Set(picks));
   saveAll();
   closeStockModal();
   rerender();
