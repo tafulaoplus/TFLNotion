@@ -9712,7 +9712,7 @@ function renderSidebar(){
     {id:'sales', icon:I.mapPin, label:t('nav_sales')},
     {id:'calendar', icon:I.calendar, label:t('nav_calendar')},
     {id:'lottery', icon:I.trending, label:t('nav_lottery')},
-    {id:'stock', icon:I.layers||I.folder, label: CURRENT_LANG==='lo' ? 'ສະຕັອກຂອງ' : 'สต๊อกของ'},
+    {id:'stock', icon:I.layers||I.folder, label: CURRENT_LANG==='lo' ? 'ເບີກຂອງ' : 'เบิกของ'},
   ];
   // Apply saved order if any
   let items = defaultItems;
@@ -19596,7 +19596,7 @@ function renderStock(el){
 
   const totalItems = stockItems.length;
   const activeCount = stockCheckouts.filter(c => c.status !== 'returned' && c.status !== 'lost').length;
-  el.innerHTML = topbarSimple('layers', isLo?'ສະຕັອກຂອງ':'สต๊อกของ', isLo?'ບໍລິຫານສະຕັອກ ເບີກ-ຄືນຂອງ':'จัดการสต๊อก · เบิก-คืนของ · ตรวจสอบโดย Officer') + `
+  el.innerHTML = topbarSimple('layers', isLo?'ເບີກຂອງ':'เบิกของ', isLo?'ບໍລິຫານສະຕັອກ ເບີກ-ຄືນຂອງ':'จัดการสต๊อก · เบิก-คืนของ · ตรวจสอบโดย Officer') + `
     <div class="page-content stock-page" style="max-width:1500px;padding:18px clamp(12px,2vw,28px)">
       <div class="stock-tabs">
         ${tabs.map(tab => `<button class="stock-tab ${stockTab===tab.id?'active':''}" onclick="setStockTab('${tab.id}')">${tab.icon} ${tab.label}</button>`).join('')}
