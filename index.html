@@ -20806,6 +20806,7 @@ function deleteLiveRecord(id){
   liveAnalytics = liveAnalytics.filter(l => l.id !== id);
   if(currentLiveDetailId === id) currentLiveDetailId = null;
   saveAll();
+  flushSyncNow();
   rerender();
 }
 
@@ -20999,6 +21000,7 @@ function _liveCreateBlank(){
   };
   liveAnalytics.push(newLive);
   saveAll();
+  flushSyncNow();
   openLiveDetail(newLive.id);
 }
 
@@ -21179,6 +21181,7 @@ function _liveSaveDetail(){
   l.link_clicks = num('liveLinkClicks');
   l.updatedAt = Date.now();
   saveAll();
+  flushSyncNow();
   alert('บันทึกแล้ว ✓');
   rerender();
 }
@@ -21752,6 +21755,7 @@ function _fbHubPullLiveFromVideo(videoId, btn){
   };
   liveAnalytics.push(newLive);
   saveAll();
+  flushSyncNow();
   if(btn){ btn.disabled = false; btn.textContent = 'ดึงแล้ว ✓'; }
   setTimeout(() => { navigateTo('liveAnalytics'); openLiveDetail(newLive.id); }, 200);
 }
@@ -21784,6 +21788,7 @@ function _fbHubPullLive(videoId, btn){
     existing.permalink = post.permalink_url || '';
     existing.updatedAt = Date.now();
     saveAll();
+    flushSyncNow();
     alert('อัปเดตข้อมูล Live เรียบร้อย');
     navigateTo('liveAnalytics');
     openLiveDetail(existing.id);
@@ -21812,6 +21817,7 @@ function _fbHubPullLive(videoId, btn){
   };
   liveAnalytics.push(newLive);
   saveAll();
+  flushSyncNow();
   if(btn){ btn.disabled = false; btn.textContent = 'ดึงแล้ว ✓'; }
   setTimeout(() => {
     navigateTo('liveAnalytics');
@@ -27066,6 +27072,7 @@ function saveTask(){
       try { logActivity('create', 'task', savedTask.id, savedTask.name); } catch(_){}
     }
     saveAll();
+    flushSyncNow();
     closeModal('taskModal');
     rerender();
     renderSidebar();
@@ -27081,6 +27088,7 @@ function deleteTask(id){
   tasks=tasks.filter(t=>t.id!==id);
   try { if(t) logActivity('delete', 'task', id, t.name); } catch(_){}
   saveAll();
+  flushSyncNow();
   refreshDbTables(); renderSidebar();
 }
 
@@ -27100,6 +27108,7 @@ function duplicateTask(id){
   if(idx >= 0) tasks.splice(idx + 1, 0, copy);
   else tasks.push(copy);
   saveAll();
+  flushSyncNow();
   refreshDbTables();
   renderSidebar();
 }
