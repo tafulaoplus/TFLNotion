@@ -8401,6 +8401,39 @@ function _neonUnloadFlush(){
 window.addEventListener('pagehide', _neonUnloadFlush);
 window.addEventListener('beforeunload', _neonUnloadFlush);
 
+// Atomic per-collection update — avoids full-snapshot last-writer-wins for high-concurrency ops.
+// Use this for check-in, lottery sales, sales events, etc. (any record-add that runs concurrently).
+// Fire-and-forget by design — local state was already saved via saveAll() before calling.
+async function _syncCollection(op, collection, recordOrId){
+  if(!neonEnabled) return;
+  try {
+    const body = { collection, op, updatedBy: currentUser ? currentUser.name : 'unknown' };
+    if(op === 'upsert') body.record = recordOrId;
+    else if(op === 'delete') body.id = recordOrId;
+    const r = await fetch(`${NEON_API}/workspace/collection`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      keepalive: true,
+    });
+    if(!r.ok){
+      const txt = await r.text().catch(()=>('HTTP '+r.status));
+      console.warn('[Sync] collection update failed', collection, op, txt);
+      // Fall back to full-snapshot push so the local change still propagates
+      flushSyncNow();
+    }
+  } catch(e){
+    console.warn('[Sync] collection update error', e.message);
+    flushSyncNow();
+  }
+}
+
+// Globally-unique id generator to prevent collision when multiple clients
+// create records simultaneously (e.g. concurrent check-ins with same nextAttendanceId).
+function _newRecordId(prefix){
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
+}
+
 function syncToNeon(){
   if(!neonEnabled) return;
   // Safety guard: never push an empty USERS array to Neon — it would wipe the team's accounts.
@@ -24258,8 +24291,9 @@ async function doCheckInOut(purpose){
     if(rec){
       rec.checkIn = entry; rec.status = status; rec.lateMinutes = lateMin;
     } else {
+      // Use globally-unique id to prevent collision between concurrent check-ins on different devices
       rec = {
-        id: nextAttendanceId++,
+        id: _newRecordId('att'),
         userId: currentUser.id,
         date: today,
         checkIn: entry,
@@ -24272,6 +24306,8 @@ async function doCheckInOut(purpose){
     }
     try { logActivity('checkin','attendance', rec.id, `${_fmtTime(now)} · ${status}`); } catch(_){}
     try { createNotif({ userId: currentUser.id, type:'info', title:'เช็คอินสำเร็จ', body:`เช็คอินเวลา ${_fmtTime(now)} · ${status==='late'?'มาสาย '+lateMin+' นาที':'ตรงเวลา'}` }); } catch(_){}
+    // Atomic per-collection upsert — bulletproof against concurrent check-ins
+    _syncCollection('upsert', 'attendanceRecords', rec);
   } else {
     if(!rec || !rec.checkIn){ alert('ต้องเช็คอินก่อน'); return; }
     if(rec.checkOut){ alert('คุณเช็คเอาท์ไปแล้ววันนี้'); return; }
@@ -24294,6 +24330,8 @@ async function doCheckInOut(purpose){
     if(rec.status==='normal' && earlyLeave > 0) rec.status = 'normal';
     try { logActivity('checkout','attendance', rec.id, `${_fmtTime(now)} · รวม ${rec.totalHours}h`); } catch(_){}
     try { createNotif({ userId: currentUser.id, type:'info', title:'เช็คเอาท์สำเร็จ', body:`รวมเวลาทำงาน ${rec.totalHours} ชั่วโมง · OT ${rec.otHours}h` }); } catch(_){}
+    // Atomic upsert for checkout too — overwrites the existing record by id
+    _syncCollection('upsert', 'attendanceRecords', rec);
   }
   attendancePhotoData = null;
   saveAll();

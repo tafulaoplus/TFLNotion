@@ -115,12 +115,55 @@ export default async function handler(req, res) {
           return s;
         });
       }
-      // Cap activityLog and notifications to last N to prevent unbounded growth
+
+      // ===== MULTI-USER MERGE =====
+      // Without this, two clients posting full snapshots concurrently would last-writer-wins,
+      // losing the other client's newly-added records (e.g. simultaneous check-ins).
+      // Strategy: for each "mergeable" collection, find records in CURRENT that are MISSING
+      // from incoming (= added by another client after this client loaded) and preserve them.
+      // Records present in both → use incoming version (this client's edit). Pure adds in
+      // either client are preserved. (Trade-off: a delete on client A can be undone if client B
+      // still has the record and posts after; user accepted this for their work pattern.)
+      const MERGE_BY_ID = [
+        'attendanceRecords', 'leaveRequests', 'salesEvents', 'lotterySales',
+        'notifications', 'activityLog',
+        'tasks', 'documents', 'notes',
+        'stockItems', 'stockCheckouts',
+        'liveAnalytics', 'liveSessions', 'adLibCompetitors',
+        'fbDrafts', 'giveawayInventory',
+      ];
+      const currentRows = await sql`
+        SELECT data FROM workspace_snapshot
+        WHERE workspace_id = ${wsId} LIMIT 1
+      `;
+      const currentData = currentRows.length ? (currentRows[0].data || {}) : {};
+      let mergeStats = {};
+      for (const key of MERGE_BY_ID) {
+        const incoming = Array.isArray(dataToStore[key]) ? dataToStore[key] : null;
+        const existing = Array.isArray(currentData[key]) ? currentData[key] : null;
+        if (!incoming || !existing) continue;
+        const incomingIds = new Set(
+          incoming.filter(x => x && x.id != null).map(x => String(x.id))
+        );
+        const preserved = existing.filter(x => x && x.id != null && !incomingIds.has(String(x.id)));
+        if (preserved.length > 0) {
+          dataToStore[key] = [...incoming, ...preserved];
+          mergeStats[key] = preserved.length;
+        }
+      }
+
+      // Cap activityLog and notifications AFTER merge (keep newest by createdAt/timestamp if available)
       if (Array.isArray(dataToStore.activityLog) && dataToStore.activityLog.length > 500) {
-        dataToStore.activityLog = dataToStore.activityLog.slice(-500);
+        dataToStore.activityLog = dataToStore.activityLog
+          .slice()
+          .sort((a, b) => (b.timestamp || b.createdAt || 0) - (a.timestamp || a.createdAt || 0))
+          .slice(0, 500);
       }
       if (Array.isArray(dataToStore.notifications) && dataToStore.notifications.length > 200) {
-        dataToStore.notifications = dataToStore.notifications.slice(-200);
+        dataToStore.notifications = dataToStore.notifications
+          .slice()
+          .sort((a, b) => (b.timestamp || b.createdAt || 0) - (a.timestamp || a.createdAt || 0))
+          .slice(0, 200);
       }
 
       const json = JSON.stringify(dataToStore);
@@ -132,7 +175,12 @@ export default async function handler(req, res) {
             updated_at = NOW(),
             updated_by = EXCLUDED.updated_by
       `;
-      return res.json({ ok: true, updatedAt: new Date().toISOString(), sizeBytes: json.length });
+      return res.json({
+        ok: true,
+        updatedAt: new Date().toISOString(),
+        sizeBytes: json.length,
+        mergePreserved: mergeStats,
+      });
     }
 
     res.setHeader('Allow', 'GET, POST');
