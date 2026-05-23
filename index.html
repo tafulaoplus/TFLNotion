@@ -8313,6 +8313,94 @@ function _slimSalesForSync(arr){
   });
 }
 
+function _buildNeonPayload(){
+  return {
+    users: USERS,
+    tasks: tasks,
+    documents: documents,
+    opts: OPTS,
+    notes: notes,
+    liveSessions: (typeof liveSessions !== 'undefined' ? liveSessions : []),
+    columnWidths: columnWidths,
+    nextTaskId: nextTaskId,
+    nextDocId: nextDocId,
+    notifications: notifications.slice(-200),
+    salesEvents: _slimSalesForSync(salesEvents),
+    giveawayInventory: giveawayInventory,
+    activityLog: activityLog.slice(-500),
+    lotterySales: lotterySales,
+    lotterySettings: lotterySettings,
+    attendanceRecords: _slimAttendanceForSync(attendanceRecords),
+    leaveRequests: leaveRequests,
+    attendanceSettings: attendanceSettings,
+    attendanceHolidays: attendanceHolidays,
+    fbDrafts: fbDrafts,
+    fbConnection: { pageId: fbPostState.pageId||'', pageName: fbPostState.pageName||'', pageToken: fbPostState.pageToken||'' },
+    postPerfConn: { enabled: postPerfConn.enabled, connectedAt: postPerfConn.connectedAt, token: postPerfConn.token, pageId: postPerfConn.pageId, pageName: postPerfConn.pageName },
+    adSpendConn: { enabled: adSpendConn.enabled, adAccountId: adSpendConn.adAccountId, adAccountName: adSpendConn.adAccountName, currency: adSpendConn.currency, connectedAt: adSpendConn.connectedAt, token: adSpendConn.token },
+    liveAnalytics: liveAnalytics,
+    adLibCompetitors: adLibCompetitors,
+    stockItems: stockItems,
+    stockCheckouts: stockCheckouts,
+    stockSettings: stockSettings,
+    googleDriveSettings: googleDriveSettings,
+    tiktokSettings: tiktokSettings,
+    youtubeSettings: youtubeSettings,
+    _updatedBy: currentUser ? currentUser.name : 'unknown',
+  };
+}
+
+// Force-flush any pending Neon sync immediately (bypass debounce)
+async function flushSyncNow(){
+  if(!neonEnabled) return;
+  if(!Array.isArray(USERS) || USERS.length === 0) return;
+  clearTimeout(neonSyncTimer);
+  if(neonSyncInProgress){
+    // Wait briefly for in-flight sync to finish, then re-push to capture latest state
+    await new Promise(res => setTimeout(res, 200));
+  }
+  neonSyncInProgress = true;
+  try {
+    const payload = _buildNeonPayload();
+    const r = await fetch(`${NEON_API}/workspace`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    });
+    if(r.ok){
+      const data = await r.json();
+      neonLastUpdatedAt = data.updatedAt;
+      setNeonStatus('online');
+    } else {
+      setNeonStatus('error', 'HTTP '+r.status);
+    }
+  } catch(e){
+    console.warn('[Neon] Force-sync failed:', e.message);
+    setNeonStatus('error', e.message);
+  } finally {
+    neonSyncInProgress = false;
+  }
+}
+
+// On page unload, fire sendBeacon to guarantee delivery (browser allows even after navigation)
+function _neonUnloadFlush(){
+  if(!neonEnabled) return;
+  if(!Array.isArray(USERS) || USERS.length === 0) return;
+  try {
+    const payload = _buildNeonPayload();
+    const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+    if(navigator.sendBeacon){
+      navigator.sendBeacon(`${NEON_API}/workspace`, blob);
+    } else {
+      // Fallback: fire-and-forget fetch with keepalive
+      fetch(`${NEON_API}/workspace`, { method: 'POST', body: blob, keepalive: true });
+    }
+  } catch(_){}
+}
+window.addEventListener('pagehide', _neonUnloadFlush);
+window.addEventListener('beforeunload', _neonUnloadFlush);
+
 function syncToNeon(){
   if(!neonEnabled) return;
   // Safety guard: never push an empty USERS array to Neon — it would wipe the team's accounts.
@@ -8326,48 +8414,12 @@ function syncToNeon(){
     if(neonSyncInProgress) return;
     neonSyncInProgress = true;
     try {
-      const payload = {
-        users: USERS,
-        tasks: tasks,
-        documents: documents,
-        opts: OPTS,
-        notes: notes,
-        liveSessions: (typeof liveSessions !== 'undefined' ? liveSessions : []),
-        columnWidths: columnWidths,
-        nextTaskId: nextTaskId,
-        nextDocId: nextDocId,
-        notifications: notifications.slice(-200),
-        salesEvents: _slimSalesForSync(salesEvents),
-        giveawayInventory: giveawayInventory,
-        activityLog: activityLog.slice(-500),
-        lotterySales: lotterySales,
-        lotterySettings: lotterySettings,
-        attendanceRecords: _slimAttendanceForSync(attendanceRecords),
-        leaveRequests: leaveRequests,
-        attendanceSettings: attendanceSettings,
-        attendanceHolidays: attendanceHolidays,
-        fbDrafts: fbDrafts,
-        fbConnection: {
-          pageId: fbPostState.pageId || '',
-          pageName: fbPostState.pageName || '',
-          pageToken: fbPostState.pageToken || '',
-        },
-        postPerfConn: { enabled: postPerfConn.enabled, connectedAt: postPerfConn.connectedAt, token: postPerfConn.token, pageId: postPerfConn.pageId, pageName: postPerfConn.pageName },
-        adSpendConn: { enabled: adSpendConn.enabled, adAccountId: adSpendConn.adAccountId, adAccountName: adSpendConn.adAccountName, currency: adSpendConn.currency, connectedAt: adSpendConn.connectedAt, token: adSpendConn.token },
-        liveAnalytics: liveAnalytics,
-        adLibCompetitors: adLibCompetitors,
-        stockItems: stockItems,
-        stockCheckouts: stockCheckouts,
-        stockSettings: stockSettings,
-        googleDriveSettings: googleDriveSettings,
-        tiktokSettings: tiktokSettings,
-        youtubeSettings: youtubeSettings,
-        _updatedBy: currentUser ? currentUser.name : 'unknown',
-      };
+      const payload = _buildNeonPayload();
       const r = await fetch(`${NEON_API}/workspace`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
+        keepalive: true,
       });
       if(r.ok){
         const data = await r.json();
@@ -8384,7 +8436,7 @@ function syncToNeon(){
     } finally {
       neonSyncInProgress = false;
     }
-  }, 500);
+  }, 250);
 }
 
 // Adaptive polling: 15s when tab is active+focused, 60s when hidden/backgrounded.
@@ -8667,6 +8719,12 @@ function saveAllLocal(){
     localStorage.setItem('tfl_nextHolidayId', String(nextHolidayId));
     localStorage.setItem('tfl_fbDrafts', JSON.stringify(fbDrafts));
     localStorage.setItem('tfl_nextFbDraftId', String(nextFbDraftId));
+    // Stock + recent additions (previously missing — caused data loss when Neon sync didn't fire before tab close)
+    localStorage.setItem('tfl_stockItems', JSON.stringify(stockItems));
+    localStorage.setItem('tfl_stockCheckouts', JSON.stringify(stockCheckouts));
+    localStorage.setItem('tfl_stockSettings', JSON.stringify(stockSettings));
+    if(typeof liveAnalytics !== 'undefined') localStorage.setItem('tfl_liveAnalytics', JSON.stringify(liveAnalytics));
+    if(typeof adLibCompetitors !== 'undefined') localStorage.setItem('tfl_adLibCompetitors', JSON.stringify(adLibCompetitors));
   } catch(e){ console.warn('Save failed:', e); }
 }
 
@@ -8762,6 +8820,21 @@ function loadAll(){
     if(fdi) nextFbDraftId = Math.max(parseInt(fdi,10)||1, 1);
     const maxDr = fbDrafts.reduce((m,d)=>Math.max(m, parseInt(d.id,10)||0), 0);
     if(maxDr >= nextFbDraftId) nextFbDraftId = maxDr + 1;
+    // Stock + recent additions
+    const si = localStorage.getItem('tfl_stockItems');
+    if(si){ const arr = JSON.parse(si); if(Array.isArray(arr)) stockItems = arr; }
+    const sc = localStorage.getItem('tfl_stockCheckouts');
+    if(sc){ const arr = JSON.parse(sc); if(Array.isArray(arr)) stockCheckouts = arr; }
+    const sg = localStorage.getItem('tfl_stockSettings');
+    if(sg){ const obj = JSON.parse(sg); if(obj && typeof obj==='object') stockSettings = Object.assign({officerIds:[]}, obj); }
+    if(typeof liveAnalytics !== 'undefined'){
+      const la = localStorage.getItem('tfl_liveAnalytics');
+      if(la){ const arr = JSON.parse(la); if(Array.isArray(arr)) liveAnalytics = arr; }
+    }
+    if(typeof adLibCompetitors !== 'undefined'){
+      const al = localStorage.getItem('tfl_adLibCompetitors');
+      if(al){ const arr = JSON.parse(al); if(Array.isArray(arr)) adLibCompetitors = arr; }
+    }
   } catch(e){ console.warn('Load failed:', e); }
 }
 
@@ -20305,6 +20378,7 @@ function submitCheckout(){
   stockCheckouts.push(ck);
   recalcStockAvailable();
   saveAll();
+  flushSyncNow();
   closeStockModal();
   rerender();
   setTimeout(()=> {
@@ -20385,6 +20459,7 @@ function deleteCheckout(id){
   stockCheckouts = stockCheckouts.filter(x=>x.id!==id);
   recalcStockAvailable();
   saveAll();
+  flushSyncNow();
   closeStockModal();
   rerender();
 }
@@ -20491,6 +20566,7 @@ function submitCheckin(){
   recalcStockAvailable();
   _checkinDraft = null;
   saveAll();
+  flushSyncNow();
   closeStockModal();
   rerender();
   setTimeout(()=> {
@@ -20583,6 +20659,7 @@ function saveStockItem(id){
   }
   recalcStockAvailable();
   saveAll();
+  flushSyncNow();
   closeStockModal();
   rerender();
 }
@@ -20596,6 +20673,7 @@ function deleteStockItem(id){
   if(!confirm((isLo?'ລຶບ ':'ลบ ')+'"'+it.name+'" ?')) return;
   stockItems = stockItems.filter(x=>x.id!==id);
   saveAll();
+  flushSyncNow();
   rerender();
 }
 
@@ -20635,6 +20713,7 @@ function saveOfficerPicker(){
     .filter(Boolean);
   stockSettings.officerIds = Array.from(new Set(picks));
   saveAll();
+  flushSyncNow();
   closeStockModal();
   rerender();
 }
