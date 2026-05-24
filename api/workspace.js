@@ -155,6 +155,33 @@ export default async function handler(req, res) {
         }
       }
 
+      // ===== PROTECTED FIELDS =====
+      // For OAuth credentials / refresh tokens: if existing DB has a non-empty value
+      // but incoming has empty (or missing), KEEP the existing one. This prevents
+      // stale browsers (that loaded snapshot before admin completed OAuth) from
+      // wiping the refresh_token via a routine saveAll() snapshot push.
+      const _isNonEmpty = (v) => v != null && v !== '' && v !== 0;
+      function _preserveNested(parentKey, fields) {
+        const existing = currentData[parentKey];
+        if (!existing || typeof existing !== 'object') return;
+        if (!dataToStore[parentKey] || typeof dataToStore[parentKey] !== 'object') {
+          dataToStore[parentKey] = {};
+        }
+        for (const f of fields) {
+          const incomingVal = dataToStore[parentKey][f];
+          if (!_isNonEmpty(incomingVal) && _isNonEmpty(existing[f])) {
+            dataToStore[parentKey][f] = existing[f];
+            mergeStats[`${parentKey}.${f}`] = 'preserved';
+          }
+        }
+      }
+      _preserveNested('googleDriveSettings', ['refreshToken', 'adminEmail', 'connectedAt', 'clientId', 'clientSecret', 'redirectUri']);
+      _preserveNested('fbConnection', ['pageToken', 'pageId', 'pageName']);
+      _preserveNested('postPerfConn', ['token', 'connectedAt', 'pageId', 'pageName']);
+      _preserveNested('adSpendConn', ['token', 'connectedAt', 'adAccountId', 'adAccountName']);
+      _preserveNested('tiktokSettings', ['accessToken', 'refreshToken']);
+      _preserveNested('youtubeSettings', ['accessToken', 'refreshToken']);
+
       // Cap activityLog and notifications AFTER merge (keep newest by createdAt/timestamp if available)
       if (Array.isArray(dataToStore.activityLog) && dataToStore.activityLog.length > 500) {
         dataToStore.activityLog = dataToStore.activityLog

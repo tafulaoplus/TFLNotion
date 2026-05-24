@@ -40,7 +40,11 @@ async function getAccessToken(cfg) {
 async function loadConfig(wsId) {
   const rows = await sql`SELECT data->'googleDriveSettings' AS cfg FROM workspace_snapshot WHERE workspace_id = ${wsId} LIMIT 1`;
   if (!rows.length) return null;
-  return rows[0].cfg || null;
+  const cfg = rows[0].cfg || {};
+  // OAuth credentials prefer env vars (safer + not wiped by client snapshot pushes)
+  if (process.env.GOOGLE_OAUTH_CLIENT_ID) cfg.clientId = process.env.GOOGLE_OAUTH_CLIENT_ID;
+  if (process.env.GOOGLE_OAUTH_CLIENT_SECRET) cfg.clientSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
+  return cfg;
 }
 
 async function readRawBody(req) {

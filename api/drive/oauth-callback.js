@@ -25,14 +25,17 @@ export default async function handler(req, res) {
     if (!rows.length) return htmlResult(res, false, 'ไม่พบ workspace snapshot');
     const data = rows[0].data || {};
     const cfg = data.googleDriveSettings || {};
-    if (!cfg.clientId || !cfg.clientSecret || !cfg.redirectUri) {
-      return htmlResult(res, false, 'ต้องตั้ง Client ID + Client Secret + Redirect URI ก่อน');
+    // Prefer env vars for OAuth credentials (safer + not wiped by client snapshot pushes)
+    const effectiveClientId     = process.env.GOOGLE_OAUTH_CLIENT_ID     || cfg.clientId;
+    const effectiveClientSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET || cfg.clientSecret;
+    if (!effectiveClientId || !effectiveClientSecret || !cfg.redirectUri) {
+      return htmlResult(res, false, 'ต้องตั้ง Client ID + Client Secret + Redirect URI ก่อน (env var GOOGLE_OAUTH_CLIENT_SECRET หรือใน workspace)');
     }
 
     const params = new URLSearchParams();
     params.set('code', code);
-    params.set('client_id', cfg.clientId);
-    params.set('client_secret', cfg.clientSecret);
+    params.set('client_id', effectiveClientId);
+    params.set('client_secret', effectiveClientSecret);
     params.set('redirect_uri', cfg.redirectUri);
     params.set('grant_type', 'authorization_code');
 
