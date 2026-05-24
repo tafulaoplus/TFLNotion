@@ -27469,16 +27469,36 @@ function updateBulkDelPreview(){
   }
 }
 
-function confirmBulkDel(){
+async function confirmBulkDel(){
   const matched = _matchedCustomersForBulk();
   if(matched.length === 0){ alert('ไม่มีรายการที่ตรงเงื่อนไข'); return; }
   if(!confirm(`ยืนยันลบ ${matched.length} รายการ?\nการกระทำนี้ย้อนกลับไม่ได้`)) return;
+
+  const btn = document.getElementById('bdConfirmBtn');
+  const originalLabel = btn ? btn.innerHTML : '';
+  if(btn){ btn.disabled = true; btn.innerHTML = `กำลังลบ... 0/${matched.length}`; }
+
+  // 1) Remove from local + localStorage immediately so UI updates
   const ids = new Set(matched.map(c => c.id));
   salesCustomers = salesCustomers.filter(c => !ids.has(c.id));
-  // Atomic delete for each on server
-  matched.forEach(c => _syncCollection('delete', 'salesCustomers', c.id));
-  saveAll();
-  flushSyncNow();
+  saveAllLocal();
+
+  // 2) Run atomic deletes IN BATCHES and AWAIT all of them BEFORE anything else.
+  //    This is the critical fix: previously we fired-and-forgot then immediately
+  //    called saveAll(), which posted the FULL snapshot. The server-side merge
+  //    would then "restore" the still-present records because it didn't yet
+  //    know they were being deleted → race condition → 0 records actually gone.
+  const CHUNK = 8;
+  let done = 0;
+  for(let i = 0; i < matched.length; i += CHUNK){
+    const chunk = matched.slice(i, i + CHUNK);
+    await Promise.allSettled(chunk.map(c => _syncCollection('delete', 'salesCustomers', c.id)));
+    done += chunk.length;
+    if(btn) btn.innerHTML = `กำลังลบ... ${done}/${matched.length}`;
+  }
+
+  // 3) DO NOT call saveAll() / flushSyncNow() — atomic deletes are authoritative,
+  //    and the snapshot push would race against server-side merge protection.
   closeBulkDel();
   alert(`✅ ลบ ${matched.length} รายการเรียบร้อย`);
   rerender();
@@ -27627,11 +27647,12 @@ function exportCustomersExcel(){
 // Also supports leading-digit format like "180526ປ້ຳ..." for flexibility.
 function _parseSheetNameForLocDate(name){
   if(!name) return { location:'', date:'' };
-  // Try trailing digits
-  let m = name.match(/^(.*?)(\d{6}|\d{8})$/);
+  // IMPORTANT: prefer \d{8} (DDMMYYYY) BEFORE \d{6} (DDMMYY) because alternation
+  // in JS regex is left-first. Otherwise "20052026" gets parsed as "200520"+"26..."
+  // causing year 2020 instead of 2026.
+  let m = name.match(/^(.*?)(\d{8}|\d{6})$/);
   if(!m){
-    // Try leading digits
-    m = name.match(/^(\d{6}|\d{8})(.+)$/);
+    m = name.match(/^(\d{8}|\d{6})(.+)$/);
     if(m) return { location: m[2].trim(), date: _parseDdmmyyOrFull(m[1]) };
     return { location: name.trim(), date: '' };
   }
