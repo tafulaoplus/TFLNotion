@@ -8263,9 +8263,22 @@ function applyRemoteWorkspace(data){
   if(Array.isArray(data.adLibCompetitors)){
     adLibCompetitors = data.adLibCompetitors;
   }
-  if(Array.isArray(data.stockItems)) stockItems = data.stockItems;
+  // MERGE rather than overwrite stock arrays — preserves locally-added records
+  // that haven't yet propagated to Neon (defeats F5-during-flush race).
+  // Server-side merge already protects on POST; this protects on GET/poll.
+  if(Array.isArray(data.stockItems)){
+    const incomingIds = new Set(data.stockItems.map(x => String(x?.id ?? '')));
+    const localOnly = stockItems.filter(x => x && x.id != null && !incomingIds.has(String(x.id)));
+    stockItems = localOnly.length > 0
+      ? [...data.stockItems, ...localOnly]
+      : data.stockItems;
+  }
   if(Array.isArray(data.stockCheckouts)){
-    stockCheckouts = data.stockCheckouts;
+    const incomingIds = new Set(data.stockCheckouts.map(c => String(c?.id ?? '')));
+    const localOnly = stockCheckouts.filter(c => c && c.id != null && !incomingIds.has(String(c.id)));
+    stockCheckouts = localOnly.length > 0
+      ? [...data.stockCheckouts, ...localOnly]
+      : data.stockCheckouts;
     // Compute next sequence number
     const maxSeq = stockCheckouts.reduce((mx, c) => {
       const m = (c.id||'').match(/CK-\d{4}-(\d+)/);
@@ -21213,7 +21226,8 @@ function submitCheckout(){
   stockCheckouts.push(ck);
   recalcStockAvailable();
   saveAll();
-  flushSyncNow();
+  // Atomic per-collection upsert (~2-5 KB) — survives F5 keepalive limit
+  _syncCollection('upsert', 'stockCheckouts', ck);
   closeStockModal();
   rerender();
   setTimeout(()=> {
@@ -21294,7 +21308,7 @@ function deleteCheckout(id){
   stockCheckouts = stockCheckouts.filter(x=>x.id!==id);
   recalcStockAvailable();
   saveAll();
-  flushSyncNow();
+  _syncCollection('delete', 'stockCheckouts', id);
   closeStockModal();
   rerender();
 }
@@ -21401,7 +21415,8 @@ function submitCheckin(){
   recalcStockAvailable();
   _checkinDraft = null;
   saveAll();
-  flushSyncNow();
+  // Atomic upsert with updated checkin data — survives F5 keepalive limit
+  _syncCollection('upsert', 'stockCheckouts', c);
   closeStockModal();
   rerender();
   setTimeout(()=> {
@@ -21486,15 +21501,19 @@ function saveStockItem(id){
     photoUrl: photo,
     note: document.getElementById('itemNote').value.trim(),
   };
+  let savedItem;
   if(id){
     const it = stockItems.find(x=>x.id===id);
-    if(it) Object.assign(it, data);
+    if(it){ Object.assign(it, data); savedItem = it; }
   } else {
-    stockItems.push({ id: 'item-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5), ...data, availableQty: data.totalQty, createdAt: new Date().toISOString() });
+    savedItem = { id: 'item-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5), ...data, availableQty: data.totalQty, createdAt: new Date().toISOString() };
+    stockItems.push(savedItem);
   }
   recalcStockAvailable();
   saveAll();
-  flushSyncNow();
+  // Atomic per-collection upsert — small payload (~1-3 KB) survives keepalive 64KB limit
+  // even if user F5s immediately. Race-proof: server uses jsonb_set + row lock.
+  if(savedItem) _syncCollection('upsert', 'stockItems', savedItem);
   closeStockModal();
   rerender();
 }
@@ -21508,7 +21527,8 @@ function deleteStockItem(id){
   if(!confirm((isLo?'ລຶບ ':'ลบ ')+'"'+it.name+'" ?')) return;
   stockItems = stockItems.filter(x=>x.id!==id);
   saveAll();
-  flushSyncNow();
+  // Atomic per-collection delete (~200 bytes, survives F5)
+  _syncCollection('delete', 'stockItems', id);
   rerender();
 }
 
