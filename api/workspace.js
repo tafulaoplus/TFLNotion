@@ -36,8 +36,11 @@ export default async function handler(req, res) {
         return res.json({ ok: true, exists: false, data: null });
       }
       const sizeBytes = Number(meta[0].size_bytes) || 0;
-      // If oversized, fetch only critical fields via JSON paths (skip large arrays)
-      if (sizeBytes > 2 * 1024 * 1024) {
+      // If TRULY oversized, fetch only critical fields via JSON paths (skip large arrays)
+      // Raised from 2MB to 10MB — at 2-3MB the snapshot still works fine and clients
+      // need ALL collections (stockItems, adLibCompetitors, attendance, etc).
+      // The old 2MB threshold caused stock + ad-lib items to silently vanish from the UI.
+      if (sizeBytes > 10 * 1024 * 1024) {
         const slim = await sql`
           SELECT
             data->'users' AS users,
