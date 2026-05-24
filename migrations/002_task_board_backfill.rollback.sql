@@ -1,0 +1,28 @@
+-- =============================================================================
+-- Rollback for: 002_task_board_backfill.sql
+-- =============================================================================
+-- 🛑 PRIMARY ROLLBACK STRATEGY = frontend feature flag (USE_TASK_API = false)
+--
+-- Per project rule: ห้าม TRUNCATE / ห้าม DROP TABLE
+-- → The backfilled rows can stay in `tasks` / `task_assignees` indefinitely.
+-- → They are simply unused if the feature flag is off.
+--
+-- workspace_snapshot.data->'tasks' was NEVER modified by the backfill,
+-- so source of truth remains intact. No data loss possible from this migration.
+--
+-- =============================================================================
+-- HARD ROLLBACK (commented out — requires separate "ยืนยัน รันได้เลย" approval)
+-- =============================================================================
+-- Only execute if:
+--   - You need to RE-RUN the backfill from scratch (e.g. backfill logic changed)
+--   - You confirmed workspace_snapshot still has all data
+--   - You took a pg_dump backup of tasks + task_assignees first
+--
+-- BEGIN;
+--   DELETE FROM task_assignees;
+--   DELETE FROM tasks;
+-- COMMIT;
+--
+-- ⚠️ ABOVE SQL IS INTENTIONALLY COMMENTED. Even though DELETE is not
+--    explicitly banned by the rules, it is destructive. Treat with the same
+--    caution as TRUNCATE. Do not uncomment without admin confirmation.

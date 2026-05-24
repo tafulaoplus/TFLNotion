@@ -1,0 +1,32 @@
+-- =============================================================================
+-- Rollback for: 001_task_board_schema.sql
+-- =============================================================================
+-- 🛑 PRIMARY ROLLBACK STRATEGY = frontend feature flag
+--
+-- Per project rule: "ห้าม DROP TABLE ทุกกรณี"
+-- → DO NOT execute hard rollback unless user explicitly approves.
+--
+-- The SAFE rollback path is:
+--   1. In index.html, set `USE_TASK_API = false`
+--   2. Frontend reverts to saveAll() + workspace_snapshot (the path it always used)
+--   3. The new tables stay in DB but are unused — no data is lost
+--   4. workspace_snapshot.data->'tasks' was never touched, so source of truth is intact
+--
+-- =============================================================================
+-- HARD ROLLBACK (commented out — requires separate "ยืนยัน รันได้เลย" approval)
+-- =============================================================================
+-- Only run during a planned maintenance window after confirming:
+--   - All frontend clients have USE_TASK_API = false
+--   - workspace_snapshot.data->'tasks' has the latest data
+--   - A pg_dump backup has been taken
+--
+-- BEGIN;
+--   DROP TRIGGER IF EXISTS trigger_tasks_bump_version ON tasks;
+--   DROP FUNCTION IF EXISTS tasks_bump_version();
+--   DROP TABLE IF EXISTS task_comments;
+--   DROP TABLE IF EXISTS task_checklists;
+--   DROP TABLE IF EXISTS task_assignees;
+--   DROP TABLE IF EXISTS tasks;
+-- COMMIT;
+--
+-- ⚠️ ABOVE SQL IS INTENTIONALLY COMMENTED. DO NOT UNCOMMENT WITHOUT APPROVAL.
