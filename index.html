@@ -8404,11 +8404,12 @@ async function flushSyncNow(){
   neonSyncInProgress = true;
   try {
     const payload = _buildNeonPayload();
+    // NOTE: do NOT use keepalive here — payload is ~1MB which exceeds the
+    // browser's 64KB keepalive body limit and causes "Failed to fetch".
     const r = await fetch(`${NEON_API}/workspace`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
-      keepalive: true,
     });
     if(r.ok){
       const data = await r.json();
@@ -8695,11 +8696,12 @@ function syncToNeon(){
     neonSyncInProgress = true;
     try {
       const payload = _buildNeonPayload();
+      // NOTE: do NOT use keepalive here — full snapshot is ~1MB which exceeds
+      // the browser's 64KB keepalive limit and causes "Failed to fetch".
       const r = await fetch(`${NEON_API}/workspace`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
-        keepalive: true,
       });
       if(r.ok){
         const data = await r.json();
