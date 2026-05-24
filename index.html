@@ -8265,19 +8265,26 @@ function applyRemoteWorkspace(data){
   }
   // MERGE rather than overwrite stock arrays — preserves locally-added records
   // that haven't yet propagated to Neon (defeats F5-during-flush race).
-  // Server-side merge already protects on POST; this protects on GET/poll.
+  // BUT only for items created in the last 30s — older items missing from
+  // incoming = deleted by another client → remove from local too.
+  const NOW = Date.now();
+  const RECENT_MS = 30_000;
+  const _isRecent = (x) => {
+    const t = x?.createdAt ? new Date(x.createdAt).getTime() : 0;
+    return (NOW - t) < RECENT_MS;
+  };
   if(Array.isArray(data.stockItems)){
     const incomingIds = new Set(data.stockItems.map(x => String(x?.id ?? '')));
-    const localOnly = stockItems.filter(x => x && x.id != null && !incomingIds.has(String(x.id)));
-    stockItems = localOnly.length > 0
-      ? [...data.stockItems, ...localOnly]
+    const localRecent = stockItems.filter(x => x && x.id != null && !incomingIds.has(String(x.id)) && _isRecent(x));
+    stockItems = localRecent.length > 0
+      ? [...data.stockItems, ...localRecent]
       : data.stockItems;
   }
   if(Array.isArray(data.stockCheckouts)){
     const incomingIds = new Set(data.stockCheckouts.map(c => String(c?.id ?? '')));
-    const localOnly = stockCheckouts.filter(c => c && c.id != null && !incomingIds.has(String(c.id)));
-    stockCheckouts = localOnly.length > 0
-      ? [...data.stockCheckouts, ...localOnly]
+    const localRecent = stockCheckouts.filter(c => c && c.id != null && !incomingIds.has(String(c.id)) && _isRecent(c));
+    stockCheckouts = localRecent.length > 0
+      ? [...data.stockCheckouts, ...localRecent]
       : data.stockCheckouts;
     // Compute next sequence number
     const maxSeq = stockCheckouts.reduce((mx, c) => {
