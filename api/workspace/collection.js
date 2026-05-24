@@ -12,7 +12,7 @@ import { sql, applyCors, sendError, DEFAULT_WORKSPACE } from '../_db.js';
 // Whitelist of collections allowed via this endpoint
 const ALLOWED = new Set([
   'attendanceRecords', 'leaveRequests',
-  'salesEvents', 'lotterySales',
+  'salesEvents', 'salesCustomers', 'lotterySales',
   'notifications', 'activityLog',
   'tasks', 'documents', 'notes',
   'stockItems', 'stockCheckouts',

@@ -128,7 +128,7 @@ export default async function handler(req, res) {
       // either client are preserved. (Trade-off: a delete on client A can be undone if client B
       // still has the record and posts after; user accepted this for their work pattern.)
       const MERGE_BY_ID = [
-        'attendanceRecords', 'leaveRequests', 'salesEvents', 'lotterySales',
+        'attendanceRecords', 'leaveRequests', 'salesEvents', 'salesCustomers', 'lotterySales',
         'notifications', 'activityLog',
         'tasks', 'documents', 'notes',
         'stockItems', 'stockCheckouts',

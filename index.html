@@ -640,6 +640,19 @@
 .sales-mstats > div{text-align:center}
 .sales-mstats span{display:block;font-size:18px;font-weight:800;color:var(--t1);line-height:1.1}
 .sales-mstats label{font-size:10.5px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px}
+/* Sales tabs */
+.sales-tabs{display:flex;gap:6px;padding:5px;background:var(--bg-soft);border:1px solid var(--border);border-radius:12px;margin-bottom:14px;overflow-x:auto}
+.sales-tab{flex:0 0 auto;padding:9px 18px;font-size:13px;font-weight:700;color:var(--t2);border:none;background:transparent;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;transition:all .15s}
+.sales-tab:hover{color:var(--t1);background:rgba(124,58,237,.05)}
+.sales-tab.active{background:var(--bg);color:var(--p600);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.sales-table-wrap{background:var(--bg);border:1px solid var(--border);border-radius:12px;overflow:auto;max-width:100%}
+.sales-table tfoot td{border-top:2px solid var(--border);padding:14px;background:var(--bg-soft)}
+.pnl-net-card{padding:18px 22px;border-radius:14px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--border);margin-bottom:6px}
+.pnl-net-card.positive{background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(16,185,129,.02));border-color:rgba(16,185,129,.3)}
+.pnl-net-card.negative{background:linear-gradient(135deg,rgba(239,68,68,.08),rgba(239,68,68,.02));border-color:rgba(239,68,68,.3)}
+.pnl-net-lbl{font-size:13px;font-weight:700;color:var(--t2)}
+.pnl-net-card.positive .pnl-net-val{color:#10b981;font-size:24px;font-weight:800;font-family:'Courier New',monospace}
+.pnl-net-card.negative .pnl-net-val{color:#ef4444;font-size:24px;font-weight:800;font-family:'Courier New',monospace}
 .sales-table{width:100%;border-collapse:collapse;background:var(--bg);border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .sales-table thead{background:var(--bg-soft)}
 .sales-table th{padding:12px 14px;text-align:left;font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
@@ -7862,11 +7875,23 @@ let documents = [];
 
 let currentUser = null;
 let salesEvents = [];
+// Customer transaction rows for the sales/event tabs. Each row:
+//   { id, date:'YYYY-MM-DD', location, phone, uid, amount, moneyGiven, cupsGiven, eventId?, by, createdAt }
+let salesCustomers = [];
 let giveawayInventory = []; // {id, name, photo:base64, unit, stock, createdAt, createdBy}
 let nextGiveawayId = 1;
 let nextSalesId = 1;
 let salesFilterMonth = '';
 let salesFilterUser = 0;
+// Tabs: 'overview' | 'customers' | 'pnl'
+let salesTab = (typeof localStorage !== 'undefined' && localStorage.getItem('tfl_sales_tab')) || 'overview';
+let salesDateFrom = '';   // YYYY-MM-DD (for customers + pnl tabs)
+let salesDateTo = '';
+let salesLocationFilter = '';  // For pnl tab
+function setSalesTab(t){ salesTab = t; try { localStorage.setItem('tfl_sales_tab', t); } catch(_){} rerender(); }
+function setSalesDateFrom(v){ salesDateFrom = v||''; rerender(); }
+function setSalesDateTo(v){ salesDateTo = v||''; rerender(); }
+function clearSalesDateRange(){ salesDateFrom=''; salesDateTo=''; rerender(); }
 let editSalesId = null;
 let salesChartMetric = 'members';
 let activityLog = [];
@@ -8222,6 +8247,7 @@ function applyRemoteWorkspace(data){
     nextNotifId = Math.max(nextNotifId, maxId + 1);
     try { updateNotifBadge(); } catch(_){}
   }
+  if(Array.isArray(data.salesCustomers)) salesCustomers = data.salesCustomers;
   if(Array.isArray(data.salesEvents)){
     const localById = {};
     salesEvents.forEach(s => { localById[s.id] = s; });
@@ -8392,6 +8418,7 @@ function _buildNeonPayload(){
     nextDocId: nextDocId,
     notifications: notifications.slice(-200),
     salesEvents: _slimSalesForSync(salesEvents),
+    salesCustomers: salesCustomers,
     giveawayInventory: giveawayInventory,
     activityLog: activityLog.slice(-500),
     lotterySales: lotterySales,
@@ -8844,6 +8871,7 @@ async function executeUploadCloud(){
       nextDocId: nextDocId,
       notifications: notifications.slice(-200),
       salesEvents: _slimSalesForSync(salesEvents),
+    salesCustomers: salesCustomers,
       activityLog: activityLog.slice(-500),
       lotterySales: lotterySales,
       lotterySettings: lotterySettings,
@@ -8969,6 +8997,7 @@ async function pushAllToNeon(){
       nextDocId: nextDocId,
       notifications: notifications.slice(-200),
       salesEvents: _slimSalesForSync(salesEvents),
+    salesCustomers: salesCustomers,
       activityLog: activityLog.slice(-500),
       lotterySales: lotterySales,
       lotterySettings: lotterySettings,
@@ -9008,6 +9037,7 @@ function saveAllLocal(){
     localStorage.setItem('tfl_notifications', JSON.stringify(notifications));
     localStorage.setItem('tfl_nextNotifId', String(nextNotifId));
     localStorage.setItem('tfl_sales', JSON.stringify(salesEvents));
+    localStorage.setItem('tfl_salesCustomers', JSON.stringify(salesCustomers));
     localStorage.setItem('tfl_nextSalesId', String(nextSalesId));
     localStorage.setItem('tfl_giveawayInv', JSON.stringify(giveawayInventory));
     localStorage.setItem('tfl_nextGiveawayId', String(nextGiveawayId));
@@ -9076,6 +9106,8 @@ function loadAll(){
     if(maxNotifId >= nextNotifId) nextNotifId = maxNotifId + 1;
     const ss = localStorage.getItem('tfl_sales');
     if(ss){ const arr = JSON.parse(ss); if(Array.isArray(arr)) salesEvents = arr; }
+    const scu = localStorage.getItem('tfl_salesCustomers');
+    if(scu){ const arr = JSON.parse(scu); if(Array.isArray(arr)) salesCustomers = arr; }
     const ssi = localStorage.getItem('tfl_nextSalesId');
     if(ssi) nextSalesId = Math.max(parseInt(ssi,10)||1, 1);
     const maxSid = salesEvents.reduce((m,s)=>Math.max(m, parseInt(s.id,10)||0), 0);
@@ -26912,7 +26944,23 @@ function _eventDateRange(e){
   return _fmtThaiDate(sd) + ' — ' + _fmtThaiDate(ed);
 }
 
+function _salesTabsBar(){
+  const tabs = [
+    { id:'overview',  label:'ภาพรวม',           icon:'📊' },
+    { id:'customers', label:'ข้อมูลลูกค้า',     icon:'👥' },
+    { id:'pnl',       label:'รายรับ-รายจ่าย',  icon:'💰' },
+  ];
+  return `<div class="sales-tabs">
+    ${tabs.map(t => `<button class="sales-tab ${salesTab===t.id?'active':''}" onclick="setSalesTab('${t.id}')">
+      <span>${t.icon}</span><span>${t.label}</span>
+    </button>`).join('')}
+  </div>`;
+}
+
 function renderSales(el){
+  if(salesTab === 'customers') return _renderSalesCustomers(el);
+  if(salesTab === 'pnl')       return _renderSalesPnL(el);
+  // === OVERVIEW (default) ===
   const isAdmin = currentUser.role === 'admin';
   const month = salesFilterMonth || new Date().toISOString().slice(0,7);
   // Shared team view — ทุกคนเห็นกิจกรรมทั้งหมด
@@ -27117,6 +27165,7 @@ function renderSales(el){
 
   el.innerHTML = topbarSales('ออกพื้นที่ / อีเว้นท์', subText, actions) + `
     <div class="page-content" style="max-width:1400px" id="salesReportRoot">
+      ${_salesTabsBar()}
       <div class="sales-filter-row" style="margin-bottom:18px">
         <div class="sales-filter-field">
           <label>เดือน</label>
@@ -27174,6 +27223,379 @@ function renderSales(el){
       <h3 class="sales-section-title" style="font-size:16px;margin-bottom:12px">รายการกิจกรรม</h3>
       ${eventListHtml}
     </div>`;
+}
+
+// =============================================================================
+// TAB 1: ข้อมูลลูกค้า (Customer rows per event)
+// =============================================================================
+function _filteredCustomers(){
+  let rows = salesCustomers.slice();
+  if(salesDateFrom) rows = rows.filter(r => (r.date||'') >= salesDateFrom);
+  if(salesDateTo)   rows = rows.filter(r => (r.date||'') <= salesDateTo);
+  if(salesLocationFilter) rows = rows.filter(r => (r.location||'').includes(salesLocationFilter));
+  return rows.sort((a,b)=>(b.date||'').localeCompare(a.date||'') || (b.createdAt||0)-(a.createdAt||0));
+}
+
+function _renderSalesCustomers(el){
+  const rows = _filteredCustomers();
+  const totalC = rows.length;
+  const totalAmount = rows.reduce((s,r)=>s+(+r.amount||0), 0);
+  const totalGiven  = rows.reduce((s,r)=>s+(+r.moneyGiven||0), 0);
+  const totalCups   = rows.reduce((s,r)=>s+(+r.cupsGiven||0), 0);
+  const locations = Array.from(new Set(salesCustomers.map(r=>r.location).filter(Boolean))).sort();
+
+  const actions = `
+    <button class="btn-ghost" onclick="openCustomerModal()">${I.plus} เพิ่มลูกค้า</button>
+    <button class="btn-ghost" onclick="downloadCustomerTemplate()">${I.download} แม่แบบ Excel</button>
+    <label class="btn-ghost" style="cursor:pointer">${I.upload} Import
+      <input type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="importCustomersExcel(this.files[0])"/>
+    </label>
+    <button class="btn-primary" onclick="exportCustomersExcel()">${I.download} Export</button>`;
+
+  el.innerHTML = topbarSales('ข้อมูลลูกค้า', `${totalC} รายการ · ยอดรวม ${_fmtBaht(totalAmount)}`, actions) + `
+    <div class="page-content" style="max-width:1400px">
+      ${_salesTabsBar()}
+      <div class="sales-filter-row" style="margin-bottom:14px">
+        <div class="sales-filter-field"><label>จากวันที่</label><input type="date" value="${salesDateFrom}" onchange="setSalesDateFrom(this.value)"/></div>
+        <div class="sales-filter-field"><label>ถึงวันที่</label><input type="date" value="${salesDateTo}" onchange="setSalesDateTo(this.value)"/></div>
+        <div class="sales-filter-field"><label>สถานที่</label>
+          <select onchange="salesLocationFilter=this.value;rerender()">
+            <option value="">ทั้งหมด</option>
+            ${locations.map(l => `<option value="${escapeHtmlN(l)}" ${salesLocationFilter===l?'selected':''}>${escapeHtmlN(l)}</option>`).join('')}
+          </select>
+        </div>
+        <div style="display:flex;align-items:flex-end"><button class="btn-ghost" onclick="clearSalesDateRange();salesLocationFilter='';rerender()">ล้าง</button></div>
+      </div>
+
+      <div class="sd-grid" style="margin-bottom:18px">
+        <div class="sd-card members"><div class="sd-lbl">จำนวนลูกค้าทั้งหมด</div><div class="sd-val">${totalC.toLocaleString()}</div></div>
+        <div class="sd-card cost"><div class="sd-lbl">ยอดซื้อทั้งหมด</div><div class="sd-val">${_fmtBaht(totalAmount)}</div></div>
+        <div class="sd-card giveaway"><div class="sd-lbl">ยอดเงินแจกทั้งหมด</div><div class="sd-val">${_fmtBaht(totalGiven)}</div></div>
+        <div class="sd-card events"><div class="sd-lbl">แก้วที่แจกทั้งหมด</div><div class="sd-val">${totalCups.toLocaleString()}</div></div>
+      </div>
+
+      <div class="sales-table-wrap">
+        <table class="sales-table">
+          <thead><tr>
+            <th>ลำดับ</th><th>วันที่</th><th>สถานที่</th>
+            <th>เบอร์ลูกค้า</th><th>UID ลูกค้า</th>
+            <th class="num">ยอดซื้อ</th><th class="num">เงินแจก</th><th class="num">แก้ว</th>
+            <th>จัดการ</th>
+          </tr></thead>
+          <tbody>${rows.length===0 ?
+            '<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--t2)">ยังไม่มีข้อมูล — กด "+ เพิ่มลูกค้า" หรือ "Import" จาก Excel</td></tr>' :
+            rows.map((r,i)=>`<tr>
+              <td>${i+1}</td>
+              <td>${r.date||'—'}</td>
+              <td>${escapeHtmlN(r.location||'')}</td>
+              <td>${escapeHtmlN(r.phone||'')}</td>
+              <td>${escapeHtmlN(r.uid||'')}</td>
+              <td class="num">${_fmtBaht(+r.amount||0)}</td>
+              <td class="num">${_fmtBaht(+r.moneyGiven||0)}</td>
+              <td class="num">${(+r.cupsGiven||0).toLocaleString()}</td>
+              <td><button class="icon-btn" onclick="openCustomerModal('${r.id}')" title="แก้">${I.edit}</button>
+                  <button class="icon-btn danger" onclick="deleteCustomer('${r.id}')" title="ลบ">${I.trash}</button></td>
+            </tr>`).join('')}
+          </tbody>
+          ${rows.length? `<tfoot><tr style="background:var(--bg-soft);font-weight:700">
+            <td colspan="5" style="text-align:right">รวม</td>
+            <td class="num">${_fmtBaht(totalAmount)}</td>
+            <td class="num">${_fmtBaht(totalGiven)}</td>
+            <td class="num">${totalCups.toLocaleString()}</td>
+            <td></td></tr></tfoot>`:''}
+        </table>
+      </div>
+    </div>`;
+}
+
+// Customer add/edit modal
+let _editingCustomerId = null;
+function openCustomerModal(id){
+  _editingCustomerId = id || null;
+  const c = id ? salesCustomers.find(x => x.id === id) : null;
+  const today = new Date().toISOString().slice(0,10);
+  const locs = Array.from(new Set(salesCustomers.map(r=>r.location).filter(Boolean))).sort();
+  const html = `
+    <div class="overlay show" style="display:flex" id="customerModal" onclick="if(event.target===this)closeCustomerModal()">
+      <div class="modal" style="width:min(520px,calc(100vw - 32px))">
+        <div class="modal-hd">
+          <div class="modal-title">${c?'แก้ไข':'เพิ่ม'}ข้อมูลลูกค้า</div>
+          <button class="modal-close" onclick="closeCustomerModal()">×</button>
+        </div>
+        <div class="modal-bd">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="lot-fld"><label class="lot-fld-lbl">วันที่ *</label><input id="fcDate" type="date" value="${c?.date||today}"/></div>
+            <div class="lot-fld"><label class="lot-fld-lbl">สถานที่ *</label>
+              <input id="fcLocation" list="customerLocList" value="${escapeHtmlN(c?.location||'')}" placeholder="เช่น ตลาดนัด ABC"/>
+              <datalist id="customerLocList">${locs.map(l=>`<option value="${escapeHtmlN(l)}">`).join('')}</datalist>
+            </div>
+            <div class="lot-fld"><label class="lot-fld-lbl">เบอร์ลูกค้า</label><input id="fcPhone" value="${escapeHtmlN(c?.phone||'')}" placeholder="08X-XXX-XXXX"/></div>
+            <div class="lot-fld"><label class="lot-fld-lbl">UID ลูกค้า</label><input id="fcUid" value="${escapeHtmlN(c?.uid||'')}" placeholder="ID ที่บริษัทใช้"/></div>
+            <div class="lot-fld"><label class="lot-fld-lbl">ยอดซื้อ</label><input id="fcAmount" type="number" min="0" step="0.01" value="${c?.amount||''}"/></div>
+            <div class="lot-fld"><label class="lot-fld-lbl">เงินที่แจก</label><input id="fcMoney" type="number" min="0" step="0.01" value="${c?.moneyGiven||''}"/></div>
+            <div class="lot-fld"><label class="lot-fld-lbl">จำนวนแก้วที่แจก</label><input id="fcCups" type="number" min="0" value="${c?.cupsGiven||''}"/></div>
+          </div>
+        </div>
+        <div class="modal-ft">
+          <button class="sm-btn-cancel" onclick="closeCustomerModal()">ยกเลิก</button>
+          <button class="btn-primary" onclick="saveCustomer()">${c?'บันทึก':'เพิ่ม'}</button>
+        </div>
+      </div>
+    </div>`;
+  let root = document.getElementById('customerModalRoot');
+  if(!root){ root = document.createElement('div'); root.id='customerModalRoot'; document.body.appendChild(root); }
+  root.innerHTML = html;
+}
+function closeCustomerModal(){
+  const root = document.getElementById('customerModalRoot');
+  if(root) root.innerHTML = '';
+  _editingCustomerId = null;
+}
+function saveCustomer(){
+  const date = document.getElementById('fcDate').value.trim();
+  const location = document.getElementById('fcLocation').value.trim();
+  if(!date){ alert('กรุณาเลือกวันที่'); return; }
+  if(!location){ alert('กรุณาใส่สถานที่'); return; }
+  const data = {
+    date, location,
+    phone: document.getElementById('fcPhone').value.trim(),
+    uid: document.getElementById('fcUid').value.trim(),
+    amount: Number(document.getElementById('fcAmount').value)||0,
+    moneyGiven: Number(document.getElementById('fcMoney').value)||0,
+    cupsGiven: Number(document.getElementById('fcCups').value)||0,
+  };
+  if(_editingCustomerId){
+    const c = salesCustomers.find(x => x.id === _editingCustomerId);
+    if(c){ Object.assign(c, data, { updatedAt: Date.now() }); }
+    _syncCollection('upsert', 'salesCustomers', c);
+  } else {
+    const rec = { id: _newRecordId('cust'), ...data, by: currentUser?.id, createdAt: Date.now() };
+    salesCustomers.push(rec);
+    _syncCollection('upsert', 'salesCustomers', rec);
+  }
+  saveAll();
+  closeCustomerModal();
+  rerender();
+}
+function deleteCustomer(id){
+  const c = salesCustomers.find(x => x.id === id);
+  if(!c) return;
+  if(!confirm(`ลบรายการลูกค้านี้?`)) return;
+  salesCustomers = salesCustomers.filter(x => x.id !== id);
+  saveAll();
+  _syncCollection('delete', 'salesCustomers', id);
+  rerender();
+}
+
+// ----- Excel: Customer template + export + import -----
+function downloadCustomerTemplate(){
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet([
+    ['วันที่ (YYYY-MM-DD)', 'สถานที่', 'เบอร์ลูกค้า', 'UID ลูกค้า', 'ยอดซื้อ', 'เงินที่แจก', 'จำนวนแก้ว'],
+    ['2026-05-25', 'ตัวอย่าง: ตลาด ABC', '0812345678', 'CUST001', 100, 20, 1],
+    ['', '', '', '', '', '', ''],
+  ]);
+  ws['!cols'] = [{wch:18},{wch:24},{wch:14},{wch:14},{wch:12},{wch:12},{wch:10}];
+  XLSX.utils.book_append_sheet(wb, ws, 'Customers');
+  XLSX.writeFile(wb, 'tfl-customers-template.xlsx');
+}
+function exportCustomersExcel(){
+  const rows = _filteredCustomers();
+  const data = [
+    ['ลำดับ','วันที่','สถานที่','เบอร์ลูกค้า','UID ลูกค้า','ยอดซื้อ','เงินที่แจก','จำนวนแก้ว'],
+    ...rows.map((r,i)=>[i+1, r.date||'', r.location||'', r.phone||'', r.uid||'', +r.amount||0, +r.moneyGiven||0, +r.cupsGiven||0]),
+  ];
+  // Footer totals
+  const totalAmount = rows.reduce((s,r)=>s+(+r.amount||0),0);
+  const totalGiven  = rows.reduce((s,r)=>s+(+r.moneyGiven||0),0);
+  const totalCups   = rows.reduce((s,r)=>s+(+r.cupsGiven||0),0);
+  data.push(['','','','','รวม', totalAmount, totalGiven, totalCups]);
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = [{wch:6},{wch:14},{wch:24},{wch:14},{wch:14},{wch:12},{wch:12},{wch:10}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Customers');
+  const fname = `tfl-customers${salesDateFrom?'-'+salesDateFrom:''}${salesDateTo?'-to-'+salesDateTo:''}.xlsx`;
+  XLSX.writeFile(wb, fname);
+}
+function importCustomersExcel(file){
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const wb = XLSX.read(ev.target.result, { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { header:1, defval:'' });
+      if(rows.length < 2){ alert('ไฟล์ว่าง'); return; }
+      const data = rows.slice(1); // skip header
+      let added = 0;
+      data.forEach(row => {
+        const [date, location, phone, uid, amount, moneyGiven, cupsGiven] = row;
+        if(!date || !location) return;
+        const dateStr = typeof date === 'number'
+          ? new Date(Math.round((date - 25569) * 86400 * 1000)).toISOString().slice(0,10)
+          : String(date).trim();
+        if(!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return;
+        const rec = {
+          id: _newRecordId('cust'),
+          date: dateStr,
+          location: String(location).trim(),
+          phone: String(phone||'').trim(),
+          uid: String(uid||'').trim(),
+          amount: Number(amount)||0,
+          moneyGiven: Number(moneyGiven)||0,
+          cupsGiven: Number(cupsGiven)||0,
+          by: currentUser?.id,
+          createdAt: Date.now() + added,
+        };
+        salesCustomers.push(rec);
+        added++;
+      });
+      saveAll();
+      flushSyncNow();
+      alert(`Import สำเร็จ ${added} รายการ`);
+      rerender();
+    } catch(e){
+      alert('Import ผิดพลาด: ' + e.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// =============================================================================
+// TAB 2: รายรับ-รายจ่าย รายเดือนตามสถานที่
+// =============================================================================
+function _aggregateLocationDaily(){
+  // Group customers by (date, location)
+  const map = new Map(); // key = `${date}|${location}`
+  _filteredCustomers().forEach(c => {
+    const k = `${c.date}|${c.location}`;
+    const cur = map.get(k) || { date:c.date, location:c.location, customers:0, revenue:0, moneyGiven:0, cups:0, expenses:0 };
+    cur.customers++;
+    cur.revenue += +c.amount||0;
+    cur.moneyGiven += +c.moneyGiven||0;
+    cur.cups += +c.cupsGiven||0;
+    map.set(k, cur);
+  });
+  // Add event expenses (cost*) to matching (date, location)
+  salesEvents.forEach(e => {
+    const date = (e.startDate||e.date||'').slice(0,10);
+    const location = e.location || '';
+    if(!date || !location) return;
+    if(salesDateFrom && date < salesDateFrom) return;
+    if(salesDateTo && date > salesDateTo) return;
+    if(salesLocationFilter && !location.includes(salesLocationFilter)) return;
+    const k = `${date}|${location}`;
+    const cur = map.get(k) || { date, location, customers:0, revenue:0, moneyGiven:0, cups:0, expenses:0 };
+    const r = e.result || {};
+    cur.expenses += (+r.costFuel||0)+(+r.costFood||0)+(+r.costTravel||0)+(+r.costRent||0);
+    map.set(k, cur);
+  });
+  return Array.from(map.values()).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+}
+
+function _renderSalesPnL(el){
+  const rows = _aggregateLocationDaily();
+  const totalC = rows.reduce((s,r)=>s+r.customers,0);
+  const totalRev = rows.reduce((s,r)=>s+r.revenue,0);
+  const totalExp = rows.reduce((s,r)=>s+r.expenses+r.moneyGiven,0);
+  const totalCups = rows.reduce((s,r)=>s+r.cups,0);
+  const net = totalRev - totalExp;
+  const locations = Array.from(new Set(salesCustomers.concat(salesEvents).map(r=>r.location).filter(Boolean))).sort();
+
+  const actions = `
+    <button class="btn-ghost" onclick="downloadPnLTemplate()">${I.download} แม่แบบ Excel</button>
+    <button class="btn-primary" onclick="exportPnLExcel()">${I.download} Export</button>`;
+
+  el.innerHTML = topbarSales('รายรับ-รายจ่าย ตามสถานที่', `${rows.length} วัน·สถานที่ · กำไรสุทธิ ${_fmtBaht(net)}`, actions) + `
+    <div class="page-content" style="max-width:1400px">
+      ${_salesTabsBar()}
+      <div class="sales-filter-row" style="margin-bottom:14px">
+        <div class="sales-filter-field"><label>จากวันที่</label><input type="date" value="${salesDateFrom}" onchange="setSalesDateFrom(this.value)"/></div>
+        <div class="sales-filter-field"><label>ถึงวันที่</label><input type="date" value="${salesDateTo}" onchange="setSalesDateTo(this.value)"/></div>
+        <div class="sales-filter-field"><label>สถานที่</label>
+          <select onchange="salesLocationFilter=this.value;rerender()">
+            <option value="">ทั้งหมด</option>
+            ${locations.map(l => `<option value="${escapeHtmlN(l)}" ${salesLocationFilter===l?'selected':''}>${escapeHtmlN(l)}</option>`).join('')}
+          </select>
+        </div>
+        <div style="display:flex;align-items:flex-end"><button class="btn-ghost" onclick="clearSalesDateRange();salesLocationFilter='';rerender()">ล้าง</button></div>
+      </div>
+
+      <div class="sd-grid" style="margin-bottom:18px">
+        <div class="sd-card members"><div class="sd-lbl">รวมจำนวนลูกค้า</div><div class="sd-val">${totalC.toLocaleString()}</div></div>
+        <div class="sd-card cost" style="--c1:#10b981;--c2:#059669"><div class="sd-lbl">รายรับรวม</div><div class="sd-val">${_fmtBaht(totalRev)}</div></div>
+        <div class="sd-card giveaway" style="--c1:#ef4444;--c2:#dc2626"><div class="sd-lbl">รายจ่ายรวม</div><div class="sd-val">${_fmtBaht(totalExp)}</div></div>
+        <div class="sd-card events"><div class="sd-lbl">แก้วที่แจกทั้งหมด</div><div class="sd-val">${totalCups.toLocaleString()}</div></div>
+      </div>
+      <div class="pnl-net-card ${net>=0?'positive':'negative'}">
+        <div class="pnl-net-lbl">กำไรสุทธิ (รายรับ − รายจ่าย − เงินแจกลูกค้า)</div>
+        <div class="pnl-net-val">${_fmtBaht(net)}</div>
+      </div>
+
+      <div class="sales-table-wrap" style="margin-top:14px">
+        <table class="sales-table">
+          <thead><tr>
+            <th>วันที่</th><th>สถานที่</th>
+            <th class="num">ลูกค้ารวม</th><th class="num">รายรับ</th>
+            <th class="num">รายจ่าย</th><th class="num">เงินแจก</th>
+            <th class="num">แก้วที่แจก</th><th class="num">กำไร</th>
+          </tr></thead>
+          <tbody>${rows.length===0 ?
+            '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--t2)">ยังไม่มีข้อมูล — เพิ่มลูกค้าจากแท็บ "ข้อมูลลูกค้า" หรือเพิ่มกิจกรรมจากแท็บ "ภาพรวม"</td></tr>' :
+            rows.map(r=>{
+              const profit = r.revenue - r.expenses - r.moneyGiven;
+              return `<tr>
+                <td>${r.date}</td>
+                <td>${escapeHtmlN(r.location)}</td>
+                <td class="num">${r.customers.toLocaleString()}</td>
+                <td class="num" style="color:#10b981;font-weight:700">${_fmtBaht(r.revenue)}</td>
+                <td class="num" style="color:#ef4444">${_fmtBaht(r.expenses)}</td>
+                <td class="num" style="color:#f59e0b">${_fmtBaht(r.moneyGiven)}</td>
+                <td class="num">${r.cups.toLocaleString()}</td>
+                <td class="num" style="font-weight:800;color:${profit>=0?'#10b981':'#ef4444'}">${_fmtBaht(profit)}</td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+          ${rows.length? `<tfoot><tr style="background:var(--bg-soft);font-weight:700">
+            <td colspan="2" style="text-align:right">รวม</td>
+            <td class="num">${totalC.toLocaleString()}</td>
+            <td class="num" style="color:#10b981">${_fmtBaht(totalRev)}</td>
+            <td class="num" style="color:#ef4444">${_fmtBaht(rows.reduce((s,r)=>s+r.expenses,0))}</td>
+            <td class="num" style="color:#f59e0b">${_fmtBaht(rows.reduce((s,r)=>s+r.moneyGiven,0))}</td>
+            <td class="num">${totalCups.toLocaleString()}</td>
+            <td class="num" style="color:${net>=0?'#10b981':'#ef4444'}">${_fmtBaht(net)}</td>
+          </tr></tfoot>`:''}
+        </table>
+      </div>
+    </div>`;
+}
+
+function downloadPnLTemplate(){
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet([
+    ['วันที่ (YYYY-MM-DD)','สถานที่','ลูกค้ารวม','รายรับ','รายจ่าย','จำนวนแก้ว'],
+    ['2026-05-25','ตลาด ABC',10,5000,1500,12],
+    ['','','','','','']
+  ]);
+  ws['!cols'] = [{wch:18},{wch:24},{wch:12},{wch:12},{wch:12},{wch:10}];
+  XLSX.utils.book_append_sheet(wb, ws, 'PnL');
+  XLSX.writeFile(wb, 'tfl-pnl-template.xlsx');
+}
+function exportPnLExcel(){
+  const rows = _aggregateLocationDaily();
+  const data = [
+    ['วันที่','สถานที่','ลูกค้ารวม','รายรับ','รายจ่าย','เงินแจก','แก้วที่แจก','กำไรสุทธิ'],
+    ...rows.map(r => [r.date, r.location, r.customers, r.revenue, r.expenses, r.moneyGiven, r.cups, r.revenue-r.expenses-r.moneyGiven]),
+  ];
+  const totalRev = rows.reduce((s,r)=>s+r.revenue,0);
+  const totalExp = rows.reduce((s,r)=>s+r.expenses,0);
+  const totalMG  = rows.reduce((s,r)=>s+r.moneyGiven,0);
+  data.push(['','รวม', rows.reduce((s,r)=>s+r.customers,0), totalRev, totalExp, totalMG, rows.reduce((s,r)=>s+r.cups,0), totalRev-totalExp-totalMG]);
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = [{wch:14},{wch:24},{wch:12},{wch:14},{wch:14},{wch:12},{wch:10},{wch:14}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'PnL');
+  XLSX.writeFile(wb, `tfl-pnl${salesDateFrom?'-'+salesDateFrom:''}${salesDateTo?'-to-'+salesDateTo:''}.xlsx`);
 }
 
 let _salesAssigneeSel = new Set();
