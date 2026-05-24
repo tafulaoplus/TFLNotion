@@ -27246,10 +27246,11 @@ function _renderSalesCustomers(el){
 
   const actions = `
     <button class="btn-ghost" onclick="openCustomerModal()">${I.plus} เพิ่มลูกค้า</button>
-    <button class="btn-ghost" onclick="downloadCustomerTemplate()">${I.download} แม่แบบ Excel</button>
+    <button class="btn-ghost" onclick="downloadCustomerTemplate()">${I.download} แม่แบบ</button>
     <label class="btn-ghost" style="cursor:pointer">${I.upload} Import
       <input type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="importCustomersExcel(this.files[0])"/>
     </label>
+    <button class="btn-ghost" onclick="openBulkDeleteCustomers()" style="color:#dc2626">${I.trash} ลบตามวันที่</button>
     <button class="btn-primary" onclick="exportCustomersExcel()">${I.download} Export</button>`;
 
   el.innerHTML = topbarSales('ข้อมูลลูกค้า', `${totalC} รายการ · ยอดรวม ${_fmtBaht(totalAmount)}`, actions) + `
@@ -27385,6 +27386,107 @@ function deleteCustomer(id){
   saveAll();
   _syncCollection('delete', 'salesCustomers', id);
   rerender();
+}
+
+// ----- Bulk delete by date range -----
+// Used by both Tab 1 (customer detail) and Tab 2 (P&L view).
+// Both delete from salesCustomers since Tab 2 is derived from it.
+function _bulkDeleteRangeUI(opts){
+  // opts = { titleIcon, titleText, helperText, filterLocation }
+  const html = `
+    <div class="overlay show" style="display:flex" id="bulkDelOverlay" onclick="if(event.target===this)closeBulkDel()">
+      <div class="modal" style="width:min(440px,calc(100vw - 32px))">
+        <div class="modal-hd">
+          <div class="modal-title">${opts.titleIcon||'🗑️'} ${opts.titleText}</div>
+          <button class="modal-close" onclick="closeBulkDel()">×</button>
+        </div>
+        <div class="modal-bd">
+          <p style="font-size:13px;color:var(--t2);margin-bottom:14px">${opts.helperText||'ลบข้อมูลในช่วงวันที่ที่เลือก ทำซ้ำไม่ได้'}</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div class="lot-fld"><label class="lot-fld-lbl">จากวันที่</label><input id="bdFrom" type="date" value="${salesDateFrom||''}"/></div>
+            <div class="lot-fld"><label class="lot-fld-lbl">ถึงวันที่</label><input id="bdTo" type="date" value="${salesDateTo||''}"/></div>
+          </div>
+          ${opts.filterLocation? `<div class="lot-fld"><label class="lot-fld-lbl">เฉพาะสถานที่ (ไม่บังคับ)</label><input id="bdLoc" type="text" value="${salesLocationFilter||''}" placeholder="เว้นว่าง = ทุกสถานที่"/></div>`:''}
+          <div id="bdPreview" style="margin-top:10px;font-size:13px;padding:11px;border-radius:9px;background:var(--bg-soft);border:1px solid var(--border);line-height:1.5"></div>
+        </div>
+        <div class="modal-ft">
+          <button class="sm-btn-cancel" onclick="closeBulkDel()">ยกเลิก</button>
+          <button class="btn-primary" id="bdConfirmBtn" style="background:linear-gradient(135deg,#ef4444,#dc2626)" onclick="confirmBulkDel()">${I.trash} ยืนยันลบ</button>
+        </div>
+      </div>
+    </div>`;
+  let root = document.getElementById('bulkDelRoot');
+  if(!root){ root = document.createElement('div'); root.id='bulkDelRoot'; document.body.appendChild(root); }
+  root.innerHTML = html;
+  const update = () => updateBulkDelPreview();
+  setTimeout(update, 30);
+  ['bdFrom','bdTo','bdLoc'].forEach(id => { const e = document.getElementById(id); if(e) e.addEventListener('input', update); });
+}
+
+function openBulkDeleteCustomers(){
+  _bulkDeleteRangeUI({
+    titleText: 'ลบข้อมูลลูกค้าตามวันที่',
+    helperText: 'จะลบทุกรายการลูกค้าในช่วงวันที่นี้ — ทำซ้ำไม่ได้',
+    filterLocation: true,
+  });
+}
+
+function openBulkDeletePnL(){
+  _bulkDeleteRangeUI({
+    titleText: 'ลบข้อมูลรายรับ-รายจ่ายตามวันที่',
+    helperText: 'จะลบรายการลูกค้าทั้งหมดในช่วงนี้ (ที่เป็นข้อมูลของรายรับ-รายจ่าย) — ทำซ้ำไม่ได้',
+    filterLocation: true,
+  });
+}
+
+function _matchedCustomersForBulk(){
+  const from = document.getElementById('bdFrom')?.value || '';
+  const to   = document.getElementById('bdTo')?.value || '';
+  const loc  = (document.getElementById('bdLoc')?.value || '').trim().toLowerCase();
+  return salesCustomers.filter(c => {
+    if(from && (c.date||'') < from) return false;
+    if(to && (c.date||'') > to) return false;
+    if(loc && !(c.location||'').toLowerCase().includes(loc)) return false;
+    return true;
+  });
+}
+
+function updateBulkDelPreview(){
+  const matched = _matchedCustomersForBulk();
+  const total = matched.length;
+  const sumAmount = matched.reduce((s,c)=>s+(+c.amount||0),0);
+  const sumCups = matched.reduce((s,c)=>s+(+c.cupsGiven||0),0);
+  const prev = document.getElementById('bdPreview');
+  const btn = document.getElementById('bdConfirmBtn');
+  if(!prev) return;
+  if(total === 0){
+    prev.innerHTML = `<span style="color:var(--t3)">ไม่มีรายการที่ตรงเงื่อนไข</span>`;
+    if(btn) btn.disabled = true;
+  } else {
+    prev.innerHTML = `จะลบ <b style="color:#dc2626">${total}</b> รายการ<br>
+      ยอดรวม: <b>${_fmtBaht(sumAmount)}</b> · แก้วที่แจก: <b>${sumCups}</b>`;
+    if(btn) btn.disabled = false;
+  }
+}
+
+function confirmBulkDel(){
+  const matched = _matchedCustomersForBulk();
+  if(matched.length === 0){ alert('ไม่มีรายการที่ตรงเงื่อนไข'); return; }
+  if(!confirm(`ยืนยันลบ ${matched.length} รายการ?\nการกระทำนี้ย้อนกลับไม่ได้`)) return;
+  const ids = new Set(matched.map(c => c.id));
+  salesCustomers = salesCustomers.filter(c => !ids.has(c.id));
+  // Atomic delete for each on server
+  matched.forEach(c => _syncCollection('delete', 'salesCustomers', c.id));
+  saveAll();
+  flushSyncNow();
+  closeBulkDel();
+  alert(`✅ ลบ ${matched.length} รายการเรียบร้อย`);
+  rerender();
+}
+
+function closeBulkDel(){
+  const root = document.getElementById('bulkDelRoot');
+  if(root) root.innerHTML = '';
 }
 
 // ----- Excel: Customer template + export + import -----
@@ -27672,7 +27774,8 @@ function _renderSalesPnL(el){
   const locations = Array.from(new Set(salesCustomers.concat(salesEvents).map(r=>r.location).filter(Boolean))).sort();
 
   const actions = `
-    <button class="btn-ghost" onclick="downloadPnLTemplate()">${I.download} แม่แบบ Excel</button>
+    <button class="btn-ghost" onclick="downloadPnLTemplate()">${I.download} แม่แบบ</button>
+    <button class="btn-ghost" onclick="openBulkDeletePnL()" style="color:#dc2626">${I.trash} ลบตามวันที่</button>
     <button class="btn-primary" onclick="exportPnLExcel()">${I.download} Export</button>`;
 
   el.innerHTML = topbarSales('รายรับ-รายจ่าย ตามสถานที่', `${rows.length} วัน·สถานที่ · กำไรสุทธิ ${_fmtBaht(net)}`, actions) + `
