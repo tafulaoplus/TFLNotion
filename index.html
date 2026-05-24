@@ -10028,11 +10028,12 @@ function cancelPin(){
 }
 
 function resetUserPin(userId){
-  const u = USERS.find(x=>x.id===userId);
+  const u = USERS.find(x => String(x.id) === String(userId));
   if(!u) return;
   if(!confirm(`ล้างรหัส PIN ของ "${u.name}"?\n\nผู้ใช้จะต้องตั้งรหัสใหม่ตอนล็อกอินครั้งถัดไป`)) return;
   u.pin = '';
   saveAll();
+  if(typeof flushSyncNow === 'function') flushSyncNow();
   alert(`ล้างรหัส PIN ของ "${u.name}" แล้ว`);
   rerender();
 }
@@ -27821,8 +27822,8 @@ function renderMembers(el){
           <span class="m-badge ${u.role==='admin'?'r-admin':u.role==='supervisor'?'r-supervisor':u.role==='social'?'role-social':u.role==='normal'?'r-normal':'r-member'}">${u.role==='admin'?'Admin':u.role==='supervisor'?'Supervisor':u.role==='social'?'Social':u.role==='normal'?'Normal':'Member'}</span>
           <div class="m-tasks">${ut.length} งาน · เสร็จ ${ud}</div>
           <div class="m-email">${u.email}</div>
-          ${u.id!==currentUser.id?`<div style="display:flex;flex-direction:column;gap:6px;margin-top:12px" onclick="event.stopPropagation()">
-            <select class="role-select" onchange="setMemberRole(${u.id}, this.value)" title="เปลี่ยน Role">
+          ${String(u.id)!==String(currentUser.id)?`<div style="display:flex;flex-direction:column;gap:6px;margin-top:12px" onclick="event.stopPropagation()">
+            <select class="role-select" onchange="setMemberRole('${u.id}', this.value)" title="เปลี่ยน Role">
               <option value="member" ${u.role==='member'?'selected':''}>Member</option>
               <option value="social" ${u.role==='social'?'selected':''}>Social</option>
               <option value="supervisor" ${u.role==='supervisor'?'selected':''}>Supervisor</option>
@@ -27830,10 +27831,10 @@ function renderMembers(el){
               <option value="normal" ${u.role==='normal'?'selected':''}>Normal (ไม่ลงเวลา)</option>
             </select>
             <div style="display:flex;gap:5px;justify-content:center">
-              <button class="small-btn ghost" onclick="viewUserPin(${u.id})" title="ดู PIN">PIN</button>
-              <button class="small-btn ghost" onclick="resetUserPin(${u.id})" title="รีเซ็ต PIN">↻</button>
-              <button class="small-btn ghost" onclick="openMemberDetail(${u.id})" title="ดูรายละเอียด">${I.edit}</button>
-              <button class="small-btn danger" onclick="removeMember(${u.id})" title="ลบ">${I.trash}</button>
+              <button class="small-btn ghost" onclick="viewUserPin('${u.id}')" title="ดู PIN">PIN</button>
+              <button class="small-btn ghost" onclick="resetUserPin('${u.id}')" title="รีเซ็ต PIN">↻</button>
+              <button class="small-btn ghost" onclick="openMemberDetail('${u.id}')" title="ดูรายละเอียด">${I.edit}</button>
+              <button class="small-btn danger" onclick="removeMember('${u.id}')" title="ลบ">${I.trash}</button>
             </div>
           </div>`:'<div style="font-size:11px;color:var(--p500);margin-top:14px;font-weight:700">← คุณ</div>'}
         </div>`;
@@ -27948,23 +27949,23 @@ function toggleRole(id){
 }
 
 function setMemberRole(id, role){
-  const u = USERS.find(x => x.id === id);
+  // Use String() comparison so it works for both numeric ids (Date.now()) and string ids ("owner-001")
+  const u = USERS.find(x => String(x.id) === String(id));
   if(!u) return;
-  // Whitelist ALL valid roles (was missing 'supervisor' and 'normal' — caused silent revert)
-  if(!['member','social','supervisor','admin','normal'].includes(role)) return;
+  // Whitelist ALL valid roles. Include 'owner' as a passthrough (owner stays owner)
+  if(!['member','social','supervisor','admin','normal','owner'].includes(role)) return;
   if(!confirm(`เปลี่ยน Role ของ "${u.name}" เป็น "${role}"?`)){
     rerender(); return;
   }
   u.role = role;
   try { logActivity('update','user', id, `เปลี่ยน Role → ${role}`); } catch(_){}
   saveAll();
-  // Force-flush so the change propagates immediately (don't wait for 250ms debounce)
   if(typeof flushSyncNow === 'function') flushSyncNow();
   rerender(); renderSidebar();
 }
 
 function viewUserPin(id){
-  const u = USERS.find(x => x.id === id);
+  const u = USERS.find(x => String(x.id) === String(id));
   if(!u) return;
   if(currentUser.role !== 'admin'){ alert('Admin เท่านั้น'); return; }
   if(!u.pin){
@@ -27977,10 +27978,18 @@ function viewUserPin(id){
 }
 
 function removeMember(id){
-  if(!confirm('ลบสมาชิกนี้ออกจากทีม?')) return;
-  USERS=USERS.filter(u=>u.id!==id);
-  tasks.forEach(t=>{ t.assignees=t.assignees.filter(a=>a!==id); if(!t.assignees.length) t.assignees=[currentUser.id]; });
+  // Use String() comparison — supports both numeric ids (Date.now()) and string ids ("owner-001")
+  const u = USERS.find(x => String(x.id) === String(id));
+  if(!u){ alert('ไม่พบสมาชิกนี้'); return; }
+  if(String(currentUser.id) === String(id)){ alert('ลบบัญชีตัวเองไม่ได้'); return; }
+  if(!confirm(`ลบสมาชิก "${u.name}" ออกจากทีม?`)) return;
+  USERS = USERS.filter(x => String(x.id) !== String(id));
+  tasks.forEach(t=>{
+    t.assignees = (t.assignees||[]).filter(a => String(a) !== String(id));
+    if(!t.assignees.length) t.assignees = [currentUser.id];
+  });
   saveAll();
+  if(typeof flushSyncNow === 'function') flushSyncNow();
   rerender(); renderSidebar(); populateModalSelects();
 }
 
