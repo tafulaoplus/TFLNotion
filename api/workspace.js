@@ -36,6 +36,20 @@ export default async function handler(req, res) {
         return res.json({ ok: true, exists: false, data: null });
       }
       const sizeBytes = Number(meta[0].size_bytes) || 0;
+
+      // ⭐ Meta-only mode: ?meta=1 → return ONLY updatedAt (~100 bytes vs ~2MB)
+      // Client polls this every 15s; only fetches full body if updatedAt changed.
+      // Massive transfer reduction (~99% of poll traffic).
+      if (req.query && (req.query.meta === '1' || req.query.meta === 'true')) {
+        return res.json({
+          ok: true,
+          exists: true,
+          updatedAt: meta[0].updated_at,
+          updatedBy: meta[0].updated_by,
+          sizeBytes,
+        });
+      }
+
       // If TRULY oversized, fetch only critical fields via JSON paths (skip large arrays)
       // Raised from 2MB to 10MB — at 2-3MB the snapshot still works fine and clients
       // need ALL collections (stockItems, adLibCompetitors, attendance, etc).
