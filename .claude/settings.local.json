@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($git = \"C:\\\\Users\\\\suntf\\\\AppData\\\\Local\\\\GitHubDesktop\\\\app-3.5.8\\\\resources\\\\app\\\\git\\\\cmd\\\\git.exe\"; & $git fetch origin; & $git status; Write-Host \"---\"; & $git log --oneline -3; Write-Host \"---\"; & $git log --oneline origin/main -3)"
+    ]
+  }
+}

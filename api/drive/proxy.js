@@ -105,7 +105,9 @@ export default async function handler(req, res) {
     const token = await getAccessToken(cfg);
 
     if (op === 'list' && req.method === 'GET') {
-      const q = encodeURIComponent(`'${DRIVE_FOLDER_ID}' in parents and trashed=false`);
+      // Optional override: list files from a different folder (used by "แบบฟอร์ม" page)
+      const folderId = (req.query && req.query.folderId) || DRIVE_FOLDER_ID;
+      const q = encodeURIComponent(`'${folderId}' in parents and trashed=false`);
       const fields = encodeURIComponent('files(id,name,size,mimeType,createdTime,modifiedTime,thumbnailLink,webViewLink,webContentLink,iconLink)');
       const r = await fetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=${fields}&orderBy=createdTime%20desc&pageSize=200`, {
         headers: { Authorization: 'Bearer ' + token },

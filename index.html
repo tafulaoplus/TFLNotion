@@ -6018,6 +6018,32 @@ img,video,iframe,canvas{max-width:100%;height:auto}
 .stock-cal-panel-hd h3{margin:0;font-size:14px;font-weight:800;color:var(--t1)}
 .stock-cal-section{margin-bottom:14px}
 .stock-cal-section h4{font-size:12px;font-weight:700;margin:8px 0 6px;text-transform:uppercase;letter-spacing:.3px;display:flex;align-items:center;gap:5px}
+
+/* ===== FORMS PAGE ===== */
+.forms-page{display:flex;flex-direction:column;gap:14px}
+.forms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.form-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:all .15s;position:relative}
+.form-card:hover{border-color:var(--p400);box-shadow:0 6px 20px rgba(124,58,237,.1);transform:translateY(-2px)}
+.form-card-icon{font-size:32px;line-height:1}
+.form-card-body{flex:1;display:flex;flex-direction:column;gap:4px}
+.form-card-title{font-size:14px;font-weight:700;color:var(--t1);line-height:1.35}
+.form-card-sub{font-size:11px;color:var(--t3);font-style:italic}
+.form-card-meta{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.form-card-cat-pill{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;color:#fff}
+.form-card-cat-pill.cat-hr{background:#3b82f6}
+.form-card-cat-pill.cat-fin{background:#10b981}
+.form-card-cat-pill.cat-op{background:#f59e0b}
+.form-card-cat-pill.cat-lg{background:#ef4444}
+.form-card-cat-pill.cat-ot{background:#a855f7}
+.form-card-print{padding:6px 12px;font-size:12px;font-weight:600;border-radius:8px}
+
+.forms-drive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:8px}
+.forms-drive-file{display:flex;flex-direction:column;gap:6px;padding:8px;background:var(--bg-soft);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--t1);transition:all .15s;overflow:hidden}
+.forms-drive-file:hover{border-color:var(--p400);background:var(--bg);transform:translateY(-1px)}
+.forms-drive-file img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;background:var(--bg)}
+.forms-drive-thumb-noimg{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--bg);color:var(--t3);border-radius:6px}
+.forms-drive-thumb-noimg svg{width:36px;height:36px}
+.forms-drive-name{font-size:11.5px;font-weight:600;color:var(--t1);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;min-height:30px}
 </style>
 </head>
 <body>
@@ -6168,6 +6194,7 @@ img,video,iframe,canvas{max-width:100%;height:auto}
       <div id="viewDashboard" class="view"></div>
       <div id="viewLibrary" class="view"></div>
       <div id="viewFiles" class="view"></div>
+      <div id="viewForms" class="view"></div>
       <div id="viewNotes" class="view"></div>
       <div id="viewTaskBoard" class="view"></div>
       <div id="viewMyTasks" class="view"></div>
@@ -7542,7 +7569,7 @@ const T_DICT = {
     // Sidebar nav
     menu_main: 'เมนูหลัก', menu_admin: 'Admin', menu_social: 'Social',
     nav_drag_hint: 'ลากเพื่อจัดเรียง',
-    nav_dashboard: 'ภาพรวม', nav_library: 'ไลบรารี', nav_files: 'เอกสาร', nav_notes: 'Note',
+    nav_dashboard: 'ภาพรวม', nav_library: 'ไลบรารี', nav_files: 'คลังไฟล์', nav_forms: 'แบบฟอร์ม', nav_notes: 'Note',
     nav_tasks: 'ติดตามงาน', nav_mytasks: 'งานของฉัน', nav_alltasks: 'งานทั้งหมด',
     nav_sales: 'ออกพื้นที่', nav_calendar: 'ปฏิทิน', nav_members: 'จัดการสมาชิก',
     nav_activity: 'Activity Log', nav_lottery: 'หวยพัฒนาลาว', nav_attendance: 'ระบบลงเวลา',
@@ -7609,7 +7636,7 @@ const T_DICT = {
     // Sidebar nav
     menu_main: 'ເມນູຫຼັກ', menu_admin: 'ຜູ້ດູແລ', menu_social: 'ໂຊຊຽວ',
     nav_drag_hint: 'ລາກເພື່ອຈັດລຽງ',
-    nav_dashboard: 'ພາບລວມ', nav_library: 'ຫ້ອງສະໝຸດ', nav_files: 'ເອກະສານ', nav_notes: 'ບັນທຶກ',
+    nav_dashboard: 'ພາບລວມ', nav_library: 'ຫ້ອງສະໝຸດ', nav_files: 'ຄັງໄຟລ໌', nav_forms: 'ແບບຟອມ', nav_notes: 'ບັນທຶກ',
     nav_tasks: 'ຕິດຕາມວຽກ', nav_mytasks: 'ວຽກຂອງຂ້ອຍ', nav_alltasks: 'ວຽກທັງໝົດ',
     nav_sales: 'ອອກພື້ນທີ່', nav_calendar: 'ປະຕິທິນ', nav_members: 'ຈັດການສະມາຊິກ',
     nav_activity: 'ປະຫວັດການເຄື່ອນໄຫວ', nav_lottery: 'ຫວຍພັດທະນາລາວ', nav_attendance: 'ລົງເວລາ',
@@ -9754,7 +9781,7 @@ function initApp(){
   let startView = 'dashboard';
   try {
     const saved = localStorage.getItem('tfl_currentView');
-    const validViews = ['dashboard','library','files','notes','taskBoard','myTasks','allTasks','members','socialReport','socialManage','adLibrary','trendScraper','affiliateHub','facebookHub','liveAnalytics','stock','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','postPerformance','adSpend','sales','activity','calendar','lottery','attendance'];
+    const validViews = ['dashboard','library','files','forms','notes','taskBoard','myTasks','allTasks','members','socialReport','socialManage','adLibrary','trendScraper','affiliateHub','facebookHub','liveAnalytics','stock','fbLive','fbGoLive','fbLiveAuto','fbPosts','socialAnalytics','socialIntegrations','postPerformance','adSpend','sales','activity','calendar','lottery','attendance'];
     if(saved && validViews.includes(saved)){
       // Check role permission
       if((saved === 'allTasks' || saved === 'members' || saved === 'activity' || saved === 'lottery' || saved === 'affiliateHub') && currentUser.role !== 'admin'){
@@ -9816,6 +9843,7 @@ function renderSidebar(){
     {id:'attendance', icon:I.clock, label:t('nav_attendance')},
     {id:'dashboard', icon:I.home, label:t('nav_dashboard')},
     {id:'files', icon:I.folder, label:t('nav_files')},
+    {id:'forms', icon:I.filePlus||I.document||I.note, label:t('nav_forms')},
     {id:'notes', icon:I.note, label:t('nav_notes')},
     {id:'taskBoard', icon:I.grid, label:t('nav_tasks')},
     {id:'myTasks', icon:I.check, label:t('nav_mytasks')},
@@ -10214,7 +10242,7 @@ function renderView(id,el){
   el.innerHTML='';
   el.classList.add('fade-in');
   setTimeout(()=>el.classList.remove('fade-in'),300);
-  ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,notes:renderNotes,taskBoard:renderTaskBoard,
+  ({dashboard:renderDashboard,library:renderLibrary,files:renderFiles,forms:renderForms,notes:renderNotes,taskBoard:renderTaskBoard,
     myTasks:renderMyTasks,allTasks:renderAllTasks,members:renderMembers,fbLive:renderFbLive,fbGoLive:renderFbGoLive,fbLiveAuto:renderFbLiveAuto,
     sales:renderSales,activity:renderActivity,calendar:renderCalendar,lottery:renderLottery,attendance:renderAttendance,socialReport:renderSocialReport,socialManage:renderSocialManage,adLibrary:renderAdLibrary,trendScraper:renderTrendScraper,affiliateHub:renderAffiliateHub,facebookHub:renderFacebookHub,liveAnalytics:renderLiveAnalytics,stock:renderStock,fbPosts:renderFbPosts,socialAnalytics:renderSocialAnalytics,socialIntegrations:renderSocialIntegrations,postPerformance:renderPostPerformance,adSpend:renderAdSpend}[id]||(()=>{}))(el);
 }
@@ -15188,6 +15216,565 @@ function getFileType(name, mime){
   return {label: ext.toUpperCase()||'FILE',color:'#6b7280',bg:'#f3f4f6'};
 }
 
+// =============================================================
+// แบบฟอร์ม / Forms (Lao company forms with company letterhead)
+// =============================================================
+const FORMS_DRIVE_FOLDER = '1jkU2wPKNOePF7WmbZSx4elO6vV-zORF3';
+const TFL_COMPANY = {
+  nameLo: 'ບໍລິສັດ TAFU INTERNATIONAL TRADING SOLE CO.,LTD',
+  addressLo: 'ບ້ານນ່ອງບົວທອງ ເມືອງສີໂຄດຕະບອງ ນະຄອນຫຼວງວຽງຈັນ ສປປ ລາວ',
+  phoneLo: '021 772 626 · 021 772 727 · 021 772 828',
+  emailLo: 'support@tflao.com',
+  logo: '/logo%20tfl%2B.png',
+};
+
+// Field types:
+//   'text'    → 1-line text input box
+//   'long'    → multi-line text (3-5 rows of underlines)
+//   'date'    → date input
+//   'number'  → number input
+//   'check'   → checkbox row with options
+//   'sign'    → signature line block
+//   'table'   → table with columns
+//   'section' → section heading
+//   'p'       → paragraph (informational text)
+const FORMS = [
+  // ===== 1. HR =====
+  { id:'hr-application', cat:'hr', titleLo:'ໃບສະໝັກວຽກ / ປະຫວັດພະນັກງານ', subEn:'Application Form / Employee Profile', icon:'📋',
+    fields:[
+      { type:'section', textLo:'ຂໍ້ມູນສ່ວນຕົວ' },
+      { type:'text', labelLo:'ຊື່ ແລະ ນາມສະກຸນ', col:1 },
+      { type:'text', labelLo:'ຊື່ຫຼິ້ນ', col:2 },
+      { type:'text', labelLo:'ເພດ', col:2 },
+      { type:'date', labelLo:'ວັນເດືອນປີເກີດ', col:2 },
+      { type:'text', labelLo:'ອາຍຸ', col:2 },
+      { type:'text', labelLo:'ສັນຊາດ', col:2 },
+      { type:'text', labelLo:'ບັດປະຈຳຕົວ ເລກທີ', col:2 },
+      { type:'text', labelLo:'ສະຖານະການແຕ່ງງານ', col:2 },
+      { type:'long', labelLo:'ທີ່ຢູ່ປະຈຸບັນ', rows:2 },
+      { type:'text', labelLo:'ເບີໂທລະສັບ', col:2 },
+      { type:'text', labelLo:'ອີເມວ', col:2 },
+      { type:'section', textLo:'ການສຶກສາ' },
+      { type:'table', cols:['ລະດັບ','ສະຖາບັນ','ສາຂາ','ປີຈົບ'], rows:3 },
+      { type:'section', textLo:'ປະສົບການເຮັດວຽກ' },
+      { type:'table', cols:['ບໍລິສັດ','ຕຳແໜ່ງ','ໄລຍະ','ເງິນເດືອນ'], rows:3 },
+      { type:'section', textLo:'ຕຳແໜ່ງທີ່ສະໝັກ' },
+      { type:'text', labelLo:'ຕຳແໜ່ງ', col:2 },
+      { type:'text', labelLo:'ເງິນເດືອນທີ່ຄາດຫວັງ', col:2 },
+      { type:'date', labelLo:'ວັນທີສາມາດເລີ່ມວຽກ', col:2 },
+      { type:'text', labelLo:'ຮູ້ຈັກບໍລິສັດຈາກ', col:2 },
+      { type:'sign', leftLo:'ລາຍເຊັນຜູ້ສະໝັກ', rightLo:'ວັນທີ' },
+    ] },
+
+  { id:'hr-resign', cat:'hr', titleLo:'ໃບລາອອກ', subEn:'Resignation Form', icon:'📝',
+    fields:[
+      { type:'text', labelLo:'ຮຽນ', col:1, placeholderLo:'ຫົວໜ້າຝ່າຍ / ຜູ້ບໍລິຫານ' },
+      { type:'text', labelLo:'ຊື່-ນາມສະກຸນ', col:2 },
+      { type:'text', labelLo:'ຕຳແໜ່ງ', col:2 },
+      { type:'text', labelLo:'ຝ່າຍ/ພະແນກ', col:2 },
+      { type:'date', labelLo:'ວັນທີເລີ່ມວຽກ', col:2 },
+      { type:'date', labelLo:'ວັນທີຕ້ອງການລາອອກ', col:1 },
+      { type:'long', labelLo:'ເຫດຜົນການລາອອກ', rows:4 },
+      { type:'long', labelLo:'ຂໍ້ສະເໜີແນະຕໍ່ບໍລິສັດ', rows:3 },
+      { type:'sign', leftLo:'ລາຍເຊັນຜູ້ລາອອກ', rightLo:'ລາຍເຊັນຫົວໜ້າ' },
+    ] },
+
+  { id:'hr-leave', cat:'hr', titleLo:'ໃບລາພັກ / ຂໍລາຫຍຸດ', subEn:'Leave Request Form', icon:'🌴',
+    fields:[
+      { type:'text', labelLo:'ຊື່-ນາມສະກຸນ', col:2 },
+      { type:'text', labelLo:'ຕຳແໜ່ງ / ຝ່າຍ', col:2 },
+      { type:'check', labelLo:'ປະເພດການລາ', optionsLo:['ລາປ່ວຍ','ລາກິດ','ລາພັກປະຈຳປີ','ລາຄອດ','ລາອື່ນໆ'] },
+      { type:'date', labelLo:'ລາແຕ່ວັນທີ', col:2 },
+      { type:'date', labelLo:'ເຖິງວັນທີ', col:2 },
+      { type:'text', labelLo:'ຈຳນວນວັນທີລາ', col:2 },
+      { type:'text', labelLo:'ເບີໂທຕິດຕໍ່ສຸກເສີນ', col:2 },
+      { type:'long', labelLo:'ເຫດຜົນ', rows:3 },
+      { type:'long', labelLo:'ຜູ້ຮັບຜິດຊອບວຽກແທນ', rows:2 },
+      { type:'sign', leftLo:'ລາຍເຊັນຜູ້ລາ', rightLo:'ລາຍເຊັນຫົວໜ້າອະນຸມັດ' },
+    ] },
+
+  { id:'hr-ot', cat:'hr', titleLo:'ໃບເບີກຄ່າຕອບແທນ / OT', subEn:'Overtime / Compensation Form', icon:'⏰',
+    fields:[
+      { type:'text', labelLo:'ຊື່-ນາມສະກຸນ', col:2 },
+      { type:'text', labelLo:'ຕຳແໜ່ງ / ຝ່າຍ', col:2 },
+      { type:'date', labelLo:'ເດືອນ/ປີ', col:1 },
+      { type:'table', cols:['ວັນທີ','ເລີ່ມ','ສິ້ນສຸດ','ຊົ່ວໂມງ','ວຽກທີ່ເຮັດ'], rows:6 },
+      { type:'text', labelLo:'ລວມຊົ່ວໂມງ OT', col:2 },
+      { type:'text', labelLo:'ຄ່າຕອບແທນ (ກີບ)', col:2 },
+      { type:'sign', leftLo:'ລາຍເຊັນຜູ້ຂໍ', rightLo:'ລາຍເຊັນຜູ້ອະນຸມັດ' },
+    ] },
+
+  { id:'hr-promotion', cat:'hr', titleLo:'ໃບຂໍເລື່ອນຕຳແໜ່ງ / ປັບເງິນເດືອນ', subEn:'Promotion / Salary Adjustment Request', icon:'📈',
+    fields:[
+      { type:'text', labelLo:'ຊື່-ນາມສະກຸນ', col:2 },
+      { type:'text', labelLo:'ຕຳແໜ່ງປະຈຸບັນ', col:2 },
+      { type:'text', labelLo:'ເງິນເດືອນປະຈຸບັນ', col:2 },
+      { type:'date', labelLo:'ວັນທີເຂົ້າເຮັດວຽກ', col:2 },
+      { type:'text', labelLo:'ຕຳແໜ່ງທີ່ຂໍເລື່ອນ', col:2 },
+      { type:'text', labelLo:'ເງິນເດືອນທີ່ຂໍ', col:2 },
+      { type:'long', labelLo:'ເຫດຜົນ / ຜົນງານທີ່ສຳເລັດ', rows:5 },
+      { type:'sign', leftLo:'ລາຍເຊັນຜູ້ຂໍ', rightLo:'ລາຍເຊັນຜູ້ບໍລິຫານ' },
+    ] },
+
+  { id:'hr-eval', cat:'hr', titleLo:'ໃບປະເມີນຜົນງານ', subEn:'Performance Evaluation', icon:'⭐',
+    fields:[
+      { type:'text', labelLo:'ຊື່ພະນັກງານ', col:2 },
+      { type:'text', labelLo:'ຕຳແໜ່ງ', col:2 },
+      { type:'text', labelLo:'ໄລຍະປະເມີນ', col:1 },
+      { type:'table', cols:['ຫົວຂໍ້','ດີຫຼາຍ','ດີ','ປານກາງ','ປັບປຸງ'], rows:6 },
+      { type:'long', labelLo:'ຄຳເຫັນຂອງຫົວໜ້າ', rows:3 },
+      { type:'long', labelLo:'ຄຳເຫັນຂອງພະນັກງານ', rows:3 },
+      { type:'sign', leftLo:'ລາຍເຊັນຜູ້ປະເມີນ', rightLo:'ລາຍເຊັນພະນັກງານ' },
+    ] },
+
+  { id:'hr-late-warning', cat:'hr', titleLo:'ໃບເຕືອນມາສາຍ', subEn:'Late Arrival Warning Notice', icon:'⚠️',
+    fields:[
+      { type:'text', labelLo:'ຮຽນ (ຊື່ພະນັກງານ)', col:2 },
+      { type:'text', labelLo:'ຕຳແໜ່ງ / ຝ່າຍ', col:2 },
+      { type:'date', labelLo:'ວັນທີອອກໃບເຕືອນ', col:2 },
+      { type:'text', labelLo:'ຄັ້ງທີ່', col:2, placeholderLo:'ເຕືອນຄັ້ງທີ 1 / 2 / 3' },
+      { type:'section', textLo:'ລາຍລະອຽດ' },
+      { type:'table', cols:['ວັນທີ','ເວລາທີ່ມາ','ສາຍ (ນາທີ)','ໝາຍເຫດ'], rows:5 },
+      { type:'long', labelLo:'ຂໍ້ຫ້າມ / ກົດລະບຽບທີ່ລະເມີດ', rows:2 },
+      { type:'long', labelLo:'ມາດຕະການລົງໂທດ (ຖ້າມີ)', rows:3, placeholderLo:'ເຊັ່ນ: ຫັກເງິນເດືອນ, ພັກວຽກຊົ່ວຄາວ, ໃບເຕືອນຄັ້ງສຸດທ້າຍ' },
+      { type:'p', textLo:'ກະລຸນາປັບປຸງການມາວຽກໃຫ້ຕົງເວລາ ການລະເມີດຄັ້ງຕໍ່ໄປ ບໍລິສັດອາດຈະພິຈາລະນາມາດຕະການທີ່ໜັກກວ່ານີ້ ລວມເຖິງການເລີກຈ້າງ' },
+      { type:'sign', leftLo:'ລາຍເຊັນຫົວໜ້າ / HR', rightLo:'ລາຍເຊັນພະນັກງານ (ຮັບຊາບ)' },
+    ] },
+
+  { id:'hr-suspend', cat:'hr', titleLo:'ໃບພັກວຽກ', subEn:'Work Suspension Notice', icon:'🛑',
+    fields:[
+      { type:'text', labelLo:'ຊື່ພະນັກງານ', col:2 },
+      { type:'text', labelLo:'ຕຳແໜ່ງ / ຝ່າຍ', col:2 },
+      { type:'date', labelLo:'ພັກວຽກແຕ່ວັນທີ', col:2 },
+      { type:'date', labelLo:'ເຖິງວັນທີ', col:2 },
+      { type:'long', labelLo:'ເຫດຜົນການພັກວຽກ', rows:4 },
+      { type:'long', labelLo:'ເງື່ອນໄຂການກັບເຂົ້າວຽກ', rows:3 },
+      { type:'sign', leftLo:'ລາຍເຊັນຜູ້ບໍລິຫານ', rightLo:'ລາຍເຊັນພະນັກງານ' },
+    ] },
+
+  // ===== 2. Finance =====
+  { id:'fin-quote-compare', cat:'fin', titleLo:'ໃບສະເໜີ ແລະ ປຽບທຽບລາຄາ', subEn:'Price Comparison / Quotation', icon:'💵',
+    fields:[
+      { type:'text', labelLo:'ໂຄງການ / ຮັບຜິດຊອບໂດຍ', col:1 },
+      { type:'date', labelLo:'ວັນທີ', col:2 },
+      { type:'text', labelLo:'ເລກທີໃບສະເໜີ', col:2 },
+      { type:'table', cols:['ລາຍການ','ຈຳນວນ','ໜ່ວຍ','ຮ້ານທີ 1','ຮ້ານທີ 2','ຮ້ານທີ 3'], rows:6 },
+      { type:'text', labelLo:'ຮ້ານທີ່ເລືອກ', col:2 },
+      { type:'text', labelLo:'ລາຄາລວມ (ກີບ)', col:2 },
+      { type:'long', labelLo:'ເຫດຜົນການເລືອກ', rows:2 },
+      { type:'sign', leftLo:'ລາຍເຊັນຜູ້ສະເໜີ', rightLo:'ລາຍເຊັນຜູ້ອະນຸມັດ' },
+    ] },
+
+  { id:'fin-expense', cat:'fin', titleLo:'ໃບເບີກຄ່າໃຊ້ຈ່າຍ', subEn:'Expense Claim Form', icon:'🧾',
+    fields:[
+      { type:'text', labelLo:'ຊື່ຜູ້ເບີກ', col:2 },
+      { type:'text', labelLo:'ຝ່າຍ', col:2 },
+      { type:'date', labelLo:'ວັນທີ', col:1 },
+      { type:'table', cols:['ວັນທີ','ລາຍລະອຽດ','ປະເພດ','ຈຳນວນເງິນ'], rows:6 },
+      { type:'text', labelLo:'ລວມທັງໝົດ (ກີບ)', col:1 },
+      { type:'long', labelLo:'ໝາຍເຫດ', rows:2 },
+      { type:'sign', leftLo:'ລາຍເຊັນຜູ້ເບີກ', rightLo:'ລາຍເຊັນຜູ້ອະນຸມັດ' },
+    ] },
+
+  { id:'fin-payment', cat:'fin', titleLo:'ໃບສັ່ງຈ່າຍ / ຈ່າຍເງິນ', subEn:'Payment Request Form', icon:'💳',
+    fields:[
+      { type:'date', labelLo:'ວັນທີ', col:2 },
+      { type:'text', labelLo:'ເລກທີ', col:2 },
+      { type:'text', labelLo:'ຈ່າຍໃຫ້', col:1 },
+      { type:'text', labelLo:'ເລກບັນຊີ / ທະນາຄານ', col:1 },
+      { type:'text', labelLo:'ຈຳນວນເງິນ (ກີບ)', col:2 },
+      { type:'text', labelLo:'ສະກຸນເງິນ', col:2 },
+      { type:'long', labelLo:'ລາຍລະອຽດ / ເຫດຜົນ', rows:3 },
+      { type:'check', labelLo:'ວິທີຊຳລະ', optionsLo:['ເງິນສົດ','ໂອນທະນາຄານ','ເຊັກ','ບັດເຄຣດິດ'] },
+      { type:'sign', leftLo:'ຜູ້ສ້າງ', rightLo:'ຜູ້ອະນຸມັດ' },
+    ] },
+
+  { id:'fin-invoice', cat:'fin', titleLo:'ໃບເກັບເງິນ / ໃບແຈ້ງໜີ້', subEn:'Invoice / Receipt', icon:'📄',
+    fields:[
+      { type:'text', labelLo:'ລູກຄ້າ', col:1 },
+      { type:'long', labelLo:'ທີ່ຢູ່ລູກຄ້າ', rows:2 },
+      { type:'text', labelLo:'ເລກທີ Invoice', col:2 },
+      { type:'date', labelLo:'ວັນທີອອກ', col:2 },
+      { type:'date', labelLo:'ກຳນົດຊຳລະ', col:2 },
+      { type:'table', cols:['ລາຍການ','ຈຳນວນ','ລາຄາຕໍ່ໜ່ວຍ','ລວມ'], rows:5 },
+      { type:'text', labelLo:'ລາຄາລວມກ່ອນພາສີ', col:2 },
+      { type:'text', labelLo:'ພາສີ VAT (10%)', col:2 },
+      { type:'text', labelLo:'ລາຄາລວມສຸດທິ', col:1 },
+      { type:'sign', leftLo:'ຜູ້ອອກໃບ', rightLo:'ຜູ້ຮັບເງິນ' },
+    ] },
+
+  { id:'fin-budget', cat:'fin', titleLo:'ໃບຂໍງົບປະມານ', subEn:'Budget Request Form', icon:'📊',
+    fields:[
+      { type:'text', labelLo:'ໂຄງການ', col:1 },
+      { type:'text', labelLo:'ຝ່າຍ', col:2 },
+      { type:'text', labelLo:'ໄລຍະເວລາ', col:2 },
+      { type:'long', labelLo:'ວັດຖຸປະສົງ', rows:2 },
+      { type:'table', cols:['ໝວດ','ລາຍລະອຽດ','ຈຳນວນເງິນ (ກີບ)'], rows:6 },
+      { type:'text', labelLo:'ລວມງົບປະມານທີ່ຂໍ', col:1 },
+      { type:'sign', leftLo:'ຜູ້ສະເໜີ', rightLo:'ຜູ້ອະນຸມັດ' },
+    ] },
+
+  // ===== 3. Operations =====
+  { id:'op-purchase', cat:'op', titleLo:'ໃບຂໍຊື້ອຸປະກອນ / ຈັດຊື້', subEn:'Purchase Request Form', icon:'🛒',
+    fields:[
+      { type:'text', labelLo:'ຊື່ຜູ້ຂໍ', col:2 },
+      { type:'text', labelLo:'ຝ່າຍ', col:2 },
+      { type:'date', labelLo:'ວັນທີ', col:2 },
+      { type:'date', labelLo:'ຕ້ອງການພາຍໃນວັນທີ', col:2 },
+      { type:'table', cols:['ລາຍການ','ຈຳນວນ','ໜ່ວຍ','ລາຄາ (ກີບ)','ເຫດຜົນ'], rows:5 },
+      { type:'text', labelLo:'ລາຄາລວມ', col:2 },
+      { type:'check', labelLo:'ຄວາມເລ່ງດ່ວນ', optionsLo:['ປົກກະຕິ','ດ່ວນ','ດ່ວນຫຼາຍ'] },
+      { type:'sign', leftLo:'ຜູ້ຂໍ', rightLo:'ຜູ້ອະນຸມັດ' },
+    ] },
+
+  { id:'op-maintenance', cat:'op', titleLo:'ໃບຂໍຊ່ອມບຳລຸງ', subEn:'Maintenance Request', icon:'🔧',
+    fields:[
+      { type:'text', labelLo:'ຊື່ຜູ້ແຈ້ງ', col:2 },
+      { type:'text', labelLo:'ຝ່າຍ', col:2 },
+      { type:'date', labelLo:'ວັນທີແຈ້ງ', col:2 },
+      { type:'text', labelLo:'ສະຖານທີ່', col:2 },
+      { type:'text', labelLo:'ອຸປະກອນ', col:1 },
+      { type:'long', labelLo:'ລາຍລະອຽດບັນຫາ', rows:4 },
+      { type:'check', labelLo:'ຄວາມເລ່ງດ່ວນ', optionsLo:['ປົກກະຕິ','ດ່ວນ','ສຸກເສີນ'] },
+      { type:'sign', leftLo:'ຜູ້ແຈ້ງ', rightLo:'ຊ່າງ / ຜູ້ດຳເນີນການ' },
+    ] },
+
+  { id:'op-approval', cat:'op', titleLo:'ໃບຂໍອະນຸມັດເອກະສານ / ໂຄງການ', subEn:'Approval Form', icon:'✅',
+    fields:[
+      { type:'text', labelLo:'ເລື່ອງ', col:1 },
+      { type:'text', labelLo:'ຮຽນ', col:1 },
+      { type:'text', labelLo:'ຈາກ', col:2 },
+      { type:'date', labelLo:'ວັນທີ', col:2 },
+      { type:'long', labelLo:'ລາຍລະອຽດ', rows:5 },
+      { type:'long', labelLo:'ຄາດຫວັງ / ຜົນທີ່ຈະໄດ້', rows:3 },
+      { type:'sign', leftLo:'ຜູ້ສະເໜີ', rightLo:'ຜູ້ອະນຸມັດ' },
+    ] },
+
+  { id:'op-daily-report', cat:'op', titleLo:'ໃບລາຍງານປະຈຳວັນ / ບົດປະຊຸມ', subEn:'Daily / Meeting Report', icon:'📔',
+    fields:[
+      { type:'text', labelLo:'ຊື່ຜູ້ລາຍງານ', col:2 },
+      { type:'text', labelLo:'ຝ່າຍ', col:2 },
+      { type:'date', labelLo:'ວັນທີ', col:2 },
+      { type:'text', labelLo:'ເລື່ອງ / ຫົວຂໍ້', col:2 },
+      { type:'long', labelLo:'ຫົວຂໍ້ສຳຄັນ', rows:4 },
+      { type:'long', labelLo:'ການຕັດສິນໃຈ / ມະຕິ', rows:3 },
+      { type:'long', labelLo:'ສິ່ງທີ່ຕ້ອງເຮັດຕໍ່ໄປ', rows:3 },
+      { type:'sign', leftLo:'ຜູ້ລາຍງານ', rightLo:'ຫົວໜ້າ' },
+    ] },
+
+  // ===== 4. Legal =====
+  { id:'lg-contract', cat:'lg', titleLo:'ໃບສັນຍາ / ຂໍ້ຕົກລົງ', subEn:'Contract Agreement', icon:'⚖️',
+    fields:[
+      { type:'text', labelLo:'ສັນຍາລະຫວ່າງ', col:1 },
+      { type:'text', labelLo:'ກັບ', col:1 },
+      { type:'date', labelLo:'ວັນທີ', col:2 },
+      { type:'text', labelLo:'ສະຖານທີ່', col:2 },
+      { type:'long', labelLo:'ຫົວຂໍ້ສັນຍາ', rows:2 },
+      { type:'long', labelLo:'ເງື່ອນໄຂ ແລະ ຂໍ້ຕົກລົງ', rows:8 },
+      { type:'text', labelLo:'ໄລຍະເວລາສັນຍາ', col:2 },
+      { type:'text', labelLo:'ມູນຄ່າ (ກີບ)', col:2 },
+      { type:'sign', leftLo:'ຄູ່ສັນຍາຝ່າຍທີ 1', rightLo:'ຄູ່ສັນຍາຝ່າຍທີ 2' },
+    ] },
+
+  { id:'lg-permission', cat:'lg', titleLo:'ໃບຂໍອະນຸຍາດ / ອະນຸມັດເອກະສານສຳຄັນ', subEn:'Important Document Approval', icon:'🔐',
+    fields:[
+      { type:'text', labelLo:'ເລື່ອງ', col:1 },
+      { type:'text', labelLo:'ຮຽນ', col:1 },
+      { type:'text', labelLo:'ຈາກ', col:2 },
+      { type:'date', labelLo:'ວັນທີ', col:2 },
+      { type:'long', labelLo:'ລາຍລະອຽດການຂໍອະນຸຍາດ', rows:5 },
+      { type:'long', labelLo:'ເອກະສານທີ່ແນບ', rows:3 },
+      { type:'sign', leftLo:'ຜູ້ຂໍ', rightLo:'ຜູ້ອະນຸມັດ' },
+    ] },
+
+  { id:'lg-incident', cat:'lg', titleLo:'ໃບລາຍງານເຫດການ / ບໍລິຫານຄວາມສ່ຽງ', subEn:'Incident Report Form', icon:'🚨',
+    fields:[
+      { type:'text', labelLo:'ຊື່ຜູ້ລາຍງານ', col:2 },
+      { type:'date', labelLo:'ວັນທີເກີດເຫດ', col:2 },
+      { type:'text', labelLo:'ເວລາ', col:2 },
+      { type:'text', labelLo:'ສະຖານທີ່', col:2 },
+      { type:'long', labelLo:'ລາຍລະອຽດເຫດການ', rows:5 },
+      { type:'long', labelLo:'ສາເຫດ', rows:3 },
+      { type:'long', labelLo:'ຜົນກະທົບ / ຄວາມເສຍຫາຍ', rows:3 },
+      { type:'long', labelLo:'ມາດຕະການແກ້ໄຂ', rows:3 },
+      { type:'sign', leftLo:'ຜູ້ລາຍງານ', rightLo:'ຜູ້ບໍລິຫານ' },
+    ] },
+
+  // ===== 5. Others =====
+  { id:'ot-it-access', cat:'ot', titleLo:'ໃບຂໍ IT / ລະຫັດເຂົ້າລະບົບ', subEn:'IT Access Request', icon:'💻',
+    fields:[
+      { type:'text', labelLo:'ຊື່ພະນັກງານ', col:2 },
+      { type:'text', labelLo:'ຝ່າຍ / ຕຳແໜ່ງ', col:2 },
+      { type:'date', labelLo:'ວັນທີ', col:1 },
+      { type:'check', labelLo:'ປະເພດການຂໍ', optionsLo:['ສ້າງບັນຊີໃໝ່','ປ່ຽນລະຫັດ','ເພີ່ມສິດເຂົ້າເຖິງ','ປິດບັນຊີ'] },
+      { type:'long', labelLo:'ລະບົບ / ໂປຣແກຣມ', rows:2 },
+      { type:'long', labelLo:'ເຫດຜົນ', rows:3 },
+      { type:'sign', leftLo:'ຜູ້ຂໍ', rightLo:'IT Admin' },
+    ] },
+
+  { id:'ot-feedback', cat:'ot', titleLo:'ໃບສະເໜີແນະ / Feedback', subEn:'Suggestion / Feedback Form', icon:'💡',
+    fields:[
+      { type:'text', labelLo:'ຊື່ (ບໍ່ບັງຄັບ)', col:2 },
+      { type:'date', labelLo:'ວັນທີ', col:2 },
+      { type:'check', labelLo:'ປະເພດ', optionsLo:['ຄຳຊົມ','ສະເໜີແນະ','ຄຳຕິ','ຮ້ອງຮຽນ'] },
+      { type:'long', labelLo:'ລາຍລະອຽດ', rows:6 },
+      { type:'long', labelLo:'ສິ່ງທີ່ຢາກໃຫ້ປັບປຸງ', rows:3 },
+      { type:'sign', leftLo:'ຜູ້ສະເໜີ', rightLo:'ຜູ້ຮັບເລື່ອງ' },
+    ] },
+
+  { id:'ot-training', cat:'ot', titleLo:'ໃບລົງທະບຽນຝຶກອົບຮົມ / ກິດຈະກຳ', subEn:'Training / Event Registration', icon:'🎓',
+    fields:[
+      { type:'text', labelLo:'ຊື່ກິດຈະກຳ / ຫຼັກສູດ', col:1 },
+      { type:'date', labelLo:'ວັນທີຈັດ', col:2 },
+      { type:'text', labelLo:'ສະຖານທີ່', col:2 },
+      { type:'text', labelLo:'ຊື່ຜູ້ລົງທະບຽນ', col:2 },
+      { type:'text', labelLo:'ຕຳແໜ່ງ', col:2 },
+      { type:'text', labelLo:'ເບີໂທ', col:2 },
+      { type:'text', labelLo:'ອີເມວ', col:2 },
+      { type:'long', labelLo:'ຄາດຫວັງຈາກກິດຈະກຳ', rows:3 },
+      { type:'sign', leftLo:'ຜູ້ລົງທະບຽນ', rightLo:'ຜູ້ຈັດ' },
+    ] },
+];
+
+const FORM_CATEGORIES = [
+  { id:'all', labelLo:'ທັງໝົດ', labelTh:'ทั้งหมด' },
+  { id:'hr',  labelLo:'ບຸກຄະລາກອນ (HR)', labelTh:'ทรัพยากรบุคคล' },
+  { id:'fin', labelLo:'ການເງິນ', labelTh:'การเงิน' },
+  { id:'op',  labelLo:'ບໍລິຫານ', labelTh:'บริหารงาน' },
+  { id:'lg',  labelLo:'ກົດໝາຍ', labelTh:'กฎหมาย' },
+  { id:'ot',  labelLo:'ອື່ນໆ', labelTh:'อื่นๆ' },
+];
+
+let _formsDriveFiles = [];
+let _formsDriveLoaded = false;
+let _formsDriveLoading = false;
+let _formsCatFilter = 'all';
+let _formsSearch = '';
+
+async function _loadFormsDriveFiles(){
+  if(_formsDriveLoading) return;
+  _formsDriveLoading = true;
+  try {
+    await refreshDriveServerStatus();
+    if(!driveServerStatus.connected){ _formsDriveLoaded = true; return; }
+    const r = await fetch('/api/drive/proxy?op=list&folderId=' + encodeURIComponent(FORMS_DRIVE_FOLDER));
+    const j = await r.json();
+    if(j.ok){ _formsDriveFiles = j.files || []; _formsDriveLoaded = true; }
+  } catch(e){ console.warn('forms drive load fail', e); }
+  finally {
+    _formsDriveLoading = false;
+    if(currentView==='forms') renderForms(document.getElementById('viewForms'));
+  }
+}
+
+function renderForms(el){
+  const isLo = CURRENT_LANG==='lo';
+  if(!_formsDriveLoaded && !_formsDriveLoading) _loadFormsDriveFiles();
+  const cat = _formsCatFilter;
+  const q = (_formsSearch||'').toLowerCase().trim();
+  const filtered = FORMS.filter(f => (cat==='all' || f.cat===cat) && (!q || f.titleLo.toLowerCase().includes(q) || (f.subEn||'').toLowerCase().includes(q)));
+  const counts = Object.fromEntries(FORM_CATEGORIES.map(c => [c.id, c.id==='all' ? FORMS.length : FORMS.filter(f=>f.cat===c.id).length]));
+  el.innerHTML = topbarSimple('document', isLo?'ແບບຟອມ':'แบบฟอร์ม', isLo?'ແບບຟອມເອກະສານບໍລິສັດ ພາສາລາວ · ກົດເພື່ອພິມ':'แบบฟอร์มเอกสารบริษัท (ภาษาลาว) · กดเพื่อพิมพ์') + `
+    <div class="page-content forms-page" style="max-width:1400px;padding:18px clamp(12px,2vw,28px)">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+        <div class="stock-team-tabs">
+          ${FORM_CATEGORIES.map(c => `<button class="stock-team-tab ${_formsCatFilter===c.id?'active':''}" onclick="_formsCatFilter='${c.id}';rerender()">${isLo?c.labelLo:c.labelTh} (${counts[c.id]})</button>`).join('')}
+        </div>
+        <div style="flex:1;min-width:200px;max-width:320px;margin-left:auto;position:relative">
+          <input type="text" placeholder="${isLo?'ຄົ້ນຫາແບບຟອມ...':'ค้นหาแบบฟอร์ม...'}" value="${escapeHtmlN(_formsSearch)}" oninput="_formsSearch=this.value;rerender()" style="width:100%;padding:9px 14px 9px 34px;border:1px solid var(--border);border-radius:9px;background:var(--bg);color:var(--t1);font-size:13px"/>
+          <span style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--t3)">${I.search}</span>
+        </div>
+      </div>
+
+      ${_renderFormsDriveSection(isLo)}
+
+      <div class="forms-grid">
+        ${filtered.map(f => `
+          <div class="form-card" onclick="printForm('${f.id}')">
+            <div class="form-card-icon">${f.icon||'📝'}</div>
+            <div class="form-card-body">
+              <div class="form-card-title">${escapeHtmlN(f.titleLo)}</div>
+              <div class="form-card-sub">${escapeHtmlN(f.subEn||'')}</div>
+              <div class="form-card-meta">
+                <span class="form-card-cat-pill cat-${f.cat}">${FORM_CATEGORIES.find(c=>c.id===f.cat)?.labelLo||''}</span>
+                <span style="font-size:11px;color:var(--t3)">${(f.fields||[]).length} ${isLo?'ຊ່ອງ':'ช่อง'}</span>
+              </div>
+            </div>
+            <button class="btn-primary form-card-print">${I.printer} ${isLo?'ພິມ':'พิมพ์'}</button>
+          </div>
+        `).join('')}
+      </div>
+      ${filtered.length===0?`<div class="empty-state">${isLo?'ບໍ່ພົບແບບຟອມ':'ไม่พบแบบฟอร์ม'}</div>`:''}
+    </div>`;
+}
+
+function _renderFormsDriveSection(isLo){
+  if(_formsDriveLoading) return `<div class="dash2-card" style="margin-bottom:14px"><div style="font-size:13px;color:var(--t3)">${isLo?'ກຳລັງໂຫລດໄຟລ໌ຈາກ Google Drive...':'กำลังโหลดไฟล์จาก Google Drive...'}</div></div>`;
+  if(!driveServerStatus.connected) return '';
+  if(_formsDriveFiles.length===0) return '';
+  return `
+    <div class="dash2-card" style="margin-bottom:14px">
+      <div class="dash2-card-hd">
+        <div class="dash2-card-title">${I.folder} ${isLo?'ໄຟລ໌ຈາກ Google Drive':'ไฟล์จาก Google Drive'} (${_formsDriveFiles.length})</div>
+        <a href="https://drive.google.com/drive/folders/${FORMS_DRIVE_FOLDER}" target="_blank" rel="noopener" class="dash2-card-link">${isLo?'ເປີດໂຟລເດີ':'เปิดโฟลเดอร์'} →</a>
+      </div>
+      <div class="forms-drive-grid">
+        ${_formsDriveFiles.map(f => `
+          <a href="${f.webViewLink||'#'}" target="_blank" rel="noopener" class="forms-drive-file" title="${escapeHtmlN(f.name)}">
+            ${f.thumbnailLink ? `<img src="${f.thumbnailLink.replace('=s220','=s320')}" alt=""/>` : `<div class="forms-drive-thumb-noimg">${I.file}</div>`}
+            <div class="forms-drive-name">${escapeHtmlN(f.name)}</div>
+          </a>
+        `).join('')}
+      </div>
+    </div>`;
+}
+
+function printForm(id){
+  const f = FORMS.find(x => x.id===id);
+  if(!f) return;
+  const dateStr = new Date().toLocaleDateString('lo-LA', { year:'numeric', month:'long', day:'numeric' });
+  const bodyHtml = (f.fields||[]).map(_renderFormFieldHtml).join('');
+  const html = `<!DOCTYPE html><html lang="lo"><head><meta charset="utf-8"><title>${escapeHtmlN(f.titleLo)} — ${TFL_COMPANY.nameLo}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;500;700&display=swap');
+  *{box-sizing:border-box}
+  body{font-family:'Noto Sans Lao','Phetsarath OT','Saysettha OT',sans-serif;color:#111;margin:0;padding:0;background:#f5f5f5}
+  .sheet{max-width:800px;margin:20px auto;background:#fff;padding:36px 44px;box-shadow:0 6px 24px rgba(0,0,0,.08);min-height:1100px}
+  .head{border-bottom:2px solid #6d28d9;padding-bottom:16px;margin-bottom:18px;display:flex;gap:18px;align-items:center}
+  .head-logo{height:72px;width:72px;object-fit:contain;flex:0 0 72px}
+  .head-info{flex:1}
+  .head-name{font-size:17px;font-weight:700;color:#111;line-height:1.3}
+  .head-addr{font-size:11.5px;color:#444;margin-top:4px;line-height:1.5}
+  .form-title{text-align:center;margin:18px 0 6px;font-size:20px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+  .form-sub{text-align:center;font-size:12px;color:#666;font-style:italic;margin-bottom:8px}
+  .form-meta{text-align:right;font-size:11.5px;color:#666;margin-bottom:14px}
+  .sec{font-size:13.5px;font-weight:700;color:#6d28d9;border-left:3px solid #6d28d9;padding:4px 10px;margin:14px 0 8px;background:#f9f6ff}
+  .row{display:flex;gap:14px;margin-bottom:8px;flex-wrap:wrap}
+  .fld{flex:1;min-width:0}
+  .fld.half{flex:0 0 calc(50% - 7px)}
+  .fld.third{flex:0 0 calc(33.33% - 9.33px)}
+  .lbl{font-size:11.5px;font-weight:600;color:#333;margin-bottom:2px;display:block}
+  .lbl::after{content:''}
+  .ipt{border-bottom:1px solid #888;min-height:22px;padding:2px 4px;font-size:13px;color:#222}
+  .ipt.long{border:1px solid #aaa;border-radius:3px;min-height:60px;padding:6px 8px;background:#fff}
+  .ipt.long.r2{min-height:38px}
+  .ipt.long.r3{min-height:56px}
+  .ipt.long.r4{min-height:74px}
+  .ipt.long.r5{min-height:92px}
+  .ipt.long.r6{min-height:110px}
+  .ipt.long.r8{min-height:148px}
+  .check-row{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:#222}
+  .check-box{display:inline-flex;align-items:center;gap:5px}
+  .check-box::before{content:'☐';font-size:16px;color:#444}
+  table.t{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px}
+  table.t th, table.t td{border:1px solid #888;padding:5px 7px;text-align:left;height:24px}
+  table.t th{background:#ede9fe;color:#5b21b6;font-weight:700;font-size:11.5px}
+  .par{font-size:12.5px;color:#444;line-height:1.6;margin:8px 0;background:#fff8e1;border-left:3px solid #f59e0b;padding:8px 12px;border-radius:0 4px 4px 0}
+  .sign{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:36px;page-break-inside:avoid}
+  .sign-box{text-align:center;font-size:12px;color:#333}
+  .sign-line{border-top:1px solid #444;margin:55px 12px 4px}
+  .foot{margin-top:24px;padding-top:10px;border-top:1px solid #ddd;font-size:10.5px;color:#777;display:flex;justify-content:space-between}
+  .actions{position:fixed;top:16px;right:16px;display:flex;gap:8px;z-index:10}
+  .actions button{padding:9px 16px;border:none;border-radius:8px;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 2px 8px rgba(124,58,237,.3);font-family:inherit}
+  .actions .ghost{background:#fff;color:#444;border:1px solid #ccc}
+  @media print{
+    body{background:#fff;padding:0}
+    .sheet{margin:0;box-shadow:none;max-width:none;min-height:auto;padding:24px 32px}
+    .actions{display:none}
+    @page{size:A4;margin:14mm 10mm}
+  }
+</style></head><body>
+<div class="actions">
+  <button onclick="window.print()">🖨 ພິມ</button>
+  <button class="ghost" onclick="window.close()">ປິດ</button>
+</div>
+<div class="sheet">
+  <div class="head">
+    <img class="head-logo" src="${TFL_COMPANY.logo}" onerror="this.style.display='none'">
+    <div class="head-info">
+      <div class="head-name">${TFL_COMPANY.nameLo}</div>
+      <div class="head-addr">
+        ${TFL_COMPANY.addressLo}<br>
+        ໂທ: ${TFL_COMPANY.phoneLo} · ອີເມວ: ${TFL_COMPANY.emailLo}
+      </div>
+    </div>
+  </div>
+  <div class="form-title">${escapeHtmlN(f.titleLo)}</div>
+  ${f.subEn?`<div class="form-sub">${escapeHtmlN(f.subEn)}</div>`:''}
+  <div class="form-meta">ວັນທີພິມ: ${dateStr} · ເລກທີ: _____________</div>
+  ${bodyHtml}
+  <div class="foot">
+    <span>${TFL_COMPANY.nameLo}</span>
+    <span>www.tflao.com</span>
+  </div>
+</div>
+<script>window.addEventListener('load',()=>setTimeout(()=>{},100))<\/script>
+</body></html>`;
+  const w = window.open('', '_blank', 'width=900,height=900');
+  if(!w){ alert('ກະລຸນາອະນຸຍາດ popup'); return; }
+  w.document.write(html);
+  w.document.close();
+}
+
+// Holds previous row's column items so we can group same-col fields into one row
+let _formRowBuf = null;
+function _flushRowBuf(){ const out = _formRowBuf; _formRowBuf = null; return out ? `<div class="row">${out}</div>` : ''; }
+function _renderFormFieldHtml(fld, idx, arr){
+  // Section heading: flush any pending row
+  if(fld.type==='section'){
+    const head = _flushRowBuf();
+    return head + `<div class="sec">${escapeHtmlN(fld.textLo)}</div>`;
+  }
+  if(fld.type==='p'){
+    const head = _flushRowBuf();
+    return head + `<div class="par">${escapeHtmlN(fld.textLo)}</div>`;
+  }
+  if(fld.type==='table'){
+    const head = _flushRowBuf();
+    const cols = fld.cols || [];
+    const rows = fld.rows || 3;
+    let t = `<table class="t"><thead><tr>${cols.map(c=>`<th>${escapeHtmlN(c)}</th>`).join('')}</tr></thead><tbody>`;
+    for(let i=0;i<rows;i++) t += `<tr>${cols.map(()=>'<td></td>').join('')}</tr>`;
+    t += '</tbody></table>';
+    return head + t;
+  }
+  if(fld.type==='check'){
+    const head = _flushRowBuf();
+    const opts = (fld.optionsLo||[]).map(o=>`<span class="check-box">${escapeHtmlN(o)}</span>`).join('');
+    return head + `<div style="margin-bottom:10px"><div class="lbl">${escapeHtmlN(fld.labelLo||'')}</div><div class="check-row">${opts}</div></div>`;
+  }
+  if(fld.type==='sign'){
+    const head = _flushRowBuf();
+    return head + `<div class="sign">
+      <div class="sign-box"><div class="sign-line"></div>${escapeHtmlN(fld.leftLo||'')}</div>
+      <div class="sign-box"><div class="sign-line"></div>${escapeHtmlN(fld.rightLo||'')}</div>
+    </div>`;
+  }
+  if(fld.type==='long'){
+    const head = _flushRowBuf();
+    const r = Math.max(2, Math.min(8, fld.rows||3));
+    return head + `<div style="margin-bottom:10px"><div class="lbl">${escapeHtmlN(fld.labelLo||'')}</div><div class="ipt long r${r}"></div></div>`;
+  }
+  // text / date / number → may be grouped in rows via col=2/3
+  const colClass = fld.col===2 ? 'half' : fld.col===3 ? 'third' : '';
+  const html = `<div class="fld${colClass?' '+colClass:''}"><div class="lbl">${escapeHtmlN(fld.labelLo||'')}</div><div class="ipt">${fld.placeholderLo?`<span style="color:#aaa;font-size:11px">${escapeHtmlN(fld.placeholderLo)}</span>`:''}</div></div>`;
+  if(fld.col===2 || fld.col===3){
+    if(!_formRowBuf) _formRowBuf = '';
+    _formRowBuf += html;
+    // If this is last field, flush
+    if(idx === arr.length-1) return _flushRowBuf();
+    // Look ahead: if next field is not same-col, flush
+    const next = arr[idx+1];
+    if(!next || (next.col !== fld.col) || (['section','p','table','sign','check','long'].includes(next.type))){
+      return _flushRowBuf();
+    }
+    return '';
+  }
+  // Single-column field — flush any pending and emit alone
+  const head = _flushRowBuf();
+  return head + `<div class="row">${html}</div>`;
+}
+
 function renderFiles(el){
   // Trigger one-shot status fetch; will rerender when done
   if(!_driveStatusFetched){
@@ -15212,7 +15799,7 @@ function renderFiles(el){
   const sorted = [...driveFiles];
   const totalSize = sorted.reduce((s,f)=>s+parseInt(f.size||0,10), 0);
 
-  el.innerHTML = topbarDoc('เอกสาร', connected?`${driveFiles.length} ไฟล์ใน Drive · ${formatBytes(totalSize)}${driveServerStatus.adminEmail?' · เชื่อมโดย '+escapeHtml(driveServerStatus.adminEmail):''}`:'รอ Admin เชื่อม Google Drive', actions) + `
+  el.innerHTML = topbarDoc(CURRENT_LANG==='lo'?'ຄັງໄຟລ໌':'คลังไฟล์', connected?`${driveFiles.length} ไฟล์ใน Drive · ${formatBytes(totalSize)}${driveServerStatus.adminEmail?' · เชื่อมโดย '+escapeHtml(driveServerStatus.adminEmail):''}`:'รอ Admin เชื่อม Google Drive', actions) + `
   <div class="page-content" id="filesPage">
     ${connected ? `
       <div class="files-drive-banner" style="background:linear-gradient(135deg,#d1fae5 0%,#a7f3d0 100%);border-color:#6ee7b7">
@@ -24746,9 +25333,9 @@ function setAttHistFilterUser(v){ attHistoryFilterUser = parseInt(v,10)||0; rere
 function clearAttHistFilters(){ attHistoryFilterDate=''; attHistoryFilterUser=0; rerender(); }
 
 function openAttDetail(recId){
-  const r = attendanceRecords.find(x => x.id === recId);
+  const r = attendanceRecords.find(x => String(x.id) === String(recId));
   if(!r){ alert('ไม่พบข้อมูล'); return; }
-  const u = USERS.find(x => x.id === r.userId);
+  const u = USERS.find(x => String(x.id) === String(r.userId));
   const settings = _userWorkSettings(u);
   const mapsLink = (lat,lng) => lat&&lng ? `https://maps.google.com/?q=${lat},${lng}` : null;
   const inLink = mapsLink(r.checkIn?.lat, r.checkIn?.lng);
@@ -25009,9 +25596,10 @@ function _renderAdminAttDashboard(allUsers, today){
             <td><span class="att-status-pill ${r.status}">${_attStatusLabel(r.status)}</span></td>
             <td>${r.checkIn?.photo? `<img class="att-mini-photo" src="${r.checkIn.photo}" onclick="window.open(this.src,'_blank')"/>` : '—'}</td>
             <td style="white-space:nowrap">
-              ${r.checkOut? `<button class="icon-btn" onclick="adminClearCheckOut(${r.id})" title="ล้างเฉพาะ check-out" style="background:none;border:none;cursor:pointer;color:var(--t2);padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">↩</button>`:''}
-              <button class="icon-btn" onclick="adminCancelCheckIn(${r.id})" title="ยกเลิกการเช็คอินทั้งหมด" style="background:none;border:none;cursor:pointer;color:#f59e0b;padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">⊘</button>
-              <button class="icon-btn" onclick="adminDeleteAttendance(${r.id})" title="ลบประวัติ" style="background:none;border:none;cursor:pointer;color:#dc2626;padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">${I.trash}</button>
+              ${r.checkIn && !r.checkOut? `<button class="icon-btn" onclick="adminCheckoutFor('${r.id}')" title="กดออกงานให้พนักงาน (เผื่อลืมกด)" style="background:#10b981;border:none;cursor:pointer;color:#fff;padding:4px 9px;border-radius:6px;font-size:11px;font-weight:700;height:28px;display:inline-flex;align-items:center;justify-content:center;gap:3px">${I.logout} ออก</button>`:''}
+              ${r.checkOut? `<button class="icon-btn" onclick="adminClearCheckOut('${r.id}')" title="ล้างเฉพาะ check-out" style="background:none;border:none;cursor:pointer;color:var(--t2);padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">↩</button>`:''}
+              <button class="icon-btn" onclick="adminCancelCheckIn('${r.id}')" title="ยกเลิกการเช็คอินทั้งหมด" style="background:none;border:none;cursor:pointer;color:#f59e0b;padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">⊘</button>
+              <button class="icon-btn" onclick="adminDeleteAttendance('${r.id}')" title="ลบประวัติ" style="background:none;border:none;cursor:pointer;color:#dc2626;padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">${I.trash}</button>
             </td>
           </tr>`;
         }).join('')}</tbody>
@@ -25057,10 +25645,11 @@ function _renderAdminAttDashboard(allUsers, today){
               <td>${r.otHours? r.otHours+'h':'—'}</td>
               <td><span class="att-status-pill ${r.status}">${_attStatusLabel(r.status)}</span></td>
               <td style="white-space:nowrap">
-                <button onclick="openAttDetail(${r.id})" title="ดูรายละเอียด + รูปถ่าย" style="background:none;border:none;cursor:pointer;color:var(--brand);padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-                ${r.checkOut? `<button onclick="adminClearCheckOut(${r.id})" title="ล้าง check-out" style="background:none;border:none;cursor:pointer;color:var(--t2);padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">↩</button>`:''}
-                <button onclick="adminCancelCheckIn(${r.id})" title="ยกเลิก check-in" style="background:none;border:none;cursor:pointer;color:#f59e0b;padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">⊘</button>
-                <button onclick="adminDeleteAttendance(${r.id})" title="ลบ" style="background:none;border:none;cursor:pointer;color:#dc2626;padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">${I.trash}</button>
+                <button onclick="openAttDetail('${r.id}')" title="ดูรายละเอียด + รูปถ่าย" style="background:none;border:none;cursor:pointer;color:var(--brand);padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                ${r.checkIn && !r.checkOut? `<button onclick="adminCheckoutFor('${r.id}')" title="กดออกงานให้พนักงาน (เผื่อลืมกด)" style="background:#10b981;border:none;cursor:pointer;color:#fff;padding:4px 9px;border-radius:6px;font-size:11px;font-weight:700;height:28px;display:inline-flex;align-items:center;justify-content:center;gap:3px">${I.logout} ออก</button>`:''}
+                ${r.checkOut? `<button onclick="adminClearCheckOut('${r.id}')" title="ล้าง check-out" style="background:none;border:none;cursor:pointer;color:var(--t2);padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">↩</button>`:''}
+                <button onclick="adminCancelCheckIn('${r.id}')" title="ยกเลิก check-in" style="background:none;border:none;cursor:pointer;color:#f59e0b;padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">⊘</button>
+                <button onclick="adminDeleteAttendance('${r.id}')" title="ลบ" style="background:none;border:none;cursor:pointer;color:#dc2626;padding:4px;border-radius:6px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center">${I.trash}</button>
               </td>
             </tr>`;
           }).join('');
@@ -25076,29 +25665,36 @@ function _leaveTypeLabel(s){
   return ({sick:'ลาป่วย', personal:'ลากิจ', vacation:'พักร้อน'})[s] || s;
 }
 
+function _findAttRec(recId){
+  return attendanceRecords.find(x => String(x.id) === String(recId));
+}
+
 function adminCancelCheckIn(recId){
-  const r = attendanceRecords.find(x => x.id === recId);
+  if(currentUser.role !== 'admin'){ alert('Admin เท่านั้น'); return; }
+  const r = _findAttRec(recId);
   if(!r) return;
-  const u = USERS.find(x => x.id === r.userId);
+  const u = USERS.find(x => String(x.id) === String(r.userId));
   if(!confirm(`ยกเลิกการเช็คอินของ "${u?.name||'ผู้ใช้'}" วันที่ ${r.date}?\n\n· รีเซ็ตเป็นยังไม่เช็คอิน\n· ลบข้อมูล check-in/out/ภาพ/OT ทิ้ง`)) return;
-  attendanceRecords = attendanceRecords.filter(x => x.id !== recId);
+  attendanceRecords = attendanceRecords.filter(x => String(x.id) !== String(recId));
   try { logActivity('delete','attendance', recId, `ยกเลิก check-in ของ ${u?.name||'?'} (${r.date})`); } catch(_){}
   try { createNotif({ userId: r.userId, type:'info', title:'การเช็คอินถูกยกเลิก', body:`Admin ยกเลิกการเช็คอินของคุณวันที่ ${r.date}` }); } catch(_){}
-  saveAll(); rerender();
+  saveAll(); _syncCollection('delete', 'attendanceRecords', recId); rerender();
 }
 
 function adminDeleteAttendance(recId){
-  const r = attendanceRecords.find(x => x.id === recId);
+  if(currentUser.role !== 'admin'){ alert('Admin เท่านั้น'); return; }
+  const r = _findAttRec(recId);
   if(!r) return;
-  const u = USERS.find(x => x.id === r.userId);
+  const u = USERS.find(x => String(x.id) === String(r.userId));
   if(!confirm(`ลบประวัติการลงเวลานี้ทิ้ง?\n\nสมาชิก: ${u?.name||'?'}\nวันที่: ${r.date}\n\nการลบไม่สามารถย้อนกลับได้`)) return;
-  attendanceRecords = attendanceRecords.filter(x => x.id !== recId);
+  attendanceRecords = attendanceRecords.filter(x => String(x.id) !== String(recId));
   try { logActivity('delete','attendance', recId, `ลบประวัติ ${u?.name||'?'} (${r.date})`); } catch(_){}
-  saveAll(); rerender();
+  saveAll(); _syncCollection('delete', 'attendanceRecords', recId); rerender();
 }
 
 function adminClearCheckOut(recId){
-  const r = attendanceRecords.find(x => x.id === recId);
+  if(currentUser.role !== 'admin'){ alert('Admin เท่านั้น'); return; }
+  const r = _findAttRec(recId);
   if(!r || !r.checkOut) return;
   if(!confirm('ล้างเฉพาะการเช็คเอาท์ออก (เก็บการเช็คอินไว้)?')) return;
   r.checkOut = null;
@@ -25106,7 +25702,63 @@ function adminClearCheckOut(recId){
   r.otHours = 0;
   r.earlyLeaveMinutes = 0;
   try { logActivity('update','attendance', recId, 'ยกเลิก check-out'); } catch(_){}
-  saveAll(); rerender();
+  saveAll(); _syncCollection('upsert', 'attendanceRecords', r); rerender();
+}
+
+// Admin-only: manually check out an employee who forgot to do so
+function adminCheckoutFor(recId){
+  if(currentUser.role !== 'admin'){ alert('Admin เท่านั้น'); return; }
+  const r = _findAttRec(recId);
+  if(!r) return;
+  if(!r.checkIn){ alert('ยังไม่มี check-in ของวันนี้'); return; }
+  if(r.checkOut){ alert('เช็คเอาท์ไปแล้ว'); return; }
+  const u = USERS.find(x => String(x.id) === String(r.userId));
+  // Suggest a default time: end-of-work time for that user, or now if today
+  const settings = _userWorkSettings(u || currentUser, r.date);
+  const defaultTime = settings.end || '18:00';
+  const input = prompt(
+    `กดออกงานให้: ${u?.name||'?'}\nวันที่: ${r.date}\nเช็คอิน: ${_fmtTime(r.checkIn.time)}\n\nใส่เวลา check-out (HH:MM)\nกด OK = ใช้ ${defaultTime}`,
+    defaultTime
+  );
+  if(input === null) return;
+  const timeStr = (input || defaultTime).trim();
+  const m = timeStr.match(/^(\d{1,2})[:.](\d{1,2})$/);
+  if(!m){ alert('รูปแบบเวลาไม่ถูก ใช้ HH:MM เช่น 18:00'); return; }
+  const hh = Math.max(0, Math.min(23, parseInt(m[1],10)));
+  const mm = Math.max(0, Math.min(59, parseInt(m[2],10)));
+  // Build a local Date for that day + time
+  const [y,mo,d] = r.date.split('-').map(n => parseInt(n,10));
+  const checkOutDate = new Date(y, mo-1, d, hh, mm, 0);
+  const checkInDate = new Date(r.checkIn.time);
+  if(checkOutDate <= checkInDate){
+    alert('เวลา check-out ต้องหลัง check-in');
+    return;
+  }
+  const endMin = _timeToMinutes(settings.end);
+  const otMin = _timeToMinutes(settings.otAfter);
+  const nowMin = hh*60 + mm;
+  const earlyLeave = Math.max(0, endMin - nowMin);
+  const otHours = nowMin > otMin ? ((nowMin - otMin)/60) : 0;
+  const totalHours = (checkOutDate - checkInDate) / 3600000;
+  r.checkOut = {
+    time: checkOutDate.toISOString(),
+    lat: r.checkIn.lat, lng: r.checkIn.lng,
+    accuracy: r.checkIn.accuracy,
+    distance: r.checkIn.distance || 0,
+    photo: null,
+    _manualByAdmin: currentUser.id,
+    _manualByName: currentUser.name,
+    _manualAt: new Date().toISOString(),
+  };
+  r.earlyLeaveMinutes = Math.round(earlyLeave);
+  r.otHours = Math.round(otHours*10)/10;
+  r.totalHours = Math.round(totalHours*10)/10;
+  try { logActivity('checkout','attendance', recId, `Admin กดออกงานให้ ${u?.name||'?'} (${r.date} ${timeStr}) · OT ${r.otHours}h`); } catch(_){}
+  try { createNotif({ userId: r.userId, type:'info', title:'Admin กดออกงานให้คุณ', body:`Admin ${currentUser.name} กดออกงานให้คุณวันที่ ${r.date} เวลา ${timeStr} · OT ${r.otHours}h · รวม ${r.totalHours}h` }); } catch(_){}
+  saveAll();
+  _syncCollection('upsert', 'attendanceRecords', r);
+  rerender();
+  alert(`✓ กดออกงานให้ ${u?.name||'?'} เรียบร้อย\nรวม ${r.totalHours}h · OT ${r.otHours}h`);
 }
 
 // ===== ATTENDANCE IMPORT (Excel/CSV) =====
