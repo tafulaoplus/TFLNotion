@@ -4,13 +4,18 @@
 > ("ยืนยัน รันได้เลย").
 > All migrations are **additive only** — no `DROP TABLE`, no `TRUNCATE`.
 
-## Phase 2 — Task Board
+## Phase 2 — Task Board (Option A: additive ALTER TABLE)
+
+> Discovered during inspection: the `tasks` table already exists in Neon
+> (created by `db/schema.sql`) but has 0 rows. All 52 real tasks live in
+> `workspace_snapshot.data->'tasks'`. Migration uses ALTER TABLE to evolve
+> the existing empty `tasks` table additively — no DROP, no rename.
 
 | # | File | Purpose | Idempotent? |
 |---|---|---|---|
-| 001 | [`001_task_board_schema.sql`](001_task_board_schema.sql) | Create 4 tables + indexes + trigger | ✅ yes (uses `IF NOT EXISTS` / `CREATE OR REPLACE`) |
-| 001r | [`001_task_board_schema.rollback.sql`](001_task_board_schema.rollback.sql) | Rollback notes (mostly feature-flag based) | — |
-| 002 | [`002_task_board_backfill.sql`](002_task_board_backfill.sql) | Copy existing tasks from `workspace_snapshot.data->'tasks'` into new tables | ✅ yes (uses `ON CONFLICT DO NOTHING`) |
+| 001 | [`001_task_board_schema.sql`](001_task_board_schema.sql) | ALTER tasks ADD COLUMN (version, deleted_at, created_by) + new indexes + new trigger + task_checklists + task_comments | ✅ yes (uses `IF NOT EXISTS` / `CREATE OR REPLACE`) |
+| 001r | [`001_task_board_schema.rollback.sql`](001_task_board_schema.rollback.sql) | Rollback notes (feature-flag based; hard rollback as commented SQL) | — |
+| 002 | [`002_task_board_backfill.sql`](002_task_board_backfill.sql) | Copy 52 tasks from `workspace_snapshot.data->'tasks'` into the (now-evolved) `tasks` table — keeps `assignees` in JSONB column | ✅ yes (uses `ON CONFLICT DO NOTHING`) |
 | 002r | [`002_task_board_backfill.rollback.sql`](002_task_board_backfill.rollback.sql) | Rollback notes | — |
 
 ## Execution order

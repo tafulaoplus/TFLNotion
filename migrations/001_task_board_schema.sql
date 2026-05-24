@@ -1,73 +1,67 @@
 -- =============================================================================
--- Migration 001: Task Board schema
+-- Migration 001 (Option A): Task Board schema — additive ALTER TABLE
 -- =============================================================================
--- Purpose: Create normalized tables for Task Board module so we can switch from
---          full-snapshot saves (workspace_snapshot JSONB) to per-task PATCH.
+-- Purpose: Evolve the EXISTING `tasks` table (empty, 0 rows) so it supports
+--          optimistic locking + soft-delete + "since" polling, without
+--          dropping or recreating anything.
+--
+-- IMPORTANT context discovered before this migration:
+--   - `tasks` table already exists in Neon (created by db/schema.sql via init-db)
+--   - It has 0 rows — all real data lives in workspace_snapshot.data->'tasks' (52 records)
+--   - Existing schema uses: assignees JSONB, due DATE, file TEXT, position INTEGER
+--   - We will REUSE those columns (not rename/recreate)
 --
 -- Strategy: 100% ADDITIVE.
---   - No DROP TABLE / TRUNCATE / DROP COLUMN
---   - Existing data in workspace_snapshot is NOT touched
---   - Safe to re-run (IF NOT EXISTS guards everywhere)
+--   - ALTER TABLE ... ADD COLUMN IF NOT EXISTS  (no DROP, no rename)
+--   - CREATE TABLE IF NOT EXISTS for net-new tables
+--   - CREATE OR REPLACE FUNCTION for trigger function
+--   - DROP TRIGGER IF EXISTS / CREATE TRIGGER is idempotent metadata change
+--   - workspace_snapshot is NOT touched
 --
--- Rollback: see 001_task_board_schema.rollback.sql
+-- Rollback: see 001_task_board_schema.rollback.sql (feature-flag based)
 -- =============================================================================
 
 BEGIN;
 
 -- -----------------------------------------------------------------------------
--- 1. tasks — main task records
+-- 1. Evolve existing `tasks` table (additive only)
 -- -----------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS tasks (
-  id            BIGINT       PRIMARY KEY,                       -- keep existing Date.now() ids
-  workspace_id  TEXT         NOT NULL DEFAULT 'default',         -- multi-tenant ready
-  emoji         TEXT,
-  name          TEXT         NOT NULL,
-  description   TEXT         NOT NULL DEFAULT '',
-  priority      TEXT,                                            -- 'low' | 'mid' | 'high'
-  type          TEXT,                                            -- 'doc' | 'video' | 'task'
-  status        TEXT         NOT NULL DEFAULT 'todo',            -- 'todo' | 'inprogress' | 'review' | 'done'
-  due           TEXT,                                            -- YYYY-MM-DD (TEXT to match existing data shape)
-  file_url      TEXT,                                            -- renamed from `file` to avoid SQL reserved-ish word
-  sort_order    INTEGER      NOT NULL DEFAULT 0,                 -- for drag-reorder
-  created_by    BIGINT,                                          -- user id (no FK yet — users still in JSONB)
-  created_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
-  updated_at    TIMESTAMPTZ  NOT NULL DEFAULT NOW(),             -- auto-updated by trigger
-  version       INTEGER      NOT NULL DEFAULT 1,                 -- optimistic locking; bumped by trigger
-  deleted_at    TIMESTAMPTZ                                      -- soft delete (NULL = active)
-);
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS version    INTEGER     NOT NULL DEFAULT 1;
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ;
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS created_by BIGINT;
 
--- Indexes for tasks
+-- Reuse existing columns as-is:
+--   id BIGINT PRIMARY KEY                ← same
+--   workspace_id TEXT (FK)               ← same
+--   emoji TEXT                           ← same
+--   name TEXT NOT NULL                   ← same
+--   description TEXT                     ← same (will write '' for empty)
+--   assignees JSONB DEFAULT '[]'         ← REUSE (no separate join table needed)
+--   priority / type / status TEXT        ← same
+--   due DATE                             ← REUSE (backfill will cast YYYY-MM-DD)
+--   file TEXT                            ← REUSE (no rename to file_url)
+--   created DATE                         ← keep, will populate from JSONB
+--   position INTEGER                     ← REUSE (no rename to sort_order)
+--   created_at / updated_at TIMESTAMPTZ  ← same
+
+-- -----------------------------------------------------------------------------
+-- 2. New indexes for incremental sync + soft-delete filtering
+-- -----------------------------------------------------------------------------
+-- ⭐ Critical for reducing Neon transfer:
+-- GET /api/tasks?since=<timestamp>  → uses this index, returns 0-3 KB instead of full snapshot.
+CREATE INDEX IF NOT EXISTS idx_tasks_workspace_updated
+  ON tasks (workspace_id, updated_at DESC);
+
+-- Soft-delete filtering: every "list active tasks" query uses this.
 CREATE INDEX IF NOT EXISTS idx_tasks_workspace_active
   ON tasks (workspace_id) WHERE deleted_at IS NULL;
 
-CREATE INDEX IF NOT EXISTS idx_tasks_workspace_updated
-  ON tasks (workspace_id, updated_at DESC);
-  -- ⭐ critical for "since" polling: GET /api/tasks?since=<ts> uses this
-
-CREATE INDEX IF NOT EXISTS idx_tasks_workspace_status
-  ON tasks (workspace_id, status) WHERE deleted_at IS NULL;
-
-CREATE INDEX IF NOT EXISTS idx_tasks_workspace_due
-  ON tasks (workspace_id, due) WHERE deleted_at IS NULL AND due IS NOT NULL;
+-- (existing indexes from db/schema.sql remain in place:
+--    idx_tasks_workspace, idx_tasks_due, idx_tasks_status, idx_tasks_assignees GIN)
 
 
 -- -----------------------------------------------------------------------------
--- 2. task_assignees — many-to-many task <-> user
--- -----------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS task_assignees (
-  task_id      BIGINT       NOT NULL,
-  user_id      BIGINT       NOT NULL,
-  assigned_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
-  assigned_by  BIGINT,
-  PRIMARY KEY (task_id, user_id)
-);
-
-CREATE INDEX IF NOT EXISTS idx_task_assignees_user
-  ON task_assignees (user_id);
-
-
--- -----------------------------------------------------------------------------
--- 3. task_checklists — sub-checklist items per task (future feature, table ready)
+-- 3. task_checklists — sub-checklist items per task (future feature, empty table)
 -- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS task_checklists (
   id          BIGSERIAL    PRIMARY KEY,
@@ -85,7 +79,7 @@ CREATE INDEX IF NOT EXISTS idx_task_checklists_task
 
 
 -- -----------------------------------------------------------------------------
--- 4. task_comments — comments per task (future feature, table ready)
+-- 4. task_comments — comments per task (future feature, empty table)
 -- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS task_comments (
   id          BIGSERIAL    PRIMARY KEY,
@@ -104,8 +98,8 @@ CREATE INDEX IF NOT EXISTS idx_task_comments_task
 -- -----------------------------------------------------------------------------
 -- 5. Trigger: auto-bump version + updated_at on every UPDATE of tasks
 -- -----------------------------------------------------------------------------
--- Enables optimistic locking. A PATCH with stale `version` will match 0 rows
--- (because the API uses `WHERE id=? AND version=?`) and the API returns 409.
+-- Replaces the existing trg_tasks_updated_at trigger (which only set updated_at).
+-- Our function does updated_at AND version+1 — superset of old behaviour.
 CREATE OR REPLACE FUNCTION tasks_bump_version()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -115,23 +109,27 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Drop+recreate the trigger (idempotent). NOTE: dropping a TRIGGER is metadata,
--- not data — it does not violate the "no DROP TABLE" rule.
+-- Idempotent: drop+create trigger (metadata only, no data touched)
 DROP TRIGGER IF EXISTS trigger_tasks_bump_version ON tasks;
 CREATE TRIGGER trigger_tasks_bump_version
   BEFORE UPDATE ON tasks
   FOR EACH ROW
   EXECUTE FUNCTION tasks_bump_version();
 
+-- Note: the original `trg_tasks_updated_at` trigger from db/schema.sql is left
+-- in place. Both will fire BEFORE UPDATE and set updated_at = NOW(). The
+-- order doesn't matter because they assign the same value. Our trigger also
+-- handles version bumping which the original doesn't. Safe to coexist.
+
 
 -- -----------------------------------------------------------------------------
--- Verification (informational — comment in real production)
+-- Verification (run after this migration to confirm)
 -- -----------------------------------------------------------------------------
--- Run after to confirm:
---   SELECT count(*) FROM tasks;            -- expect 0 before backfill
---   SELECT count(*) FROM task_assignees;   -- expect 0
---   SELECT count(*) FROM task_checklists;  -- expect 0
---   SELECT count(*) FROM task_comments;    -- expect 0
---   \d tasks                               -- check all columns + indexes exist
+-- \d tasks                                                 -- check columns
+-- SELECT column_name FROM information_schema.columns
+--   WHERE table_name='tasks' AND column_name IN ('version','deleted_at','created_by');
+-- SELECT count(*) FROM tasks;                              -- expect 0 (backfill is step 2)
+-- SELECT count(*) FROM task_checklists;                    -- expect 0
+-- SELECT count(*) FROM task_comments;                      -- expect 0
 
 COMMIT;
