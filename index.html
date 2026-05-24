@@ -27904,13 +27904,17 @@ function toggleRole(id){
 function setMemberRole(id, role){
   const u = USERS.find(x => x.id === id);
   if(!u) return;
-  if(!['member','social','admin'].includes(role)) return;
+  // Whitelist ALL valid roles (was missing 'supervisor' and 'normal' — caused silent revert)
+  if(!['member','social','supervisor','admin','normal'].includes(role)) return;
   if(!confirm(`เปลี่ยน Role ของ "${u.name}" เป็น "${role}"?`)){
     rerender(); return;
   }
   u.role = role;
   try { logActivity('update','user', id, `เปลี่ยน Role → ${role}`); } catch(_){}
-  saveAll(); rerender(); renderSidebar();
+  saveAll();
+  // Force-flush so the change propagates immediately (don't wait for 250ms debounce)
+  if(typeof flushSyncNow === 'function') flushSyncNow();
+  rerender(); renderSidebar();
 }
 
 function viewUserPin(id){
