@@ -27796,30 +27796,18 @@ function _parseDdmmyyOrFull(s){
 // =============================================================================
 // TAB 2: รายรับ-รายจ่าย รายเดือนตามสถานที่
 // =============================================================================
+// P&L is now derived PURELY from salesCustomers (no event matching).
+// "รายจ่าย" = total moneyGiven to customers in that (date, location).
+// Rows only appear if there is at least 1 customer entry.
 function _aggregateLocationDaily(){
-  // Group customers by (date, location)
   const map = new Map(); // key = `${date}|${location}`
   _filteredCustomers().forEach(c => {
     const k = `${c.date}|${c.location}`;
-    const cur = map.get(k) || { date:c.date, location:c.location, customers:0, revenue:0, moneyGiven:0, cups:0, expenses:0 };
+    const cur = map.get(k) || { date:c.date, location:c.location, customers:0, revenue:0, expenses:0, cups:0 };
     cur.customers++;
-    cur.revenue += +c.amount||0;
-    cur.moneyGiven += +c.moneyGiven||0;
-    cur.cups += +c.cupsGiven||0;
-    map.set(k, cur);
-  });
-  // Add event expenses (cost*) to matching (date, location)
-  salesEvents.forEach(e => {
-    const date = (e.startDate||e.date||'').slice(0,10);
-    const location = e.location || '';
-    if(!date || !location) return;
-    if(salesDateFrom && date < salesDateFrom) return;
-    if(salesDateTo && date > salesDateTo) return;
-    if(salesLocationFilter && !location.includes(salesLocationFilter)) return;
-    const k = `${date}|${location}`;
-    const cur = map.get(k) || { date, location, customers:0, revenue:0, moneyGiven:0, cups:0, expenses:0 };
-    const r = e.result || {};
-    cur.expenses += (+r.costFuel||0)+(+r.costFood||0)+(+r.costTravel||0)+(+r.costRent||0);
+    cur.revenue  += +c.amount||0;
+    cur.expenses += +c.moneyGiven||0;
+    cur.cups     += +c.cupsGiven||0;
     map.set(k, cur);
   });
   return Array.from(map.values()).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
@@ -27829,10 +27817,10 @@ function _renderSalesPnL(el){
   const rows = _aggregateLocationDaily();
   const totalC = rows.reduce((s,r)=>s+r.customers,0);
   const totalRev = rows.reduce((s,r)=>s+r.revenue,0);
-  const totalExp = rows.reduce((s,r)=>s+r.expenses+r.moneyGiven,0);
+  const totalExp = rows.reduce((s,r)=>s+r.expenses,0);
   const totalCups = rows.reduce((s,r)=>s+r.cups,0);
   const net = totalRev - totalExp;
-  const locations = Array.from(new Set(salesCustomers.concat(salesEvents).map(r=>r.location).filter(Boolean))).sort();
+  const locations = Array.from(new Set(salesCustomers.map(r=>r.location).filter(Boolean))).sort();
 
   const actions = `
     <button class="btn-ghost" onclick="downloadPnLTemplate()">${I.download} แม่แบบ</button>
@@ -27861,7 +27849,7 @@ function _renderSalesPnL(el){
         <div class="sd-card events"><div class="sd-lbl">แก้วที่แจกทั้งหมด</div><div class="sd-val">${totalCups.toLocaleString()}</div></div>
       </div>
       <div class="pnl-net-card ${net>=0?'positive':'negative'}">
-        <div class="pnl-net-lbl">กำไรสุทธิ (รายรับ − รายจ่าย − เงินแจกลูกค้า)</div>
+        <div class="pnl-net-lbl">กำไรสุทธิ (รายรับ − รายจ่าย)</div>
         <div class="pnl-net-val">${_fmtBaht(net)}</div>
       </div>
 
@@ -27870,20 +27858,19 @@ function _renderSalesPnL(el){
           <thead><tr>
             <th>วันที่</th><th>สถานที่</th>
             <th class="num">ลูกค้ารวม</th><th class="num">รายรับ</th>
-            <th class="num">รายจ่าย</th><th class="num">เงินแจก</th>
+            <th class="num">รายจ่าย</th>
             <th class="num">แก้วที่แจก</th><th class="num">กำไร</th>
           </tr></thead>
           <tbody>${rows.length===0 ?
-            '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--t2)">ยังไม่มีข้อมูล — เพิ่มลูกค้าจากแท็บ "ข้อมูลลูกค้า" หรือเพิ่มกิจกรรมจากแท็บ "ภาพรวม"</td></tr>' :
+            '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--t2)">ยังไม่มีข้อมูล — เพิ่มลูกค้าในแท็บ "ข้อมูลลูกค้า" ก่อน</td></tr>' :
             rows.map(r=>{
-              const profit = r.revenue - r.expenses - r.moneyGiven;
+              const profit = r.revenue - r.expenses;
               return `<tr>
                 <td>${r.date}</td>
                 <td>${escapeHtmlN(r.location)}</td>
                 <td class="num">${r.customers.toLocaleString()}</td>
                 <td class="num" style="color:#10b981;font-weight:700">${_fmtBaht(r.revenue)}</td>
                 <td class="num" style="color:#ef4444">${_fmtBaht(r.expenses)}</td>
-                <td class="num" style="color:#f59e0b">${_fmtBaht(r.moneyGiven)}</td>
                 <td class="num">${r.cups.toLocaleString()}</td>
                 <td class="num" style="font-weight:800;color:${profit>=0?'#10b981':'#ef4444'}">${_fmtBaht(profit)}</td>
               </tr>`;
@@ -27893,8 +27880,7 @@ function _renderSalesPnL(el){
             <td colspan="2" style="text-align:right">รวม</td>
             <td class="num">${totalC.toLocaleString()}</td>
             <td class="num" style="color:#10b981">${_fmtBaht(totalRev)}</td>
-            <td class="num" style="color:#ef4444">${_fmtBaht(rows.reduce((s,r)=>s+r.expenses,0))}</td>
-            <td class="num" style="color:#f59e0b">${_fmtBaht(rows.reduce((s,r)=>s+r.moneyGiven,0))}</td>
+            <td class="num" style="color:#ef4444">${_fmtBaht(totalExp)}</td>
             <td class="num">${totalCups.toLocaleString()}</td>
             <td class="num" style="color:${net>=0?'#10b981':'#ef4444'}">${_fmtBaht(net)}</td>
           </tr></tfoot>`:''}
@@ -27959,13 +27945,13 @@ function downloadPnLTemplate(){
 
 function exportPnLExcel(){
   const aggRows = _aggregateLocationDaily();
-  // Map to the simple shape the Lao sheet expects
+  // Direct mapping — expenses are already sum(moneyGiven) from customers
   const rows = aggRows.map(r => ({
     date: r.date,
     location: r.location,
     customers: r.customers,
     revenue: r.revenue,
-    expenses: r.expenses + r.moneyGiven,  // user's "ลายจ่าย" includes both event cost + money given to customers
+    expenses: r.expenses,
     cups: r.cups,
   }));
   const ws = _buildPnLSheet(rows.length ? rows : [{date:'',location:'',customers:'',revenue:'',expenses:'',cups:''}]);
