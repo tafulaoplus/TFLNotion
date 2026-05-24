@@ -2084,10 +2084,12 @@ svg{display:block;flex-shrink:0}
 .rbadge.r-admin{background:#fef3c7;color:#b45309}
 .rbadge.r-supervisor{background:#ede9fe;color:#6d28d9}
 .rbadge.r-member{background:#dbeafe;color:#1d4ed8}
+.rbadge.r-normal{background:#f3f4f6;color:#4b5563}
 .rbadge.role-social{background:#fce7f3;color:#be185d}
 [data-theme="dark"] .rbadge.r-admin{background:rgba(251,191,36,.2);color:#fbbf24}
 [data-theme="dark"] .rbadge.r-supervisor{background:rgba(167,139,250,.2);color:#c4b5fd}
 [data-theme="dark"] .rbadge.r-member{background:rgba(96,165,250,.2);color:#60a5fa}
+[data-theme="dark"] .rbadge.r-normal{background:rgba(156,163,175,.2);color:#9ca3af}
 [data-theme="dark"] .rbadge.role-social{background:rgba(244,114,182,.2);color:#f472b6}
 .user-card .check{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;display:none;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 10px rgba(124,58,237,.4)}
 .user-card .check svg{width:13px;height:13px}
@@ -7402,6 +7404,7 @@ img,video,iframe,canvas{max-width:100%;height:auto}
           <option value="social">Social (Member + Social Menu)</option>
           <option value="supervisor">Supervisor (ทุกอย่าง ยกเว้น Admin)</option>
           <option value="admin">Admin</option>
+          <option value="normal">Normal (เฉพาะ Note + งานของฉัน · ไม่ลงเวลา)</option>
         </select>
       </div>
       <div class="fgrp">
@@ -9817,7 +9820,7 @@ function renderLoginUsers(){
         <div class="uname">${escapeHtml(u.name)}</div>
         <div class="uemail">${escapeHtml(u.email||'')}</div>
       </div>
-      <span class="rbadge ${u.role==='admin'?'r-admin':u.role==='supervisor'?'r-supervisor':u.role==='social'?'role-social':'r-member'}">${u.role==='admin'?'Admin':u.role==='supervisor'?'Supervisor':u.role==='social'?'Social':'Member'}</span>
+      <span class="rbadge ${u.role==='admin'?'r-admin':u.role==='supervisor'?'r-supervisor':u.role==='social'?'role-social':u.role==='normal'?'r-normal':'r-member'}">${u.role==='admin'?'Admin':u.role==='supervisor'?'Supervisor':u.role==='social'?'Social':u.role==='normal'?'Normal':'Member'}</span>
       <div class="check">${I.check}</div>
     </div>`;
   }).join('');
@@ -10070,7 +10073,13 @@ function renderSidebar(){
   const isAdmin = currentUser.role==='admin';
   const isSupervisor = currentUser.role==='supervisor' || isAdmin;
   const isSocial = currentUser.role==='social' || isSupervisor;
-  const defaultItems = [
+  const isNormal = currentUser.role==='normal';
+  // 'normal' role = restricted: only Note + งานของฉัน. No attendance, no stock,
+  // no dashboard, no admin sections.
+  const defaultItems = isNormal ? [
+    {id:'myTasks', icon:I.check, label:t('nav_mytasks')},
+    {id:'notes', icon:I.note, label:t('nav_notes')},
+  ] : [
     {id:'attendance', icon:I.clock, label:t('nav_attendance')},
     {id:'dashboard', icon:I.home, label:t('nav_dashboard')},
     {id:'files', icon:I.folder, label:t('nav_files')},
@@ -10186,7 +10195,7 @@ function renderUserProfile(){
     ${avatarHTML(currentUser, 36, 13)}
     <div class="up-info">
       <div class="up-name">${escapeHtml(currentUser.name)}</div>
-      <div class="up-role">${currentUser.role==='admin'?'Admin':currentUser.role==='supervisor'?'Supervisor':currentUser.role==='social'?'Social':'Member'}</div>
+      <div class="up-role">${currentUser.role==='admin'?'Admin':currentUser.role==='supervisor'?'Supervisor':currentUser.role==='social'?'Social':currentUser.role==='normal'?'Normal':'Member'}</div>
     </div>
     <span style="color:var(--t3);transform:rotate(0deg);transition:transform .15s" id="userChev">${I.chevronDown}</span>`;
   renderUserDropdown();
@@ -10431,6 +10440,10 @@ function populateModalSelects(){
 function navigateTo(id){
   if(!id) return;
   // Role-based route guards
+  // 'normal' role = restricted to only Note + My Tasks
+  if(currentUser && currentUser.role === 'normal'){
+    if(id !== 'notes' && id !== 'myTasks') id = 'myTasks';
+  }
   if(id === 'socialIntegrations' && currentUser && currentUser.role !== 'admin'){
     id = 'dashboard';
   } else if((id === 'fbLive' || id === 'fbGoLive' || id === 'fbLiveAuto' || id === 'fbPosts' || id === 'socialAnalytics') && currentUser && currentUser.role !== 'admin' && currentUser.role !== 'social'){
@@ -25564,7 +25577,9 @@ function renderAttendance(el){
           </div>
         </div>`).join('')}</div>`}`;
   } else if(attendanceView === 'admin'){
-    const allUsers = USERS;
+    // Exclude 'normal' role users from attendance reports — they don't check in
+    // so they shouldn't be counted as absent/late/etc.
+    const allUsers = USERS.filter(u => u.role !== 'normal');
     body = _renderAdminAttDashboard(allUsers, today);
   }
 
@@ -27757,7 +27772,7 @@ function renderMembers(el){
         return `<div class="member-card" style="cursor:pointer" onclick="openMemberDetail(${u.id})">
           ${av}
           <div class="m-name">${escapeHtml(u.name)}</div>
-          <span class="m-badge ${u.role==='admin'?'r-admin':u.role==='social'?'role-social':'r-member'}">${u.role==='admin'?'Admin':u.role==='social'?'Social':'Member'}</span>
+          <span class="m-badge ${u.role==='admin'?'r-admin':u.role==='social'?'role-social':u.role==='normal'?'r-normal':'r-member'}">${u.role==='admin'?'Admin':u.role==='social'?'Social':u.role==='normal'?'Normal':'Member'}</span>
           <div class="m-tasks">${ut.length} งาน · เสร็จ ${ud}</div>
           <div class="m-email">${u.email}</div>
           ${u.id!==currentUser.id?`<div style="display:flex;flex-direction:column;gap:6px;margin-top:12px" onclick="event.stopPropagation()">
@@ -27766,6 +27781,7 @@ function renderMembers(el){
               <option value="social" ${u.role==='social'?'selected':''}>Social</option>
               <option value="supervisor" ${u.role==='supervisor'?'selected':''}>Supervisor</option>
               <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
+              <option value="normal" ${u.role==='normal'?'selected':''}>Normal (ไม่ลงเวลา)</option>
             </select>
             <div style="display:flex;gap:5px;justify-content:center">
               <button class="small-btn ghost" onclick="viewUserPin(${u.id})" title="ดู PIN">PIN</button>
@@ -27812,7 +27828,7 @@ function renderMemberDetail(el, userId){
         <div style="font-size:22px;font-weight:800;letter-spacing:-.01em">${u.name}</div>
         <div style="font-size:13px;color:var(--t2);margin-top:3px">${u.email}</div>
         <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
-          <span class="m-badge ${u.role==='admin'?'r-admin':u.role==='social'?'role-social':'r-member'}">${u.role==='admin'?'Admin':u.role==='social'?'Social':'Member'}</span>
+          <span class="m-badge ${u.role==='admin'?'r-admin':u.role==='social'?'role-social':u.role==='normal'?'r-normal':'r-member'}">${u.role==='admin'?'Admin':u.role==='social'?'Social':u.role==='normal'?'Normal':'Member'}</span>
           <span style="font-size:12px;color:var(--t3)">ความคืบหน้า <b style="color:var(--p600)">${pct}%</b></span>
         </div>
       </div>
