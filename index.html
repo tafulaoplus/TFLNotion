@@ -27389,29 +27389,61 @@ function deleteCustomer(id){
 
 // ----- Excel: Customer template + export + import -----
 function downloadCustomerTemplate(){
-  const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.aoa_to_sheet([
+  // Header + 1 example row + 99 blank rows + live-formula total row
+  const blankRows = 99;
+  const data = [
     ['วันที่ (YYYY-MM-DD)', 'สถานที่', 'เบอร์ลูกค้า', 'UID ลูกค้า', 'ยอดซื้อ', 'เงินที่แจก', 'จำนวนแก้ว'],
     ['2026-05-25', 'ตัวอย่าง: ตลาด ABC', '0812345678', 'CUST001', 100, 20, 1],
-    ['', '', '', '', '', '', ''],
-  ]);
+  ];
+  for(let i=0; i<blankRows; i++) data.push(['','','','','','','']);
+  data.push(['','','','','รวม', 0, 0]); // placeholder row 103
+
+  const ws = XLSX.utils.aoa_to_sheet(data);
   ws['!cols'] = [{wch:18},{wch:24},{wch:14},{wch:14},{wch:12},{wch:12},{wch:10}];
+
+  // Live SUM formulas in the total row (covers all data rows 2..102, header is row 1)
+  const firstDataRow = 2;
+  const lastDataRow = 1 + 1 + blankRows;  // 1 example + 99 blanks = rows 2..102
+  const totalRow = lastDataRow + 1;       // row 103
+  // Columns in template: A=date, B=loc, C=phone, D=uid, E=amount, F=money, G=cups
+  ws[`E${totalRow}`] = { t:'n', f:`SUM(E${firstDataRow}:E${lastDataRow})`, z:'#,##0.00' };
+  ws[`F${totalRow}`] = { t:'n', f:`SUM(F${firstDataRow}:F${lastDataRow})`, z:'#,##0.00' };
+  ws[`G${totalRow}`] = { t:'n', f:`SUM(G${firstDataRow}:G${lastDataRow})`, z:'#,##0' };
+
+  const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Customers');
   XLSX.writeFile(wb, 'tfl-customers-template.xlsx');
 }
 function exportCustomersExcel(){
   const rows = _filteredCustomers();
+  // Build header + data rows. We DO NOT push totals as fixed values —
+  // we'll write SUM() formulas after sheet creation so totals stay live
+  // when user edits any cell in Excel.
   const data = [
     ['ลำดับ','วันที่','สถานที่','เบอร์ลูกค้า','UID ลูกค้า','ยอดซื้อ','เงินที่แจก','จำนวนแก้ว'],
     ...rows.map((r,i)=>[i+1, r.date||'', r.location||'', r.phone||'', r.uid||'', +r.amount||0, +r.moneyGiven||0, +r.cupsGiven||0]),
   ];
-  // Footer totals
-  const totalAmount = rows.reduce((s,r)=>s+(+r.amount||0),0);
-  const totalGiven  = rows.reduce((s,r)=>s+(+r.moneyGiven||0),0);
-  const totalCups   = rows.reduce((s,r)=>s+(+r.cupsGiven||0),0);
-  data.push(['','','','','รวม', totalAmount, totalGiven, totalCups]);
+  // Empty placeholder for the total row (will be filled with formulas below)
+  data.push(['','','','','รวม', 0, 0, 0]);
+
   const ws = XLSX.utils.aoa_to_sheet(data);
-  ws['!cols'] = [{wch:6},{wch:14},{wch:24},{wch:14},{wch:14},{wch:12},{wch:12},{wch:10}];
+  ws['!cols'] = [{wch:6},{wch:14},{wch:24},{wch:14},{wch:14},{wch:14},{wch:14},{wch:10}];
+
+  // Write live SUM formulas in the total row.
+  // Excel rows are 1-indexed; data rows occupy 2..(1+rows.length)
+  if(rows.length > 0){
+    const firstDataRow = 2;
+    const lastDataRow = 1 + rows.length;
+    const totalRow = lastDataRow + 1;  // the "รวม" row we just appended
+    // F = ยอดซื้อ, G = เงินแจก, H = แก้ว
+    ws[`F${totalRow}`] = { t:'n', f:`SUM(F${firstDataRow}:F${lastDataRow})` };
+    ws[`G${totalRow}`] = { t:'n', f:`SUM(G${firstDataRow}:G${lastDataRow})` };
+    ws[`H${totalRow}`] = { t:'n', f:`SUM(H${firstDataRow}:H${lastDataRow})` };
+    // Light styling hint via cell number format (Excel-side)
+    [`F${totalRow}`,`G${totalRow}`].forEach(addr => { if(ws[addr]) ws[addr].z = '#,##0.00'; });
+    if(ws[`H${totalRow}`]) ws[`H${totalRow}`].z = '#,##0';
+  }
+
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Customers');
   const fname = `tfl-customers${salesDateFrom?'-'+salesDateFrom:''}${salesDateTo?'-to-'+salesDateTo:''}.xlsx`;
@@ -27571,28 +27603,68 @@ function _renderSalesPnL(el){
 }
 
 function downloadPnLTemplate(){
+  const blankRows = 99;
+  const data = [
+    ['วันที่ (YYYY-MM-DD)','สถานที่','ลูกค้ารวม','รายรับ','รายจ่าย','จำนวนแก้ว','กำไรสุทธิ'],
+    ['2026-05-25','ตลาด ABC',10,5000,1500,12,0],
+  ];
+  for(let i=0; i<blankRows; i++) data.push(['','','','','','','']);
+  data.push(['','รวม', 0, 0, 0, 0, 0]);
+
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = [{wch:18},{wch:24},{wch:12},{wch:14},{wch:14},{wch:10},{wch:14}];
+
+  const firstDataRow = 2;
+  const lastDataRow = 1 + 1 + blankRows;
+  const totalRow = lastDataRow + 1;
+
+  // Per-row profit formula: G = D - E (revenue - expense; ignoring money-given since template doesn't have it)
+  for(let r = firstDataRow; r <= lastDataRow; r++){
+    ws[`G${r}`] = { t:'n', f:`D${r}-E${r}`, z:'#,##0.00' };
+  }
+  // Live totals
+  ws[`C${totalRow}`] = { t:'n', f:`SUM(C${firstDataRow}:C${lastDataRow})`, z:'#,##0' };
+  ws[`D${totalRow}`] = { t:'n', f:`SUM(D${firstDataRow}:D${lastDataRow})`, z:'#,##0.00' };
+  ws[`E${totalRow}`] = { t:'n', f:`SUM(E${firstDataRow}:E${lastDataRow})`, z:'#,##0.00' };
+  ws[`F${totalRow}`] = { t:'n', f:`SUM(F${firstDataRow}:F${lastDataRow})`, z:'#,##0' };
+  ws[`G${totalRow}`] = { t:'n', f:`D${totalRow}-E${totalRow}`, z:'#,##0.00' };
+
   const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.aoa_to_sheet([
-    ['วันที่ (YYYY-MM-DD)','สถานที่','ลูกค้ารวม','รายรับ','รายจ่าย','จำนวนแก้ว'],
-    ['2026-05-25','ตลาด ABC',10,5000,1500,12],
-    ['','','','','','']
-  ]);
-  ws['!cols'] = [{wch:18},{wch:24},{wch:12},{wch:12},{wch:12},{wch:10}];
   XLSX.utils.book_append_sheet(wb, ws, 'PnL');
   XLSX.writeFile(wb, 'tfl-pnl-template.xlsx');
 }
 function exportPnLExcel(){
   const rows = _aggregateLocationDaily();
+  // Build data; profit column per row uses a formula (D-E-F) so it updates if user edits
   const data = [
     ['วันที่','สถานที่','ลูกค้ารวม','รายรับ','รายจ่าย','เงินแจก','แก้วที่แจก','กำไรสุทธิ'],
-    ...rows.map(r => [r.date, r.location, r.customers, r.revenue, r.expenses, r.moneyGiven, r.cups, r.revenue-r.expenses-r.moneyGiven]),
+    ...rows.map(r => [r.date, r.location, r.customers, r.revenue, r.expenses, r.moneyGiven, r.cups, 0]),
   ];
-  const totalRev = rows.reduce((s,r)=>s+r.revenue,0);
-  const totalExp = rows.reduce((s,r)=>s+r.expenses,0);
-  const totalMG  = rows.reduce((s,r)=>s+r.moneyGiven,0);
-  data.push(['','รวม', rows.reduce((s,r)=>s+r.customers,0), totalRev, totalExp, totalMG, rows.reduce((s,r)=>s+r.cups,0), totalRev-totalExp-totalMG]);
+  // Total row placeholder
+  data.push(['','รวม', 0, 0, 0, 0, 0, 0]);
+
   const ws = XLSX.utils.aoa_to_sheet(data);
   ws['!cols'] = [{wch:14},{wch:24},{wch:12},{wch:14},{wch:14},{wch:12},{wch:10},{wch:14}];
+
+  if(rows.length > 0){
+    const firstDataRow = 2;
+    const lastDataRow = 1 + rows.length;
+    const totalRow = lastDataRow + 1;
+
+    // Per-row profit formula in column H (กำไรสุทธิ = D - E - F)
+    for(let r = firstDataRow; r <= lastDataRow; r++){
+      ws[`H${r}`] = { t:'n', f:`D${r}-E${r}-F${r}`, z:'#,##0.00' };
+    }
+
+    // Live totals in row totalRow (cols C..H)
+    ws[`C${totalRow}`] = { t:'n', f:`SUM(C${firstDataRow}:C${lastDataRow})`, z:'#,##0' };
+    ws[`D${totalRow}`] = { t:'n', f:`SUM(D${firstDataRow}:D${lastDataRow})`, z:'#,##0.00' };
+    ws[`E${totalRow}`] = { t:'n', f:`SUM(E${firstDataRow}:E${lastDataRow})`, z:'#,##0.00' };
+    ws[`F${totalRow}`] = { t:'n', f:`SUM(F${firstDataRow}:F${lastDataRow})`, z:'#,##0.00' };
+    ws[`G${totalRow}`] = { t:'n', f:`SUM(G${firstDataRow}:G${lastDataRow})`, z:'#,##0' };
+    ws[`H${totalRow}`] = { t:'n', f:`D${totalRow}-E${totalRow}-F${totalRow}`, z:'#,##0.00' };
+  }
+
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'PnL');
   XLSX.writeFile(wb, `tfl-pnl${salesDateFrom?'-'+salesDateFrom:''}${salesDateTo?'-to-'+salesDateTo:''}.xlsx`);
