@@ -653,6 +653,12 @@
 .pnl-net-lbl{font-size:13px;font-weight:700;color:var(--t2)}
 .pnl-net-card.positive .pnl-net-val{color:#10b981;font-size:24px;font-weight:800;font-family:'Courier New',monospace}
 .pnl-net-card.negative .pnl-net-val{color:#ef4444;font-size:24px;font-weight:800;font-family:'Courier New',monospace}
+.event-pick-row{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg);cursor:pointer;transition:all .15s}
+.event-pick-row:hover{border-color:var(--p400);background:var(--p50);transform:translateX(2px)}
+.event-pick-info{flex:1;min-width:0}
+.event-pick-title{font-size:14px;font-weight:700;color:var(--t1);line-height:1.3;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.event-pick-meta{font-size:12px;color:var(--t2);line-height:1.4}
+.event-pick-arrow{color:var(--p400);font-size:20px;font-weight:700;flex:0 0 auto}
 .sales-table{width:100%;border-collapse:collapse;background:var(--bg);border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .sales-table thead{background:var(--bg-soft)}
 .sales-table th{padding:12px 14px;text-align:left;font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
@@ -27247,11 +27253,9 @@ function _renderSalesCustomers(el){
   const actions = `
     <button class="btn-ghost" onclick="openCustomerModal()">${I.plus} เพิ่มลูกค้า</button>
     <button class="btn-ghost" onclick="downloadCustomerTemplate()">${I.download} แม่แบบ</button>
-    <label class="btn-ghost" style="cursor:pointer">${I.upload} Import
-      <input type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="importCustomersExcel(this.files[0])"/>
-    </label>
+    <button class="btn-ghost" onclick="importCustomersExcel()">${I.upload} Import (เลือก Event)</button>
     <button class="btn-ghost" onclick="openBulkDeleteCustomers()" style="color:#dc2626">${I.trash} ลบตามวันที่</button>
-    <button class="btn-primary" onclick="exportCustomersExcel()">${I.download} Export</button>`;
+    <button class="btn-primary" onclick="exportCustomersExcel()">${I.download} Export (เลือก Event)</button>`;
 
   el.innerHTML = topbarSales('ข้อมูลลูกค้า', `${totalC} รายการ · ยอดรวม ${_fmtBaht(totalAmount)}`, actions) + `
     <div class="page-content" style="max-width:1400px">
@@ -27510,9 +27514,10 @@ function closeBulkDel(){
 }
 
 // ----- Excel: Customer template + export + import -----
-// Match the user's expected format: one sheet per (location + date).
-// Headers in Lao. Sheet name = location + DDMMYY (max 31 chars, sanitized).
+// New format (per user request): 1 sheet "ชีต1", 6 Lao columns, NO date/location
+// columns. Date + location come from the selected Event in calendar.
 const _CUST_HEADER_LAO = ['ລຳດັບ','ເບີລູກຄ້າ','UID','ຍອດຊື້','ເງິນແຈກ','ຈຳນວນຈອກທີ່ແຈກ'];
+const _CUST_SHEET_NAME = 'ชีต1';
 
 function _excelSheetName(location, date){
   // Convert YYYY-MM-DD → DDMMYY
@@ -27526,11 +27531,12 @@ function _excelSheetName(location, date){
   return name.slice(0, 31);
 }
 
-// Build a single Lao-format customer sheet for one group (location+date)
+// Build the single Lao customer sheet — 6 columns, no date/location.
+// Includes a summary row at the bottom (live SUM formulas).
 function _buildCustomerSheet(rows){
   const data = [_CUST_HEADER_LAO];
   rows.forEach((r,i) => data.push([i+1, r.phone||'', r.uid||'', +r.amount||0, +r.moneyGiven||0, +r.cupsGiven||0]));
-  // Summary block (4 rows blank then totals)
+  // Summary block
   data.push(['','','','','','']);
   data.push(['','ຍອດລູກຄ້າ', '', '', '', '']);
   data.push(['','ຍອດຊື້', 0, '', '', '']);
@@ -27540,72 +27546,211 @@ function _buildCustomerSheet(rows){
   const ws = XLSX.utils.aoa_to_sheet(data);
   ws['!cols'] = [{wch:8},{wch:16},{wch:14},{wch:14},{wch:14},{wch:16}];
 
-  const firstDataRow = 2;
-  const lastDataRow = rows.length ? (1 + rows.length) : 1;
   if(rows.length > 0){
-    const summaryStart = lastDataRow + 2; // skip 1 blank row
-    // ຍອດລູກຄ້າ (count) — using COUNTA on phone column (B)
-    ws[`C${summaryStart}`]   = { t:'s', v: `${rows.length} ຄົນ` };
-    // ຍອດຊື້ (SUM column D)
+    const firstDataRow = 2;
+    const lastDataRow = 1 + rows.length;
+    const summaryStart = lastDataRow + 2; // 1 blank row then summary
+    ws[`C${summaryStart}`]   = { t:'n', f:`SUM(D${firstDataRow}:D${lastDataRow})>0`, z:'0' }; // placeholder count
+    // Actually use COUNTA on phone column for accurate count
+    ws[`C${summaryStart}`]   = { t:'n', f:`COUNTA(B${firstDataRow}:B${lastDataRow})`, z:'#,##0" ຄົນ"' };
     ws[`C${summaryStart+1}`] = { t:'n', f:`SUM(D${firstDataRow}:D${lastDataRow})`, z:'#,##0' };
-    // ຍອດຈ່າຍ (SUM column E — money given)
     ws[`C${summaryStart+2}`] = { t:'n', f:`SUM(E${firstDataRow}:E${lastDataRow})`, z:'#,##0' };
-    // ຈອກທີ່ແຈກ (SUM column F)
-    ws[`C${summaryStart+3}`] = { t:'n', f:`SUM(F${firstDataRow}:F${lastDataRow})`, z:'#,##0' };
+    ws[`C${summaryStart+3}`] = { t:'n', f:`SUM(F${firstDataRow}:F${lastDataRow})`, z:'#,##0" ໜ່ວຍ"' };
   }
   return ws;
 }
 
 function downloadCustomerTemplate(){
   const wb = XLSX.utils.book_new();
-  // Build 1 example sheet with the Lao header + a few example rows + summary block
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth()+1).padStart(2,'0');
-  const dd = String(today.getDate()).padStart(2,'0');
-  const dateISO = `${yyyy}-${mm}-${dd}`;
+  // 1 example row + 80 blank rows for staff to fill
   const exampleRows = [
-    { phone:'0812345678', uid:'12345678', amount:20000, moneyGiven:50000, cupsGiven:1 },
-    { phone:'', uid:'', amount:0, moneyGiven:0, cupsGiven:0 },
-    { phone:'', uid:'', amount:0, moneyGiven:0, cupsGiven:0 },
+    { phone:'xxxxxx99', uid:'12345678', amount:20000, moneyGiven:50000, cupsGiven:0 },
   ];
-  // Fill with blank rows for user to fill (~80 more)
   for(let i=0;i<80;i++) exampleRows.push({});
   const ws = _buildCustomerSheet(exampleRows);
-  XLSX.utils.book_append_sheet(wb, ws, _excelSheetName('ຕົວຢ່າງສະຖານທີ່', dateISO));
+  XLSX.utils.book_append_sheet(wb, ws, _CUST_SHEET_NAME);
   XLSX.writeFile(wb, 'tfl-customers-template.xlsx');
 }
 
-function exportCustomersExcel(){
-  const rows = _filteredCustomers();
-  // Group rows by (date, location). Each group becomes a separate sheet.
-  const groups = new Map();
-  rows.forEach(r => {
-    const key = `${r.date||''}|${r.location||''}`;
-    if(!groups.has(key)) groups.set(key, { date:r.date, location:r.location, rows:[] });
-    groups.get(key).rows.push(r);
+// ----- Event picker (shared by Export + Import) -----
+function _openEventPicker(opts){
+  // opts: { titleText, helperText, onPick(event) }
+  const events = salesEvents.slice().sort((a,b)=>(b.startDate||b.date||'').localeCompare(a.startDate||a.date||''));
+  const catLabel = { booth:'ออกบูธ', field:'ลงพื้นที่', event:'อีเว้นท์', visit:'เยี่ยมลูกค้า' };
+  const html = `
+    <div class="overlay show" style="display:flex" id="evPickOverlay" onclick="if(event.target===this)closeEventPicker()">
+      <div class="modal" style="width:min(560px,calc(100vw - 32px));max-height:80vh;display:flex;flex-direction:column">
+        <div class="modal-hd">
+          <div class="modal-title">${opts.titleText||'เลือก Event'}</div>
+          <button class="modal-close" onclick="closeEventPicker()">×</button>
+        </div>
+        <div class="modal-bd" style="overflow:auto;flex:1">
+          <p style="font-size:13px;color:var(--t2);margin-bottom:10px">${opts.helperText||'เลือก Event จากปฏิทินที่บันทึกไว้ — ระบบจะใช้วันที่และสถานที่ของ Event นี้กับข้อมูลลูกค้าที่ Import/Export'}</p>
+          <input type="text" id="evPickSearch" placeholder="🔍 ค้นหา (ชื่อ/สถานที่/วันที่)" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:9px;background:var(--bg);color:var(--t1);font-size:13px;margin-bottom:10px" oninput="_evPickerFilter(this.value)"/>
+          <div id="evPickList" style="display:flex;flex-direction:column;gap:6px;max-height:50vh;overflow:auto">
+            ${events.length === 0 ?
+              '<div class="empty-state">ยังไม่มี Event ในปฏิทิน — ไปสร้างที่หน้า "ภาพรวม" ก่อน</div>' :
+              events.map(e => {
+                const date = e.startDate || e.date || '';
+                const cat = catLabel[e.category] || 'ลงพื้นที่';
+                return `<div class="event-pick-row" data-text="${escapeHtmlN(((e.title||'')+(e.location||'')+date).toLowerCase())}" onclick="_evPickerSelect(${e.id})">
+                  <div class="event-pick-info">
+                    <div class="event-pick-title">${escapeHtmlN(e.title || e.location || 'กิจกรรม')}</div>
+                    <div class="event-pick-meta">📅 ${date} ${e.location?'· 📍 '+escapeHtmlN(e.location):''} · ${cat}</div>
+                  </div>
+                  <div class="event-pick-arrow">→</div>
+                </div>`;
+              }).join('')
+            }
+          </div>
+        </div>
+        <div class="modal-ft">
+          <button class="sm-btn-cancel" onclick="closeEventPicker()">ยกเลิก</button>
+        </div>
+      </div>
+    </div>`;
+  let root = document.getElementById('evPickRoot');
+  if(!root){ root = document.createElement('div'); root.id='evPickRoot'; document.body.appendChild(root); }
+  root.innerHTML = html;
+  window._evPickerCb = opts.onPick;
+  setTimeout(() => { try { document.getElementById('evPickSearch').focus(); } catch(_){} }, 50);
+}
+function closeEventPicker(){
+  const root = document.getElementById('evPickRoot');
+  if(root) root.innerHTML = '';
+  window._evPickerCb = null;
+}
+function _evPickerSelect(id){
+  const e = salesEvents.find(x => x.id === id);
+  if(!e){ alert('ไม่พบ Event'); return; }
+  const cb = window._evPickerCb;
+  closeEventPicker();
+  if(cb) cb(e);
+}
+function _evPickerFilter(q){
+  const ql = (q||'').toLowerCase().trim();
+  document.querySelectorAll('#evPickList .event-pick-row').forEach(row => {
+    const text = row.dataset.text || '';
+    row.style.display = (!ql || text.includes(ql)) ? '' : 'none';
   });
-  const wb = XLSX.utils.book_new();
-  if(groups.size === 0){
-    // Fallback: empty template-like sheet
-    const ws = _buildCustomerSheet([{},{},{}]);
-    XLSX.utils.book_append_sheet(wb, ws, _excelSheetName('NoData', new Date().toISOString().slice(0,10)));
-  } else {
-    // Sort groups by date asc
-    const sortedKeys = Array.from(groups.keys()).sort();
-    const usedNames = new Set();
-    for(const k of sortedKeys){
-      const g = groups.get(k);
-      let name = _excelSheetName(g.location, g.date);
-      // Ensure unique sheet name
-      let n = name; let i = 2;
-      while(usedNames.has(n)){ n = (name.slice(0, 28) + '(' + i + ')'); i++; }
-      usedNames.add(n);
-      XLSX.utils.book_append_sheet(wb, _buildCustomerSheet(g.rows), n);
-    }
+}
+
+function exportCustomersExcel(){
+  // Step 1: pick the event the export should cover
+  _openEventPicker({
+    titleText: '📤 เลือก Event ที่จะ Export',
+    helperText: 'จะ Export เฉพาะข้อมูลลูกค้าของวันที่+สถานที่ที่ตรงกับ Event นี้',
+    onPick: (ev) => {
+      const date = (ev.startDate || ev.date || '').slice(0,10);
+      const location = (ev.location || '').trim();
+      const rows = salesCustomers.filter(c =>
+        (c.date||'') === date && (c.location||'').trim() === location);
+      const ws = _buildCustomerSheet(rows.length ? rows : [{},{},{}]);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, _CUST_SHEET_NAME);
+      // Filename: include event date + location
+      const safeLoc = location.replace(/[\\\/:*?"<>|]/g,'').slice(0,30) || 'event';
+      const ddmmyy = date.replace(/-/g,'').slice(2);  // YYMMDD-like compact
+      XLSX.writeFile(wb, `tfl-customers-${safeLoc}-${date}.xlsx`);
+    },
+  });
+}
+
+function importCustomersExcel(file){
+  if(!file){
+    // Trigger event picker first, then a hidden file input
+    _openEventPicker({
+      titleText: '📥 เลือก Event ก่อน Import',
+      helperText: 'ระบบจะใช้วันที่ + สถานที่ของ Event นี้กับทุกแถวในไฟล์ Excel',
+      onPick: (ev) => {
+        // Save event context for the next file picker
+        window._importCustomerEvent = ev;
+        // Open file picker programmatically
+        const tmp = document.createElement('input');
+        tmp.type = 'file';
+        tmp.accept = '.xlsx,.xls,.csv';
+        tmp.onchange = () => { if(tmp.files && tmp.files[0]) _doImportCustomersExcel(tmp.files[0], ev); };
+        tmp.click();
+      },
+    });
+    return;
   }
-  const fname = `tfl-customers${salesDateFrom?'-'+salesDateFrom:''}${salesDateTo?'-to-'+salesDateTo:''}.xlsx`;
-  XLSX.writeFile(wb, fname);
+  // If called with file (legacy via inline <input>), still require event selection
+  _openEventPicker({
+    titleText: '📥 เลือก Event ก่อน Import',
+    helperText: 'ระบบจะใช้วันที่ + สถานที่ของ Event นี้กับทุกแถวในไฟล์ Excel',
+    onPick: (ev) => _doImportCustomersExcel(file, ev),
+  });
+}
+
+function _doImportCustomersExcel(file, eventCtx){
+  const eventDate = (eventCtx.startDate || eventCtx.date || '').slice(0,10);
+  const eventLoc = (eventCtx.location || '').trim();
+  if(!eventDate){ alert('Event ไม่มีวันที่ — กรุณาแก้ที่หน้า ภาพรวม'); return; }
+  if(!eventLoc){ alert('Event ไม่มีสถานที่ — กรุณาแก้ที่หน้า ภาพรวม'); return; }
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const wb = XLSX.read(ev.target.result, { type: 'array' });
+      // Prefer "ชีต1" sheet, else first sheet
+      const sheetName = wb.SheetNames.find(n => n === 'ชีต1') || wb.SheetNames[0];
+      const ws = wb.Sheets[sheetName];
+      if(!ws){ alert('ไฟล์ไม่มี sheet ที่อ่านได้'); return; }
+      const allRows = XLSX.utils.sheet_to_json(ws, { header:1, defval:'', raw:true });
+
+      // Find header row by looking for "ເບີລູກຄ້າ" / "UID" / "ຍອດຊື້"
+      const headerIdx = allRows.findIndex(r => {
+        const joined = r.map(x => String(x||'').toLowerCase()).join('|');
+        return joined.includes('ເບີລູກຄ້າ') || joined.includes('uid') || joined.includes('ຍອດຊື້') ||
+               joined.includes('เบอร์ลูกค้า') || joined.includes('ยอดซื้อ');
+      });
+      if(headerIdx < 0){ alert('ไม่พบ header ในไฟล์ — ตรวจคอลัมน์ ເບີລູກຄ້າ/UID/ຍອດຊື້'); return; }
+
+      const header = allRows[headerIdx].map(x => String(x||'').trim());
+      const colIdx = {
+        phone:  header.findIndex(h => /ເບີລູກຄ້າ|เบอร์ลูกค้า|phone/i.test(h)),
+        uid:    header.findIndex(h => /^UID/i.test(h.split(/\s/)[0]) || /^uid$/i.test(h)),
+        amount: header.findIndex(h => /ຍອດຊື້|ยอดซื้อ|amount|รายรับ/i.test(h)),
+        money:  header.findIndex(h => /ເງິນແຈກ|เงินที่แจก|เงินแจก|money/i.test(h)),
+        cups:   header.findIndex(h => /ຈອກ|แก้ว|cup/i.test(h)),
+      };
+
+      let added = 0;
+      for(const row of allRows.slice(headerIdx + 1)){
+        // Stop when hitting the summary block
+        const second = String(row[1]||'').trim();
+        if(/^(ຍອດ|ลูกค้ารวม|รวม|Total|ยอด)/i.test(second)) break;
+        const phone = colIdx.phone >= 0 ? String(row[colIdx.phone]||'').trim() : '';
+        const uid   = colIdx.uid   >= 0 ? String(row[colIdx.uid]||'').trim() : '';
+        const amount = colIdx.amount >= 0 ? row[colIdx.amount] : 0;
+        const money  = colIdx.money  >= 0 ? row[colIdx.money]  : 0;
+        const cups   = colIdx.cups   >= 0 ? row[colIdx.cups]   : 0;
+        if(!phone && !uid && !amount && !money && !cups) continue;
+        salesCustomers.push({
+          id: _newRecordId('cust'),
+          date: eventDate,
+          location: eventLoc,
+          eventId: eventCtx.id,
+          phone, uid,
+          amount: Number(String(amount).replace(/,/g,''))||0,
+          moneyGiven: Number(String(money).replace(/,/g,''))||0,
+          cupsGiven: Number(String(cups).replace(/,/g,''))||0,
+          by: currentUser?.id,
+          createdAt: Date.now() + added,
+        });
+        added++;
+      }
+      saveAll();
+      flushSyncNow();
+      window._importCustomerEvent = null;
+      alert(`✅ Import สำเร็จ ${added} รายการ\nลงให้ Event: "${eventCtx.title||eventCtx.location}"\n📅 ${eventDate} 📍 ${eventLoc}`);
+      rerender();
+    } catch(e){
+      alert('Import ผิดพลาด: ' + e.message);
+      console.error(e);
+    }
+  };
+  reader.readAsArrayBuffer(file);
 }
 function exportCustomersExcel(){
   const rows = _filteredCustomers();
