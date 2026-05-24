@@ -27752,44 +27752,7 @@ function _doImportCustomersExcel(file, eventCtx){
   };
   reader.readAsArrayBuffer(file);
 }
-function exportCustomersExcel(){
-  const rows = _filteredCustomers();
-  // Build header + data rows. We DO NOT push totals as fixed values —
-  // we'll write SUM() formulas after sheet creation so totals stay live
-  // when user edits any cell in Excel.
-  const data = [
-    ['ลำดับ','วันที่','สถานที่','เบอร์ลูกค้า','UID ลูกค้า','ยอดซื้อ','เงินที่แจก','จำนวนแก้ว'],
-    ...rows.map((r,i)=>[i+1, r.date||'', r.location||'', r.phone||'', r.uid||'', +r.amount||0, +r.moneyGiven||0, +r.cupsGiven||0]),
-  ];
-  // Empty placeholder for the total row (will be filled with formulas below)
-  data.push(['','','','','รวม', 0, 0, 0]);
-
-  const ws = XLSX.utils.aoa_to_sheet(data);
-  ws['!cols'] = [{wch:6},{wch:14},{wch:24},{wch:14},{wch:14},{wch:14},{wch:14},{wch:10}];
-
-  // Write live SUM formulas in the total row.
-  // Excel rows are 1-indexed; data rows occupy 2..(1+rows.length)
-  if(rows.length > 0){
-    const firstDataRow = 2;
-    const lastDataRow = 1 + rows.length;
-    const totalRow = lastDataRow + 1;  // the "รวม" row we just appended
-    // F = ยอดซื้อ, G = เงินแจก, H = แก้ว
-    ws[`F${totalRow}`] = { t:'n', f:`SUM(F${firstDataRow}:F${lastDataRow})` };
-    ws[`G${totalRow}`] = { t:'n', f:`SUM(G${firstDataRow}:G${lastDataRow})` };
-    ws[`H${totalRow}`] = { t:'n', f:`SUM(H${firstDataRow}:H${lastDataRow})` };
-    // Light styling hint via cell number format (Excel-side)
-    [`F${totalRow}`,`G${totalRow}`].forEach(addr => { if(ws[addr]) ws[addr].z = '#,##0.00'; });
-    if(ws[`H${totalRow}`]) ws[`H${totalRow}`].z = '#,##0';
-  }
-
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Customers');
-  const fname = `tfl-customers${salesDateFrom?'-'+salesDateFrom:''}${salesDateTo?'-to-'+salesDateTo:''}.xlsx`;
-  XLSX.writeFile(wb, fname);
-}
-// Parse sheet name like "ປ້ຳນ້ຳມັນດົງໂດກ180526" → { location, date }
-// Strategy: trailing 6 digits = DDMMYY (or DDMMYYYY if 8 digits). Prefix = location.
-// Also supports leading-digit format like "180526ປ້ຳ..." for flexibility.
+// (Legacy parser kept for backward-compat in case old Excel files are imported via other paths)
 function _parseSheetNameForLocDate(name){
   if(!name) return { location:'', date:'' };
   // IMPORTANT: prefer \d{8} (DDMMYYYY) BEFORE \d{6} (DDMMYY) because alternation
@@ -27816,86 +27779,6 @@ function _parseDdmmyyOrFull(s){
     return `${yyyy}-${mm}-${dd}`;
   }
   return '';
-}
-
-function importCustomersExcel(file){
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    try {
-      const wb = XLSX.read(ev.target.result, { type: 'array' });
-      let added = 0;
-      let sheetsProcessed = 0;
-      for(const sheetName of wb.SheetNames){
-        // Skip the example/instruction sheets
-        if(/^(NoData|Sheet\d*)$/i.test(sheetName)) continue;
-        const ws = wb.Sheets[sheetName];
-        if(!ws) continue;
-        const allRows = XLSX.utils.sheet_to_json(ws, { header:1, defval:'', raw:true });
-        if(allRows.length < 2) continue;
-
-        // Detect headers — find row that contains "ເບີລູກຄ້າ" or "เบอร์ลูกค้า" or "phone" etc.
-        const headerRowIdx = allRows.findIndex(r => {
-          const joined = r.map(x => String(x||'').toLowerCase()).join('|');
-          return joined.includes('ເບີລູກຄ້າ') || joined.includes('เบอร์ลูกค้า') ||
-                 joined.includes('phone') || joined.includes('uid') ||
-                 joined.includes('ຍອດຊື້') || joined.includes('ยอดซื้อ');
-        });
-        if(headerRowIdx < 0) continue;
-
-        // Map header columns by name
-        const header = allRows[headerRowIdx].map(x => String(x||'').trim());
-        const colIdx = {
-          no:     header.findIndex(h => /^ລຳດັບ|ลำดับ|no\.?|#$/i.test(h)),
-          phone:  header.findIndex(h => /ເບີລູກຄ້າ|เบอร์ลูกค้า|phone/i.test(h)),
-          uid:    header.findIndex(h => /^UID/i.test(h.split(/\s/)[0]) || /^uid$/i.test(h)),
-          amount: header.findIndex(h => /ຍອດຊື້|ยอดซื้อ|amount|รายรับ/i.test(h)),
-          money:  header.findIndex(h => /ເງິນແຈກ|เงินที่แจก|เงินแจก|money/i.test(h)),
-          cups:   header.findIndex(h => /ຈອກ|แก้ว|cup/i.test(h)),
-        };
-
-        // Parse sheet name to get location + date
-        let { location, date } = _parseSheetNameForLocDate(sheetName);
-        // Fall back to filename hints / defaults
-        if(!date) date = new Date().toISOString().slice(0,10);
-        if(!location) location = sheetName.trim();
-
-        const dataRows = allRows.slice(headerRowIdx + 1);
-        let groupAdded = 0;
-        for(const row of dataRows){
-          // Stop if we hit a summary row (e.g. col B = "ຍອດລູກຄ້າ" or "ยอดลูกค้า" etc)
-          const second = String(row[1]||'').trim();
-          if(/^(ຍອດ|ลูกค้ารวม|รวม|Total|ยอด)/i.test(second)) break;
-          const phone = colIdx.phone >= 0 ? String(row[colIdx.phone]||'').trim() : '';
-          const uid   = colIdx.uid   >= 0 ? String(row[colIdx.uid]||'').trim() : '';
-          const amount = colIdx.amount >= 0 ? row[colIdx.amount] : 0;
-          const money  = colIdx.money  >= 0 ? row[colIdx.money]  : 0;
-          const cups   = colIdx.cups   >= 0 ? row[colIdx.cups]   : 0;
-          if(!phone && !uid && !amount && !money && !cups) continue;
-          salesCustomers.push({
-            id: _newRecordId('cust'),
-            date, location,
-            phone, uid,
-            amount: Number(String(amount).replace(/,/g,''))||0,
-            moneyGiven: Number(String(money).replace(/,/g,''))||0,
-            cupsGiven: Number(String(cups).replace(/,/g,''))||0,
-            by: currentUser?.id,
-            createdAt: Date.now() + added,
-          });
-          added++; groupAdded++;
-        }
-        if(groupAdded > 0) sheetsProcessed++;
-      }
-      saveAll();
-      flushSyncNow();
-      alert(`Import สำเร็จ ${added} รายการ จาก ${sheetsProcessed} sheet`);
-      rerender();
-    } catch(e){
-      alert('Import ผิดพลาด: ' + e.message);
-      console.error(e);
-    }
-  };
-  reader.readAsArrayBuffer(file);
 }
 
 // =============================================================================
