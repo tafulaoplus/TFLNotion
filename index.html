@@ -19671,6 +19671,7 @@ function saveAdLibCompetitor(){
   if(!pageUrl){ alert('กรอก URL เพจ'); return; }
   if(!name){ alert('กรอกชื่อเพจ'); return; }
   const finalAdUrl = adLibUrl || _generateAdLibUrl(_parseFbPageHandle(pageUrl), adLibCountry);
+  let savedComp;
   if(_adLibEditId){
     const c = adLibCompetitors.find(x => x.id === _adLibEditId);
     if(c){
@@ -19680,15 +19681,21 @@ function saveAdLibCompetitor(){
       c.adLibUrl = finalAdUrl;
       c.note = note;
       c.updatedAt = Date.now();
+      savedComp = c;
     }
   } else {
-    adLibCompetitors.push({
+    savedComp = {
       id: 'comp_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
       pageUrl, name, picture, adLibUrl: finalAdUrl, note,
       createdAt: Date.now(), updatedAt: Date.now(),
-    });
+    };
+    adLibCompetitors.push(savedComp);
   }
   saveAll();
+  // Atomic per-collection upsert — small payload (~500B) survives the
+  // browser's keepalive 64KB limit; guarantees server gets the new entry
+  // even if user closes tab immediately after click.
+  if(savedComp) _syncCollection('upsert', 'adLibCompetitors', savedComp);
   closeModal('adLibCompetitorModal');
   rerender();
 }
@@ -19697,6 +19704,7 @@ function deleteAdLibCompetitor(id){
   if(!confirm('ลบคู่แข่งนี้?')) return;
   adLibCompetitors = adLibCompetitors.filter(c => c.id !== id);
   saveAll();
+  _syncCollection('delete', 'adLibCompetitors', id);
   rerender();
 }
 
