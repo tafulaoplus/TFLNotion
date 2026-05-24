@@ -8463,6 +8463,211 @@ function _newRecordId(prefix){
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;
 }
 
+// =============================================================================
+// TASK BOARD API CLIENT  (Phase 2 step 4, refactor-realtime branch)
+// =============================================================================
+// Replaces full-snapshot push with per-task PATCH for the Task Board module.
+// Flag-controlled: when USE_TASK_API is false, every task save falls back to
+// the legacy saveAll() / snapshot push so we can revert instantly if anything
+// goes wrong. Default = true (server tested 34/34 endpoints).
+let USE_TASK_API = (function(){
+  try {
+    const v = localStorage.getItem('tfl_use_task_api');
+    return v === null ? true : v === '1';
+  } catch(_) { return true; }
+})();
+function setUseTaskApi(on){
+  USE_TASK_API = !!on;
+  try { localStorage.setItem('tfl_use_task_api', on ? '1' : '0'); } catch(_){}
+  console.log('[taskApi] toggled to', USE_TASK_API);
+}
+
+// Cursor for incremental polling (ISO timestamp of last sync)
+let _tasksLastSyncTs = null;
+let _tasksPollTimer = null;
+let _tasksPollInProgress = false;
+
+const taskApi = {
+  async list(since){
+    const params = new URLSearchParams({ workspace: 'default' });
+    if (since) params.set('since', since);
+    const r = await fetch(`${NEON_API}/tasks?${params}`, { cache: 'no-store' });
+    const j = await r.json().catch(()=>({ ok:false, error:'parse error' }));
+    return { ...j, status: r.status };
+  },
+  async create(data){
+    const r = await fetch(`${NEON_API}/tasks?workspace=default`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+      keepalive: true,
+    });
+    const j = await r.json().catch(()=>({ ok:false, error:'parse error' }));
+    return { ...j, status: r.status };
+  },
+  async patch(id, fields, version){
+    const body = { version, ...fields };
+    const r = await fetch(`${NEON_API}/tasks/${id}?workspace=default`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      keepalive: true,
+    });
+    const j = await r.json().catch(()=>({ ok:false, error:'parse error' }));
+    return { ...j, status: r.status, conflict: r.status === 409 };
+  },
+  async remove(id, version){
+    const params = new URLSearchParams({ workspace: 'default' });
+    if (version != null) params.set('version', String(version));
+    const r = await fetch(`${NEON_API}/tasks/${id}?${params}`, {
+      method: 'DELETE', keepalive: true,
+    });
+    const j = await r.json().catch(()=>({ ok:false, error:'parse error' }));
+    return { ...j, status: r.status };
+  },
+};
+
+// ---- High-level helpers used by save points ----
+// All do optimistic local update first, then fire API in background, with
+// automatic fallback to saveAll() (full snapshot) on error.
+
+function _taskPatchAndApi(t, fields){
+  if (!t) return;
+  Object.assign(t, fields);
+  saveAllLocal();
+  if (!USE_TASK_API){ saveAll(); return; }
+  const version = t._version || 1;
+  taskApi.patch(t.id, fields, version).then(r => {
+    if (r.ok && r.task){
+      t._version = r.task.version;
+    } else if (r.conflict && r.task){
+      // Another user changed it first — adopt their version, keep our intent visible
+      Object.assign(t, r.task);
+      t._version = r.task.version;
+      console.warn('[taskApi.patch] 409 conflict, applied server version', r.task);
+      try { refreshDbTables(); renderSidebar(); } catch(_){}
+    } else {
+      console.warn('[taskApi.patch] unexpected response, falling back to snapshot:', r);
+      saveAll();
+    }
+  }).catch(e => {
+    console.warn('[taskApi.patch] error, falling back to snapshot:', e);
+    saveAll();
+  });
+}
+
+async function _taskCreateAndApi(data){
+  if (!USE_TASK_API){
+    const savedTask = { id: nextTaskId++, ...data };
+    tasks.push(savedTask);
+    saveAll();
+    flushSyncNow();
+    return savedTask;
+  }
+  try {
+    const r = await taskApi.create(data);
+    if (r.ok && r.task){
+      // server-generated id wins; merge into local
+      tasks.push(r.task);
+      saveAllLocal();
+      return r.task;
+    }
+    throw new Error('create failed: ' + JSON.stringify(r));
+  } catch (e) {
+    console.warn('[taskApi.create] error, falling back to snapshot:', e);
+    const savedTask = { id: nextTaskId++, ...data };
+    tasks.push(savedTask);
+    saveAll();
+    flushSyncNow();
+    return savedTask;
+  }
+}
+
+function _taskDeleteAndApi(id){
+  tasks = tasks.filter(t => t.id !== id);
+  saveAllLocal();
+  if (!USE_TASK_API){ saveAll(); flushSyncNow(); return; }
+  taskApi.remove(id).then(r => {
+    if (!r.ok){
+      console.warn('[taskApi.remove] failed, falling back to snapshot:', r);
+      saveAll();
+    }
+  }).catch(e => {
+    console.warn('[taskApi.remove] error:', e);
+    saveAll();
+  });
+}
+
+// Incremental task sync — replaces polling the full workspace snapshot for task changes.
+async function _taskPollDelta(){
+  if (!USE_TASK_API) return;
+  if (_tasksPollInProgress) return;
+  _tasksPollInProgress = true;
+  try {
+    const r = await taskApi.list(_tasksLastSyncTs);
+    if (r.ok){
+      let changed = false;
+      for (const apiTask of (r.tasks || [])){
+        const idx = tasks.findIndex(x => x.id === apiTask.id);
+        if (idx >= 0){
+          // Only update if server version is newer (skip our own writes echoed back)
+          if ((tasks[idx]._version || 0) < (apiTask.version || 0)){
+            tasks[idx] = { ...apiTask, _version: apiTask.version };
+            changed = true;
+          }
+        } else {
+          tasks.push({ ...apiTask, _version: apiTask.version });
+          changed = true;
+        }
+      }
+      for (const delId of (r.deletedIds || [])){
+        const idx = tasks.findIndex(x => x.id === delId);
+        if (idx >= 0){ tasks.splice(idx, 1); changed = true; }
+      }
+      _tasksLastSyncTs = r.now || _tasksLastSyncTs;
+      if (changed){
+        saveAllLocal();
+        try {
+          refreshDbTables();
+          renderSidebar();
+        } catch(_){}
+      }
+    }
+  } catch(e){
+    console.warn('[taskApi.poll] failed:', e);
+  } finally {
+    _tasksPollInProgress = false;
+  }
+}
+
+// Initial hydration: pull full list once to learn current versions, then start polling
+async function _hydrateTaskVersions(){
+  if (!USE_TASK_API) return;
+  try {
+    const r = await taskApi.list();
+    if (r.ok && Array.isArray(r.tasks)){
+      const byId = Object.fromEntries(r.tasks.map(t => [t.id, t]));
+      tasks.forEach(t => {
+        const api = byId[t.id];
+        if (api) t._version = api.version;
+      });
+      _tasksLastSyncTs = r.now;
+      console.log('[taskApi] hydrated', tasks.length, 'task versions');
+    }
+  } catch(e){
+    console.warn('[taskApi] hydration failed:', e);
+  }
+}
+
+function _startTaskPolling(){
+  if (_tasksPollTimer) clearInterval(_tasksPollTimer);
+  if (!USE_TASK_API) return;
+  // Poll every 15s, but skip when tab hidden
+  _tasksPollTimer = setInterval(() => {
+    if (!document.hidden) _taskPollDelta();
+  }, 15000);
+}
+
 function syncToNeon(){
   if(!neonEnabled) return;
   // Safety guard: never push an empty USERS array to Neon — it would wipe the team's accounts.
@@ -9800,6 +10005,8 @@ function initApp(){
   navigateTo(startView);
   try { requestBrowserNotifPerm(); } catch(_){}
   try { startNotifChecker(); } catch(_){}
+  // Task Board: hydrate version numbers from API + start incremental poll (refactor-realtime)
+  try { _hydrateTaskVersions().then(_startTaskPolling); } catch(_){}
 }
 
 let _navDragId = null;
@@ -16051,16 +16258,20 @@ function onRowDrop(e, targetTaskId){
   if(sourceIdx === -1 || targetIdx === -1){ cleanupRowDrag(); return; }
   const sourceTask = tasks[sourceIdx];
   const targetTask = tasks[targetIdx];
-  // If dropping into different date group, adopt that date
-  if(sourceTask.due !== targetTask.due){
-    sourceTask.due = targetTask.due || '';
-  }
+  const dueChanged = sourceTask.due !== targetTask.due;
+  const newDue = dueChanged ? (targetTask.due || '') : sourceTask.due;
   // Reorder array
   tasks.splice(sourceIdx, 1);
   if(sourceIdx < targetIdx) targetIdx--;
   tasks.splice(isBefore ? targetIdx : targetIdx + 1, 0, sourceTask);
+  // Recompute position for affected tasks (cheap: 0..N)
+  tasks.forEach((t, i) => { t.position = i; });
   cleanupRowDrag();
-  saveAll();
+  // Patch the moved task (due maybe changed + new position)
+  const patchFields = { position: sourceTask.position };
+  if(dueChanged) patchFields.due = newDue;
+  _taskPatchAndApi(sourceTask, patchFields);
+  saveAllLocal();
   refreshDbTables();
 }
 
@@ -16219,7 +16430,7 @@ function editCellName(cell,e,id){
   inp.focus();
   inp.select();
   let saved = false;
-  const save = ()=>{ if(saved) return; saved=true; t.name = inp.value.trim()||t.name; saveAll(); refreshDbTables(); };
+  const save = ()=>{ if(saved) return; saved=true; const newName = inp.value.trim()||t.name; _taskPatchAndApi(t, { name: newName }); refreshDbTables(); };
   inp.addEventListener('blur', save);
   inp.addEventListener('keydown', ev=>{ if(ev.key==='Enter'){ ev.preventDefault(); inp.blur(); } if(ev.key==='Escape') refreshDbTables(); });
 }
@@ -16243,8 +16454,7 @@ function editCellDate(cell,e,id){
     if(saved) return;
     saved = true;
     if(inp.value !== oldVal){
-      t.due = inp.value;
-      saveAll();
+      _taskPatchAndApi(t, { due: inp.value });
     }
     refreshDbTables();
   };
@@ -16264,7 +16474,7 @@ function editCellText(cell,e,id,field){
   const inp = cell.querySelector('input');
   inp.focus();
   let saved = false;
-  const save = ()=>{ if(saved) return; saved=true; t[field] = inp.value.trim(); saveAll(); refreshDbTables(); };
+  const save = ()=>{ if(saved) return; saved=true; _taskPatchAndApi(t, { [field]: inp.value.trim() }); refreshDbTables(); };
   inp.addEventListener('blur', save);
   inp.addEventListener('keydown', ev=>{ if(ev.key==='Enter'){ ev.preventDefault(); inp.blur(); } if(ev.key==='Escape') refreshDbTables(); });
 }
@@ -16450,11 +16660,11 @@ function openAssigneeDropdown(anchorEl, e, taskId){
 function toggleAssignee(taskId, userId, keepOpen){
   const t = tasks.find(x=>x.id===taskId);
   if(!t) return;
-  if(t.assignees.includes(userId)) t.assignees = t.assignees.filter(a=>a!==userId);
-  else t.assignees.push(userId);
-  if(!t.assignees.length) t.assignees = [userId];
-  saveAll();
-  // Update only the cells, not the whole dropdown
+  let newAssignees = (t.assignees||[]).includes(userId)
+    ? t.assignees.filter(a=>a!==userId)
+    : [...(t.assignees||[]), userId];
+  if(!newAssignees.length) newAssignees = [userId];
+  _taskPatchAndApi(t, { assignees: newAssignees });
   if(!keepOpen) closeAllPopups();
   refreshDbTables();
 }
@@ -16558,7 +16768,7 @@ document.addEventListener('input', e=>{
 function setEmoji(em){
   if(currentEmojiTarget?.type==='task'){
     const t = tasks.find(x=>x.id===currentEmojiTarget.id);
-    if(t){ t.emoji = em; saveAll(); refreshDbTables(); }
+    if(t){ _taskPatchAndApi(t, { emoji: em }); refreshDbTables(); }
   } else if(currentEmojiTarget?.type==='modal-task'){
     document.getElementById('taskEmojiBtn').textContent = em || '📝';
     document.getElementById('taskEmojiBtn').dataset.emoji = em;
@@ -16624,7 +16834,10 @@ function onDrop(e,col){
   document.querySelectorAll('.task-card.dragging').forEach(c=>c.classList.remove('dragging'));
   if(dragId!=null){
     const t=tasks.find(x=>x.id===dragId);
-    if(t){t.status=col;saveAll();refreshDbTables();renderSidebar();}
+    if(t){
+      _taskPatchAndApi(t, { status: col });
+      refreshDbTables(); renderSidebar();
+    }
   }
 }
 
@@ -16659,8 +16872,8 @@ function renderChecklist(list){
 function toggleChecklist(id){
   const t = tasks.find(x=>x.id===id);
   if(!t) return;
-  t.status = t.status==='done' ? 'todo' : 'done';
-  saveAll();
+  const newStatus = t.status==='done' ? 'todo' : 'done';
+  _taskPatchAndApi(t, { status: newStatus });
   refreshDbTables();
   renderSidebar();
 }
@@ -27752,19 +27965,21 @@ function saveTask(){
       const i = tasks.findIndex(t => t.id === editTaskId);
       if(i >= 0){
         const prevAssignees = Array.isArray(tasks[i].assignees) ? [...tasks[i].assignees] : [];
-        tasks[i] = {...tasks[i], ...data};
+        // Use API patch (with version) when flag is on; fallback to snapshot otherwise.
+        _taskPatchAndApi(tasks[i], data);
         savedTask = tasks[i];
         try { notifyTaskAssigned(savedTask, prevAssignees); } catch(_){}
         try { logActivity('update', 'task', savedTask.id, savedTask.name); } catch(_){}
       }
     } else {
-      savedTask = {id: nextTaskId++, ...data};
-      tasks.push(savedTask);
-      try { notifyTaskAssigned(savedTask, []); } catch(_){}
-      try { logActivity('create', 'task', savedTask.id, savedTask.name); } catch(_){}
+      // Create via API (server-generated id) when flag on; fallback to snapshot otherwise.
+      _taskCreateAndApi(data).then(t => {
+        try { notifyTaskAssigned(t, []); } catch(_){}
+        try { logActivity('create', 'task', t.id, t.name); } catch(_){}
+        try { refreshDbTables(); renderSidebar(); } catch(_){}
+      });
+      savedTask = null; // server async; refresh happens in .then()
     }
-    saveAll();
-    flushSyncNow();
     closeModal('taskModal');
     rerender();
     renderSidebar();
@@ -27777,10 +27992,8 @@ function saveTask(){
 function deleteTask(id){
   if(!confirm('ลบงานนี้?')) return;
   const t = tasks.find(x => x.id === id);
-  tasks=tasks.filter(t=>t.id!==id);
   try { if(t) logActivity('delete', 'task', id, t.name); } catch(_){}
-  saveAll();
-  flushSyncNow();
+  _taskDeleteAndApi(id);
   refreshDbTables(); renderSidebar();
 }
 
@@ -27788,21 +28001,12 @@ function duplicateTask(id){
   const t = tasks.find(x => x.id === id);
   if(!t) return;
   const today = new Date().toISOString().split('T')[0];
-  const copy = {
-    ...JSON.parse(JSON.stringify(t)),
-    id: nextTaskId++,
-    due: today,
-    status: 'todo',
-    created: today,
-  };
-  // Insert right after the original for visual continuity
-  const idx = tasks.findIndex(x => x.id === id);
-  if(idx >= 0) tasks.splice(idx + 1, 0, copy);
-  else tasks.push(copy);
-  saveAll();
-  flushSyncNow();
-  refreshDbTables();
-  renderSidebar();
+  // Strip server-managed fields before sending to create
+  const { id: _omit, _version, version, createdAt, updatedAt, ...rest } = JSON.parse(JSON.stringify(t));
+  const dupData = { ...rest, due: today, status: 'todo', created: today };
+  _taskCreateAndApi(dupData).then(()=>{
+    refreshDbTables(); renderSidebar();
+  });
 }
 
 // ========== DOC MODAL ==========
