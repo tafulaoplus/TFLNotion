@@ -27772,7 +27772,7 @@ function renderMembers(el){
         return `<div class="member-card" style="cursor:pointer" onclick="openMemberDetail(${u.id})">
           ${av}
           <div class="m-name">${escapeHtml(u.name)}</div>
-          <span class="m-badge ${u.role==='admin'?'r-admin':u.role==='social'?'role-social':u.role==='normal'?'r-normal':'r-member'}">${u.role==='admin'?'Admin':u.role==='social'?'Social':u.role==='normal'?'Normal':'Member'}</span>
+          <span class="m-badge ${u.role==='admin'?'r-admin':u.role==='supervisor'?'r-supervisor':u.role==='social'?'role-social':u.role==='normal'?'r-normal':'r-member'}">${u.role==='admin'?'Admin':u.role==='supervisor'?'Supervisor':u.role==='social'?'Social':u.role==='normal'?'Normal':'Member'}</span>
           <div class="m-tasks">${ut.length} งาน · เสร็จ ${ud}</div>
           <div class="m-email">${u.email}</div>
           ${u.id!==currentUser.id?`<div style="display:flex;flex-direction:column;gap:6px;margin-top:12px" onclick="event.stopPropagation()">
@@ -27828,7 +27828,7 @@ function renderMemberDetail(el, userId){
         <div style="font-size:22px;font-weight:800;letter-spacing:-.01em">${u.name}</div>
         <div style="font-size:13px;color:var(--t2);margin-top:3px">${u.email}</div>
         <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
-          <span class="m-badge ${u.role==='admin'?'r-admin':u.role==='social'?'role-social':u.role==='normal'?'r-normal':'r-member'}">${u.role==='admin'?'Admin':u.role==='social'?'Social':u.role==='normal'?'Normal':'Member'}</span>
+          <span class="m-badge ${u.role==='admin'?'r-admin':u.role==='supervisor'?'r-supervisor':u.role==='social'?'role-social':u.role==='normal'?'r-normal':'r-member'}">${u.role==='admin'?'Admin':u.role==='supervisor'?'Supervisor':u.role==='social'?'Social':u.role==='normal'?'Normal':'Member'}</span>
           <span style="font-size:12px;color:var(--t3)">ความคืบหน้า <b style="color:var(--p600)">${pct}%</b></span>
         </div>
       </div>
